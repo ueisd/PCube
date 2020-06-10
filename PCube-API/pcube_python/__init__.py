@@ -2,6 +2,7 @@ import os
 from flask import Flask
 from .main import main
 from .autre_routes import test
+from .auth_routes import auth
 
 def create_app():
 
@@ -16,5 +17,6 @@ def create_app():
 
     app.register_blueprint(main)
     app.register_blueprint(test)
+    app.register_blueprint(auth, url_prefix='/api')
 
     return app
