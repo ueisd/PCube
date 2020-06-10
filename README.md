@@ -17,11 +17,11 @@ Un organisme communautaire Le Petit Peuple souhaiterait que soit réalisé un sy
 - Richer Stébenne, Sébastien (RICS21109001)
 
 
-## Mise en place du projet (Linux)
+## Mise en place du projet (Linux) (Possiblement avec Terminal Ubuntu sur W10) 
 
 ### Installation de Python3.8
 
-Afin de pouvoir faire fonctionner le projet, nous devons tout d'abord mettre en place un environnement virtuel. La version **Python3.8** a été choisi pour la réalisation de l'application. 
+Afin de pouvoir faire fonctionner le projet, nous devons tous d'abord mettre en place un environnement virtuel. La version **Python3.8** a été choisi pour la réalisation de l'application. 
 
 Vérifier avec la commande `python3.8 --version` pour savoir si **Python3.8** est déjà installer sur votre machine. Si vous obtenez un message simulaire « *python3.8: command not found* », il faudrat alors suivre les étapes dans le guide [d'installation de Python 3.8](https://linuxize.com/post/how-to-install-python-3-8-on-ubuntu-18-04/).
 
@@ -49,27 +49,34 @@ Commande pour l'installation :
 
 ### Installer les dépences Flask et Angular
 
-**_!!! Votre environnement virtuel doit être activé !!!_**
+**_!!! Votre environnement virtuel doit être activé pour les dépendances Flask !!!_**
 
 Vous devez vous assurer d'avoir la dernière version de **pip** d'installer dans votre environnement virtuel. Simplement lancer la commande suivante `pip install --upgrade pip`
 
-De plus, **NPM** doit être aussi installer pour pouvoir gérer les dépendances d'Angular. Voir la section **Installer NPM et RAML**.
+Une fois votre environnement virtuel activé, rendez-vous dans le dossier du Backend. Un fichier **requirements.txt** sera disponible pour automatiser l'installation. Entrez la commande suivante : `pip install -r requirements.txt`
 
-Lancer la commande du **Makefile** `make install-requirements`.
+Pour Angular, **NPM** doit être installer pour pouvoir gérer les dépendances. Voir la section **Installer NPM et RAML**.
+
+Rendez-vous dans le dossier du Frontend et lancez la commande suivante : `npm install`.
+
+Une fois l'installer complété, regarder votre terminal pour visualiser les codes d'erreurs. Il ce pourrait que la commande doit être lancer avec **sudo**. Regarder aussi pour un message du genre *found 1 low severity vulnerability*. Pas de panique, lancer la commande `npm audit fix`. Si rien ne se règle, on ne touche à rien. C'est "normal" la communauté travail pour régler ces problèmes.
 
 
 ### Démarrage de l'application
-Pour démarrer l'application, simplement utiliser le **Makefile** fourni avec la commande `make` ou `make run-debug` pour être en mode débogage. L'application devrait être disponible à l'URL suivant : [http://localhost:5000/](http://localhost:5000/)
 
+#### Flask
+
+**_!!! Votre environnement virtuel doit être activé !!!_**
+
+Pour démarrer l'application, simplement utiliser le Makefile fourni avec la commande `make`.
+(Le fichier risque d'évoluer au fil du projet, garder un oeil ouvert.)
+
+#### Angular
+
+Simplement lancer `npm start`. 
 
 ## Makefile
 
 Vous pouvez utiliser le Makefile du projet.
-- `make` : Permets de démarrer le serveur en mode "normal".
-- `make run-debug` : Permets de démarrer le serveur en mode débogage.
-- `make raml` : Lance la création du doc.html avec raml2html
-- `make install-requirements` : Installe les exigences du projet.
-- `make pep8` : Permets de lancer la commande pep8 sur le dossier courrant.
-- `make ng-build` : Génère les fichiers front-end de Angular
-- `make ng-transfert-all-files` : Déplace les fichiers Angular dans les dossiers spécifique à Flask.
+- `make` : Permets de démarrer le serveur Flask
 
