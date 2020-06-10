@@ -1,6 +1,7 @@
 import os
 from flask import Flask
 from .main import main
+from .autre_routes import test
 
 def create_app():
 
@@ -14,5 +15,6 @@ def create_app():
     )
 
     app.register_blueprint(main)
+    app.register_blueprint(test)
 
     return app
