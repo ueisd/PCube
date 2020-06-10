@@ -1,5 +1,3 @@
-# coding=utf-8
-
 import sqlite3
 
 
@@ -24,7 +22,7 @@ class Database:
         Retourne la connection à la base de données.
         """
         if self.connection is None:
-            self.connection = sqlite3.connect('db/pcube.db')
+            self.connection = sqlite3.connect('db/database/pcube.db')
         return self.connection
 
     def disconnect(self):
@@ -33,19 +31,3 @@ class Database:
         """
         if self.connection is not None:
             self.connection.close()
-
-    def get_role(self, id):
-        """
-        Recherche un rôle avec un identfiant.
-
-        Paramètres
-        ----------
-        id : integer
-            L'identifiant du rôle
-        """
-        cursor = self.get_connection().cursor()
-        cursor.execute(("SELECT role_name FROM role "
-                        "WHERE id = ?"), 
-                       (id))
-        role = cursor.fetchall()
-        return role[0]

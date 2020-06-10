@@ -144,4 +144,4 @@ cython_debug/
 *.db
 
 # Angular
-# envtest*
+envtest*

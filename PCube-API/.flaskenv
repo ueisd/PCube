@@ -1,2 +1,2 @@
-FLASK_APP=pcube-python
+FLASK_APP=pcube_python
 FLASK_ENV=development
