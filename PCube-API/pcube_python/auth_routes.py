@@ -18,8 +18,8 @@ app = Flask(__name__)
 log = create_logger(app)
 
 
-@auth.route('/auth/login', methods=['GET'])
-def login_user(id):
+@auth.route('/auth/login', methods=['POST'])
+def login_user():
     """
     Login user
     """
@@ -33,5 +33,49 @@ def login_user(id):
         }))
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
+        abort(403)
+
+
+@auth.route('/auth/info', methods=['GET'])
+@auth_required
+def login_info_api():
+    """
+    Get informaiton about currently logged in user
+    """
+    try:
+        user = get_authenticated_user()
+        return make_response(jsonify({
+            'username': user['username'],
+            'enabled': user['enabled'],
+            'isAdmin': user['is_admin']
+        }))
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+
+@app.route('/auth/logout', methods=['POST'])
+@auth_refresh_required
+def logout_api():
+    """
+    Log user out
+    """
+    deauthenticate_user()
+    return make_response()
+
+
+@app.route('/auth/refresh', methods=['POST'])
+@auth_refresh_required
+def refresh_api():
+    """
+    Get a fresh access token from a valid refresh token
+    """
+    try:
+        access_token = refresh_authentication()
+        return make_response(jsonify({
+            'accessToken': access_token
+        }))
+    except AuthenticationError as error:
+        log.error('authentication error %s', error)
         abort(403)
    
