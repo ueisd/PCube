@@ -9,8 +9,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 // Auth
 import { AuthInterceptor } from 'src/app/services/auth/auth.interceptor';
-import { LoginComponent } from './components/pages/login/login/login.component';
-import { LogoutComponent } from './components/layouts/logout/logout/logout.component';
+import { LoginComponent } from './components/pages/login/login.component';
+import { LogoutComponent } from './components/layouts/logout/logout.component';
+import { HomeComponent } from './components/pages/home/home.component';
+import { AccessDeniedComponent } from './components/pages/access-denied/access-denied.component';
+import { AdminContentComponent } from './components/pages/admin-content/admin-content.component';
 
 
 @NgModule({
@@ -18,7 +21,10 @@ import { LogoutComponent } from './components/layouts/logout/logout/logout.compo
     AppComponent,
     EnvTestComponent,
     LoginComponent,
-    LogoutComponent
+    LogoutComponent,
+    HomeComponent,
+    AccessDeniedComponent,
+    AdminContentComponent
   ],
   imports: [
     BrowserModule,

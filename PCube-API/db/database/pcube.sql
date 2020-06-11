@@ -61,14 +61,6 @@ CREATE TABLE timeline (
     FOREIGN KEY(person_id) REFERENCES person(id)
 );
 
-CREATE TABLE user_session(
-    id INTEGER(10) PRIMARY KEY,
-    user_id INTEGER(10),
-	token varchar(255) NOT NULL,
-    expired varchar(50) NOT NULL,
-    FOREIGN KEY(user_id) REFERENCES user(id)
-)
-
 INSERT INTO role(id, role_name, access_level) VALUES(1, 'admin', 1);
 INSERT INTO role(id, role_name, access_level) VALUES(2, 'member', 2);
 

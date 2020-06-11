@@ -54,7 +54,7 @@ def login_info_api():
         abort(403)
 
 
-@app.route('/auth/logout', methods=['POST'])
+@auth.route('/auth/logout', methods=['POST'])
 @auth_refresh_required
 def logout_api():
     """
@@ -64,7 +64,7 @@ def logout_api():
     return make_response()
 
 
-@app.route('/auth/refresh', methods=['POST'])
+@auth.route('/auth/refresh', methods=['POST'])
 @auth_refresh_required
 def refresh_api():
     """
