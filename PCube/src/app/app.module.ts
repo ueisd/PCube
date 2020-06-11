@@ -1,22 +1,40 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule } from '@angular/common/http'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EnvTestComponent } from './components/envtest/envtest.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
+// Auth
+import { AuthInterceptor } from 'src/app/services/auth/auth.interceptor';
+import { LoginComponent } from './components/pages/login/login.component';
+import { LogoutComponent } from './components/layouts/logout/logout.component';
+import { HomeComponent } from './components/pages/home/home.component';
+import { AccessDeniedComponent } from './components/pages/access-denied/access-denied.component';
+import { AdminContentComponent } from './components/pages/admin-content/admin-content.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    EnvTestComponent
+    EnvTestComponent,
+    LoginComponent,
+    LogoutComponent,
+    HomeComponent,
+    AccessDeniedComponent,
+    AdminContentComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
