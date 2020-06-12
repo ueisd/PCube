@@ -10,6 +10,12 @@ from flask_jwt_extended import (
     create_access_token, create_refresh_token, get_jwt_identity,
     verify_jwt_in_request, verify_jwt_refresh_token_in_request
 )
+from .security import (
+    is_password_valid, generate_salt, encrypt_password
+)
+
+from ..db.auth_request import AuthRequest
+from ..pcube_python.db_controller import get_db
 
 app = Flask(__name__)
 log = create_logger(app)
@@ -55,36 +61,57 @@ class UserNotFound(AuthenticationError):
     """User identity not found"""
 
 
-def authenticate_user(username, password):
+def authenticate_user(email, password):
     """
     Authenticate a user
+    Errors :
+    raise InvalidCredentials(email) : Lorsque les informations sont erronés
+    raise AccountInactive(email) : Lorsque le compte est suspendu
     """
-    for user in USERS:
-        if username == user['username'] and password == user['password']:
-            if user['enabled']:
-                return (
-                    create_access_token(identity=username),
-                    create_refresh_token(identity=username)
-                )
-            else:
-                raise AccountInactive(username)
+
+    connection = get_db().get_connection()
+    request = AuthRequest(connection)
+    user = request.select_user(email)
+    
+    salt = generate_salt()
+    print("salt : " + salt)
+    print("pass : " + encrypt_password(password, salt))
+
+    if user is None or not is_password_valid(user['hashed_password'], password, user['salt']):
+        raise InvalidCredentials(email)
     else:
-        raise InvalidCredentials()
+        return (
+            create_access_token(identity=email),
+            create_refresh_token(identity=email)
+        )
 
 
 def get_authenticated_user():
     """
     Get authentication token user identity and verify account is active
+    Errors:
+    raise UserNotFound(identity) : Si l'identité n'existe pas.
+    raise AccountInactive() : Si le compte est suspendu.
     """
+
+    connection = get_db().get_connection()
+    request = AuthRequest(connection)
     identity = get_jwt_identity()
-    for user in USERS:
-        if identity == user['username']:
-            if user['enabled']:
-                return user
-            else:
-                raise AccountInactive()
-    else:
+
+    user = request.select_user(identity)
+ 
+    if user is None:
         raise UserNotFound(identity)
+
+    role = request.get_access_level(user['role_id'])
+
+    if role is None:
+        raise AccountInactive()
+
+    return {
+        'email' : user['email'],
+        'role' : role
+    }
 
 
 def deauthenticate_user():
@@ -102,7 +129,7 @@ def refresh_authentication():
     Refresh authentication, issue new access token
     """
     user = get_authenticated_user()
-    return create_access_token(identity=user['username'])
+    return create_access_token(identity=user['email'])
 
 
 def auth_required(func):
@@ -140,6 +167,24 @@ def auth_refresh_required(func):
 def admin_required(func):
     """
     View decorator - required valid access token and admin access
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        verify_jwt_in_request()
+        try:
+            user = get_authenticated_user()
+            if user['is_admin']:
+                return func(*args, **kwargs)
+            else:
+                abort(403)
+        except (UserNotFound, AccountInactive) as error:
+            log.error('authorization failed: %s', error)
+            abort(403)
+    return wrapper
+
+def project_manager_required(func):
+    """
+    View decorator - required valid access token and project manager access
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
