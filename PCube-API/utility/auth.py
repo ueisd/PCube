@@ -173,7 +173,7 @@ def admin_required(func):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
-            if user['is_admin']:
+            if user['role'] == 'admin':
                 return func(*args, **kwargs)
             else:
                 abort(403)
@@ -191,7 +191,25 @@ def project_manager_required(func):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
-            if user['is_admin']:
+            if user['role'] == 'project_manager' or user['role'] == 'admin':
+                return func(*args, **kwargs)
+            else:
+                abort(403)
+        except (UserNotFound, AccountInactive) as error:
+            log.error('authorization failed: %s', error)
+            abort(403)
+    return wrapper
+
+def member_required(func):
+    """
+    View decorator - required valid access token and project manager access
+    """
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        verify_jwt_in_request()
+        try:
+            user = get_authenticated_user()
+            if user['role'] == 'member' or user['role'] == 'project_manager' or user['role'] == 'admin':
                 return func(*args, **kwargs)
             else:
                 abort(403)

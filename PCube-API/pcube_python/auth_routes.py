@@ -9,7 +9,8 @@ from flask.logging import create_logger
 from ..db.auth_request import AuthRequest
 from ..utility.auth import (authenticate_user, deauthenticate_user,
                     refresh_authentication, get_authenticated_user,
-                    auth_required, auth_refresh_required, AuthenticationError
+                    auth_required, auth_refresh_required, AuthenticationError,
+                    admin_required, project_manager_required, member_required
                     )
 
 auth = Blueprint('auth', __name__)
@@ -76,4 +77,19 @@ def refresh_api():
     except AuthenticationError as error:
         log.error('authentication error %s', error)
         abort(403)
+
+@auth.route('admin-check', methods=['GET'])
+@admin_required
+def admin_check():
+    return {}
+
+@auth.route('project-manager-check', methods=['GET'])
+@project_manager_required
+def project_manager_check():
+    return {}
+
+@auth.route('member-check', methods=['GET'])
+@member_required
+def member_check():
+    return {}
    

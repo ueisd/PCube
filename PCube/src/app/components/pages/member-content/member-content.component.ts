@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-member-content',
@@ -7,9 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MemberContentComponent implements OnInit {
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
-  ngOnInit(): void {
+  ngOnInit() {
+    this.http.get(environment.api_url + '/api/member-check').subscribe();
   }
 
 }
