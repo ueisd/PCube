@@ -61,8 +61,10 @@ CREATE TABLE timeline (
     FOREIGN KEY(person_id) REFERENCES person(id)
 );
 
+INSERT INTO role(id, role_name, access_level) VALUES(2, 'super-admin', 0);
 INSERT INTO role(id, role_name, access_level) VALUES(1, 'admin', 1);
 INSERT INTO role(id, role_name, access_level) VALUES(2, 'member', 2);
+
 
 -- INSERT INTO table person VALUES(1, 'Alexandre-Thibault', 'Arcole');
 -- INSERT INTO table person VALUES(2, 'Oussema', 'Boutaous');
