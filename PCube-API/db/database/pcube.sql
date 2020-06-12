@@ -27,8 +27,10 @@ CREATE TABLE user (
     email VARCHAR(255),
     hashed_password VARCHAR(255),
     salt VARCHAR(255),
+    person_id INTEGER(10),
     role_id INTEGER(10),
-    FOREIGN KEY(role_id) REFERENCES role(id)    
+    FOREIGN KEY(role_id) REFERENCES role(id),
+    FOREIGN KEY(person_id) REFERENCES person(id)
 );
 
 CREATE TABLE accounting_time_category (
