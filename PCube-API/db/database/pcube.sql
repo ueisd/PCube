@@ -24,20 +24,11 @@ CREATE TABLE activity (
 
 CREATE TABLE user (
     id INTEGER(10) PRIMARY KEY,
+    email VARCHAR(255),
     hashed_password VARCHAR(255),
     salt VARCHAR(255),
-    person_id INTEGER(10),
-    FOREIGN KEY(person_id) REFERENCES person(id)    
-);
-
-CREATE TABLE role_attribution (
-    id INTEGER(5) PRIMARY KEY,
-    project_id INTEGER(5),
-    role_id INTEGER(5),
-    user_id INTEGER(10),
-    FOREIGN KEY(project_id) REFERENCES project(id),
-    FOREIGN KEY(role_id) REFERENCES role(id),
-    FOREIGN KEY(user_id) REFERENCES user(id)
+    role_id INTEGER(10),
+    FOREIGN KEY(role_id) REFERENCES role(id)    
 );
 
 CREATE TABLE accounting_time_category (
@@ -62,7 +53,8 @@ CREATE TABLE timeline (
 );
 
 INSERT INTO role(id, role_name, access_level) VALUES(1, 'admin', 1);
-INSERT INTO role(id, role_name, access_level) VALUES(2, 'member', 2);
+INSERT INTO role(id, role_name, access_level) VALUES(2, 'project_manager', 2);
+INSERT INTO role(id, role_name, access_level) VALUES(3, 'member', 3);
 
 -- INSERT INTO table person VALUES(1, 'Alexandre-Thibault', 'Arcole');
 -- INSERT INTO table person VALUES(2, 'Oussema', 'Boutaous');
