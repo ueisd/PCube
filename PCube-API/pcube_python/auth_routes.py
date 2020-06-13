@@ -9,9 +9,9 @@ from flask.logging import create_logger
 from ..db.auth_request import AuthRequest
 from ..utility.auth import (authenticate_user, deauthenticate_user,
                     refresh_authentication, get_authenticated_user,
-                    auth_required, auth_refresh_required, AuthenticationError)
-
-from .db_controller import get_db
+                    auth_required, auth_refresh_required, AuthenticationError,
+                    admin_required, project_manager_required, member_required
+                    )
 
 auth = Blueprint('auth', __name__)
 app = Flask(__name__)
@@ -24,9 +24,9 @@ def login_user():
     Login user
     """
     try:
-        username = request.json.get('username', None)
+        email = request.json.get('email', None)
         password = request.json.get('password', None)
-        access_token, refresh_token = authenticate_user(username, password)
+        access_token, refresh_token = authenticate_user(email, password)
         return make_response(jsonify({
             'accessToken': access_token,
             'refreshToken': refresh_token
@@ -45,9 +45,8 @@ def login_info_api():
     try:
         user = get_authenticated_user()
         return make_response(jsonify({
-            'username': user['username'],
-            'enabled': user['enabled'],
-            'isAdmin': user['is_admin']
+            'email': user['email'],
+            'role': user['role']
         }))
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
@@ -78,4 +77,19 @@ def refresh_api():
     except AuthenticationError as error:
         log.error('authentication error %s', error)
         abort(403)
+
+@auth.route('admin-check', methods=['GET'])
+@admin_required
+def admin_check():
+    return {}
+
+@auth.route('project-manager-check', methods=['GET'])
+@project_manager_required
+def project_manager_check():
+    return {}
+
+@auth.route('member-check', methods=['GET'])
+@member_required
+def member_check():
+    return {}
    

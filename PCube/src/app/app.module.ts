@@ -14,6 +14,8 @@ import { LogoutComponent } from './components/layouts/logout/logout.component';
 import { HomeComponent } from './components/pages/home/home.component';
 import { AccessDeniedComponent } from './components/pages/access-denied/access-denied.component';
 import { AdminContentComponent } from './components/pages/admin-content/admin-content.component';
+import { ProjectManagerContentComponent } from './components/pages/project-manager-content/project-manager-content.component';
+import { MemberContentComponent } from './components/pages/member-content/member-content.component';
 
 
 @NgModule({
@@ -24,7 +26,9 @@ import { AdminContentComponent } from './components/pages/admin-content/admin-co
     LogoutComponent,
     HomeComponent,
     AccessDeniedComponent,
-    AdminContentComponent
+    AdminContentComponent,
+    ProjectManagerContentComponent,
+    MemberContentComponent
   ],
   imports: [
     BrowserModule,

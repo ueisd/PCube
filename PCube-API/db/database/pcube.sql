@@ -24,7 +24,7 @@ CREATE TABLE activity (
 
 CREATE TABLE user (
     id INTEGER(10) PRIMARY KEY,
-    email VARCHAR(255),
+    email VARCHAR(255) UNIQUE,
     hashed_password VARCHAR(255),
     salt VARCHAR(255),
     person_id INTEGER(10),
@@ -57,6 +57,7 @@ CREATE TABLE timeline (
 INSERT INTO role(id, role_name, access_level) VALUES(1, 'admin', 1);
 INSERT INTO role(id, role_name, access_level) VALUES(2, 'project_manager', 2);
 INSERT INTO role(id, role_name, access_level) VALUES(3, 'member', 3);
+
 
 -- INSERT INTO table person VALUES(1, 'Alexandre-Thibault', 'Arcole');
 -- INSERT INTO table person VALUES(2, 'Oussema', 'Boutaous');

@@ -24,9 +24,8 @@ class RefreshResponse {
 }
 
 class UserInfo {
-  username: string;
-  enabled: boolean;
-  isAdmin: boolean;
+  email: string;
+  role: string;
 }
 
 
@@ -55,8 +54,8 @@ export class AuthService {
   }
 
   // Log user in and get refresh/access tokens
-  authenticate(username: string, password: string) {
-    return this.http.post<LoginResponse>(LOGIN_API, { username, password })
+  authenticate(email: string, password: string) {
+    return this.http.post<LoginResponse>(LOGIN_API, { email, password })
       .pipe(
         mergeMap(response => {
           // store JWTs
@@ -71,9 +70,8 @@ export class AuthService {
           };
           return this.http.get<UserInfo>(INFO_API, opts).pipe(
             map(userInfo => {
-              localStorage.setItem('username', userInfo.username);
-              localStorage.setItem('enabled', String(userInfo.enabled));
-              localStorage.setItem('isAdmin', String(userInfo.isAdmin));
+              localStorage.setItem('email', userInfo.email);
+              localStorage.setItem('role', userInfo.role);
               this.authStatus.next(true);
             })
           );
@@ -125,18 +123,27 @@ export class AuthService {
 
   // User is logged in
   isAuthenticated(): boolean {
-    return localStorage.getItem('username') !== null &&
-           localStorage.getItem('enabled') === 'true' &&
+    return localStorage.getItem('email') !== null &&
+           localStorage.getItem('role') !== null &&
            !this.jwt.isTokenExpired(localStorage.getItem('refreshToken'));
   }
 
   // User is an administrator
   isAdmin(): boolean {
-    return localStorage.getItem('isAdmin') === 'true';
+    return localStorage.getItem('role') === 'admin';
   }
 
-  // get username
-  getUsername(): string {
-    return localStorage.getItem('username');
+  // User is a project manager
+  isProjectManager(): boolean {
+    return localStorage.getItem('role') === 'project_manager'
+  }
+
+  isMember(): boolean {
+    return localStorage.getItem('role') === 'member'
+  }
+
+  // get email
+  getemail(): string {
+    return localStorage.getItem('email');
   }
 }

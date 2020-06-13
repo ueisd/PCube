@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/services/auth/auth.service';
 export class LoginComponent implements OnInit {
   message = '';
   loginForm = new FormGroup({
-    username: new FormControl('', Validators.required),
+    email: new FormControl('', Validators.required),
     password: new FormControl('', Validators.required)
   });
 
@@ -23,10 +23,10 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit() {
-    const username = this.loginForm.get('username').value;
+    const email = this.loginForm.get('email').value;
     const password = this.loginForm.get('password').value;
-    console.log(`logging in: ${username}`);
-    this.auth.authenticate(username, password).subscribe(
+    console.log(`logging in: ${email}`);
+    this.auth.authenticate(email, password).subscribe(
       () => {
         this.router.navigate(['/']);
       },

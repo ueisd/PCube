@@ -11,6 +11,7 @@ python-dotenv = "*"
 flask-json-schema = "*"
 requirements-txt = "*"
 flask-jwt-extended = "*"
+flask-bcrypt = "*"
 
 [requires]
 python_version = "3.8"
