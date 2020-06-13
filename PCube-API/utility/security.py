@@ -1,4 +1,5 @@
-import crypt
+import os
+import base64
 from flask import Flask
 from flask_bcrypt import Bcrypt
 
@@ -6,7 +7,8 @@ app = Flask(__name__)
 bcrypt = Bcrypt(app)
 
 def generate_salt():
-    return crypt.mksalt(crypt.METHOD_SHA512)
+    salt = os.urandom(16)
+    return str(base64.b64encode(salt))
 
 def encrypt_password(password, salt):
     """
