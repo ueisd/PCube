@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { UserListComponent } from 'src/app/components/user-list/user-list.component'
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-project-manager-content',
@@ -19,6 +19,6 @@ export class ProjectManagerContentComponent implements OnInit {
   }
 
   openDialog() {
-    this.dialog.open(UserListComponent);
+    this.dialog.open(UserListComponent,{height:'80%',width:'80%'});
   }
 }
