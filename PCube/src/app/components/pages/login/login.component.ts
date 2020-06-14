@@ -20,6 +20,9 @@ export class LoginComponent implements OnInit {
               private router: Router) { }
 
   ngOnInit() {
+    if(this.auth.isAuthenticated()){
+      this.router.navigate(['/']);
+    }
   }
 
   onSubmit() {

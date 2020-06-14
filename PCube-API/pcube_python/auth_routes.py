@@ -46,7 +46,8 @@ def login_info_api():
         user = get_authenticated_user()
         return make_response(jsonify({
             'email': user['email'],
-            'role': user['role']
+            'role': user['role'],
+            'level': user['level']
         }))
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
@@ -77,6 +78,7 @@ def refresh_api():
     except AuthenticationError as error:
         log.error('authentication error %s', error)
         abort(403)
+
 
 @auth.route('admin-check', methods=['GET'])
 @admin_required

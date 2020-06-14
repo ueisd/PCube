@@ -15,26 +15,11 @@ from .security import (
 )
 
 from ..db.auth_request import AuthRequest
+from ..domain.access_token import AccessToken
 from ..pcube_python.db_controller import get_db
 
 app = Flask(__name__)
 log = create_logger(app)
-
-USERS = [
-    {
-        'username': 'admin',
-        'password': 'admin',
-        'enabled': True,
-        'is_admin': True
-    },
-    {
-        'username': 'user',
-        'password': 'user',
-        'enabled': True,
-        'is_admin': False
-    }
-]
-
 
 class AuthenticationError(Exception):
     """Base Authentication Exception"""
@@ -72,10 +57,6 @@ def authenticate_user(email, password):
     connection = get_db().get_connection()
     request = AuthRequest(connection)
     user = request.select_user(email)
-    
-    salt = generate_salt()
-    print("salt : " + salt)
-    print("pass : " + encrypt_password(password, salt))
 
     if user is None or not is_password_valid(user['hashed_password'], password, user['salt']):
         raise InvalidCredentials(email)
@@ -103,14 +84,15 @@ def get_authenticated_user():
     if user is None:
         raise UserNotFound(identity)
 
-    role = request.get_access_level(user['role_id'])
+    role = request.select_role(user['role_id'])
 
     if role is None:
         raise AccountInactive()
 
     return {
         'email' : user['email'],
-        'role' : role
+        'role' : role['role_name'],
+        'level' : str(role['access_level'])
     }
 
 
@@ -173,7 +155,7 @@ def admin_required(func):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
-            if user['role'] == 'admin':
+            if user['access_level'] == 1:
                 return func(*args, **kwargs)
             else:
                 abort(403)
@@ -191,7 +173,7 @@ def project_manager_required(func):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
-            if user['role'] == 'project_manager' or user['role'] == 'admin':
+            if user['access_level'] <= 2:
                 return func(*args, **kwargs)
             else:
                 abort(403)
@@ -209,7 +191,7 @@ def member_required(func):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
-            if user['role'] == 'member' or user['role'] == 'project_manager' or user['role'] == 'admin':
+            if user['access_level'] <= 3:
                 return func(*args, **kwargs)
             else:
                 abort(403)
