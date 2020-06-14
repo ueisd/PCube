@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-
+import { UserListComponent } from 'src/app/components/user-list/user-list.component'
+import { MatDialog } from "@angular/material/dialog";
 
 @Component({
   selector: 'app-project-manager-content',
@@ -10,10 +11,14 @@ import { environment } from 'src/environments/environment';
 })
 export class ProjectManagerContentComponent implements OnInit {
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, 
+    private dialog: MatDialog) { }
 
   ngOnInit() {
     this.http.get(environment.api_url + '/api/project-manager-check').subscribe();
   }
 
+  openDialog() {
+    this.dialog.open(UserListComponent);
+  }
 }
