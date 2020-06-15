@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,6 +16,7 @@ import { AccessDeniedComponent } from './components/pages/access-denied/access-d
 import { AdminContentComponent } from './components/pages/admin-content/admin-content.component';
 import { ProjectManagerContentComponent } from './components/pages/project-manager-content/project-manager-content.component';
 import { MemberContentComponent } from './components/pages/member-content/member-content.component';
+import { AddUserComponent } from './components/pages/add-user/add-user.component';
 
 
 @NgModule({
@@ -28,7 +29,8 @@ import { MemberContentComponent } from './components/pages/member-content/member
     AccessDeniedComponent,
     AdminContentComponent,
     ProjectManagerContentComponent,
-    MemberContentComponent
+    MemberContentComponent,
+    AddUserComponent,
   ],
   imports: [
     BrowserModule,
