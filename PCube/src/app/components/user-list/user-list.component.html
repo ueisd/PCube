@@ -27,8 +27,8 @@
   <ng-container matColumnDef="operations">
     <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
     <mat-cell *matCellDef="let user">
-        <button mat-raised-button color="primary" (click)="openEditDialog()">Modifier</button>
-        <button mat-raised-button color="primary" (click)="openDeleteDialog()">Supprimer</button>
+        <button mat-raised-button color="primary" (click)="openEditDialog(user)"><mat-icon>edit</mat-icon></button>
+        <button mat-raised-button color="primary" (click)="openDeleteDialog(user)"><mat-icon>delete</mat-icon></button>
     </mat-cell>
   </ng-container>
 

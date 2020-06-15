@@ -9,7 +9,7 @@ export class UserService {
   constructor() { }
 
   getUsers() {
-    let response = "{ \"users\" : [{\"first_name\" : \"Mitesh\", \"last_name\" : \"Patel\", \"email\" : \"test\", \"role\" : \"admin\"},{\"first_name\" : \"George\", \"last_name\" : \"Smith\", \"email\" : \"test2\", \"role\" : \"member\"}]}"; 
+    let response = "{ \"users\" : [{\"first_name\" : \"Mitesh\", \"last_name\" : \"Patel\", \"email\" : \"test@test.com\", \"role\" : \"admin\"},{\"first_name\" : \"George\", \"last_name\" : \"Smith\", \"email\" : \"test2@test.com\", \"role\" : \"member\"}]}"; 
     let json = JSON.parse(response)
     let users : User[] = [];
 

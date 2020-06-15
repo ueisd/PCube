@@ -18,11 +18,11 @@ export class UserListComponent implements OnInit {
     this.dataSource = this.userService.getUsers();
   }
 
-  openEditDialog() {
-
+  openEditDialog(user) {
+    console.log(user);
   }
 
-  openDeleteDialog() {
-
+  openDeleteDialog(user) {
+    console.log(user);
   }
 }
