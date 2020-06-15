@@ -11,10 +11,10 @@ def create_app():
 
     app.config.from_json(os.path.join('../resources', 'config.json'))
 
-    jwt = JWTManager(app)
-
     app.register_blueprint(main)
     app.register_blueprint(test)
     app.register_blueprint(auth, url_prefix='/api')
+
+    JWTManager(app)
 
     return app

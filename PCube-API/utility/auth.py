@@ -7,6 +7,7 @@ from flask import Flask
 from flask import abort
 from flask.logging import create_logger
 from flask_jwt_extended import (
+    JWTManager, jwt_required, get_raw_jwt,
     create_access_token, create_refresh_token, get_jwt_identity,
     verify_jwt_in_request, verify_jwt_refresh_token_in_request
 )
@@ -20,6 +21,17 @@ from ..pcube_python.db_controller import get_db
 
 app = Flask(__name__)
 log = create_logger(app)
+
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+jwt = JWTManager(app)
+blacklist = set()
+
+
+@jwt.token_in_blacklist_loader
+def check_if_token_in_blacklist(decrypted_token):
+    jti = decrypted_token['jti']
+    return jti in blacklist
 
 class AuthenticationError(Exception):
     """Base Authentication Exception"""
@@ -60,6 +72,8 @@ def authenticate_user(email, password):
 
     if user is None or not is_password_valid(user['hashed_password'], password, user['salt']):
         raise InvalidCredentials(email)
+    elif not user['isActive']:
+        raise AccountInactive(email)
     else:
         return (
             create_access_token(identity=email),
@@ -83,6 +97,8 @@ def get_authenticated_user():
  
     if user is None:
         raise UserNotFound(identity)
+    elif not user['isActive']:
+        raise AccountInactive(identity)
 
     role = request.select_role(user['role_id'])
 
@@ -95,15 +111,14 @@ def get_authenticated_user():
         'level' : str(role['access_level'])
     }
 
-
 def deauthenticate_user():
     """
     Log user out
     in a real app, set a flag in user database requiring login, or
     implement token revocation scheme
     """
-    identity = get_jwt_identity()
-    log.debug('logging user "%s" out', identity)
+    jti = get_raw_jwt()['jti']
+    blacklist.add(jti)
 
 
 def refresh_authentication():

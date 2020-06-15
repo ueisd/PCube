@@ -1,4 +1,4 @@
-export class UserInfo {
+export class UserAuth {
     email: string;
     role: string;
     level: string;
