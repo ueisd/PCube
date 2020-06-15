@@ -18,10 +18,12 @@ export class UserListComponent implements OnInit {
     this.dataSource = this.userService.getUsers();
   }
 
+  // Ouvre un boîte dialogue pour modifier un utilisateur
   openEditDialog(user) {
     console.log(user);
   }
 
+  // Ouvre un boîte dialogue pour supprimer un utilisateur
   openDeleteDialog(user) {
     console.log(user);
   }

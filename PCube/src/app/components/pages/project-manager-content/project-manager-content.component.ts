@@ -18,6 +18,7 @@ export class ProjectManagerContentComponent implements OnInit {
     this.http.get(environment.api_url + '/api/project-manager-check').subscribe();
   }
 
+  // Ouvre un boîte dialogue pour afficher une liste d'utilisateurs
   openDialog() {
     this.dialog.open(UserListComponent,{height:'80%',width:'80%'});
   }
