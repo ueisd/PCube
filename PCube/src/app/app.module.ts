@@ -19,6 +19,7 @@ import { ProjectManagerContentComponent } from './components/pages/project-manag
 import { MemberContentComponent } from './components/pages/member-content/member-content.component';
 import { UserListComponent } from './components/user-list/user-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AddActivityComponent } from './components/domain/activity/add-activity/add-activity.component';
 
 
 @NgModule({
@@ -32,7 +33,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AdminContentComponent,
     ProjectManagerContentComponent,
     MemberContentComponent,
-    UserListComponent
+    UserListComponent,
+    AddActivityComponent
   ],
   imports: [
     BrowserModule,

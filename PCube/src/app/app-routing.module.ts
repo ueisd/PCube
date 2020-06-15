@@ -14,6 +14,7 @@ import { AccessDeniedComponent } from 'src/app/components/pages/access-denied/ac
 import { AdminContentComponent } from 'src/app/components/pages/admin-content/admin-content.component';
 import { ProjectManagerContentComponent } from 'src/app/components/pages/project-manager-content/project-manager-content.component';
 import { MemberContentComponent } from './components/pages/member-content/member-content.component';
+import { AppComponent } from './app.component';
 
 
 
@@ -53,6 +54,7 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  bootstrap: [ProjectManagerContentComponent]
 })
 export class AppRoutingModule { }
