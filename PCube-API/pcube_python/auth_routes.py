@@ -54,7 +54,7 @@ def login_info_api():
 
 @auth.route('/auth/logout', methods=['DELETE'])
 @auth_refresh_required
-def logout_api_refresh():
+def logout_api():
     """
     Log user out
     """
