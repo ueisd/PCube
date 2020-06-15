@@ -1,0 +1,37 @@
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!-- Colonne Prénom -->
+  <ng-container matColumnDef="firstName">
+    <mat-header-cell *matHeaderCellDef> Prénom </mat-header-cell>
+    <mat-cell *matCellDef="let user"> {{user.firstName}} </mat-cell>
+  </ng-container>
+
+  <!-- Colonne Nom de famille -->
+  <ng-container matColumnDef="lastName">
+    <mat-header-cell *matHeaderCellDef> Nom de famille </mat-header-cell>
+    <mat-cell *matCellDef="let user"> {{user.lastName}} </mat-cell>
+  </ng-container>
+
+  <!-- Colonne courriel -->
+  <ng-container matColumnDef="email">
+    <mat-header-cell *matHeaderCellDef> Courriel </mat-header-cell>
+    <mat-cell *matCellDef="let user"> {{user.email}} </mat-cell>
+  </ng-container>
+
+  <!-- Colonne rôle -->
+  <ng-container matColumnDef="role">
+    <mat-header-cell *matHeaderCellDef> Rôle </mat-header-cell>
+    <mat-cell *matCellDef="let user"> {{user.role}} </mat-cell>
+  </ng-container>
+
+  <!-- Colonne rôle -->
+  <ng-container matColumnDef="operations">
+    <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
+    <mat-cell *matCellDef="let user">
+        <button mat-raised-button color="primary" (click)="openEditDialog(user)"><mat-icon>edit</mat-icon></button>
+        <button mat-raised-button color="primary" (click)="openDeleteDialog(user)"><mat-icon>delete</mat-icon></button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
