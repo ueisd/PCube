@@ -11,8 +11,6 @@ export class MemberContentComponent implements OnInit {
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit() {
-    this.http.get(environment.api_url + '/api/member-check').subscribe();
-  }
+  ngOnInit() {}
 
 }
