@@ -5,10 +5,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EnvTestComponent } from './components/envtest/envtest.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
+import {MatNativeDateModule} from '@angular/material/core';
 
-// Auth
 import { AuthInterceptor } from 'src/app/services/auth/auth.interceptor';
 import { LoginComponent } from './components/pages/login/login.component';
 import { LogoutComponent } from './components/layouts/logout/logout.component';
@@ -20,6 +20,12 @@ import { MemberContentComponent } from './components/pages/member-content/member
 import { UserListComponent } from './components/user-list/user-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddActivityComponent } from './components/domain/activity/add-activity/add-activity.component';
+
+
+import {MaterialAutocomplete} from 'src/app/material/material-autocomplete';
+import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
+
+
 
 
 @NgModule({
@@ -38,15 +44,22 @@ import { AddActivityComponent } from './components/domain/activity/add-activity/
   ],
   imports: [
     BrowserModule,
+    BrowserAnimationsModule,
+    FormsModule,
     AppRoutingModule,
     HttpClientModule,
     ReactiveFormsModule,
+    MatNativeDateModule,
     BrowserAnimationsModule,
-    MaterialModule
+    MaterialModule,
+    MaterialAutocomplete,
+    BrowserModule
   ],
+  exports:[],
+  bootstrap: [AppComponent],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
-  ],
-  bootstrap: [AppComponent]
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }
+  ]
 })
 export class AppModule { }

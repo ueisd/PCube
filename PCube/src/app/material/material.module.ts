@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+
 
 
 @NgModule({
@@ -13,11 +14,11 @@ import { MatIconModule } from '@angular/material/icon';
     MatDialogModule,
     MatButtonModule,
     MatTableModule,
-    MatIconModule
+    MatIconModule,
   ],
   exports: [
-    MatDialogModule,
     MatButtonModule,
+    MatDialogModule,
     MatTableModule,
     MatIconModule
   ]
