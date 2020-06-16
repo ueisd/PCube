@@ -43,16 +43,17 @@ const routes: Routes = [
       {
         path: 'denied',
         component: AccessDeniedComponent
+      },
+      {
+        path: 'addUser',
+        component: AddUserComponent,
+        canActivate: [AdminGuard]
       }
     ]
   },
   {
     path: 'login',
     component: LoginComponent
-  },
-  {
-    path: 'addUser',
-    component: AddUserComponent
   }
 ];
 
