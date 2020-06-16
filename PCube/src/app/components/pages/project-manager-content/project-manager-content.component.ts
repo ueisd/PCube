@@ -14,9 +14,7 @@ export class ProjectManagerContentComponent implements OnInit {
   constructor(private http: HttpClient, 
     private dialog: MatDialog) { }
 
-  ngOnInit() {
-    this.http.get(environment.api_url + '/api/project-manager-check').subscribe();
-  }
+  ngOnInit() {}
 
   // Ouvre un boîte dialogue pour afficher une liste d'utilisateurs
   openDialog() {

@@ -11,8 +11,6 @@ export class AdminContentComponent implements OnInit {
 
   constructor(private http: HttpClient) { }
 
-  ngOnInit() {
-    this.http.get(environment.api_url + '/api/admin-check').subscribe();
-  }
+  ngOnInit() {}
 
 }

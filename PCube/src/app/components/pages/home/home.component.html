@@ -3,15 +3,15 @@
     <h1>HOME PAGE</h1>
     <app-logout></app-logout>
 
-    <div *ngIf="accessLevel >= 1">
+    <div *ngIf="accessLevel >= 1 && accessLevel <= 3">
         <app-member-content></app-member-content>
     </div>
 
-    <div *ngIf="accessLevel >= 2">
+    <div *ngIf="accessLevel >= 1 && accessLevel <= 2">
         <app-project-manager-content></app-project-manager-content>
     </div>
 
-    <div *ngIf="accessLevel >= 3">
+    <div *ngIf="accessLevel == 1">
         <app-admin-content></app-admin-content>
     </div>
 

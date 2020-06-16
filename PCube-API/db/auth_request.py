@@ -32,10 +32,14 @@ class AuthRequest:
         cursor.close()
         return data
 
-    def get_access_level(self, role_id):
+    def select_role(self, role_id):
+        """
+        Permet d'obtenir le nom de l'accès
+        """
+        self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select role_name from role where id = ?",
+        cursor.execute("select * from role where id = ?",
                         (role_id,))
         data = cursor.fetchone()
         cursor.close()
-        return data['role_name']
+        return data

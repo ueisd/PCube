@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
+import { UserAuth } from 'src/app/components/domain/user/user-auth';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -13,22 +15,22 @@ export class HomeComponent implements OnInit {
 
   constructor(private auth: AuthService) { }
 
+  authSubscription: Subscription;
+
   ngOnInit(): void {
     this.auth.subscribe(
       (authenticated) => {
         this.authenticated = authenticated;
         this.accessLevel = -1;
         if(authenticated){
-          if(this.auth.isAdmin()){
-            this.accessLevel = 3;
-          } else if (this.auth.isProjectManager()){
-            this.accessLevel = 2;
-          } else if (this.auth.isMember()){
-            this.accessLevel = 1;
-          }
+          this.authSubscription = this.auth.getAccessLevel().subscribe(userInfo => this.accessLevel = parseInt(userInfo.level));
         }
       }
     );
+  }
+
+  ngOnDestroy() { 
+    this.authSubscription.unsubscribe();
   }
 
 }

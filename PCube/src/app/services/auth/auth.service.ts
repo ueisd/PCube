@@ -6,13 +6,14 @@ import { throwError, BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
+import { UserAuth } from 'src/app/components/domain/user/user-auth';
 
 
 const LOGIN_API = environment.api_url + '/api/auth/login';
 const LOGOUT_API = environment.api_url + '/api/auth/logout';
 const INFO_API = environment.api_url + '/api/auth/info';
 const REFRESH_API = environment.api_url + '/api/auth/refresh';
-
+const ACCESS_LEVEL_API = environment.api_url + '/api/auth/access-level';
 
 class LoginResponse {
   accessToken: string;
@@ -22,12 +23,6 @@ class LoginResponse {
 class RefreshResponse {
   accessToken: string;
 }
-
-class UserInfo {
-  email: string;
-  role: string;
-}
-
 
 @Injectable({
   providedIn: 'root'
@@ -68,7 +63,7 @@ export class AuthService {
               'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
             })
           };
-          return this.http.get<UserInfo>(INFO_API, opts).pipe(
+          return this.http.get<UserAuth>(INFO_API, opts).pipe(
             map(userInfo => {
               localStorage.setItem('email', userInfo.email);
               localStorage.setItem('role', userInfo.role);
@@ -89,7 +84,8 @@ export class AuthService {
     };
     localStorage.clear();
     this.authStatus.next(false);
-    return this.http.post(LOGOUT_API, {}, opts)
+    
+    return this.http.delete(LOGOUT_API, opts)
       .pipe(
         map(response => null),
         catchError(this.errorHandler)
@@ -126,6 +122,16 @@ export class AuthService {
     return localStorage.getItem('email') !== null &&
            localStorage.getItem('role') !== null &&
            !this.jwt.isTokenExpired(localStorage.getItem('refreshToken'));
+  }
+
+  getAccessLevel(): Observable<UserAuth>{
+    // now get user info
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<UserAuth>(INFO_API, opts);
   }
 
   // User is an administrator
