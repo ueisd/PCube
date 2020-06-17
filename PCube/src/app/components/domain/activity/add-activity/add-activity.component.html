@@ -1,33 +1,17 @@
 <div>
     <h1>Création d'un activité</h1>
 
-    <form class="example-form">
-        <mat-form-field class="example-full-width">
-          <input type="text"
-                 placeholder="Pick one"
-                 aria-label="Number"
-                 matInput
-                 [formControl]="myControl"
-                 [matAutocomplete]="auto">
-          <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
-            <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
-              {{option}}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </form>
-
-
     <form [formGroup]="newActivityForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
 
-        <label for="parentProject">Projet Parent</label>
-
-        <label for="activityName">Nom de l'activité</label>
-        <div *ngIf="newActivityForm.controls['activityName'].invalid && myform.submitted">
-            Please enter valid course name !
+        <div *ngIf="isAdded" class="alert alert-success" role="alert">
+            Succès, votre activité a été enregistré !
         </div>
-        <input type="text" id="activityName" class="form-control" formControlName="activityName">
-        <button class="btn btn-success" type="submit">Ajouter</button>
+        <label for="activityName">Nom de l'activité</label>
+        <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
+            L'activité doit être unique !
+        </div>
+        <input (ngModelChange)="checkUniqueName($event)" type="text" id="activityName" class="form-control" formControlName="activityName">
+        <button class="btn btn-success" type="submit" [disabled]="!newActivityForm.valid || !isUnique">Ajouter</button>
     </form>
 </div>
     

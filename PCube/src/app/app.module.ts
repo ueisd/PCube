@@ -24,6 +24,8 @@ import { AddActivityComponent } from './components/domain/activity/add-activity/
 
 import {MaterialAutocomplete} from 'src/app/material/material-autocomplete';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
+import { ActivityComponent } from './components/pages/activity/activity.component';
+import { ActivityListComponent } from './components/domain/activity/activity-list/activity-list.component';
 
 
 
@@ -40,7 +42,9 @@ import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
     ProjectManagerContentComponent,
     MemberContentComponent,
     UserListComponent,
-    AddActivityComponent
+    AddActivityComponent,
+    ActivityComponent,
+    ActivityListComponent
   ],
   imports: [
     BrowserModule,

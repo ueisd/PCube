@@ -1,10 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { ActivityItem } from 'src/app/components/domain/activity/activity-item/activity';
-import { ProjectService } from 'src/app/services/project/project.service';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { ActivityService } from 'src/app/services/activity/activity.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import {Observable} from 'rxjs';
 
 @Component({
   selector: 'app-add-activity',
@@ -14,40 +10,57 @@ import {Observable} from 'rxjs';
 
 export class AddActivityComponent implements OnInit{
 
-  constructor(private projectService: ProjectService) { }
+  constructor(private activityService: ActivityService) { }
 
   newActivityForm: FormGroup;
-  projectSubscription: Subscription;
 
-  myControl = new FormControl();
+  hasToRefresh: boolean = true;
+
+  @Output() refreshDataEvent = new EventEmitter<boolean>();
+
+  askForDataRefresh() {
+    this.refreshDataEvent.emit(this.hasToRefresh);
+  }
 
   ngOnInit(): void {
     this.initForm();
-    this.filteredOptions = this.myControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this._filter(value))
-    );
+    this.isAdded = false;
+    this.isUnique = true;
   }
 
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
+  isAdded: boolean;
 
-    return this.options.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
+
+  private onSubmitSuccess(){
+    this.isAdded = true;
+    this.askForDataRefresh();
+    this.newActivityForm.reset();
   }
 
-  onSubmit(){ 
-    console.log(this.newActivityForm);
+  onSubmit(){
+
+    if(this.newActivityForm.valid){
+      this.activityService.addNewActivity(this.newActivityForm.controls['activityName'].value).subscribe(activity => {
+          if(activity.id != -1){
+            this.onSubmitSuccess();
+          }else{
+            this.isAdded = false;
+          }
+      });
+    }
   }
 
-  options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]>;
+  isUnique: boolean;
+
+  checkUniqueName(newValue){
+    if(newValue != null && newValue.trim().length != 0){
+      this.activityService.isNameUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
+    }
+  }
 
   private initForm(){
-
-    this.projectSubscription = this.projectService.getAllParentProject().subscribe();
     
     this.newActivityForm = new FormGroup({
-      'parentProject': new FormControl('', [Validators.required]),
       'activityName': new FormControl('', [Validators.required])
     });
   }

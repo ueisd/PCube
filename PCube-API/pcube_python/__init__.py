@@ -14,8 +14,8 @@ def create_app():
 
     app.register_blueprint(main)
     app.register_blueprint(test)
-    app.register_blueprint(auth, url_prefix='/api')
-    app.register_blueprint(project, url_prefix='/api')
+    app.register_blueprint(auth, url_prefix='/api/auth')
+    app.register_blueprint(project, url_prefix='/api/project')
 
     JWTManager(app)
 

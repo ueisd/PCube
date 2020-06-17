@@ -46,6 +46,23 @@ Commande pour l'installation :
 
 - RAML : `sudo npm i -g raml2html`
 
+### Installer la base de données Sqlite3
+
+Commande pour l'installation :
+
+- Sqlite3 : `sudo apt-get install sqlite3`
+
+Vous devriez commencer par effacer la base de données courrante (**pcube.db**) si elle est existante. (En cas qu'il y a eu des changements aux scripts) 
+
+La base de données est dans **PCube-API/db/database/pcube.db**.
+
+Vous pouvez ensuite faire les commandes suivantes dans **/database**:
+
+1) Sur le terminal : `sqlite3 pcube.db`
+2) Sur Sqlite3 : `.read pcube.sql`
+3) Sur Sqlite3 : `.read data_generation.sql`
+4) Sur Sqlite3 : `select * from user;` (Pour tester que le tout fonctionne)
+
 
 ### Installer les dépences Flask et Angular
 

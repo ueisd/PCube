@@ -1,6 +1,7 @@
 import sqlite3
 from .database import Database
 from .dict_factory import dict_factory
+from ..domain.activity import Activity
 
 
 class ProjectRequest:
@@ -32,3 +33,19 @@ class ProjectRequest:
         data = cursor.fetchall()
         cursor.close()
         return data
+    
+    def select_one_activity(self, name):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from activity where upper(name) = upper(?)", (name,))
+        data = cursor.fetchone()
+        cursor.close()
+        return data
+
+    def insert_activity(self, activity):
+        cursor = self.connection.cursor()
+        cursor.execute("insert into activity(name) values(?)",(activity.name,))
+        self.connection.commit()
+        activity.id = cursor.lastrowid
+        cursor.close()
+        return activity
