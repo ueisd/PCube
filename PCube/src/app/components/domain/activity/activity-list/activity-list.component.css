@@ -4,6 +4,10 @@
     border-color: #f5c6cb;
 }
 
+.red-message{
+    color: #721c24;
+}
+
 .green-icon{
     background-color: #d4edda;;
     color: #155724;
