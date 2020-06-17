@@ -1,9 +1,30 @@
 <div>
     <!-- Colonne Prénom -->
     <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+
         <ng-container matColumnDef="name">
             <mat-header-cell *matHeaderCellDef> Nom </mat-header-cell>
-            <mat-cell *matCellDef="let activity"> {{activity.name}} </mat-cell>
+            <mat-cell *matCellDef="let activity">
+                <div id="modification-{{activity.id}}" class="hidden">
+                    <input id="input-{{activity.id}}" type="text" value="{{activity.name}}">
+                    <button disabled id="accept-{{activity.id}}" mat-raised-button class="green-icon" (click)="acceptModification(activity)"><mat-icon>done</mat-icon></button>
+                    <button mat-raised-button class="red-icon" (click)="cancelModification(activity)"><mat-icon>cancel</mat-icon></button>
+                    <div id="error-{{activity.id}}" class="hidden red-message">Le nom doit être unique</div>
+                </div>
+                <div id="showName-{{activity.id}}">
+                    {{activity.name}}
+                </div>
+                
+            </mat-cell>
+        </ng-container>
+
+          <!-- Colonne rôle -->
+        <ng-container matColumnDef="operations">
+            <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
+            <mat-cell *matCellDef="let activity">
+                <button mat-raised-button color="primary" (click)="editAction(activity)"><mat-icon>edit</mat-icon></button>
+            </mat-cell>
         </ng-container>
 
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

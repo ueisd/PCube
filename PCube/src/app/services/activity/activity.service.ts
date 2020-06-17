@@ -8,7 +8,7 @@ import { ActivityItem } from 'src/app/components/domain/activity/activity-item/a
 
 const API_ALL_ACTIVITY = environment.api_url + "/api/project/get-all-activity";
 const API_IS_UNIQUE = environment.api_url + "/api/project/is-unique-activity";
-const API_ADD_ACTIVITY = environment.api_url + "/api/project/add-new-activity";
+const API_ACTIVITY = environment.api_url + "/api/project/activity";
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +28,7 @@ export class ActivityService {
   }
 
   isNameUnique(name): Observable<boolean> {
+
     var url = API_IS_UNIQUE + "/" + name
     const opts = {
       headers: new HttpHeaders({
@@ -45,7 +46,20 @@ export class ActivityService {
     };
     let body = new HttpParams();
     body = body.set('name', name);
-    return this.http.post<ActivityItem>(API_ADD_ACTIVITY, body, opts);
+    return this.http.post<ActivityItem>(API_ACTIVITY, body, opts);
+  }
+
+  updateActivity(id, name, newName): Observable<ActivityItem>{
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    let body = new HttpParams();
+    body = body.set('id', id);
+    body = body.set('name', name);
+    body = body.set('new_name', newName);
+    return this.http.put<ActivityItem>(API_ACTIVITY, body, opts);
   }
 
 
