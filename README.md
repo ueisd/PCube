@@ -58,10 +58,10 @@ La base de données est dans **PCube-API/db/database/pcube.db**.
 
 Vous pouvez ensuite faire les commandes suivantes dans **/database**:
 
-Sur le terminal : `sqlite3 pcube.db`
-Sur Sqlite3 : `.read pcube.sql`
-Sur Sqlite3 : `.read data_generation.sql`
-Sur Sqlite3 : `select * from user;` (Pour tester que le tout fonctionne)
+1) Sur le terminal : `sqlite3 pcube.db`
+2) Sur Sqlite3 : `.read pcube.sql`
+3) Sur Sqlite3 : `.read data_generation.sql`
+4) Sur Sqlite3 : `select * from user;` (Pour tester que le tout fonctionne)
 
 
 ### Installer les dépences Flask et Angular
