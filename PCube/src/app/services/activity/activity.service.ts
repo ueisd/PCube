@@ -28,6 +28,7 @@ export class ActivityService {
   }
 
   isNameUnique(name): Observable<boolean> {
+
     var url = API_IS_UNIQUE + "/" + name
     const opts = {
       headers: new HttpHeaders({
