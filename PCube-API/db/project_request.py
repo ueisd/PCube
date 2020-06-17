@@ -24,3 +24,11 @@ class ProjectRequest:
         data = cursor.fetchall()
         cursor.close()
         return data
+    
+    def select_all_activity(self):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from activity")
+        data = cursor.fetchall()
+        cursor.close()
+        return data
