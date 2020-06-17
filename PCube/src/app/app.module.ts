@@ -17,12 +17,9 @@ import { AccessDeniedComponent } from './components/pages/access-denied/access-d
 import { AdminContentComponent } from './components/pages/admin-content/admin-content.component';
 import { ProjectManagerContentComponent } from './components/pages/project-manager-content/project-manager-content.component';
 import { MemberContentComponent } from './components/pages/member-content/member-content.component';
-<<<<<<< HEAD
 import { AddUserComponent } from './components/pages/add-user/add-user.component';
-=======
 import { UserListComponent } from './components/user-list/user-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
->>>>>>> d72a4037f4cd5ba586a9c5f7f5b9d49569cc8b9c
 
 
 @NgModule({
@@ -36,11 +33,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     AdminContentComponent,
     ProjectManagerContentComponent,
     MemberContentComponent,
-<<<<<<< HEAD
     AddUserComponent,
-=======
     UserListComponent
->>>>>>> d72a4037f4cd5ba586a9c5f7f5b9d49569cc8b9c
   ],
   imports: [
     BrowserModule,
