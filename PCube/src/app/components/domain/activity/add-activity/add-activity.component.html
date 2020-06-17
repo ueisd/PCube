@@ -1,0 +1,17 @@
+<div>
+    <h1>Création d'un activité</h1>
+
+    <form [formGroup]="newActivityForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
+
+        <div *ngIf="isAdded" class="alert alert-success" role="alert">
+            Succès, votre activité a été enregistré !
+        </div>
+        <label for="activityName">Nom de l'activité</label>
+        <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
+            L'activité doit être unique !
+        </div>
+        <input (ngModelChange)="checkUniqueName($event)" type="text" id="activityName" class="form-control" formControlName="activityName">
+        <button class="btn btn-success" type="submit" [disabled]="!newActivityForm.valid || !isUnique">Ajouter</button>
+    </form>
+</div>
+    
