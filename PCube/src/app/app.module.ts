@@ -26,6 +26,9 @@ import {MaterialAutocomplete} from 'src/app/material/material-autocomplete';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import { ActivityComponent } from './components/pages/activity/activity.component';
 import { ActivityListComponent } from './components/domain/activity/activity-list/activity-list.component';
+import { ProjectComponent } from './components/pages/project/project.component';
+import { ProjectListComponent } from './components/domain/project/project-list/project-list.component';
+import { ProjectAddProjectComponent } from './components/domain/project/project-add-project/project-add-project.component';
 
 
 
@@ -44,7 +47,10 @@ import { ActivityListComponent } from './components/domain/activity/activity-lis
     UserListComponent,
     AddActivityComponent,
     ActivityComponent,
-    ActivityListComponent
+    ActivityListComponent,
+    ProjectComponent,
+    ProjectListComponent,
+    ProjectAddProjectComponent
   ],
   imports: [
     BrowserModule,

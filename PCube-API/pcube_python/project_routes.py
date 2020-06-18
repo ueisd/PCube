@@ -7,7 +7,7 @@ from flask import Blueprint
 from flask.logging import create_logger
 from .db_controller import get_db
 from ..db.project_request import ProjectRequest
-from ..domain.activity import Activity
+from ..domain.project import Project
 from ..utility.auth import (
                     get_authenticated_user,
                     auth_required, auth_refresh_required, AuthenticationError,
@@ -54,95 +54,25 @@ def get_all_sub_parent_project(parent_id):
         log.error('authentication error: %s', error)
         abort(403)
 
-@project.route('/get-all-activity', methods=['GET'])
+@project.route('/get-all-project', methods=['GET'])
 @auth_required
-def get_all_activity():
+def get_all_project():
     """
-    Permet d'obtenir toutes les activités du système
+    Construit l'abre des projets.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
         get_authenticated_user()
         connection = get_db().get_connection()
         request = ProjectRequest(connection)
-        activities = request.select_all_activity()
-        return jsonify(activities)
+        parents_dict = request.select_all_parent()
+
+        for project in parents_dict:
+            childs_dict = request.select_all_project_from_parent(project['id'])
+            project['childs'] = childs_dict
+
+        return jsonify(parents_dict)
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
-
-@project.route('/is-unique-activity/<name>', methods=['GET'])
-def is_unique_activity(name):
-        connection = get_db().get_connection()
-        request = ProjectRequest(connection)
-        isUnique = request.select_one_activity(name)
-        if isUnique is None:
-            return jsonify(True)
-        else:
-            return jsonify(False)
-    
-@project.route('/activity', methods=['POST'])
-@auth_required
-def add_new_activity():
-    """
-    Permet d'ajouter une nouvelle activité dans le système.
-    """
-    try:
-        get_authenticated_user()
-        name = request.form.get("name", "")
-        if not name:
-            log.error('Post is missing parameter name')
-            abort(400)
-
-        connection = get_db().get_connection()
-        aRequest = ProjectRequest(connection)
-        isUnique = aRequest.select_one_activity(name)
-
-        if isUnique is not None:
-            log.error('The activity name is not unique')
-            abort(409)
-
-        activity = Activity(name)
-
-        activity = aRequest.insert_activity(activity)
-        return jsonify(activity.asDictionnary())
-
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
-
-@project.route('/activity', methods=['PUT'])
-@auth_required
-def modify_activity():
-    """
-    Permet de modifier une activité dans le système.
-    """
-    try:
-        get_authenticated_user()
-        name = request.form.get("name", "")
-        id = request.form.get("id", "")
-        new_name = request.form.get("new_name", "")
-        if not name or not id or not new_name:
-            log.error('Post is missing parameters')
-            abort(400)
-
-        connection = get_db().get_connection()
-        aRequest = ProjectRequest(connection)
-        isUnique = aRequest.select_one_activity(new_name)
-
-        if isUnique is not None:
-            log.error('The activity name is not unique')
-            abort(409)
-
-        activity = Activity(name)
-        activity.id = id
-        new_activity = Activity(new_name)
-
-        new_activity = aRequest.update_activity(activity, new_activity)
-        return jsonify(new_activity.asDictionnary())
-
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
-   
