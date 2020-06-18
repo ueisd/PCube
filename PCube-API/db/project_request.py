@@ -20,7 +20,7 @@ class ProjectRequest:
     def select_all_project_from_parent(self, parent_id):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from project where parent_id = ?",
+        cursor.execute("select * from project where parent_id = ? and parent_id != id",
         (parent_id,))
         data = cursor.fetchall()
         cursor.close()

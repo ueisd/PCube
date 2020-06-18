@@ -54,22 +54,36 @@ def get_all_sub_parent_project(parent_id):
         log.error('authentication error: %s', error)
         abort(403)
 
+def find_all_child(parent_id):
+
+    connection = get_db().get_connection()
+    request = ProjectRequest(connection)
+
+    childs_dict = request.select_all_project_from_parent(parent_id)
+
+    if not childs_dict:
+        return {}
+
+    for project in childs_dict:
+        project['child'] = find_all_child(project['id'])
+
+    return childs_dict
+
+
 @project.route('/get-all-project', methods=['GET'])
-@auth_required
 def get_all_project():
     """
     Construit l'abre des projets.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        get_authenticated_user()
+        #get_authenticated_user()
         connection = get_db().get_connection()
         request = ProjectRequest(connection)
         parents_dict = request.select_all_parent()
 
         for project in parents_dict:
-            childs_dict = request.select_all_project_from_parent(project['id'])
-            project['childs'] = childs_dict
+            project['child'] = find_all_child(project['id'])
 
         return jsonify(parents_dict)
 
