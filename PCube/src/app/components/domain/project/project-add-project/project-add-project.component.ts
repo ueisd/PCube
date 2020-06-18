@@ -96,7 +96,7 @@ export class ProjectAddProjectComponent implements OnInit {
   }
 
   async parentNameFocusOut(){
-    await this.delay(100);
+    await this.delay(200);
     this.autocomplete = [];
   }
 

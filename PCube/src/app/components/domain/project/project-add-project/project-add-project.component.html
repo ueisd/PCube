@@ -14,13 +14,13 @@
             <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
                 Le projet doit être unique !
             </div>
-            <input (ngModelChange)="projectNameOnChange($event)" type="text" id="projectName" class="form-control" formControlName="projectName" autocomplete="off">
+            <input (ngModelChange)="projectNameOnChange($event)" id="projectName" class="form-control" formControlName="projectName" autocomplete="off" matInput>
         </div>
         <div>
             <mat-checkbox (ngModelChange)="isChildChecked($event)" id="isChild" class="form-control" formControlName="isChild">Est un sous-projet</mat-checkbox>
         </div>
         <div class="hidden" id="parentName-div">
-            <input (ngModelChange)="parentNameOnChange($event)" (focus)="parentNameOnChange($event.target.value)" (focusout)="parentNameFocusOut()" type="text" id="parentName" class="form-control" formControlName="parentName" autocomplete="off">
+            <input (ngModelChange)="parentNameOnChange($event)" (focus)="parentNameOnChange($event.target.value)" (focusout)="parentNameFocusOut()" id="parentName" class="form-control" formControlName="parentName" autocomplete="off" matInput>
             <div>
                 <table id="autocomplete-table" *ngFor="let project of autocomplete" (click)="autocompleteChoice($event, project)">
                     <tr><td id="{{project.id}}">{{ project.name }}</td></tr>      
