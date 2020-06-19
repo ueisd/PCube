@@ -21,7 +21,6 @@ import { UserListComponent } from './components/domain/user/user-list/user-list.
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddActivityComponent } from './components/domain/activity/add-activity/add-activity.component';
 
-
 import { MaterialAutocomplete } from 'src/app/material/material-autocomplete';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ActivityComponent } from './components/pages/activity/activity.component';
@@ -30,8 +29,6 @@ import { ProjectComponent } from './components/pages/project/project.component';
 import { ProjectListComponent } from './components/domain/project/project-list/project-list.component';
 import { ProjectAddProjectComponent } from './components/domain/project/project-add-project/project-add-project.component';
 import { DeleteUserComponent } from './components/domain/user/delete-user/delete-user.component';
-
-
 
 
 @NgModule({
@@ -51,7 +48,7 @@ import { DeleteUserComponent } from './components/domain/user/delete-user/delete
     ActivityListComponent,
     ProjectComponent,
     ProjectListComponent,
-    ProjectAddProjectComponent
+    ProjectAddProjectComponent,
     DeleteUserComponent
   ],
   imports: [
