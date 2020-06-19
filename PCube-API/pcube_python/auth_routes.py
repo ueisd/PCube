@@ -17,7 +17,7 @@ auth = Blueprint('auth', __name__)
 app = Flask(__name__)
 log = create_logger(app)
 
-@auth.route('/auth/login', methods=['POST'])
+@auth.route('/login', methods=['POST'])
 def login_user():
     """
     Login user
@@ -35,7 +35,7 @@ def login_user():
         abort(403)
 
 
-@auth.route('/auth/info', methods=['GET'])
+@auth.route('/info', methods=['GET'])
 @auth_required
 def login_info_api():
     """
@@ -52,7 +52,7 @@ def login_info_api():
         log.error('authentication error: %s', error)
         abort(403)
 
-@auth.route('/auth/logout', methods=['DELETE'])
+@auth.route('/logout', methods=['DELETE'])
 @auth_refresh_required
 def logout_api():
     """
@@ -62,7 +62,7 @@ def logout_api():
     return jsonify({"msg": "Successfully logged out"}), 200
 
 
-@auth.route('/auth/refresh', methods=['POST'])
+@auth.route('/refresh', methods=['POST'])
 @auth_refresh_required
 def refresh_api():
     """

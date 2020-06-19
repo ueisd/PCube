@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTableModule } from '@angular/material/table';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
 
 
 @NgModule({
@@ -13,13 +15,15 @@ import { MatIconModule } from '@angular/material/icon';
     MatDialogModule,
     MatButtonModule,
     MatTableModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule,
   ],
   exports: [
-    MatDialogModule,
     MatButtonModule,
+    MatDialogModule,
     MatTableModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule,
   ]
 })
 export class MaterialModule { }
