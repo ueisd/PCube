@@ -4,6 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 
@@ -15,12 +16,14 @@ import { MatTableModule } from '@angular/material/table';
     MatButtonModule,
     MatTableModule,
     MatIconModule,
+    MatSnackBarModule,
   ],
   exports: [
     MatButtonModule,
     MatDialogModule,
     MatTableModule,
-    MatIconModule
+    MatIconModule,
+    MatSnackBarModule,
   ]
 })
 export class MaterialModule { }
