@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { UserListComponent } from 'src/app/components/user-list/user-list.component'
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { UserListComponent } from 'src/app/components/domain/user/user-list/user-list.component'
+import { MatDialog } from "@angular/material/dialog";
 import * as $ from 'jquery/dist/jquery.min.js';
 
 const SHOW_MENU_CLASS = "showMenu";

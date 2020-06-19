@@ -17,7 +17,7 @@ import { AccessDeniedComponent } from './components/pages/access-denied/access-d
 import { AdminContentComponent } from './components/pages/admin-content/admin-content.component';
 import { ProjectManagerContentComponent } from './components/pages/project-manager-content/project-manager-content.component';
 import { MemberContentComponent } from './components/pages/member-content/member-content.component';
-import { UserListComponent } from './components/user-list/user-list.component';
+import { UserListComponent } from './components/domain/user/user-list/user-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddActivityComponent } from './components/domain/activity/add-activity/add-activity.component';
 
@@ -26,6 +26,7 @@ import {MaterialAutocomplete} from 'src/app/material/material-autocomplete';
 import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
 import { ActivityComponent } from './components/pages/activity/activity.component';
 import { ActivityListComponent } from './components/domain/activity/activity-list/activity-list.component';
+import { DeleteUserComponent } from './components/domain/user/delete-user/delete-user.component';
 
 
 
@@ -44,7 +45,8 @@ import { ActivityListComponent } from './components/domain/activity/activity-lis
     UserListComponent,
     AddActivityComponent,
     ActivityComponent,
-    ActivityListComponent
+    ActivityListComponent,
+    DeleteUserComponent
   ],
   imports: [
     BrowserModule,
