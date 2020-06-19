@@ -11,8 +11,26 @@
 
             <label for="lname">Adresse Courriel :</label><br>
             <input type="email" id="email" name="email" formControlName="email"><br>             
-         
+            
+            <label for="password">Rentrz un mot de passe :</label><br>
+            <input type="password" id="password" name="password" formControlName="password"><br>
+            
+            <label for="passwordConfirmation">Confirmez le mot de passe : </label><br>
+            <input type="password" id="passwordConfirmation" name="passwordConfirmation" formControlName="passwordConfirmation"><br>
+
+            <div class="error"  *ngIf="userForm.get('passwordConfirmation').errors && userForm.get('passwordConfirmation').errors.notMatching">
+                Les mots de passes ne sont pas identiques!
+            </div>
+            <label for="orders"> Roles </label>
+            <select formControlName="roles" id="roles">
+                <option *ngFor="let role of roles; let i = index" [value]="roles[i].id">
+                    {{roles[i].role_name}}
+                 </option>
+            </select><br>
+            <input type="checkbox" name="checkbox" (click)="clicked($event)" ng-model="isChecked">
+            <label for="creerCompte"> Créer un identifiant pour cet utilisateur</label><br>
+
         </div>     
-        <button type="submit" [disabled]="userForm.invalid">Creer</button>
+        <button type="submit" [disabled]="userForm.invalid || (userForm.get('passwordConfirmation').errors && userForm.get('passwordConfirmation').errors.notMatching)">Creer</button>
         
       </form>
