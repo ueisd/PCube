@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
-import { User } from 'src/app/components/domain/user/user';
+import { User } from 'src/app/components/domain/user/User';
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeleteUserComponent } from 'src/app/components/domain/user/delete-user/delete-user.component';
