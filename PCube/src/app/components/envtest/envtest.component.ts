@@ -43,7 +43,7 @@ export class EnvTestComponent implements OnInit {
 
   private initForm(){
 
-    this.projectSubscription = this.projectService.getAllParentProject().subscribe();
+    //this.projectSubscription = this.projectService.getAllParentProject().subscribe();
     
     this.newActivityForm = new FormGroup({
       'parentProject': new FormControl('', [Validators.required]),

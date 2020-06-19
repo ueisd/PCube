@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { EnvTestComponent } from './components/envtest/envtest.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
-import {MatNativeDateModule} from '@angular/material/core';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import { AuthInterceptor } from 'src/app/services/auth/auth.interceptor';
 import { LoginComponent } from './components/pages/login/login.component';
@@ -22,10 +22,13 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddActivityComponent } from './components/domain/activity/add-activity/add-activity.component';
 
 
-import {MaterialAutocomplete} from 'src/app/material/material-autocomplete';
-import {MAT_FORM_FIELD_DEFAULT_OPTIONS} from '@angular/material/form-field';
+import { MaterialAutocomplete } from 'src/app/material/material-autocomplete';
+import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ActivityComponent } from './components/pages/activity/activity.component';
 import { ActivityListComponent } from './components/domain/activity/activity-list/activity-list.component';
+import { ProjectComponent } from './components/pages/project/project.component';
+import { ProjectListComponent } from './components/domain/project/project-list/project-list.component';
+import { ProjectAddProjectComponent } from './components/domain/project/project-add-project/project-add-project.component';
 import { DeleteUserComponent } from './components/domain/user/delete-user/delete-user.component';
 
 
@@ -46,6 +49,9 @@ import { DeleteUserComponent } from './components/domain/user/delete-user/delete
     AddActivityComponent,
     ActivityComponent,
     ActivityListComponent,
+    ProjectComponent,
+    ProjectListComponent,
+    ProjectAddProjectComponent
     DeleteUserComponent
   ],
   imports: [

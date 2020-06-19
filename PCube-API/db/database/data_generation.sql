@@ -19,18 +19,18 @@ INSERT INTO user VALUES(3, 'Sébastien', 'Stébenne', 'm', '$2b$12$YGVT18G7YzzeJ
 /*************************************/
 /*          TABLE PROJECT            */
 /*************************************/
-INSERT INTO project VALUES(1,"Souper Noel 2020", 1);
-INSERT INTO project VALUES(2,"Souper Noel 2019", 2);
-INSERT INTO project VALUES(3,"Souper Noel 2018", 3);
-INSERT INTO project VALUES(4,"Réception - SN - 2020", 1);
-INSERT INTO project VALUES(5,"Cuisine - SN - 2020", 1);
-INSERT INTO project VALUES(6,"Marketing - SN - 2020", 1);
+INSERT INTO project VALUES(1,"SOUPER NOEL 2020", 1);
+INSERT INTO project VALUES(2,"SOUPER NOEL 2019", 2);
+INSERT INTO project VALUES(3,"SOUPER NOEL 2018", 3);
+INSERT INTO project VALUES(4,"RÉCEPTION - SN - 2020", 1);
+INSERT INTO project VALUES(5,"CUISINE - SN - 2020", 1);
+INSERT INTO project VALUES(6,"MARKETING - SN - 2020", 1);
 
 /*************************************/
 /*          TABLE ACTIVITY           */
 /*************************************/
-INSERT INTO activity VALUES(1,"Course de patate");
-INSERT INTO activity VALUES(2,"Course de banane");
-INSERT INTO activity VALUES(3,"Course de raviolie");
-INSERT INTO activity VALUES(4,"Course de pomme");
-INSERT INTO activity VALUES(5,"Course de chat");
+INSERT INTO activity VALUES(1,"COURSE DE PATATE");
+INSERT INTO activity VALUES(2,"COURSE DE BANANE");
+INSERT INTO activity VALUES(3,"COURSE DE RAVIOLIE");
+INSERT INTO activity VALUES(4,"COURSE DE POMME");
+INSERT INTO activity VALUES(5,"COURSE DE CHAT");

@@ -1,0 +1,35 @@
+<div style="margin: 20px 0; min-height: 500px;">
+    <h1>Création d'un projet</h1>
+
+    <form [formGroup]="newProjectForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
+        <div>
+            <div *ngIf="isAdded" class="alert alert-success" role="alert">
+                Succès, votre projet a été enregistré !
+            </div>
+            <div *ngIf="isAddedFailled" class="alert alert-danger" role="alert">
+                Une erreur s'est produit lors de la soumission du formulaire.<br />
+                Veuillez vérifier les champs et essayer de nouveau.
+            </div>
+            <label for="projectName">Nom du projet</label>
+            <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
+                Le projet doit être unique !
+            </div>
+            <mat-label>Nom du projet</mat-label>
+            <input (ngModelChange)="projectNameOnChange($event)" id="projectName" class="form-control" formControlName="projectName" autocomplete="off" matInput>
+        </div>
+        <div>
+            <mat-checkbox (ngModelChange)="isChildChecked($event)" id="isChild" class="form-control" formControlName="isChild">Est un sous-projet</mat-checkbox>
+        </div>
+        <div class="hidden" id="parentName-div">
+            <mat-label>Nom du projet parent</mat-label>
+            <input (ngModelChange)="parentNameOnChange($event)" (focus)="parentNameOnChange($event.target.value)" (focusout)="parentNameFocusOut()" id="parentName" class="form-control" formControlName="parentName" autocomplete="off" matInput>
+            <div>
+                <table id="autocomplete-table" *ngFor="let project of autocomplete" (click)="autocompleteChoice($event, project)">
+                    <tr><td id="{{project.id}}">{{ project.name }}</td></tr>      
+                </table>
+            </div>
+        </div>
+        <button class="btn btn-success" type="submit" [disabled]="!newProjectForm.valid || !isUnique || !isFormValid || !isParentExist">Ajouter</button>
+    </form>
+</div>
+    
