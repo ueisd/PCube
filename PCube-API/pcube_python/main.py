@@ -32,7 +32,7 @@ def get_role(id):
 @main.route('/api/role', methods=['GET'])
 def get_roles():
     """
-    Retourne un rôle avec un identifiant.
+    Retourne tous les roles.
     """
     connection = get_db().get_connection()
     request = AuthRequest(connection)

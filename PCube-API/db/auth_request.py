@@ -46,7 +46,7 @@ class AuthRequest:
 
     def get_all_roles(self):
         """
-        Permet d'obtenir le nom de l'accès
+        Permet d'obtenir tous les roles.
         """
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
