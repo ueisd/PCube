@@ -11,7 +11,15 @@ class UserRequest:
     def select_all_user(self):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select first_name, last_name, email, role_id from user")
+        cursor.execute("select first_name, last_name, email, role_id, isActive from user")
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
+    def delete_user(self, user_id, email):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("update user set isActive = false where id = ? and email = ?", (user_id, email,))
         data = cursor.fetchall()
         cursor.close()
         return data
