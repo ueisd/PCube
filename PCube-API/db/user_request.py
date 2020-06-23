@@ -20,6 +20,7 @@ class UserRequest:
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("update user set isActive = false where id = ? and email = ?", (user_id, email,))
+        cursor.execute("select first_name, last_name, email, role_id, isActive from user where id = ? and email = ?", (user_id, email,))
         data = cursor.fetchall()
         cursor.close()
         return data

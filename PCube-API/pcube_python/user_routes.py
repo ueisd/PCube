@@ -18,16 +18,16 @@ app = Flask(__name__)
 log = create_logger(app)
 
 @user.route('', methods=['GET'])
-#@auth_required
+@auth_required
 def get_all_user():
     """
     Permet d'obtenir la liste de tout les utilisateurs.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        #get_authenticated_user()
-        #admin_required()
-        #project_manager_required()
+        get_authenticated_user()
+        admin_required()
+        project_manager_required()
         connection = get_db().get_connection()
         query = UserRequest(connection)
         users = query.select_all_user()
@@ -39,22 +39,25 @@ def get_all_user():
 
 
 @user.route('', methods=['DELETE'])
-#@auth_required
+@auth_required
 def delete_user():
     """
     Permet de supprimer un utilisateur.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        #get_authenticated_user()
-        #admin_required()
+        get_authenticated_user()
+        admin_required()
         user_id = request.args.get('user_id', None)
         email = request.args.get('email', None)
         connection = get_db().get_connection()
         query = UserRequest(connection)
         user = query.delete_user(user_id, email)
         connection.commit()
-        return jsonify(user)
+        if not bool(user):
+            return "user does not exist in database", 404
+        else:
+            return jsonify(user)
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
