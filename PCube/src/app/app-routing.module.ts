@@ -14,6 +14,7 @@ import { AccessDeniedComponent } from 'src/app/components/pages/access-denied/ac
 import { AdminContentComponent } from 'src/app/components/pages/admin-content/admin-content.component';
 import { ProjectManagerContentComponent } from 'src/app/components/pages/project-manager-content/project-manager-content.component';
 import { MemberContentComponent } from './components/pages/member-content/member-content.component';
+import { AddUserComponent } from './components/pages/add-user/add-user.component';
 import { AppComponent } from './app.component';
 
 
@@ -43,6 +44,11 @@ const routes: Routes = [
       {
         path: 'denied',
         component: AccessDeniedComponent
+      },
+      {
+        path: 'addUser',
+        component: AddUserComponent,
+        canActivate: [AdminGuard]
       }
     ]
   },
