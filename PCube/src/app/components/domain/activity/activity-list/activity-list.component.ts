@@ -1,9 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivityItem } from 'src/app/components/domain/activity/activity-item/activity';
 import { ActivityService } from 'src/app/services/activity/activity.service';
 import * as $ from 'jquery/dist/jquery.min.js';
-import { disableDebugTools } from '@angular/platform-browser';
-import { isUndefined } from 'util';
 
 const HIDDEN_CLASS = 'hidden';
 

@@ -2,10 +2,12 @@ export class ProjectItem {
     id : number;
     name : string;
     parent_id: number;
+    child_project: ProjectItem[];
 
-    constructor(activityResponse: any) {
-        this.id = activityResponse.id;
-        this.name = activityResponse.name;
-        this.parent_id = activityResponse.parent_id;
+    constructor(projectResponse: any) {
+        this.id = projectResponse.id;
+        this.name = projectResponse.name;
+        this.parent_id = projectResponse.parent_id;
+        this.child_project = projectResponse.child;
     }
 }

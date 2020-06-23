@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { throwError, BehaviorSubject, Observable } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
-import { JwtHelperService } from '@auth0/angular-jwt';
-import { environment } from 'src/environments/environment';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { ProjectItem } from 'src/app/components/domain/project/project-item/project';
 
-const ALL_PROJECT_API = "/api/project/get-parents";
+const API_PROJECT = "/api/project";
+const API_IS_UNIQUE = "api/project/is-unique";
+const API_AUTOCOMPLTE = "api/project/autocomplete";
 
 @Injectable({
   providedIn: 'root'
@@ -16,14 +15,46 @@ export class ProjectService {
 
   constructor(private http: HttpClient) { }
 
-  getAllParentProject(): Observable<ProjectItem[]>{
+  getAllProject(): Observable<ProjectItem[]>{
     // now get user info
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
       })
     };
-    return this.http.get<ProjectItem[]>(ALL_PROJECT_API, opts);
+    return this.http.get<ProjectItem[]>(API_PROJECT, opts);
   }
 
+  addNewProject(name, parent_name): Observable<ProjectItem>{
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    let body = new HttpParams();
+    body = body.set('name', name);
+    body = body.set('parent_name', parent_name);
+    return this.http.post<ProjectItem>(API_PROJECT, body, opts);
+  }
+  
+  isNameUnique(name): Observable<boolean> {
+
+    var url = API_IS_UNIQUE + "/" + name
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<boolean>(url, opts);
+  }
+
+  getProjectNameForAutocomplete(name): Observable<ProjectItem[]>{
+    var url = API_AUTOCOMPLTE + "/" + name
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<ProjectItem[]>(url, opts);
+  }
 }
