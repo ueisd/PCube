@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
-import { throwError, BehaviorSubject, Observable } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
-import { JwtHelperService } from '@auth0/angular-jwt';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ActivityItem } from 'src/app/components/domain/activity/activity-item/activity';
 
-const API_ALL_ACTIVITY = environment.api_url + "/api/project/get-all-activity";
-const API_IS_UNIQUE = environment.api_url + "/api/project/is-unique-activity";
-const API_ACTIVITY = environment.api_url + "/api/project/activity";
+const API_ALL_ACTIVITY = environment.api_url + "/api/activity/get-all-activity";
+const API_IS_UNIQUE = environment.api_url + "/api/activity/is-unique-activity";
+const API_ACTIVITY = environment.api_url + "/api/activity/activity";
 
 @Injectable({
   providedIn: 'root'
