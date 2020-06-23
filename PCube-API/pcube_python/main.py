@@ -29,7 +29,7 @@ def get_role(id):
     return jsonify(role)
 
 
-@main.route('/api/role', methods=['GET'])
+@main.route('/api/roles', methods=['GET'])
 def get_roles():
     """
     Retourne tous les roles.
