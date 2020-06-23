@@ -43,3 +43,15 @@ class AuthRequest:
         data = cursor.fetchone()
         cursor.close()
         return data
+
+    def get_all_roles(self):
+        """
+        Permet d'obtenir tous les roles.
+        """
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from role",
+                        )
+        data = cursor.fetchall()
+        cursor.close()
+        return data

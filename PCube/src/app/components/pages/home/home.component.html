@@ -10,11 +10,11 @@
     <div *ngIf="accessLevel >= 1 && accessLevel <= 2">
         <app-project-manager-content></app-project-manager-content>
     </div>
-
+     
     <div *ngIf="accessLevel == 1">
         <app-admin-content></app-admin-content>
     </div>
-
+    
     <router-outlet></router-outlet>
 
 </div>

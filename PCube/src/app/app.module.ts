@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http'
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -17,6 +17,7 @@ import { AccessDeniedComponent } from './components/pages/access-denied/access-d
 import { AdminContentComponent } from './components/pages/admin-content/admin-content.component';
 import { ProjectManagerContentComponent } from './components/pages/project-manager-content/project-manager-content.component';
 import { MemberContentComponent } from './components/pages/member-content/member-content.component';
+import { AddUserComponent } from './components/pages/add-user/add-user.component';
 import { UserListComponent } from './components/domain/user/user-list/user-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddActivityComponent } from './components/domain/activity/add-activity/add-activity.component';
@@ -42,6 +43,7 @@ import { DeleteUserComponent } from './components/domain/user/delete-user/delete
     AdminContentComponent,
     ProjectManagerContentComponent,
     MemberContentComponent,
+    AddUserComponent,
     UserListComponent,
     AddActivityComponent,
     ActivityComponent,

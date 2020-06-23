@@ -27,4 +27,14 @@ def get_role(id):
     request = AuthRequest(connection)
     role = request.get_role(id)
     return jsonify(role)
-   
+
+
+@main.route('/api/roles', methods=['GET'])
+def get_roles():
+    """
+    Retourne tous les roles.
+    """
+    connection = get_db().get_connection()
+    request = AuthRequest(connection)
+    role = request.get_all_roles()
+    return jsonify(role)
