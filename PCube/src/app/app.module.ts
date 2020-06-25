@@ -30,6 +30,10 @@ import { ProjectComponent } from './components/pages/project/project.component';
 import { ProjectListComponent } from './components/domain/project/project-list/project-list.component';
 import { ProjectAddProjectComponent } from './components/domain/project/project-add-project/project-add-project.component';
 import { DeleteUserComponent } from './components/domain/user/delete-user/delete-user.component';
+import { HeaderComponent } from './components/layouts/header/header.component';
+import { SidenavComponent } from './components/layouts/sidenav/sidenav.component';
+import { UsersComponent } from './components/pages/users/users.component';
+import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 
 @NgModule({
@@ -51,11 +55,14 @@ import { DeleteUserComponent } from './components/domain/user/delete-user/delete
     ProjectComponent,
     ProjectListComponent,
     ProjectAddProjectComponent,
-    DeleteUserComponent
+    DeleteUserComponent,
+    HeaderComponent,
+    SidenavComponent,
+    UsersComponent,
   ],
   imports: [
+    MatDialogModule,
     BrowserModule,
-    BrowserAnimationsModule,
     FormsModule,
     AppRoutingModule,
     HttpClientModule,
@@ -64,13 +71,21 @@ import { DeleteUserComponent } from './components/domain/user/delete-user/delete
     BrowserAnimationsModule,
     MaterialModule,
     MaterialAutocomplete,
-    BrowserModule
   ],
-  exports:[],
+  entryComponents: [AddActivityComponent],
+  exports:[UserListComponent, AddActivityComponent],
   bootstrap: [AppComponent],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
-    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } }
-  ]
+    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+    {
+      provide: MatDialogRef,
+      useValue: {}
+    },
+    {
+      provide: MAT_DIALOG_DATA,
+      useValue: {} // Add any data you wish to test if it is passed/used correctly
+    }
+  ],
 })
 export class AppModule { }

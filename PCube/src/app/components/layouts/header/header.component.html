@@ -1,0 +1,41 @@
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <mat-menu #menu="matMenu">
+        <button mat-menu-item>
+          <mat-icon>dialpad</mat-icon>
+          <span>Redial</span>
+        </button>
+        <button mat-menu-item disabled>
+            <mat-icon>dialpad</mat-icon>
+            <span>Redial</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>notifications_off</mat-icon>
+          <span>Disable alerts</span>
+        </button>
+      </mat-menu>
+      <h1>PCube</h1>
+      <span class="menu-spacer"></span>
+      <div>
+        <a mat-button [routerLink]="'/accounts'"> Accounts </a>
+        <a mat-button [routerLink]="'/create-account'"> Create Account </a>
+        <a mat-button [routerLink]="'/contacts'"> Contacts </a>
+        <a mat-button [routerLink]="'/create-contact'"> Create Contact </a>
+        <a mat-button [routerLink]="'/activities'"> Activities </a>
+        <a mat-button [routerLink]="'/create-activity'"> Create Activity </a>
+  
+      </div>
+      <span class="example-spacer"></span>
+        <mat-icon class="example-icon" aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
+        <mat-icon class="example-icon" aria-hidden="false" aria-label="Example delete icon">delete</mat-icon>
+        <app-logout></app-logout>
+    </mat-toolbar-row>
+  
+    <mat-toolbar-row>
+        <span style="font-size: 12px;">PCube Welcome to PCube!</span>
+      </mat-toolbar-row>
+</mat-toolbar>
+
