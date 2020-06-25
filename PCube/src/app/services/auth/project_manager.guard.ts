@@ -14,7 +14,7 @@ import { AuthService } from './auth.service';
       next: ActivatedRouteSnapshot,
       state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
   
-      if (this.auth.isProjectManager()) {
+      if (this.auth.isProjectManager() || this.auth.isAdmin()) {
         return true;
       } else {
         this.router.navigate(['/denied']);
@@ -25,7 +25,7 @@ import { AuthService } from './auth.service';
       next: ActivatedRouteSnapshot,
       state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
   
-      if (this.auth.isProjectManager()) {
+      if (this.auth.isProjectManager() || this.auth.isAdmin()) {
         return true;
       } else {
         this.router.navigate(['/denied']);

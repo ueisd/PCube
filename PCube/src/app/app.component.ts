@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'PCube';
+
+  events: string[] = [];
+  opened: boolean = true;
+
 }

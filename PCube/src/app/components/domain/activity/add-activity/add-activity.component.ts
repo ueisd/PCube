@@ -1,6 +1,10 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Inject, Optional } from '@angular/core';
 import { ActivityService } from 'src/app/services/activity/activity.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+
+
+
 
 @Component({
   selector: 'app-add-activity',
@@ -10,7 +14,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 export class AddActivityComponent implements OnInit{
 
-  constructor(private activityService: ActivityService) { }
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+    private activityService: ActivityService, private dialogRef: MatDialogRef<AddActivityComponent>) { }
 
   newActivityForm: FormGroup;
 
@@ -35,6 +40,7 @@ export class AddActivityComponent implements OnInit{
     this.isAdded = true;
     this.askForDataRefresh();
     this.newActivityForm.reset();
+    this.dialogRef.close(true);
   }
 
   onSubmit(){

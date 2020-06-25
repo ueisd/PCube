@@ -17,3 +17,7 @@
 .hidden{
     display: none;
 }
+
+.mat-cell, .mat-header-cell, .test-right {
+    text-align: right;
+}

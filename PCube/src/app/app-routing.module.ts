@@ -3,7 +3,9 @@ import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from 'src/app/components/pages/login/login.component';
 
 
-
+import { ActivityComponent } from 'src/app/components/pages/activity/activity.component';
+import { ProjectComponent } from 'src/app/components/pages/project/project.component';
+import { UsersComponent } from 'src/app/components/pages/users/users.component';
 import { AuthGuard } from 'src/app/services/auth/auth.guard';
 import { AdminGuard } from 'src/app/services/auth/admin.guard';
 import { ProjectManagerGuard } from './services/auth/project_manager.guard';
@@ -37,6 +39,21 @@ const routes: Routes = [
         canActivate: [ProjectManagerGuard]
       },
       {
+        path: 'activity-managing',
+        component: ActivityComponent,
+        canActivate: [ProjectManagerGuard]
+      },
+      {
+        path: 'project-managing',
+        component: ProjectComponent,
+        canActivate: [ProjectManagerGuard]
+      },
+      {
+        path: 'users-managing',
+        component: UsersComponent,
+        canActivate: [AdminGuard]
+      },
+      {
         path: 'admin-content',
         component: AdminContentComponent,
         canActivate: [AdminGuard]
@@ -55,7 +72,7 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent
-  }
+  },
 ];
 
 @NgModule({

@@ -1,6 +1,12 @@
 <div>
-    <app-add-activity (refreshDataEvent)="askForDataRefresh($event)"></app-add-activity>
-    <app-activity-list></app-activity-list>
+    <mat-card class="list-activite-card">
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="openDialog()">Ajouter une activité</button>
+        </mat-card-actions>
+        <mat-card-content>
+            <app-activity-list></app-activity-list>
+        </mat-card-content>
+    </mat-card>
 </div>
 
 
