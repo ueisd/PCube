@@ -2,7 +2,9 @@
 from flask import Flask
 from flask import abort
 from flask import jsonify
+from flask import make_response
 from flask import Blueprint
+from flask import request
 from .db_controller import get_db
 from flask.logging import create_logger
 from ..db.user_request import UserRequest
@@ -27,9 +29,35 @@ def get_all_user():
         admin_required()
         project_manager_required()
         connection = get_db().get_connection()
-        request = UserRequest(connection)
-        users = request.select_all_user()
+        query = UserRequest(connection)
+        users = query.select_all_user()
         return jsonify(users)
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+
+@user.route('', methods=['DELETE'])
+@auth_required
+def delete_user():
+    """
+    Permet de supprimer un utilisateur.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        get_authenticated_user()
+        admin_required()
+        user_id = request.args.get('user_id', None)
+        email = request.args.get('email', None)
+        connection = get_db().get_connection()
+        query = UserRequest(connection)
+        user = query.delete_user(user_id, email)
+        connection.commit()
+        if not bool(user):
+            return "user does not exist in database", 404
+        else:
+            return jsonify(user)
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)

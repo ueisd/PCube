@@ -1,7 +1,7 @@
 class User:
 
     def __init__(self):
-        self.id = -1
+        self.user_id = -1
         self.first_name = ""
         self.last_name = ""
         self.email = ""
