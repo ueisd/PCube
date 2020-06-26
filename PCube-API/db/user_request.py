@@ -24,7 +24,8 @@ class UserRequest:
         data = cursor.fetchall()
         cursor.close()
         return data
-def select_one_user(self, email):
+    
+    def select_one_user(self, email):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select first_name, last_name, email, role_id, isActive from user where email = ?",
@@ -32,6 +33,17 @@ def select_one_user(self, email):
         data = cursor.fetchone()
         cursor.close()
         return data
+
+def update_user(self, user_id, email):
+        cursor = self.connection.cursor()
+        cursor.execute("update user set first_name = ? , last_name = ? ,"
+                         "password = ? where id = ? and email = ?", 
+                        (newUser.first_name, newUser.last_name, newUser.password, user.user_id, user.email,))
+        self.connection.commit()
+        cursor.close()
+        newUser.id = user_id.id
+        return newUser
+
 
     def insert_user(self, user):
 		 """
