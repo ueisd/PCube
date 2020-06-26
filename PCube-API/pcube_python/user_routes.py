@@ -62,3 +62,51 @@ def delete_user():
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
+@user.route('/is-unique-user/<email>', methods=['GET'])
+def is_unique_user(email):
+        connection = get_db().get_connection()
+        request = UserRequest(connection)
+        isUnique = request.select_one_user(email.upper())
+        if isUnique is None:
+            return jsonify(True)
+        else:
+            return jsonify(False)
+
+
+@user.route('/user', methods=['POST'])
+#@auth_required
+def add_new_user():
+    """
+    Permet d'ajouter un utilisateur dans le système.
+    """
+    try:
+        get_authenticated_user()
+        first_name = request.form.get("first_name", "").upper()
+        last_name = request.form.get("last_name", "").upper()
+        email = request.form.get("email", "").upper()
+        password = request.form.get("password", "").upper()
+        confirm_password = request.form.get("confirm_password", "").upper()
+        if not first_name or not last_name or not email or not password or not confirm_password:
+            log.error('Post is missing parameter')
+            abort(400)
+
+        connection = get_db().get_connection()
+        aRequest = UserRequest(connection)
+        isUnique = aRequest.select_one_user(email)
+
+        if isUnique is not None:
+            log.error('The email is not unique')
+            abort(409)
+
+        user = User()
+        user.first_name = first_name
+        user.last_name = last_name
+        user.email = email
+        user.password = password
+
+        user = aRequest.insert_user(user)
+        return jsonify(user.asDictionnary())
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)

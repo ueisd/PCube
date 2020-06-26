@@ -24,3 +24,30 @@ class UserRequest:
         data = cursor.fetchall()
         cursor.close()
         return data
+def select_one_user(self, email):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select first_name, last_name, email, role_id, isActive from user where email = ?",
+        (email,))
+        data = cursor.fetchone()
+        cursor.close()
+        return data
+
+    def insert_user(self, user):
+		 """
+        Permet d'Insère un nouvel utilisateur dans la base de données.
+        La fonctionne retourne un utilisateur avec son nouvel identifiant.
+        """
+        
+        cursor = self.connexion.cursor()
+        cursor.execute("insert into user(prenom, nom,"
+                       " email, mot_de_passe, salt)"
+                       " values(?, ?, ?, ?, ?)",
+                       (user.prenom, user.nom, user.email,
+                        user.mot_de_passe, user.salt))
+        self.connexion.commit()
+        id = cursor.lastrowid
+        cursor.close()
+        user.id = id
+        return user
+
