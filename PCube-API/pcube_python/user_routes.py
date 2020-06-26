@@ -62,6 +62,7 @@ def delete_user():
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
+
 @user.route('/is-unique-user/<email>', methods=['GET'])
 def is_unique_user(email):
         connection = get_db().get_connection()
@@ -86,7 +87,7 @@ def add_new_user():
         email = request.form.get("email", "").upper()
         password = request.form.get("password", "").upper()
         confirm_password = request.form.get("confirm_password", "").upper()
-        if not first_name or not last_name or not email or not password or not confirm_password:
+        if not first_name or not last_name or not email or not password or not confirm_password: #Il y a une erreur a cette ligne qui bloque tout les routes utilisateurs
             log.error('Post is missing parameter')
             abort(400)
 
