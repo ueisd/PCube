@@ -110,3 +110,43 @@ def add_new_user():
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
+
+
+@user.route('/user', methods=['PUT'])
+#@auth_required
+def add_new_user():
+    """
+    Permet de modifier un utilisateur dans le système.
+    """
+    try:
+        get_authenticated_user()
+        user_id = request.args.get('user_id', "").upper()
+        email = request.args.get('email', "").upper()
+        new_first_name = request.form.get("new_first_name", "").upper()
+        new_last_name = request.form.get("new_last_name", "").upper()
+        new_password = request.form.get("new_password", "").upper()
+        if not user_id or not email or not  new_first_name or not new_last_name or not new_password 
+            log.error('Post is missing parameter')
+            abort(400)
+
+        connection = get_db().get_connection()
+        aRequest = UserRequest(connection)
+        isUnique = aRequest.select_one_user(email)
+
+        if isUnique is not None:
+            log.error('The email is not unique')
+            abort(409)
+
+        user = User()
+        user.user_id = user_id
+        user.email = email
+        user.first_name = new_first_name
+        user.last_name = new_last_name
+        user.password = new_password
+
+        user = aRequest.update_user(user)
+        return jsonify(user.asDictionnary())
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
