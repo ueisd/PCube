@@ -52,6 +52,9 @@ def delete_user():
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
+        get_authenticated_user()
+        user_id = request.args.get('user_id', None)
+        email = request.args.get('email', None)
         data = request.json
 
         connection = get_db().get_connection()

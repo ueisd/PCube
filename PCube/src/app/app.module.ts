@@ -34,6 +34,7 @@ import { HeaderComponent } from './components/layouts/header/header.component';
 import { SidenavComponent } from './components/layouts/sidenav/sidenav.component';
 import { UsersComponent } from './components/pages/users/users.component';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { ModifyUserComponent } from './components/domain/user/modify-user/modify-user.component';
 
 
 @NgModule({
@@ -59,6 +60,7 @@ import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/materia
     HeaderComponent,
     SidenavComponent,
     UsersComponent,
+    ModifyUserComponent,
   ],
   imports: [
     MatDialogModule,

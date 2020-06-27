@@ -1,9 +1,11 @@
+import { Role } from 'src/app/Model/role';
+
 export class User {
     id : number;
     firstName : string;
     lastName : string;
     email : string;
-    role : string;
+    role : Role;
 
     constructor(userResponse: any) {
         this.id = userResponse.id;
