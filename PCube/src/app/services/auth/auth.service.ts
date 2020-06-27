@@ -99,7 +99,6 @@ export class AuthService {
     if (!this.jwt.isTokenExpired(accessToken)) {
       return new BehaviorSubject(accessToken);
     } else if (!this.jwt.isTokenExpired(refreshToken)) {
-      console.log('refreshing access token');
       const opts = {
         headers: new HttpHeaders({
           Authorization: 'Bearer ' + refreshToken
@@ -108,7 +107,6 @@ export class AuthService {
       return this.http.post<RefreshResponse>(REFRESH_API, {}, opts).pipe(
         map(response => {
           localStorage.setItem('accessToken', response.accessToken);
-          console.log('authentication refresh successful');
           return response.accessToken;
         })
       );

@@ -28,12 +28,14 @@ export class ProjectService {
   addNewProject(name, parent_name): Observable<ProjectItem>{
     const opts = {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Content-Type': 'application/json'
       })
     };
-    let body = new HttpParams();
-    body = body.set('name', name);
-    body = body.set('parent_name', parent_name);
+    let body = {
+      name: name,
+      parent_name: parent_name
+    }
     return this.http.post<ProjectItem>(API_PROJECT, body, opts);
   }
   

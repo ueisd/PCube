@@ -4,7 +4,11 @@ from flask import abort
 from flask import make_response
 from flask import jsonify
 from flask import Blueprint
+from flask import escape
+from flask_json_schema import JsonSchema
+from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
+from ..schemas.project_schema import (project_insert_schema)
 from .db_controller import get_db
 from ..db.project_request import ProjectRequest
 from ..domain.project import Project
@@ -17,6 +21,7 @@ from ..utility.auth import (
 project = Blueprint('project', __name__)
 app = Flask(__name__)
 log = create_logger(app)
+schema = JsonSchema(app)
 
 @project.route('/get-parents', methods=['GET'])
 @auth_required
@@ -94,33 +99,32 @@ def get_all_project():
 
 @project.route('', methods=['POST'])
 @auth_required
+@schema.validate(project_insert_schema)
 def create_project():
     """
     Création d'un nouveau projet
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        get_authenticated_user()
-
-        name = request.form.get("name", "").upper()
-        parent_name = request.form.get("parent_name", "").upper()
-        if not name or not parent_name:
-            log.error('Post is missing parameter')
-            abort(400)
-
+        data = request.json
         project = Project()
-        project.name = name
-        project.parent_name = parent_name
+        project.name = escape(data['name'].upper().strip())
+        project.parent_name = escape(data['parent_name'].upper().strip())
 
         connection = get_db().get_connection()
-        aRequest = ProjectRequest(connection)
-        
-        if(name != parent_name):
-            project.parent_id = aRequest.select_one_project(parent_name)['id']
+        query = ProjectRequest(connection)
 
-        project = aRequest.insert_project(project)
+        if(project.name != project.parent_name):
+            parent = query.select_one_project(project.parent_name)
+            if parent:
+                project.parent_id = parent['id']
+            else:
+                log.error("Le parent n'existe pas")
+                abort(404)
 
-        return jsonify(project.asDictionary())
+        project = query.insert_project(project)
+
+        return jsonify(project.asDictionary()),201
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
@@ -186,4 +190,9 @@ def project_autocomplte(name):
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
+
+@project.errorhandler(JsonValidationError)
+def validation_error(e):
+    errors = [validation_error.message for validation_error in e.errors]
+    return jsonify({'error': e.message, 'errors': errors}), 400
         
