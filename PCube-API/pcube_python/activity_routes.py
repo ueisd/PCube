@@ -20,14 +20,14 @@ log = create_logger(app)
 
 
 @activity.route('/get-all-activity', methods=['GET'])
-@auth_required
+#@auth_required
 def get_all_activity():
     """
     Permet d'obtenir toutes les activités du système
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        get_authenticated_user()
+        #get_authenticated_user()
         connection = get_db().get_connection()
         request = ProjectRequest(connection)
         activities = request.select_all_activity()
