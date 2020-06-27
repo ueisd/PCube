@@ -6,7 +6,7 @@ import { ActivityItem } from 'src/app/components/domain/activity/activity-item/a
 
 const API_ALL_ACTIVITY = environment.api_url + "/api/activity/get-all-activity";
 const API_IS_UNIQUE = environment.api_url + "/api/activity/is-unique-activity";
-const API_ACTIVITY = environment.api_url + "/api/activity/activity";
+const API_ACTIVITY = environment.api_url + "/api/activity";
 
 @Injectable({
   providedIn: 'root'
@@ -39,24 +39,28 @@ export class ActivityService {
   addNewActivity(name): Observable<ActivityItem>{
     const opts = {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Content-Type': 'application/json'
       })
     };
-    let body = new HttpParams();
-    body = body.set('name', name);
+    let body = {
+      name: name
+    }
     return this.http.post<ActivityItem>(API_ACTIVITY, body, opts);
   }
 
   updateActivity(id, name, newName): Observable<ActivityItem>{
     const opts = {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Content-Type': 'application/json'
       })
     };
-    let body = new HttpParams();
-    body = body.set('id', id);
-    body = body.set('name', name);
-    body = body.set('new_name', newName);
+    let body = {
+      id: id,
+      name: name,
+      new_name: newName
+    }
     return this.http.put<ActivityItem>(API_ACTIVITY, body, opts);
   }
 

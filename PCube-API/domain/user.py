@@ -1,11 +1,11 @@
 class User:
 
     def __init__(self):
-        self.user_id = -1
+        self.id = -1
         self.first_name = ""
         self.last_name = ""
         self.email = ""
-        self.isActive = false
+        self.isActive = False
         self.role_id = -1
 
     def asDictionary(self):
