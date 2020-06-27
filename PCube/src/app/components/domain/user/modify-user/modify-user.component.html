@@ -1,0 +1,32 @@
+<form [formGroup]="modifyUserForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
+    <h1 mat-dialog-title>Modifier un utilisateur</h1>
+    <mat-dialog-content class="mat-typography">
+
+        <input type="hidden" id="id" class="form-control" formControlName="id" [ngModel]="data.id">
+        <input type="hidden" id="email" class="form-control" formControlName="email" [ngModel]="data.email">
+        
+        <label for="firstName">Prénom</label><br>
+        <input type="text" id="firstName" class="form-control" formControlName="firstName" [ngModel]="data.firstName"><br>
+        
+        <label for="lastName">Nom de famille</label><br>
+        <input type="text" id="lastName" class="form-control" formControlName="lastName" [ngModel]="data.lastName"><br>
+ 
+        <label for="newEmail">Adresse Courriel</label><br>
+        <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
+            L'adresse courriel doit être unique!
+        </div>
+        <input (ngModelChange)="checkUniqueEmail($event)" type="text" id="newEmail" class="form-control" formControlName="newEmail" [ngModel]="data.email"><br>
+
+        <label for="roleId">Rôle</label><br>
+        <select formControlName="roleId" id="roleId" [ngModel]="data.role.id">
+            <option id="roleId" *ngFor="let role of roles; let i = index" [value]="roles[i].id">
+                {{roles[i].role_name}}
+                </option>
+        </select><br>
+
+    </mat-dialog-content>
+    <mat-dialog-actions>
+        <button mat-button type="submit" [disabled]="!modifyUserForm.valid || !isUnique">Sauvegarder</button>
+        <button mat-button mat-dialog-close>Annuler</button>
+    </mat-dialog-actions>
+</form>

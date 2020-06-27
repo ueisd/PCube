@@ -20,10 +20,10 @@
   <!-- Colonne rôle -->
   <ng-container matColumnDef="role">
     <mat-header-cell *matHeaderCellDef> Rôle </mat-header-cell>
-    <mat-cell *matCellDef="let user"> {{user.role}} </mat-cell>
+    <mat-cell *matCellDef="let user"> {{user.role.role_name}} </mat-cell>
   </ng-container>
 
-  <!-- Colonne rôle -->
+  <!-- Colonne opérations -->
   <ng-container matColumnDef="operations">
     <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
     <mat-cell *matCellDef="let user">

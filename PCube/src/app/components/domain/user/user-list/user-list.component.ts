@@ -4,6 +4,7 @@ import { User } from 'src/app/components/domain/user/User';
 import { MatDialog } from "@angular/material/dialog";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeleteUserComponent } from 'src/app/components/domain/user/delete-user/delete-user.component';
+import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/modify-user.component';
 
 
 @Component({
@@ -26,25 +27,47 @@ export class UserListComponent implements OnInit {
   // Ouvre une boîte dialogue pour modifier un utilisateur
   openEditDialog(user) {
     console.log(user);
-  }
-
-  // Ouvre une boîte dialogue pour supprimer un utilisateur
-  openDeleteDialog(user) {
-    const dialogRef = this.dialog.open(DeleteUserComponent, {
-      data: { id: user.id, firstName: user.firstName, lastName: user.lastName, email: user.email, role: user.role }
+    const dialogRef = this.dialog.open(ModifyUserComponent, {
+      data: { 
+        id: user.id, 
+        firstName: user.firstName, 
+        lastName: user.lastName, 
+        email: user.email, 
+        role: user.role 
+      }
     });
-
+    
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
-        this.userService.deleteUser(result);
-        this.openSnackBar();
+        this.openSnackBar('L\'utilisateur a été modifié!');
         this.refreshList();
       }
     });
   }
 
-  openSnackBar() {
-    this.snackBar.open('L\'utilisateur a été supprimé!', 'Fermer', {
+  // Ouvre une boîte dialogue pour supprimer un utilisateur
+  openDeleteDialog(user) {
+    const dialogRef = this.dialog.open(DeleteUserComponent, {
+      data: { 
+        id: user.id, 
+        firstName: user.firstName, 
+        lastName: user.lastName, 
+        email: user.email, 
+        role: user.role 
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result !== undefined) {
+        this.userService.deleteUser(result);
+        this.openSnackBar('L\'utilisateur a été supprimé!');
+        this.refreshList();
+      }
+    });
+  }
+
+  openSnackBar(message) {
+    this.snackBar.open(message, 'Fermer', {
       duration: 2000,
       horizontalPosition: "right",
       verticalPosition: "bottom",

@@ -26,8 +26,6 @@ def get_all_user():
     """
     try:
         get_authenticated_user()
-        admin_required()
-        project_manager_required()
         connection = get_db().get_connection()
         query = UserRequest(connection)
         users = query.select_all_user()
@@ -47,7 +45,6 @@ def delete_user():
     """
     try:
         get_authenticated_user()
-        admin_required()
         user_id = request.args.get('user_id', None)
         email = request.args.get('email', None)
         connection = get_db().get_connection()
