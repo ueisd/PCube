@@ -5,6 +5,7 @@ from flask import jsonify
 from flask import make_response
 from flask import Blueprint
 from flask import request
+from flask import escape
 from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from .db_controller import get_db
@@ -56,11 +57,14 @@ def delete_user():
         connection = get_db().get_connection()
         query = UserRequest(connection)
 
-        if not query.is_id_email_combo_exist(data['id'], data['email']):
+        id = escape(data['id']).strip()
+        email = escape(data['email']).strip()
+
+        if not query.is_id_email_combo_exist(id, email):
             log.error("L'utilisateur n'existe pas")
             abort(404)
 
-        query.delete_user(data['id'], data['email'])
+        query.delete_user(id, email)
         return "",200
 
     except AuthenticationError as error:
@@ -88,10 +92,10 @@ def add_new_user():
     try:
         data = request.json
         user = User()
-        user.first_name = data['first_name']
-        user.last_name = data['last_name']
-        user.email = data['email']
-        user.role_id = data['role_id']
+        user.first_name = escape(data['first_name']).strip()
+        user.last_name = escape(data['last_name']).strip()
+        user.email = escape(data['email']).strip()
+        user.role_id = escape(data['role_id']).strip()
 
         connection = get_db().get_connection()
         query = UserRequest(connection)
@@ -126,11 +130,11 @@ def update_user():
     try:
         data = request.json
         user = User()
-        user.first_name = data['first_name']
-        user.last_name = data['last_name']
-        user.id = data['id']
-        user.email = data['email']
-        user.role_id = data['role_id']
+        user.first_name = escape(data['first_name']).strip()
+        user.last_name = escape(data['last_name']).strip()
+        user.id = escape(data['id']).strip()
+        user.email = escape(data['email']).strip()
+        user.role_id = escape(data['role_id']).strip()
 
         connection = get_db().get_connection()
         query = UserRequest(connection)
@@ -147,7 +151,7 @@ def update_user():
         log.error('authentication error: %s', error)
         abort(403)
 
-@app.errorhandler(JsonValidationError)
+@user.errorhandler(JsonValidationError)
 def validation_error(e):
     errors = [validation_error.message for validation_error in e.errors]
     return jsonify({'error': e.message, 'errors': errors}), 400

@@ -5,7 +5,11 @@ from flask import abort
 from flask import make_response
 from flask import jsonify
 from flask import Blueprint
+from flask import escape
+from flask_json_schema import JsonSchema
+from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
+from ..schemas.auth_schema import (auth_login_schema)
 from ..db.auth_request import AuthRequest
 from ..utility.auth import (authenticate_user, deauthenticate_user,
                     refresh_authentication, get_authenticated_user,
@@ -16,15 +20,19 @@ from ..utility.auth import (authenticate_user, deauthenticate_user,
 auth = Blueprint('auth', __name__)
 app = Flask(__name__)
 log = create_logger(app)
+schema = JsonSchema(app)
 
 @auth.route('/login', methods=['POST'])
+@schema.validate(auth_login_schema)
 def login_user():
     """
     Login user
     """
     try:
-        email = request.json.get('email', None)
-        password = request.json.get('password', None)
+        data = request.json
+
+        email = escape(data['email']).strip()
+        password = escape(data['password']).strip()
         access_token, refresh_token = authenticate_user(email, password)
         return make_response(jsonify({
             'accessToken': access_token,
@@ -92,4 +100,8 @@ def project_manager_check():
 @member_required
 def member_check():
     return {}
-   
+
+@auth.errorhandler(JsonValidationError)
+def validation_error(e):
+    errors = [validation_error.message for validation_error in e.errors]
+    return jsonify({'error': e.message, 'errors': errors}), 400
