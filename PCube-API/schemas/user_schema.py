@@ -26,13 +26,23 @@ user_update_schema = {
     "additionalProperties": False
 }
 
-user_password_update= {
+user_password_update_schema = {
     "type": "object",
     "required": ["id", "email", "new_password"],
     "properties": {
         "id": {"type": "int"},
         "email": {"type": "string", "pattern" : r"/[a-z0-9\._%+!$&*=^|~#%{}/\-]+@([a-z0-9\-]+\.){1,}([a-z]{2,22})/"},
         "new_password": {"type": "string", "minLength": 1, "maxLength": 120},
+    },
+    "additionalProperties": False
+}
+
+user_delete_schema = {
+    "type": "object",
+    "required": ["id", "email"],
+    "properties": {
+        "id": {"type": "integer"},
+        "email": {"type": "string", "format": "email"},
     },
     "additionalProperties": False
 }
