@@ -5,9 +5,14 @@ from flask import jsonify
 from flask import make_response
 from flask import Blueprint
 from flask import request
+from flask_json_schema import JsonSchema
+from flask_json_schema import JsonValidationError
 from .db_controller import get_db
 from flask.logging import create_logger
+from ..schemas.user_schema import (user_update_schema, user_insert_schema)
 from ..db.user_request import UserRequest
+from ..domain.user import User
+from ..utility.security import (generate_salt, encrypt_password)
 from ..utility.auth import (get_authenticated_user,
                     auth_required, auth_refresh_required, AuthenticationError,
                     admin_required, project_manager_required, member_required
@@ -16,6 +21,7 @@ from ..utility.auth import (get_authenticated_user,
 user = Blueprint('user', __name__)
 app = Flask(__name__)
 log = create_logger(app)
+schema = JsonSchema(app)
 
 @user.route('', methods=['GET'])
 @auth_required
@@ -26,8 +32,6 @@ def get_all_user():
     """
     try:
         get_authenticated_user()
-        admin_required()
-        project_manager_required()
         connection = get_db().get_connection()
         query = UserRequest(connection)
         users = query.select_all_user()
@@ -47,7 +51,6 @@ def delete_user():
     """
     try:
         get_authenticated_user()
-        admin_required()
         user_id = request.args.get('user_id', None)
         email = request.args.get('email', None)
         connection = get_db().get_connection()
@@ -74,80 +77,76 @@ def is_unique_user(email):
             return jsonify(False)
 
 
-@user.route('/user', methods=['POST'])
-#@auth_required
+@user.route('', methods=['POST'])
+@auth_required
+@schema.validate(user_insert_schema)
 def add_new_user():
     """
     Permet d'ajouter un utilisateur dans le système.
     """
     try:
-        get_authenticated_user()
-        first_name = request.form.get("first_name", "").upper()
-        last_name = request.form.get("last_name", "").upper()
-        email = request.form.get("email", "").upper()
-        password = request.form.get("password", "").upper()
-        confirm_password = request.form.get("confirm_password", "").upper()
-        if not first_name or not last_name or not email or not password or not confirm_password: #Il y a une erreur a cette ligne qui bloque tout les routes utilisateurs
-            log.error('Post is missing parameter')
-            abort(400)
+        data = request.json
+        user = User()
+        user.first_name = data['first_name']
+        user.last_name = data['last_name']
+        user.email = data['email']
+        user.role_id = data['role_id']
 
         connection = get_db().get_connection()
-        aRequest = UserRequest(connection)
-        isUnique = aRequest.select_one_user(email)
+        query = UserRequest(connection)
+        isUnique = query.select_one_user(user.email)
 
         if isUnique is not None:
             log.error('The email is not unique')
             abort(409)
 
-        user = User()
-        user.first_name = first_name
-        user.last_name = last_name
-        user.email = email
-        user.password = password
+        if data['password_confirmed'] != data['password']:
+            log.error('Échec de la validation du mot de passe!')
+            abort(400)
 
-        user = aRequest.insert_user(user)
-        return jsonify(user.asDictionnary())
+        salt = generate_salt()
+        hashed_password = encrypt_password(data['password'], salt)
+
+        user = query.insert_user(user,hashed_password, salt)
+        return jsonify(user.asDictionary())
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
 
 
-@user.route('/user', methods=['PUT'])
-#@auth_required
-def add_new_user():
+@user.route('', methods=['PUT'])
+@auth_required
+@schema.validate(user_update_schema)
+def update_user():
     """
     Permet de modifier un utilisateur dans le système.
     """
     try:
-        get_authenticated_user()
-        user_id = request.args.get('user_id', "").upper()
-        email = request.args.get('email', "").upper()
-        new_first_name = request.form.get("new_first_name", "").upper()
-        new_last_name = request.form.get("new_last_name", "").upper()
-        new_password = request.form.get("new_password", "").upper()
-        if not user_id or not email or not  new_first_name or not new_last_name or not new_password 
-            log.error('Post is missing parameter')
-            abort(400)
+        data = request.json
+        user = User()
+        user.first_name = data['first_name']
+        user.last_name = data['last_name']
+        user.id = data['id']
+        user.email = data['email']
+        user.role_id = data['role_id']
 
         connection = get_db().get_connection()
-        aRequest = UserRequest(connection)
-        isUnique = aRequest.select_one_user(email)
+        query = UserRequest(connection)
 
-        if isUnique is not None:
-            log.error('The email is not unique')
-            abort(409)
+        if not query.is_id_email_combo_exist(user.id, user.email):
+            log.error("L'utilisateur n'existe pas")
+            abort(404)
 
-        user = User()
-        user.user_id = user_id
-        user.email = email
-        user.first_name = new_first_name
-        user.last_name = new_last_name
-        user.password = new_password
+        user = query.update_user(user, data['new_email'])
 
-        user = aRequest.update_user(user)
-        return jsonify(user.asDictionnary())
+        return jsonify(user.asDictionary())
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
+
+@app.errorhandler(JsonValidationError)
+def validation_error(e):
+    errors = [validation_error.message for validation_error in e.errors]
+    return jsonify({'error': e.message, 'errors': errors}), 400

@@ -1,7 +1,7 @@
 import sqlite3
 from .database import Database
 from .dict_factory import dict_factory
-from ..domain.activity import Activity
+from ..domain.user import User
 
 class UserRequest:
 
@@ -34,30 +34,37 @@ class UserRequest:
         cursor.close()
         return data
 
-def update_user(self, user_id, email):
+    def is_id_email_combo_exist(self, id, email):
+        self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("update user set first_name = ? , last_name = ? ,"
-                         "password = ? where id = ? and email = ?", 
-                        (newUser.first_name, newUser.last_name, newUser.password, user.user_id, user.email,))
+        cursor.execute("select * from user where email = ? and id = ?",
+        (email, id))
+        data = cursor.fetchone()
+        cursor.close()
+        return True if data else False
+
+    def update_user(self, user, new_email):
+        cursor = self.connection.cursor()
+        cursor.execute("update user set first_name = ?, last_name = ?,"
+                        "email = ?, role_id = ? where id = ? and email = ?", 
+                        (user.first_name, user.last_name, new_email, user.role_id, user.id, user.email))
         self.connection.commit()
         cursor.close()
-        newUser.id = user_id.id
-        return newUser
+        user.email = new_email
+        return user
 
 
-    def insert_user(self, user):
-		 """
+    def insert_user(self, user, hashed_password, salt):
+        """
         Permet d'Insère un nouvel utilisateur dans la base de données.
         La fonctionne retourne un utilisateur avec son nouvel identifiant.
         """
         
-        cursor = self.connexion.cursor()
-        cursor.execute("insert into user(prenom, nom,"
-                       " email, mot_de_passe, salt)"
-                       " values(?, ?, ?, ?, ?)",
-                       (user.prenom, user.nom, user.email,
-                        user.mot_de_passe, user.salt))
-        self.connexion.commit()
+        cursor = self.connection.cursor()
+        cursor.execute("insert into user(first_name, last_name, email, hashed_password, salt, isActive, role_id)"
+                       " values(?, ?, ?, ?, ?, ?, ?)",
+                       (user.first_name, user.last_name, user.email, hashed_password, salt, True, user.role_id))
+        self.connection.commit()
         id = cursor.lastrowid
         cursor.close()
         user.id = id
