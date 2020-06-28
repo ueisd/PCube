@@ -4,6 +4,7 @@ import { ActivityListComponent } from 'src/app/components/domain/activity/activi
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { AddActivityComponent } from 'src/app/components/domain/activity/add-activity/add-activity.component';
 import { Utils } from 'src/app/components/domain/utils/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-activity',
@@ -16,7 +17,8 @@ export class ActivityComponent implements OnInit {
   @ViewChild(ActivityListComponent) child;
 
   constructor(private activityService: ActivityService, 
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private snackBar : MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -29,10 +31,19 @@ export class ActivityComponent implements OnInit {
         console.log(result);
         this.child.refreshList();
         if(result == true) {
-          Utils.openSnackBar('L\'activité a été créée', 'notif-success');
+          this.openSnackBar('L\'activité a été créée', 'notif-success');
         }
       }
     );
+  }
+
+  openSnackBar(message, panelClass) {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 2000,
+      horizontalPosition: "right",
+      verticalPosition: "bottom",
+      panelClass: [panelClass]
+    });
   }
 
 }

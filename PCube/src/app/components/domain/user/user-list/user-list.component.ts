@@ -5,7 +5,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { DeleteUserComponent } from 'src/app/components/domain/user/delete-user/delete-user.component';
 import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/modify-user.component';
 import { Utils } from 'src/app/components/domain/utils/utils';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-list',
@@ -17,7 +17,8 @@ export class UserListComponent implements OnInit {
   dataSource : User[] = [];
 
   constructor(private userService: UserService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private snackBar : MatSnackBar) { }
 
   ngOnInit(): void {
     this.refreshList();
@@ -37,7 +38,7 @@ export class UserListComponent implements OnInit {
     
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
-        Utils.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
+        this.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
         this.refreshList();
       }
     });
@@ -58,14 +59,23 @@ export class UserListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
         this.userService.deleteUser(result.id, result.email).subscribe((data) => {
-          Utils.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
+          this.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
         },
         (error) => {
-          Utils.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', '');
+          this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
         });
         
         this.refreshList();
       }
+    });
+  }
+
+  openSnackBar(message, panelClass) {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 2000,
+      horizontalPosition: "right",
+      verticalPosition: "bottom",
+      panelClass: [panelClass]
     });
   }
 

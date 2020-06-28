@@ -4,6 +4,7 @@ import { UserListComponent } from 'src/app/components/domain/user/user-list/user
 import { AddUserComponent } from 'src/app/components/domain/user/add-user/add-user.component';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { Utils } from 'src/app/components/domain/utils/utils';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-users',
@@ -16,7 +17,8 @@ export class UsersComponent implements OnInit {
   @ViewChild(UserListComponent) child;
 
   constructor(private userService: UserService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog,
+    private snackBar : MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -29,10 +31,19 @@ export class UsersComponent implements OnInit {
         console.log(result);
         this.child.refreshList();
         if(result == true) {
-          Utils.openSnackBar('L\'utilisateur a été créé!', 'notif-success');
+          this.openSnackBar('L\'utilisateur a été créé!', 'notif-success');
         }
       }
     );
+  }
+
+  openSnackBar(message, panelClass) {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 2000,
+      horizontalPosition: "right",
+      verticalPosition: "bottom",
+      panelClass: [panelClass]
+    });
   }
 
 }
