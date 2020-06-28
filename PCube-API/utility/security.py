@@ -1,5 +1,5 @@
 import os
-import base64
+from base64 import b64encode
 from flask import Flask
 from flask_bcrypt import Bcrypt
 
@@ -8,7 +8,7 @@ bcrypt = Bcrypt(app)
 
 def generate_salt():
     salt = os.urandom(16)
-    return str(base64.b64encode(salt))
+    return b64encode(salt).decode('utf-8')
 
 def encrypt_password(password, salt):
     """

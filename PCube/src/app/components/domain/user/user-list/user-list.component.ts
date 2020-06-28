@@ -60,12 +60,11 @@ export class UserListComponent implements OnInit {
       if(result !== undefined) {
         this.userService.deleteUser(result.id, result.email).subscribe((data) => {
           this.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
+          this.refreshList();
         },
         (error) => {
           this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
         });
-        
-        this.refreshList();
       }
     });
   }
