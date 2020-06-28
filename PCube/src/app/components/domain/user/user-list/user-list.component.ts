@@ -60,10 +60,13 @@ export class UserListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
-        this.userService.deleteUser(result.id, result.email).subscribe(res => {
-          console.log(res);
+        this.userService.deleteUser(result.id, result.email).subscribe((data) => {
+          this.openSnackBar('L\'utilisateur a été supprimé!');
+        },
+        (error) => {
+          this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer');
         });
-        this.openSnackBar('L\'utilisateur a été supprimé!');
+        
         this.refreshList();
       }
     });

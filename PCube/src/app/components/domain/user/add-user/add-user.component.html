@@ -23,7 +23,7 @@
             </div>
             <label for="orders"> Roles </label>
             <select formControlName="roles" id="roles">
-                <option *ngFor="let role of roles; let i = index" [value]="roles[i].id">
+                <option *ngFor="let role of roles; let i = index" [ngValue]="roles[i].id">
                     {{roles[i].role_name}}
                  </option>
             </select><br>

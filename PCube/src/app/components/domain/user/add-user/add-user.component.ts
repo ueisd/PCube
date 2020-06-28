@@ -1,11 +1,13 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { UserService } from 'src/app/services/user.service'
+import { UserService } from 'src/app/services/user/user.service'
 import { UserForm } from 'src/app/Model/user-form';
 import { RoleService } from 'src/app/services/role.service'
 import { Role } from 'src/app/Model/role';
 import { MatDialog } from '@angular/material/dialog';
+import { User } from '../User';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-add-user',
@@ -23,27 +25,38 @@ export class AddUserComponent implements OnInit {
 
 
   constructor(private router: Router, private userService:UserService, 
-    private roleService: RoleService, private dialog: MatDialog, private fb: FormBuilder){ 
+    private roleService: RoleService, private dialog: MatDialog, private fb: FormBuilder,
+    private snackBar: MatSnackBar){ 
   }
 
   onSubmit(){
-    const name = this.userForm.get("name").value;
-    const lname = this.userForm.get("lname").value;
-    const email = this.userForm.get("email").value;
+    let user = new User();
+    user.firstName = this.userForm.get("name").value;
+    user.lastName = this.userForm.get("lname").value;
+    user.email = this.userForm.get("email").value;
+    user.roleId = this.userForm.get("roles").value;
     const password = this.userForm.get("password").value
-    const roleId = this.userForm.get("roles").value;
-    const creerUser = this.isChecked;
     const passwordConfirmation = this.userForm.get("passwordConfirmation").value;
     if (this.passwordsMatch(password, passwordConfirmation)){
-      let user = new UserForm(name, lname, email, password, passwordConfirmation, roleId, creerUser);
-      this.userService.createUser(user);
-      this.router.navigate(['/'])
+      this.userService.createUser(user, password, passwordConfirmation).subscribe((data) => {
+        this.openSnackBar('L\'utilisateur a été ajouté!');
+      },
+      (error) => {
+        this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer');
+      });
     }else{
       console.log(passwordConfirmation, password, password === passwordConfirmation)
     }
-    
   }
   
+  openSnackBar(message) {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 2000,
+      horizontalPosition: "right",
+      verticalPosition: "bottom",
+    });
+  }
+
   ngOnInit(): void { 
     this.roleService.getRoless().subscribe(res=>{
       this.roles= res;

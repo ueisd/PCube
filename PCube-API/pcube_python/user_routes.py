@@ -67,7 +67,7 @@ def delete_user():
             abort(404)
 
         query.delete_user(id, email)
-        return "",200
+        return jsonify(""),200
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)

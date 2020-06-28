@@ -37,7 +37,7 @@ export class UserService {
     return this.http.get<User[]>(API_ALL_USER, opts);
   }
 
-  deleteUser(id, email): Observable<any> {
+  deleteUser(id, email): Observable<{}> {
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
@@ -49,7 +49,7 @@ export class UserService {
       }
     };
 
-    return this.http.delete<any>(API_USER, opts);
+    return this.http.delete(API_USER, opts);
   }
 
   isEmailUnique(email): Observable<boolean> {
@@ -81,5 +81,26 @@ export class UserService {
     }
 
     return this.http.put<User>(API_USER, body, opts);
+  }
+
+  createUser(user: User, pwd, confirmedPwd): Observable<User> {
+
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Content-Type': 'application/json'
+      })
+    };
+
+    let body = {
+      email: user.email,
+      first_name: user.firstName,
+      last_name: user.lastName,
+      role_id: user.roleId,
+      password: pwd,
+      password_confirmed: confirmedPwd
+    }
+
+    return this.http.post<User>(API_USER, body, opts);
   }
 }
