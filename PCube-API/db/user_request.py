@@ -45,7 +45,7 @@ class UserRequest:
 
     def update_user(self, user, new_email):
         cursor = self.connection.cursor()
-        cursor.execute("update user set first_name = ?, last_name = ?,"
+        cursor.execute("update user set first_name = ?, last_name = ?, "
                         "email = ?, role_id = ? where id = ? and email = ?", 
                         (user.first_name, user.last_name, new_email, user.role_id, user.id, user.email))
         self.connection.commit()

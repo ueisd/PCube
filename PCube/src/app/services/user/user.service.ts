@@ -5,7 +5,7 @@ import { User } from 'src/app/components/domain/user/User';
 import { Observable } from 'rxjs';
 
 const API_ALL_USER = environment.api_url + "/api/user";
-const API_IS_UNIQUE = environment.api_url + "/api/user/is-unique-email";
+const API_IS_UNIQUE = environment.api_url + "/api/user/is-unique-user";
 const API_USER = environment.api_url + "/api/user";
 
 @Injectable({
@@ -37,14 +37,19 @@ export class UserService {
     return this.http.get<User[]>(API_ALL_USER, opts);
   }
 
-  deleteUser(user) {
+  deleteUser(id, email): Observable<any> {
     const opts = {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
-      })
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Content-Type' : 'application/json'
+      }),
+      body : {
+        id: id,
+        email: email
+      }
     };
-    
-    return this.http.delete<User>(API_USER, opts);
+
+    return this.http.delete<any>(API_USER, opts);
   }
 
   isEmailUnique(email): Observable<boolean> {
@@ -58,7 +63,7 @@ export class UserService {
     return this.http.get<boolean>(url, opts);
   }
 
-  modifyUser(id, email, firstName, lastName, newEmail, roleId) {
+  modifyUser(id, email, firstName, lastName, newEmail, roleId : number) {
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
@@ -73,8 +78,8 @@ export class UserService {
       last_name: lastName,
       new_email: newEmail,
       role_id: roleId
-    } 
-    
+    }
+
     return this.http.put<User>(API_USER, body, opts);
   }
 }

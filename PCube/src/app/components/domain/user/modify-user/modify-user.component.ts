@@ -53,7 +53,7 @@ export class ModifyUserComponent implements OnInit {
       const firstName = this.modifyUserForm.controls['firstName'].value;
       const lastName = this.modifyUserForm.controls['lastName'].value;
       const newEmail = this.modifyUserForm.controls['newEmail'].value;
-      const roleId = this.modifyUserForm.controls['roleId'].value;
+      const roleId : number = this.modifyUserForm.controls['roleId'].value;
 
       this.userService.modifyUser(id, email, firstName, lastName, newEmail, roleId).subscribe(user => {
           if(user.id != -1){
@@ -68,7 +68,7 @@ export class ModifyUserComponent implements OnInit {
   checkUniqueEmail(newValue){
     if(newValue != null && newValue.trim().length != 0){
       this.isUnique = true;
-      //this.userService.isEmailUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
+      this.userService.isEmailUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
     }
   }
 

@@ -26,7 +26,6 @@ export class UserListComponent implements OnInit {
 
   // Ouvre une boîte dialogue pour modifier un utilisateur
   openEditDialog(user) {
-    console.log(user);
     const dialogRef = this.dialog.open(ModifyUserComponent, {
       data: { 
         id: user.id, 
@@ -61,7 +60,9 @@ export class UserListComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
-        this.userService.deleteUser(result);
+        this.userService.deleteUser(result.id, result.email).subscribe(res => {
+          console.log(res);
+        });
         this.openSnackBar('L\'utilisateur a été supprimé!');
         this.refreshList();
       }
