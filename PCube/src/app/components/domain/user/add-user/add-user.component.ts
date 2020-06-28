@@ -2,9 +2,9 @@ import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service'
-import { UserForm } from 'src/app/Model/user-form';
-import { RoleService } from 'src/app/services/role.service'
-import { Role } from 'src/app/Model/role';
+import { UserForm } from 'src/app/models/user-form';
+import { RoleService } from 'src/app/services/role/role.service'
+import { Role } from 'src/app/models/role';
 import { MatDialog } from '@angular/material/dialog';
 import { User } from '../User';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -58,7 +58,7 @@ export class AddUserComponent implements OnInit {
   }
 
   ngOnInit(): void { 
-    this.roleService.getRoless().subscribe(res=>{
+    this.roleService.getRoles().subscribe(res=>{
       this.roles= res;
     });
     this.userForm = this.fb.group({

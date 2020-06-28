@@ -13,7 +13,8 @@ class UserRequest:
         cursor = self.connection.cursor()
         cursor.execute("select user.id, first_name, last_name, email, role_id, isActive, role_name, access_level "
                        "from user "
-                       "inner join role on user.role_id = role.id")
+                       "inner join role on user.role_id = role.id "
+                       "where isActive = true")
         data = cursor.fetchall()
         cursor.close()
         return data

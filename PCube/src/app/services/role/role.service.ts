@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Role } from '../Model/role';
+import { Role } from 'src/app/models/role';
 
 
 @Injectable({
@@ -11,7 +11,7 @@ export class RoleService {
   url = '/api/roles';
   constructor(private http : HttpClient) { }
 
-  getRoless() : Observable<Role[]>{
+  getRoles() : Observable<Role[]>{
     return this.http.get<Role[]>(this.url);
   }
 }

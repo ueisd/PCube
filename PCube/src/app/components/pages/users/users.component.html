@@ -1,3 +1,10 @@
-<p>users works!</p>
-<app-add-user></app-add-user>
-<app-user-list></app-user-list>
+<div>
+    <mat-card class="list-activite-card">
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="openDialog()">Ajouter un utlisateur</button>
+        </mat-card-actions>
+        <mat-card-content>
+            <app-user-list></app-user-list>
+        </mat-card-content>
+    </mat-card>
+</div>
