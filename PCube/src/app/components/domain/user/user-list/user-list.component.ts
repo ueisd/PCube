@@ -2,9 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/components/domain/user/User';
 import { MatDialog } from "@angular/material/dialog";
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeleteUserComponent } from 'src/app/components/domain/user/delete-user/delete-user.component';
 import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/modify-user.component';
+import { Utils } from 'src/app/components/domain/utils/utils';
 
 
 @Component({
@@ -17,14 +17,12 @@ export class UserListComponent implements OnInit {
   dataSource : User[] = [];
 
   constructor(private userService: UserService,
-    private dialog: MatDialog,
-    private snackBar: MatSnackBar) { }
+    private dialog: MatDialog) { }
 
   ngOnInit(): void {
     this.refreshList();
   }
 
-  // Ouvre une boîte dialogue pour modifier un utilisateur
   openEditDialog(user) {
     const dialogRef = this.dialog.open(ModifyUserComponent, {
       data: { 
@@ -39,13 +37,12 @@ export class UserListComponent implements OnInit {
     
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
-        this.openSnackBar('L\'utilisateur a été modifié!');
+        Utils.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
         this.refreshList();
       }
     });
   }
 
-  // Ouvre une boîte dialogue pour supprimer un utilisateur
   openDeleteDialog(user) {
     const dialogRef = this.dialog.open(DeleteUserComponent, {
       data: { 
@@ -61,22 +58,14 @@ export class UserListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
         this.userService.deleteUser(result.id, result.email).subscribe((data) => {
-          this.openSnackBar('L\'utilisateur a été supprimé!');
+          Utils.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
         },
         (error) => {
-          this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer');
+          Utils.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', '');
         });
         
         this.refreshList();
       }
-    });
-  }
-
-  openSnackBar(message) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
     });
   }
 

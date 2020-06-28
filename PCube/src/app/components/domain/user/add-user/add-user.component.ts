@@ -1,13 +1,11 @@
-import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Input, Inject } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import { UserService } from 'src/app/services/user/user.service'
-import { UserForm } from 'src/app/models/user-form';
 import { RoleService } from 'src/app/services/role/role.service'
 import { Role } from 'src/app/models/role';
-import { MatDialog } from '@angular/material/dialog';
 import { User } from '../User';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { Utils } from 'src/app/components/domain/utils/utils';
 
 @Component({
   selector: 'app-add-user',
@@ -19,14 +17,37 @@ export class AddUserComponent implements OnInit {
   accessLevel: number;
   roles: Role[];
   userForm : FormGroup;
+  hasToRefresh: boolean = true;
+  isAdded: boolean;
+  
   @Input() isChecked = false;
-
   @Output() createUser : EventEmitter<any> = new EventEmitter;
+  @Output() refreshDataEvent = new EventEmitter<boolean>();
 
+  constructor(private userService:UserService, 
+    private roleService: RoleService, 
+    private fb: FormBuilder,
+    @Inject(MAT_DIALOG_DATA) public data: any,
+    private dialogRef: MatDialogRef<AddUserComponent>){ 
+  }
 
-  constructor(private router: Router, private userService:UserService, 
-    private roleService: RoleService, private dialog: MatDialog, private fb: FormBuilder,
-    private snackBar: MatSnackBar){ 
+  ngOnInit(): void { 
+    this.roleService.getRoles().subscribe(res=>{
+      this.roles= res;
+    });
+    this.isAdded = false;
+    this.initForm();
+  }
+
+  askForDataRefresh() {
+    this.refreshDataEvent.emit(this.hasToRefresh);
+  }
+
+  private onSubmitSuccess(){
+    this.isAdded = true;
+    this.askForDataRefresh();
+    this.userForm.reset();
+    this.dialogRef.close(true);
   }
 
   onSubmit(){
@@ -37,38 +58,19 @@ export class AddUserComponent implements OnInit {
     user.roleId = this.userForm.get("roles").value;
     const password = this.userForm.get("password").value
     const passwordConfirmation = this.userForm.get("passwordConfirmation").value;
+    
     if (this.passwordsMatch(password, passwordConfirmation)){
       this.userService.createUser(user, password, passwordConfirmation).subscribe((data) => {
-        this.openSnackBar('L\'utilisateur a été ajouté!');
+        Utils.openSnackBar('L\'utilisateur a été ajouté!','notif-success');
+        this.onSubmitSuccess();
       },
       (error) => {
-        this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer');
+        Utils.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', '');
       });
     }else{
+      this.isAdded = false;
       console.log(passwordConfirmation, password, password === passwordConfirmation)
     }
-  }
-  
-  openSnackBar(message) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-    });
-  }
-
-  ngOnInit(): void { 
-    this.roleService.getRoles().subscribe(res=>{
-      this.roles= res;
-    });
-    this.userForm = this.fb.group({
-      name : ['', Validators.required],
-      lname : ['', Validators.required],
-      email : ['', Validators.required], 
-      password: ['', Validators.required],
-      passwordConfirmation: ['', Validators.required],
-      roles: ['', Validators.required]
-    },{validators: this.passwordMatchValidator});
   }
 
   clicked = (any) => {  
@@ -93,5 +95,16 @@ export class AddUserComponent implements OnInit {
       }else{
         control.get('passwordConfirmation').setErrors({ notMatching : true });
       }
+    }
+
+    private initForm() {
+      this.userForm = this.fb.group({
+        name : ['', Validators.required],
+        lname : ['', Validators.required],
+        email : ['', Validators.required], 
+        password: ['', Validators.required],
+        passwordConfirmation: ['', Validators.required],
+        roles: ['', Validators.required]
+      },{validators: this.passwordMatchValidator});
     }
 }

@@ -1,5 +1,6 @@
 <form [formGroup]="modifyUserForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
-    <h1 mat-dialog-title>Modifier un utilisateur</h1>
+    <h2 mat-dialog-title>Modifier un utilisateur</h2>
+    
     <mat-dialog-content class="mat-typography">
 
         <input type="hidden" id="id" class="form-control" formControlName="id" [ngModel]="data.id">
