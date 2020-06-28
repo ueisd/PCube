@@ -18,7 +18,7 @@
         <input (ngModelChange)="checkUniqueEmail($event)" type="text" id="newEmail" class="form-control" formControlName="newEmail" [ngModel]="data.email"><br>
 
         <label for="roleId">Rôle</label><br>
-        <select formControlName="roleId" id="roleId" [ngModel]="data.role.id">
+        <select formControlName="roleId" id="roleId" [ngModel]="data.roleId">
             <option id="roleId" *ngFor="let role of roles; let i = index" [value]="roles[i].id">
                 {{roles[i].role_name}}
                 </option>

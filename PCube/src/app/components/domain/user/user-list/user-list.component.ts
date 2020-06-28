@@ -14,7 +14,7 @@ import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/
 })
 export class UserListComponent implements OnInit {
   displayedColumns : string[];
-  dataSource : User[];
+  dataSource : User[] = [];
 
   constructor(private userService: UserService,
     private dialog: MatDialog,
@@ -30,10 +30,11 @@ export class UserListComponent implements OnInit {
     const dialogRef = this.dialog.open(ModifyUserComponent, {
       data: { 
         id: user.id, 
-        firstName: user.firstName, 
-        lastName: user.lastName, 
+        firstName: user.first_name, 
+        lastName: user.last_name, 
         email: user.email, 
-        role: user.role 
+        roleId: user.role_id,
+        roleName: user.role_name 
       }
     });
     
@@ -50,10 +51,11 @@ export class UserListComponent implements OnInit {
     const dialogRef = this.dialog.open(DeleteUserComponent, {
       data: { 
         id: user.id, 
-        firstName: user.firstName, 
-        lastName: user.lastName, 
+        firstName: user.first_name, 
+        lastName: user.last_name, 
         email: user.email, 
-        role: user.role 
+        roleId: user.role_id,
+        roleName: user.role_name
       }
     });
 
@@ -76,9 +78,9 @@ export class UserListComponent implements OnInit {
 
   refreshList() {
     this.displayedColumns = ['firstName', 'lastName', 'email', 'role', 'operations'];
-    this.dataSource = this.userService.getUsers();
-    // this.userService.getAllUser().subscribe(users => {
-    //   this.dataSource = users;
-    // })
+    this.userService.getAllUser().subscribe(users => {
+      this.dataSource = users;
+    });
   }
+
 }

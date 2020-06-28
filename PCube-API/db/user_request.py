@@ -11,7 +11,9 @@ class UserRequest:
     def select_all_user(self):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select first_name, last_name, email, role_id, isActive from user")
+        cursor.execute("select user.id, first_name, last_name, email, role_id, isActive, role_name, access_level "
+                       "from user "
+                       "inner join role on user.role_id = role.id")
         data = cursor.fetchall()
         cursor.close()
         return data

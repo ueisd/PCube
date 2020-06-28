@@ -68,7 +68,7 @@ export class ModifyUserComponent implements OnInit {
   checkUniqueEmail(newValue){
     if(newValue != null && newValue.trim().length != 0){
       this.isUnique = true;
-      this.userService.isEmailUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
+      //this.userService.isEmailUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
     }
   }
 
