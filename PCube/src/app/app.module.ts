@@ -31,6 +31,8 @@ import { SidenavComponent } from './components/layouts/sidenav/sidenav.component
 import { UsersComponent } from './components/pages/users/users.component';
 import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ModifyUserComponent } from './components/domain/user/modify-user/modify-user.component';
+import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
+import { ExpenseAccountListComponent } from './components/domain/expense-account/expense-account-list/expense-account-list.component';
 
 
 @NgModule({
@@ -54,6 +56,8 @@ import { ModifyUserComponent } from './components/domain/user/modify-user/modify
     SidenavComponent,
     UsersComponent,
     ModifyUserComponent,
+    ExpenseAccountsComponent,
+    ExpenseAccountListComponent,
   ],
   imports: [
     MatDialogModule,
