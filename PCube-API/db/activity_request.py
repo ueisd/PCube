@@ -15,6 +15,14 @@ class ActivityRequest:
         data = cursor.fetchall()
         cursor.close()
         return data
+
+    def select_activity_by_filter(self, name):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from activity where name LIKE ?", ('%'+name+'%',))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
     
     def select_one_activity(self, name):
         """

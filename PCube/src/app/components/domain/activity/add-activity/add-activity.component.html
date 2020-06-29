@@ -9,7 +9,7 @@
         <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
             L'activité doit être unique !
         </div>
-        <input (ngModelChange)="checkUniqueName($event)" type="text" id="activityName" class="form-control" formControlName="activityName">
+        <input (ngModelChange)="checkUniqueName($event)" type="text" id="activityName" class="form-control" formControlName="activityName" autocomplete="off">
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
