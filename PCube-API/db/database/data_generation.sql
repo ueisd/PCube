@@ -34,3 +34,13 @@ INSERT INTO activity VALUES(2,"COURSE DE BANANE");
 INSERT INTO activity VALUES(3,"COURSE DE RAVIOLIE");
 INSERT INTO activity VALUES(4,"COURSE DE POMME");
 INSERT INTO activity VALUES(5,"COURSE DE CHAT");
+
+/*************************************/
+/*      TABLE EXPENSE ACCOUNT        */
+/*************************************/
+INSERT INTO accounting_time_category VALUES(1,"COMPTE ABC", 1);
+INSERT INTO accounting_time_category VALUES(2,"COMPTE XYZ", 2);
+INSERT INTO accounting_time_category VALUES(3,"COMPTE DEF", 3);
+INSERT INTO accounting_time_category VALUES(4,"SOUS COMPTE 1", 1);
+INSERT INTO accounting_time_category VALUES(5,"SOUS COMPTE 2", 1);
+INSERT INTO accounting_time_category VALUES(6,"SOUS COMPTE 3", 1);

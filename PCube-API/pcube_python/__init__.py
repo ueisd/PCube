@@ -7,6 +7,7 @@ from .project_routes import project
 from .activity_routes import activity
 from .user_routes import user
 from flask_jwt_extended import JWTManager
+from .expense_account_routes import expense_account
 
 
 def create_app():
@@ -21,6 +22,7 @@ def create_app():
     app.register_blueprint(project, url_prefix='/api/project')
     app.register_blueprint(activity, url_prefix='/api/activity')
     app.register_blueprint(user, url_prefix='/api/user')
+    app.register_blueprint(expense_account, url_prefix='/api/expense_account')
 
     JWTManager(app)
 
