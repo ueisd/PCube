@@ -14,6 +14,7 @@ import { HomeComponent } from 'src/app/components/pages/home/home.component';
 import { AccessDeniedComponent } from 'src/app/components/pages/access-denied/access-denied.component';
 import { AddUserComponent } from './components/domain/user/add-user/add-user.component';
 import { AppComponent } from './app.component';
+import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
 
 
 
@@ -37,6 +38,11 @@ const routes: Routes = [
       {
         path: 'users-managing',
         component: UsersComponent,
+        canActivate: [AdminGuard]
+      },
+      {
+        path: 'expense-account-managing',
+        component: ExpenseAccountsComponent,
         canActivate: [AdminGuard]
       },
       {

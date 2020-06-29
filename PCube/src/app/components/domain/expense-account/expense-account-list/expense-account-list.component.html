@@ -1,0 +1,31 @@
+<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+  <!-- Colonne id -->
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef> Id </mat-header-cell>
+    <mat-cell *matCellDef="let expenseAccount"> {{expenseAccount.id}} </mat-cell>
+  </ng-container>
+
+  <!-- Colonne nom -->
+  <ng-container matColumnDef="name">
+    <mat-header-cell *matHeaderCellDef> Nom de Compte </mat-header-cell>
+    <mat-cell *matCellDef="let expenseAccount"> {{expenseAccount.name}} </mat-cell>
+  </ng-container>
+
+  <!-- Colonne parentId -->
+  <ng-container matColumnDef="parentId">
+    <mat-header-cell *matHeaderCellDef> Id Parent </mat-header-cell>
+    <mat-cell *matCellDef="let expenseAccount"> {{expenseAccount.parentId}} </mat-cell>
+  </ng-container>
+
+  <!-- Colonne opérations -->
+  <ng-container matColumnDef="operations">
+    <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
+    <mat-cell *matCellDef="let expenseAccount">
+        <button mat-raised-button color="primary" (click)="openEditDialog(expenseAccount)"><mat-icon>edit</mat-icon></button>
+        <button mat-raised-button color="primary" (click)="openDeleteDialog(expenseAccount)"><mat-icon>delete</mat-icon></button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
