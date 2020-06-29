@@ -43,6 +43,23 @@ def get_all_activity():
         log.error('authentication error: %s', error)
         abort(403)
 
+@activity.route('/name-filter/<filter>', methods=['GET'])
+@auth_required
+def get_activity_by_name_filter(filter):
+    """
+    Permet d'obtenir une liste d'activité filtré par le nom
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        connection = get_db().get_connection()
+        query = ActivityRequest(connection)
+        activities = query.select_activity_by_name_filter(escape(filter).upper().strip()) 
+        return jsonify(activities)
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
 @activity.route('/is-unique-activity/<name>', methods=['GET'])
 def is_unique_activity(name):
         connection = get_db().get_connection()

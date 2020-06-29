@@ -1,7 +1,9 @@
 <!-- Colonne Prénom -->
 <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="name">
-        <mat-header-cell *matHeaderCellDef> Nom </mat-header-cell>
+        <mat-header-cell *matHeaderCellDef>
+            <input class="name-filter" matInput placeholder="Nom" (ngModelChange)="onNameFilterChanged($event)" [formControl]="nameFilter">
+        </mat-header-cell>
         <mat-cell *matCellDef="let activity">
             <div id="modification-{{activity.id}}" class="hidden">
                 <input id="input-{{activity.id}}" type="text" value="{{activity.name}}">

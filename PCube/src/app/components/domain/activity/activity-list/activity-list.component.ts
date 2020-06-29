@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivityItem } from 'src/app/models/activity';
 import { ActivityService } from 'src/app/services/activity/activity.service';
 import * as $ from 'jquery/dist/jquery.min.js';
+import { FormControl } from '@angular/forms';
+import { Observable, } from 'rxjs';
 
 const HIDDEN_CLASS = 'hidden';
 
@@ -12,6 +14,8 @@ const HIDDEN_CLASS = 'hidden';
 })
 
 export class ActivityListComponent implements OnInit {
+
+  nameFilter = new FormControl('');
 
   constructor(private activityService: ActivityService ) { }
 
@@ -32,7 +36,11 @@ export class ActivityListComponent implements OnInit {
     else
     $("#error-"+id).removeClass('hidden');
   }
-  
+
+  onNameFilterChanged(nameFilter){
+    this.refreshList();
+  }
+
   bindKeypress(){
     $( document ).ready(function() {
       this.dataSource.forEach(element => {
@@ -65,10 +73,17 @@ export class ActivityListComponent implements OnInit {
 
   refreshList(){
     this.displayedColumns = ['name', 'operations'];
-    this.activityService.getAllActivity().subscribe(activities => {
-      this.dataSource = activities;
-      this.bindKeypress();
-    })
+    if(this.nameFilter.value.trim() == ""){
+      this.activityService.getAllActivity().subscribe(activities => {
+        this.dataSource = activities;
+        this.bindKeypress();
+      });
+    }else{
+      this.activityService.filterActivityByName(this.nameFilter.value.trim()).subscribe(activities => {
+        this.dataSource = activities;
+        this.bindKeypress();
+      });
+    }
   }
 
   editAction(activity){

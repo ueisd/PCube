@@ -7,7 +7,7 @@ import { Component, OnInit, Input } from '@angular/core';
 })
 export class SidenavComponent implements OnInit {
 
-  accessLevel: number;
+  accessLevel: number = -1;
 
   constructor() { }
 
