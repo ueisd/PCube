@@ -72,18 +72,14 @@ export class ActivityListComponent implements OnInit {
   }
 
   refreshList(){
+    let activity = new ActivityItem();
+    activity.name = this.nameFilter.value.trim();
     this.displayedColumns = ['name', 'operations'];
-    if(this.nameFilter.value.trim() == ""){
-      this.activityService.getAllActivity().subscribe(activities => {
-        this.dataSource = activities;
-        this.bindKeypress();
-      });
-    }else{
-      this.activityService.filterActivityByName(this.nameFilter.value.trim()).subscribe(activities => {
-        this.dataSource = activities;
-        this.bindKeypress();
-      });
-    }
+    this.activityService.filterActivity(activity).subscribe(activities => {
+      this.dataSource = activities;
+      this.bindKeypress();
+    });
+    
   }
 
   editAction(activity){

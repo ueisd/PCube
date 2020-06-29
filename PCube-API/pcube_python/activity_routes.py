@@ -43,17 +43,18 @@ def get_all_activity():
         log.error('authentication error: %s', error)
         abort(403)
 
-@activity.route('/name-filter/<filter>', methods=['GET'])
+@activity.route('/filter', methods=['GET'])
 @auth_required
-def get_activity_by_name_filter(filter):
+def get_activity_by_filter():
     """
     Permet d'obtenir une liste d'activité filtré par le nom
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
+        name = escape(request.args.get('name', "")).upper().strip()
         connection = get_db().get_connection()
         query = ActivityRequest(connection)
-        activities = query.select_activity_by_name_filter(escape(filter).upper().strip()) 
+        activities = query.select_activity_by_filter(name) 
         return jsonify(activities)
 
     except AuthenticationError as error:

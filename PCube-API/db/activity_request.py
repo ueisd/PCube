@@ -16,7 +16,7 @@ class ActivityRequest:
         cursor.close()
         return data
 
-    def select_activity_by_name_filter(self, name):
+    def select_activity_by_filter(self, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from activity where name LIKE ?", ('%'+name+'%',))
