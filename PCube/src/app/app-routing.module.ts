@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LoginComponent } from 'src/app/components/pages/login/login.component';
 
-
 import { ActivityComponent } from 'src/app/components/pages/activity/activity.component';
 import { ProjectComponent } from 'src/app/components/pages/project/project.component';
 import { UsersComponent } from 'src/app/components/pages/users/users.component';

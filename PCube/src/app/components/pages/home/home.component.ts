@@ -13,6 +13,9 @@ export class HomeComponent implements OnInit {
   authenticated: boolean;
   accessLevel: number;
 
+  events: string[] = [];
+  opened: boolean = true;
+
   constructor(private auth: AuthService) { }
 
   authSubscription: Subscription;

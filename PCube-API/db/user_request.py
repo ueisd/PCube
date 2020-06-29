@@ -14,7 +14,7 @@ class UserRequest:
         cursor.execute("select user.id, first_name, last_name, email, role_id, isActive, role_name, access_level "
                        "from user "
                        "inner join role on user.role_id = role.id "
-                       "where isActive = true")
+                       "where isActive = 1")
         data = cursor.fetchall()
         cursor.close()
         return data

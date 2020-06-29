@@ -22,7 +22,6 @@ import { UserListComponent } from './components/domain/user/user-list/user-list.
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AddActivityComponent } from './components/domain/activity/add-activity/add-activity.component';
 
-import { MaterialAutocomplete } from 'src/app/material/material-autocomplete';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { ActivityComponent } from './components/pages/activity/activity.component';
 import { ActivityListComponent } from './components/domain/activity/activity-list/activity-list.component';
@@ -72,7 +71,6 @@ import { ModifyUserComponent } from './components/domain/user/modify-user/modify
     MatNativeDateModule,
     BrowserAnimationsModule,
     MaterialModule,
-    MaterialAutocomplete,
   ],
   entryComponents: [AddActivityComponent],
   exports:[UserListComponent, AddActivityComponent],
