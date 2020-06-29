@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivityItem } from 'src/app/components/domain/activity/activity-item/activity';
+import { ActivityItem } from 'src/app/models/activity';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';

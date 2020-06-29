@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
-import { User } from 'src/app/components/domain/user/User';
+import { User } from 'src/app/models/user';
 import { Observable } from 'rxjs';
 
 const API_ALL_USER = environment.api_url + "/api/user";

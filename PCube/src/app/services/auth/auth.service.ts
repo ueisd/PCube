@@ -6,7 +6,7 @@ import { throwError, BehaviorSubject, Observable } from 'rxjs';
 import { catchError, map, mergeMap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
-import { UserAuth } from 'src/app/components/domain/user/user-auth';
+import { UserAuth } from 'src/app/models/user-auth';
 
 
 const LOGIN_API = environment.api_url + '/api/auth/login';

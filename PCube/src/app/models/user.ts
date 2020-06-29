@@ -1,17 +1,17 @@
 export class User {
-    name:String;
-    lname:String;
-    email:String;
-    password:String;
-    roleId:number;
-    creerUser: boolean;
+    id : number;
+    firstName : string;
+    lastName : string;
+    email : string;
+    roleId : number;
+    roleName : string;
 
-    constructor(name, lname, email, password, roleId, creerUser) {
-        this.name = name;
-        this.lname = lname;
-        this.email = email;
-        this.password = password;
-        this.roleId = roleId;
-        this.creerUser = creerUser;
-   }
+    constructor(userResponse?: any) {
+        this.id = userResponse && userResponse.id || 0;
+        this.firstName = userResponse && userResponse.first_name || "";
+        this.lastName = userResponse && userResponse.last_name || "";
+        this.email = userResponse && userResponse.email || "";
+        this.roleId = userResponse && userResponse.role_id || "";
+        this.roleName = userResponse && userResponse.role_name || "";
+    }
 }

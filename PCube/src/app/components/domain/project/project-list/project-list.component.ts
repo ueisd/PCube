@@ -1,5 +1,5 @@
 import { OnInit, Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
-import { ProjectItem } from 'src/app/components/domain/project/project-item/project';
+import { ProjectItem } from 'src/app/models/project';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource, MatTable } from '@angular/material/table';

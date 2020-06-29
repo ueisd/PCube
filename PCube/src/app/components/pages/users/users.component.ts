@@ -3,7 +3,6 @@ import { UserService } from 'src/app/services/user/user.service';
 import { UserListComponent } from 'src/app/components/domain/user/user-list/user-list.component';
 import { AddUserComponent } from 'src/app/components/domain/user/add-user/add-user.component';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
-import { Utils } from 'src/app/components/domain/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

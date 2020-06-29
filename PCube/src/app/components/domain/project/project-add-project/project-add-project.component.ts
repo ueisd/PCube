@@ -2,7 +2,7 @@ import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { FormControl, FormGroup, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import * as $ from 'jquery/dist/jquery.min.js';
-import { ProjectItem } from '../project-item/project';
+import { ProjectItem } from '../../../../models/project';
 
 const PARENT_NAME_INPUT_ID = "parentName";
 const PROJECT_NAME_INPUT_ID = "projectName";

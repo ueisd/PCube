@@ -3,9 +3,8 @@ import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/fo
 import { UserService } from 'src/app/services/user/user.service'
 import { RoleService } from 'src/app/services/role/role.service'
 import { Role } from 'src/app/models/role';
-import { User } from '../User';
+import { User } from '../../../../models/user';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-import { Utils } from 'src/app/components/domain/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

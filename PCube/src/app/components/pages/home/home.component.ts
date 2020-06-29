@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { UserAuth } from 'src/app/components/domain/user/user-auth';
+import { UserAuth } from 'src/app/models/user-auth';
 import { Subscription } from 'rxjs';
 import { SidenavComponent } from 'src/app/components/layouts/sidenav/sidenav.component';
 

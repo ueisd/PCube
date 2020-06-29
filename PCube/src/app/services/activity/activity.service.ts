@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { ActivityItem } from 'src/app/components/domain/activity/activity-item/activity';
+import { ActivityItem } from 'src/app/models/activity';
 
 const API_ALL_ACTIVITY = environment.api_url + "/api/activity/get-all-activity";
 const API_IS_UNIQUE = environment.api_url + "/api/activity/is-unique-activity";

@@ -3,7 +3,6 @@ import { ActivityService } from 'src/app/services/activity/activity.service';
 import { ActivityListComponent } from 'src/app/components/domain/activity/activity-list/activity-list.component';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { AddActivityComponent } from 'src/app/components/domain/activity/add-activity/add-activity.component';
-import { Utils } from 'src/app/components/domain/utils/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
