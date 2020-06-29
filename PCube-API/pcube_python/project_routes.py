@@ -91,7 +91,30 @@ def get_all_project():
         for project in parents_dict:
             project['child_project'] = find_all_child(project['id'])
 
+        return jsonify(parents_dict)
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+@project.route('/filter', methods=['GET'])
+@auth_required
+def get_project_by_filter():
+    """
+    Construit l'abre des projets.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        project = Project()
+        project.name = escape(request.args.get('name', "")).upper().strip()
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        query = ProjectRequest(connection)
+        parents_dict = query.select_all_parent_by_filter(project)
         print(parents_dict)
+        for project in parents_dict:
+            project['child_project'] = find_all_child(project['id'])
+
         return jsonify(parents_dict)
 
     except AuthenticationError as error:

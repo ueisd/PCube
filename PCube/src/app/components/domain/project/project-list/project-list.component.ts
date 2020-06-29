@@ -4,6 +4,7 @@ import { ProjectService } from 'src/app/services/project/project.service';
 import {FlatTreeControl} from '@angular/cdk/tree';
 import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import * as $ from 'jquery/dist/jquery.min.js';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-project-list',
@@ -12,6 +13,8 @@ import * as $ from 'jquery/dist/jquery.min.js';
 })
 
 export class ProjectListComponent implements OnInit {
+
+  nameFilter = new FormControl('');
 
   constructor(private projectService: ProjectService ) {
     this.refreshList();
@@ -29,7 +32,11 @@ export class ProjectListComponent implements OnInit {
     };
   }
 
-  treeControl = new FlatTreeControl<ExampleFlatNode>(
+  onFilterChanged(){
+    this.refreshList();
+  }
+
+  treeControl = new FlatTreeControl<FlatNode>(
       node => node.level, node => node.expandable);
 
   treeFlattener = new MatTreeFlattener(
@@ -38,46 +45,20 @@ export class ProjectListComponent implements OnInit {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
 
-  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+  hasChild = (_: number, node: FlatNode) => node.expandable;
 
   refreshList(){
-    this.projectService.getAllProject().subscribe(projets =>{
+    let project = new ProjectItem()
+    project.name = this.nameFilter.value.trim();
+    this.projectService.filterProject(project).subscribe(projets =>{
       this.dataSource.data = projets;
     });
     
   }
 }
 
-/**
- * Food data with nested structure.
- * Each node has a name and an optional list of children.
- */
-interface FoodNode {
-  name: string;
-  children?: FoodNode[];
-}
-
-const TREE_DATA: ProjectItem[] = [
-  {
-    id: 1,
-    name: "allo",
-    parent_id: 1,
-    child_project:[
-      { id: 2,
-        name: "allo",
-        parent_id: 1,
-      }
-    ]
-  },
-  {
-    id: 1,
-    name: "allo",
-    parent_id: 1
-  }
-];
-
 /** Flat node with expandable and level information */
-interface ExampleFlatNode {
+interface FlatNode {
   expandable: boolean;
   name: string;
   level: number;

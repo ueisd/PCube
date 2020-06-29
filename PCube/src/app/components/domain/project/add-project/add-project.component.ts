@@ -1,23 +1,33 @@
-import { Component, OnInit, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter, Inject, Optional } from '@angular/core';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { FormControl, FormGroup, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
 import * as $ from 'jquery/dist/jquery.min.js';
 import { ProjectItem } from '../../../../models/project';
+import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 const PARENT_NAME_INPUT_ID = "parentName";
 const PROJECT_NAME_INPUT_ID = "projectName";
 const TABLE_AUTOCOMPLETE_ID = "autocomplete-table";
 
 @Component({
-  selector: 'app-project-add-project',
-  templateUrl: './project-add-project.component.html',
-  styleUrls: ['./project-add-project.component.css']
+  selector: 'app-project',
+  templateUrl: './add-project.component.html',
+  styleUrls: ['./add-project.component.css']
 })
-export class ProjectAddProjectComponent implements OnInit {
+export class AddProjectComponent implements OnInit {
 
-  constructor(private projectService: ProjectService) { }
+  @Output() refreshDataEvent = new EventEmitter<boolean>();
+
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+  private projectService: ProjectService, private dialogRef: MatDialogRef<AddProjectComponent>) { }
 
   newProjectForm: FormGroup;
+
+  hasToRefresh: boolean = true;
+
+  askForDataRefresh() {
+    this.refreshDataEvent.emit(this.hasToRefresh);
+  }
 
   ngOnInit(): void {
     this.initForm();
@@ -31,8 +41,10 @@ export class ProjectAddProjectComponent implements OnInit {
 
   private onSubmitSuccess(){
     this.isAdded = true;
+    this.askForDataRefresh();
     this.isAddedFailled = false;
     this.newProjectForm.reset();
+    this.dialogRef.close(true);
   }
 
   private onSubmitFailled(){

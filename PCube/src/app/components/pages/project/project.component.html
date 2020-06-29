@@ -1,3 +1,10 @@
-<app-project-list></app-project-list>
-<app-project-add-project></app-project-add-project>
-
+<div>
+    <mat-card class="">
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="openDialog()">Ajouter un projet</button>
+        </mat-card-actions>
+        <mat-card-content>
+            <app-project-list></app-project-list>
+        </mat-card-content>
+    </mat-card>
+</div>

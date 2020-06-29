@@ -24,7 +24,7 @@ import { ActivityComponent } from './components/pages/activity/activity.componen
 import { ActivityListComponent } from './components/domain/activity/activity-list/activity-list.component';
 import { ProjectComponent } from './components/pages/project/project.component';
 import { ProjectListComponent } from './components/domain/project/project-list/project-list.component';
-import { ProjectAddProjectComponent } from './components/domain/project/project-add-project/project-add-project.component';
+import { AddProjectComponent } from './components/domain/project/add-project/add-project.component';
 import { DeleteUserComponent } from './components/domain/user/delete-user/delete-user.component';
 import { HeaderComponent } from './components/layouts/header/header.component';
 import { SidenavComponent } from './components/layouts/sidenav/sidenav.component';
@@ -50,7 +50,7 @@ import { ExpenseAccountListComponent } from './components/domain/expense-account
     ActivityListComponent,
     ProjectComponent,
     ProjectListComponent,
-    ProjectAddProjectComponent,
+    AddProjectComponent,
     DeleteUserComponent,
     HeaderComponent,
     SidenavComponent,

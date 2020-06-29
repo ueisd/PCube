@@ -17,14 +17,6 @@ export class AddActivityComponent implements OnInit{
 
   newActivityForm: FormGroup;
 
-  hasToRefresh: boolean = true;
-
-  @Output() refreshDataEvent = new EventEmitter<boolean>();
-
-  askForDataRefresh() {
-    this.refreshDataEvent.emit(this.hasToRefresh);
-  }
-
   ngOnInit(): void {
     this.initForm();
     this.isAdded = false;
@@ -36,7 +28,6 @@ export class AddActivityComponent implements OnInit{
 
   private onSubmitSuccess(){
     this.isAdded = true;
-    this.askForDataRefresh();
     this.newActivityForm.reset();
     this.dialogRef.close(true);
   }

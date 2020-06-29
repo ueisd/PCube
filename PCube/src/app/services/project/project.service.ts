@@ -6,6 +6,7 @@ import { ProjectItem } from 'src/app/models/project';
 const API_PROJECT = "/api/project";
 const API_IS_UNIQUE = "api/project/is-unique";
 const API_AUTOCOMPLTE = "api/project/autocomplete";
+const API_FILTER = "/api/project/filter";
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,16 @@ export class ProjectService {
 
   getProjectNameForAutocomplete(name): Observable<ProjectItem[]>{
     var url = API_AUTOCOMPLTE + "/" + name
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<ProjectItem[]>(url, opts);
+  }
+
+  filterProject(projet: ProjectItem): Observable<ProjectItem[]>{
+    let url = API_FILTER + "?name=" + projet.name;
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
