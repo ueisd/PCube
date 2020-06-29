@@ -70,7 +70,7 @@ def find_all_child(parent_id):
         return {}
 
     for project in childs_dict:
-        project['child'] = find_all_child(project['id'])
+        project['child_project'] = find_all_child(project['id'])
 
     return childs_dict
 
@@ -89,8 +89,9 @@ def get_all_project():
         parents_dict = request.select_all_parent()
 
         for project in parents_dict:
-            project['child'] = find_all_child(project['id'])
+            project['child_project'] = find_all_child(project['id'])
 
+        print(parents_dict)
         return jsonify(parents_dict)
 
     except AuthenticationError as error:

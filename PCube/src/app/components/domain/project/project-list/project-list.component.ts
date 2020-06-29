@@ -1,9 +1,8 @@
-import { OnInit, Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+import { OnInit, Component } from '@angular/core';
 import { ProjectItem } from 'src/app/models/project';
 import { ProjectService } from 'src/app/services/project/project.service';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource, MatTable } from '@angular/material/table';
-import { animate, state, style, transition, trigger } from '@angular/animations';
+import {FlatTreeControl} from '@angular/cdk/tree';
+import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
 import * as $ from 'jquery/dist/jquery.min.js';
 
 @Component({
@@ -14,105 +13,72 @@ import * as $ from 'jquery/dist/jquery.min.js';
 
 export class ProjectListComponent implements OnInit {
 
-  @ViewChild('outerSort', { static: true }) sort: MatSort;
-  @ViewChildren('innerSort') innerSort: QueryList<MatSort>;
-  @ViewChildren('innerTables') innerTables: QueryList<MatTable<TestProject>>;
-
-  constructor(private projectService: ProjectService, private cd: ChangeDetectorRef ) { }
-
-  dataSource: MatTableDataSource<TestProject>;
-  projectData: TestProject[] = [];
-  columnsToDisplay = ['id', 'name', 'parent_id'];
-  innerDisplayedColumns = ['id', 'name', 'parent_id'];
-  expandedElement: TestProject | null;
+  constructor(private projectService: ProjectService ) {
+    this.refreshList();
+  }
 
   ngOnInit(): void {
     this.refreshList();
   }
 
+  private _transformer = (node: ProjectItem, level: number) => {
+    return {
+      expandable: !!node.child_project && node.child_project.length > 0,
+      name: node.name,
+      level: level,
+    };
+  }
+
+  treeControl = new FlatTreeControl<ExampleFlatNode>(
+      node => node.level, node => node.expandable);
+
+  treeFlattener = new MatTreeFlattener(
+      this._transformer, node => node.level, node => node.expandable, node => node.child_project);
+
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+
+
+  hasChild = (_: number, node: ExampleFlatNode) => node.expandable;
+
   refreshList(){
-
-    USERS.forEach(user => {
-      if (user.child_project && Array.isArray(user.child_project) && user.child_project.length) {
-        this.projectData = [...this.projectData, {...user, child_project: new MatTableDataSource(user.child_project)}];
-      } else {
-        this.projectData = [...this.projectData, user];
-      }
+    this.projectService.getAllProject().subscribe(projets =>{
+      this.dataSource.data = projets;
     });
-    this.dataSource = new MatTableDataSource(this.projectData);
-    this.dataSource.sort = this.sort;
-  
-
-
-
-
-    this.projectService.getAllProject().subscribe(projects => {
-      
-      projects.forEach(project => {
-        //this.projectData = [...this.projectData, {...project, child_project: new MatTableDataSource(project.child_project)}]
-      });
-
-      //this.dataSource = new MatTableDataSource(this.usersData);
-      //this.dataSource.sort = this.sort;
-
-    });
+    
   }
-
-
-  toggleRow(element: TestProject) {
-    element.child_project && (element.child_project as MatTableDataSource<TestProject>).data.length ? (this.expandedElement = this.expandedElement === element ? null : element) : null;
-    this.cd.detectChanges();
-    this.innerTables.forEach((table, index) => (table.dataSource as MatTableDataSource<TestProject>).sort = this.innerSort.toArray()[index]);
-  }
-
-
 }
 
-export interface TestProject {
-  id : number;
-  name : string;
-  parent_id: number;
-  child_project?: TestProject[] | MatTableDataSource<TestProject>;
+/**
+ * Food data with nested structure.
+ * Each node has a name and an optional list of children.
+ */
+interface FoodNode {
+  name: string;
+  children?: FoodNode[];
 }
 
-const USERS: TestProject[] = [
+const TREE_DATA: ProjectItem[] = [
   {
     id: 1,
-    name: "mason@test.com",
+    name: "allo",
     parent_id: 1,
-    child_project: [
-      {
-        id: 40,
-        name: "mason@test.com",
-        parent_id: 1,
-      },
-      {
-        id: 41,
-        name: "mason@test.com",
+    child_project:[
+      { id: 2,
+        name: "allo",
         parent_id: 1,
       }
     ]
   },
   {
-    id: 2,
-    name: "mason@test.com",
-    parent_id: 2,
-  },
-  {
-    id: 3,
-    name: "mason@test.com",
-    parent_id: 3,
-    child_project: [
-      {
-        id: 42,
-        name: "mason@test.com",
-        parent_id: 3,
-      },
-      {
-        id: 43,
-        name: "mason@test.com",
-        parent_id: 3,
-      }
-    ]
+    id: 1,
+    name: "allo",
+    parent_id: 1
   }
 ];
+
+/** Flat node with expandable and level information */
+interface ExampleFlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
+}
