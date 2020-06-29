@@ -86,7 +86,7 @@ def get_all_expense_account():
         get_authenticated_user()
         connection = get_db().get_connection()
         request = ExpenseAccountRequest(connection)
-        parents_dict = request.select_all_expense_account()
+        parents_dict = request.select_all_parent()
 
         for expense_account in parents_dict:
             expense_account['child'] = find_all_child(expense_account['id'])

@@ -22,7 +22,7 @@ def create_app():
     app.register_blueprint(project, url_prefix='/api/project')
     app.register_blueprint(activity, url_prefix='/api/activity')
     app.register_blueprint(user, url_prefix='/api/user')
-    app.register_blueprint(expense_account, url_prefix='/api/expense_account')
+    app.register_blueprint(expense_account, url_prefix='/api/expense-account')
 
     JWTManager(app)
 

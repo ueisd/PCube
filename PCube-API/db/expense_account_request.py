@@ -17,7 +17,7 @@ class ExpenseAccountRequest:
         cursor.close()
         return data
 
-    def select_account_name_like(self, name):
+    def select_expense_account_name_like(self, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from accounting_time_category where name like ? limit 20", ('%' + name + '%',))
@@ -26,7 +26,7 @@ class ExpenseAccountRequest:
         return data
     
 
-    def select_all_account_from_parent(self, parent_id):
+    def select_all_expense_account_from_parent(self, parent_id):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from accounting_time_category where parent_id = ? and parent_id != id",
@@ -35,7 +35,7 @@ class ExpenseAccountRequest:
         cursor.close()
         return data
     
-    def select_one_account(self, name):
+    def select_one_expense_account(self, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from accounting_time_category where name = ?",
