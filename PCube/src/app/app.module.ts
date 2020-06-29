@@ -14,9 +14,6 @@ import { LoginComponent } from './components/pages/login/login.component';
 import { LogoutComponent } from './components/layouts/logout/logout.component';
 import { HomeComponent } from './components/pages/home/home.component';
 import { AccessDeniedComponent } from './components/pages/access-denied/access-denied.component';
-import { AdminContentComponent } from './components/pages/admin-content/admin-content.component';
-import { ProjectManagerContentComponent } from './components/pages/project-manager-content/project-manager-content.component';
-import { MemberContentComponent } from './components/pages/member-content/member-content.component';
 import { AddUserComponent } from './components/domain/user/add-user/add-user.component';
 import { UserListComponent } from './components/domain/user/user-list/user-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -44,9 +41,6 @@ import { ModifyUserComponent } from './components/domain/user/modify-user/modify
     LogoutComponent,
     HomeComponent,
     AccessDeniedComponent,
-    AdminContentComponent,
-    ProjectManagerContentComponent,
-    MemberContentComponent,
     AddUserComponent,
     UserListComponent,
     AddActivityComponent,
