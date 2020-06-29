@@ -4,19 +4,19 @@
     <mat-dialog-content class="mat-typography">
         <div class="form-group">
             <label for="name">Prénom :</label><br>
-            <input type="text" id="name" name="name" formControlName="name"><br>
+            <input type="text" id="name" name="name" formControlName="name" autocomplete="off"><br>
 
             <label for="lname">Nom de Famille:</label><br>
-            <input type="text" id="lname" name="lname" formControlName="lname"><br>
+            <input type="text" id="lname" name="lname" formControlName="lname" autocomplete="off"><br>
 
             <label for="lname">Adresse Courriel :</label><br>
-            <input type="email" id="email" name="email" formControlName="email"><br>             
+            <input type="email" id="email" name="email" formControlName="email" autocomplete="off"><br>             
             
             <label for="password">Saisir un mot de passe :</label><br>
-            <input type="password" id="password" name="password" formControlName="password"><br>
+            <input type="password" id="password" name="password" formControlName="password" autocomplete="off"><br>
             
             <label for="passwordConfirmation">Confirmez le mot de passe : </label><br>
-            <input type="password" id="passwordConfirmation" name="passwordConfirmation" formControlName="passwordConfirmation"><br>
+            <input type="password" id="passwordConfirmation" name="passwordConfirmation" formControlName="passwordConfirmation" autocomplete="off"><br>
 
             <div class="error"  *ngIf="userForm.get('passwordConfirmation').errors && userForm.get('passwordConfirmation').errors.notMatching">
                 Les mots de passes ne sont pas identiques!

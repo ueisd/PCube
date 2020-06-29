@@ -43,6 +43,30 @@ def get_all_user():
         abort(403)
 
 
+@user.route('/filter', methods=['GET'])
+@auth_required
+def get_user_by_filter():
+    """
+    Permet d'obtenir la liste de tout les utilisateurs.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        user = User()
+        user.first_name = escape(request.args.get('name', "")).upper().strip()
+        user.last_name = escape(request.args.get('lastName', "")).upper().strip()
+        user.email = escape(request.args.get('email', "")).upper().strip()
+        role_name = escape(request.args.get('role', "")).upper().strip()
+
+        connection = get_db().get_connection()
+        query = UserRequest(connection)
+        users = query.select_user_by_filter(user,role_name)
+        return jsonify(users)
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+
 @user.route('', methods=['DELETE'])
 @auth_required
 @schema.validate(user_delete_schema)
