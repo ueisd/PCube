@@ -11,7 +11,10 @@ class UserRequest:
     def select_all_user(self):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select first_name, last_name, email, role_id, isActive from user")
+        cursor.execute("select user.id, first_name, last_name, email, role_id, isActive, role_name, access_level "
+                       "from user "
+                       "inner join role on user.role_id = role.id "
+                       "where isActive = 1")
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -43,7 +46,7 @@ class UserRequest:
 
     def update_user(self, user, new_email):
         cursor = self.connection.cursor()
-        cursor.execute("update user set first_name = ?, last_name = ?,"
+        cursor.execute("update user set first_name = ?, last_name = ?, "
                         "email = ?, role_id = ? where id = ? and email = ?", 
                         (user.first_name, user.last_name, new_email, user.role_id, user.id, user.email))
         self.connection.commit()

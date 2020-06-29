@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
-import { User } from 'src/app/components/domain/user/User';
+import { User } from 'src/app/models/user';
 import { MatDialog } from "@angular/material/dialog";
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeleteUserComponent } from 'src/app/components/domain/user/delete-user/delete-user.component';
 import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/modify-user.component';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-user-list',
@@ -14,71 +13,75 @@ import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/
 })
 export class UserListComponent implements OnInit {
   displayedColumns : string[];
-  dataSource : User[];
+  dataSource : User[] = [];
 
   constructor(private userService: UserService,
     private dialog: MatDialog,
-    private snackBar: MatSnackBar) { }
+    private snackBar : MatSnackBar) { }
 
   ngOnInit(): void {
     this.refreshList();
   }
 
-  // Ouvre une boîte dialogue pour modifier un utilisateur
   openEditDialog(user) {
-    console.log(user);
     const dialogRef = this.dialog.open(ModifyUserComponent, {
       data: { 
         id: user.id, 
-        firstName: user.firstName, 
-        lastName: user.lastName, 
+        firstName: user.first_name, 
+        lastName: user.last_name, 
         email: user.email, 
-        role: user.role 
+        roleId: user.role_id,
+        roleName: user.role_name 
       }
     });
     
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
-        this.openSnackBar('L\'utilisateur a été modifié!');
+        this.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
         this.refreshList();
       }
     });
   }
 
-  // Ouvre une boîte dialogue pour supprimer un utilisateur
   openDeleteDialog(user) {
     const dialogRef = this.dialog.open(DeleteUserComponent, {
       data: { 
         id: user.id, 
-        firstName: user.firstName, 
-        lastName: user.lastName, 
+        firstName: user.first_name, 
+        lastName: user.last_name, 
         email: user.email, 
-        role: user.role 
+        roleId: user.role_id,
+        roleName: user.role_name
       }
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
-        this.userService.deleteUser(result);
-        this.openSnackBar('L\'utilisateur a été supprimé!');
-        this.refreshList();
+        this.userService.deleteUser(result.id, result.email).subscribe((data) => {
+          this.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
+          this.refreshList();
+        },
+        (error) => {
+          this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+        });
       }
     });
   }
 
-  openSnackBar(message) {
+  openSnackBar(message, panelClass) {
     this.snackBar.open(message, 'Fermer', {
       duration: 2000,
       horizontalPosition: "right",
       verticalPosition: "bottom",
+      panelClass: [panelClass]
     });
   }
 
   refreshList() {
     this.displayedColumns = ['firstName', 'lastName', 'email', 'role', 'operations'];
-    this.dataSource = this.userService.getUsers();
-    // this.userService.getAllUser().subscribe(users => {
-    //   this.dataSource = users;
-    // })
+    this.userService.getAllUser().subscribe(users => {
+      this.dataSource = users;
+    });
   }
+
 }

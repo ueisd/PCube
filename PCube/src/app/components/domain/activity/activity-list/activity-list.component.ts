@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivityItem } from 'src/app/components/domain/activity/activity-item/activity';
+import { ActivityItem } from 'src/app/models/activity';
 import { ActivityService } from 'src/app/services/activity/activity.service';
 import * as $ from 'jquery/dist/jquery.min.js';
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ProjectItem } from 'src/app/components/domain/project/project-item/project';
+import { ProjectItem } from 'src/app/models/project';
 
 const API_PROJECT = "/api/project";
 const API_IS_UNIQUE = "api/project/is-unique";

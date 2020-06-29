@@ -2,9 +2,9 @@ import { Component, OnInit, Output, EventEmitter, Inject, Optional } from '@angu
 import { UserService } from 'src/app/services/user/user.service'; 
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef , MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { User } from 'src/app/components/domain/user/User';
-import { RoleService } from 'src/app/services/role.service'
-import { Role } from 'src/app/Model/role';
+import { User } from 'src/app/models/user';
+import { RoleService } from 'src/app/services/role/role.service'
+import { Role } from 'src/app/models/role';
 
 @Component({
   selector: 'app-modify-user',
@@ -31,7 +31,7 @@ export class ModifyUserComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.roleService.getRoless().subscribe(res=>{
+    this.roleService.getRoles().subscribe(res=>{
       this.roles= res;
     });
     this.initForm();
@@ -53,7 +53,7 @@ export class ModifyUserComponent implements OnInit {
       const firstName = this.modifyUserForm.controls['firstName'].value;
       const lastName = this.modifyUserForm.controls['lastName'].value;
       const newEmail = this.modifyUserForm.controls['newEmail'].value;
-      const roleId = this.modifyUserForm.controls['roleId'].value;
+      const roleId : number = this.modifyUserForm.controls['roleId'].value;
 
       this.userService.modifyUser(id, email, firstName, lastName, newEmail, roleId).subscribe(user => {
           if(user.id != -1){

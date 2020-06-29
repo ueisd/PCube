@@ -1,5 +1,6 @@
 <form [formGroup]="modifyUserForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
-    <h1 mat-dialog-title>Modifier un utilisateur</h1>
+    <h2 mat-dialog-title>Modifier un utilisateur</h2>
+    
     <mat-dialog-content class="mat-typography">
 
         <input type="hidden" id="id" class="form-control" formControlName="id" [ngModel]="data.id">
@@ -18,8 +19,8 @@
         <input (ngModelChange)="checkUniqueEmail($event)" type="text" id="newEmail" class="form-control" formControlName="newEmail" [ngModel]="data.email"><br>
 
         <label for="roleId">Rôle</label><br>
-        <select formControlName="roleId" id="roleId" [ngModel]="data.role.id">
-            <option id="roleId" *ngFor="let role of roles; let i = index" [value]="roles[i].id">
+        <select formControlName="roleId" id="roleId" [ngModel]="data.roleId">
+            <option id="roleId" *ngFor="let role of roles; let i = index" [ngValue]="roles[i].id">
                 {{roles[i].role_name}}
                 </option>
         </select><br>

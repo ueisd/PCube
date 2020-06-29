@@ -1,7 +1,13 @@
 /* You can add global styles to this file, and also import other style files */
 html, body { height: 100%;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
 .notif-success {
     background: #7aeb4d;
+    color: black;
+}
+
+.notif-error {
+    background: #cd4746;
     color: black;
 }

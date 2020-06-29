@@ -1,10 +1,10 @@
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
+    <h2 mat-dialog-title>Création d'un utilisateur</h2>
     
-    
-    <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+    <mat-dialog-content class="mat-typography">
         <div class="form-group">
             <label for="name">Prénom :</label><br>
             <input type="text" id="name" name="name" formControlName="name"><br>
-            
 
             <label for="lname">Nom de Famille:</label><br>
             <input type="text" id="lname" name="lname" formControlName="lname"><br>
@@ -21,16 +21,19 @@
             <div class="error"  *ngIf="userForm.get('passwordConfirmation').errors && userForm.get('passwordConfirmation').errors.notMatching">
                 Les mots de passes ne sont pas identiques!
             </div>
-            <label for="orders"> Roles </label>
+            <label for="orders"> Roles </label><br>
             <select formControlName="roles" id="roles">
-                <option *ngFor="let role of roles; let i = index" [value]="roles[i].id">
+                <option *ngFor="let role of roles; let i = index" [ngValue]="roles[i].id">
                     {{roles[i].role_name}}
-                 </option>
+                    </option>
             </select><br>
             <input type="checkbox" name="checkbox" (click)="clicked($event)" ng-model="isChecked">
             <label for="creerCompte"> Créer un identifiant pour cet utilisateur</label><br>
-
         </div>     
-        <button type="submit" [disabled]="userForm.invalid || (userForm.get('passwordConfirmation').errors && userForm.get('passwordConfirmation').errors.notMatching)">Creer</button>
-        
-      </form>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Annuler</button>
+        <button mat-button type="submit" [disabled]="userForm.invalid || (userForm.get('passwordConfirmation').errors && userForm.get('passwordConfirmation').errors.notMatching)">Ajouter</button>
+    </mat-dialog-actions>
+</form>

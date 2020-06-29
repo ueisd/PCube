@@ -1,21 +1,20 @@
 <form [formGroup]="newActivityForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
-<h2 mat-dialog-title>Création d'un activité</h2>
-<mat-dialog-content class="mat-typography">
+    <h2 mat-dialog-title>Création d'une activité</h2>
     
-
+    <mat-dialog-content class="mat-typography">
         <div *ngIf="isAdded" class="alert alert-success" role="alert">
-            Succès, votre activité a été enregistré !
+            Succès, votre activité a été enregistrée!
         </div>
         <label for="activityName">Nom de l'activité</label>
         <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
             L'activité doit être unique !
         </div>
         <input (ngModelChange)="checkUniqueName($event)" type="text" id="activityName" class="form-control" formControlName="activityName">
-    
-</mat-dialog-content>
-<mat-dialog-actions align="end">
-    <button mat-button mat-dialog-close>Cancel</button>
-    <button mat-button type="submit" [disabled]="!newActivityForm.valid || !isUnique">Ajouter</button>
-</mat-dialog-actions>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button type="submit" [disabled]="!newActivityForm.valid || !isUnique">Ajouter</button>
+    </mat-dialog-actions>
 </form>
     
