@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 const API_ALL_USER = environment.api_url + "/api/user";
 const API_IS_UNIQUE = environment.api_url + "/api/user/is-unique-user";
 const API_USER = environment.api_url + "/api/user";
+const API_GET_BY_FILTER = environment.api_url + "/api/user/filter";
 
 @Injectable({
   providedIn: 'root'
@@ -102,5 +103,21 @@ export class UserService {
     }
 
     return this.http.post<User>(API_USER, body, opts);
+  }
+
+  getUserByFilter(user: User){
+
+    let url = API_GET_BY_FILTER + "?name=" + user.firstName;
+    url += "&lastName=" + user.lastName;
+    url += "&email=" + user.email;
+    url += "&role=" + user.roleName;
+
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    
+    return this.http.get<User[]>(url, opts);
   }
 }

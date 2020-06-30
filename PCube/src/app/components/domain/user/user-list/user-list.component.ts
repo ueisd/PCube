@@ -5,6 +5,7 @@ import { MatDialog } from "@angular/material/dialog";
 import { DeleteUserComponent } from 'src/app/components/domain/user/delete-user/delete-user.component';
 import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/modify-user.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-user-list',
@@ -12,14 +13,24 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
+
   displayedColumns : string[];
   dataSource : User[] = [];
+
+  nameFilter = new FormControl('');
+  lastNameFilter = new FormControl('');
+  emailFilter = new FormControl('');
+  roleFilter = new FormControl('');
 
   constructor(private userService: UserService,
     private dialog: MatDialog,
     private snackBar : MatSnackBar) { }
 
   ngOnInit(): void {
+    this.refreshList();
+  }
+
+  onFilterChanged(){
     this.refreshList();
   }
 
@@ -78,8 +89,15 @@ export class UserListComponent implements OnInit {
   }
 
   refreshList() {
+
+    let user = new User();
+    user.firstName = this.nameFilter.value.trim();
+    user.lastName = this.lastNameFilter.value.trim();
+    user.email = this.emailFilter.value.trim();
+    user.roleName = this.roleFilter.value.trim();
+
     this.displayedColumns = ['firstName', 'lastName', 'email', 'role', 'operations'];
-    this.userService.getAllUser().subscribe(users => {
+    this.userService.getUserByFilter(user).subscribe(users => {
       this.dataSource = users;
     });
   }

@@ -1,4 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ProjectListComponent } from 'src/app/components/domain/project/project-list/project-list.component';
+import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
+import { AddProjectComponent } from 'src/app/components/domain/project/add-project/add-project.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-project',
@@ -7,9 +11,37 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProjectComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private dialog: MatDialog,
+    private snackBar : MatSnackBar
+    ){}
 
   ngOnInit(): void {
+  }
+
+  fileNameDialogRef: MatDialogRef<AddProjectComponent>;
+  @ViewChild(ProjectListComponent) projectListChild;
+
+  openDialog() {
+    const dialogConfig = new MatDialogConfig();
+    this.fileNameDialogRef = this.dialog.open(AddProjectComponent, dialogConfig);
+    
+    this.fileNameDialogRef.afterClosed().subscribe(result => { 
+        this.projectListChild.refreshList();
+        if(result == true) {
+          this.openSnackBar('L\'activité a été créée', 'notif-success');
+        }
+      }
+    );
+  }
+
+  openSnackBar(message, panelClass) {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 2000,
+      horizontalPosition: "right",
+      verticalPosition: "bottom",
+      panelClass: [panelClass]
+    });
   }
 
 }

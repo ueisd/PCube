@@ -25,6 +25,9 @@ INSERT INTO project VALUES(3,"SOUPER NOEL 2018", 3);
 INSERT INTO project VALUES(4,"RÉCEPTION - SN - 2020", 1);
 INSERT INTO project VALUES(5,"CUISINE - SN - 2020", 1);
 INSERT INTO project VALUES(6,"MARKETING - SN - 2020", 1);
+INSERT INTO project VALUES(7,"SOUS-PROJET 1", 5);
+INSERT INTO project VALUES(8,"SOUS-PROJET 1.1", 7);
+INSERT INTO project VALUES(9,"SOUS-PROJET 1.1.1", 8);
 
 /*************************************/
 /*          TABLE ACTIVITY           */

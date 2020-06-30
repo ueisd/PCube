@@ -65,7 +65,7 @@ export class ActivityService {
     return this.http.put<ActivityItem>(API_ACTIVITY, body, opts);
   }
 
-  filterActivity(activity: ActivityItem){
+  filterActivity(activity: ActivityItem): Observable<ActivityItem[]>{
     let url = API_FILTER_BY_NAME + "?name=" + activity.name;
     const opts = {
       headers: new HttpHeaders({

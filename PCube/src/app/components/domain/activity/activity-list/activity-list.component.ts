@@ -37,7 +37,7 @@ export class ActivityListComponent implements OnInit {
     $("#error-"+id).removeClass('hidden');
   }
 
-  onNameFilterChanged(nameFilter){
+  onNameFilterChanged(){
     this.refreshList();
   }
 

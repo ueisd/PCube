@@ -18,6 +18,18 @@ class UserRequest:
         data = cursor.fetchall()
         cursor.close()
         return data
+    
+    def select_user_by_filter(self, user, role_name):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select user.id, first_name, last_name, email, role_id, isActive, role_name, access_level "
+                       "from user "
+                       "inner join role on user.role_id = role.id "
+                       "where isActive = 1 and first_name LIKE ? and last_name LIKE ? and email LIKE ? and role_name LIKE ?", 
+        ('%'+user.first_name+'%','%'+user.last_name+'%','%'+user.email+'%','%'+role_name+'%'))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
 
     def delete_user(self, user_id, email):
         self.connection.row_factory = dict_factory

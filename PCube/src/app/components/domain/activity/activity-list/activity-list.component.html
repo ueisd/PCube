@@ -2,7 +2,7 @@
 <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="name">
         <mat-header-cell *matHeaderCellDef>
-            <input class="name-filter" matInput placeholder="Nom" (ngModelChange)="onNameFilterChanged($event)" [formControl]="nameFilter">
+            <input class="name-filter" matInput placeholder="Nom" (ngModelChange)="onNameFilterChanged()" [formControl]="nameFilter">
         </mat-header-cell>
         <mat-cell *matCellDef="let activity">
             <div id="modification-{{activity.id}}" class="hidden">
