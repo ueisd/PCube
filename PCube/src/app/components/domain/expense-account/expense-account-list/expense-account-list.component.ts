@@ -1,8 +1,9 @@
-import { OnInit, Component, ViewChild, ViewChildren, QueryList, ChangeDetectorRef } from '@angular/core';
+import { OnInit, Component } from '@angular/core';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
 import { ExpenseAccountService } from 'src/app/services/expense-account/expense-account.service';
-import { MatDialog } from "@angular/material/dialog";
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-expense-account-list',
@@ -10,39 +11,49 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./expense-account-list.component.css']
 })
 export class ExpenseAccountListComponent implements OnInit {
-  displayedColumns : string[];
-  dataSource : ExpenseAccountItem[] = [];
 
-  constructor(private expenseAccountService: ExpenseAccountService,
-    private dialog: MatDialog,
-    private snackBar : MatSnackBar) { }
+  nameFilter = new FormControl('');
+
+  constructor(private expenseAccountService: ExpenseAccountService) { }
 
   ngOnInit(): void {
     this.refreshList();
   }
 
-  openEditDialog(user) {
-    this.openSnackBar('Le compte de dépense a été modifié!', 'notif-success');
+  private transformer = (node : ExpenseAccountItem, level: number) => {
+    return {
+      expandable: !!node.child_expense_account && node.child_expense_account.length > 0,
+      name: node.name,
+      level: level,
+    };
   }
 
-  openDeleteDialog(user) {
-    this.openSnackBar('Le compte de dépense a été supprimé!', 'notif-success');
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
-    });
+  treeControl = new FlatTreeControl<FlatNode>(
+    node => node.level, node => node.expandable);
+  
+  treeFlattener = new MatTreeFlattener(
+    this.transformer, node => node.level, node => node.expandable, node => node.child_expense_account);
+  
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
+  
+  hasChild = (_: number, node: FlatNode) => node.expandable;
+  
+  onFilterChanged() {
+    this.refreshList();
   }
 
   refreshList() {
-    this.displayedColumns = ['id', 'name', 'parentId', 'operations'];
-    this.expenseAccountService.getAllExpenseAccount().subscribe(accounts => {
-      this.dataSource = accounts;
+    let expenseAccount = new ExpenseAccountItem();
+    expenseAccount.name = this.nameFilter.value.trim();
+    this.expenseAccountService.filterExpenseAccount(expenseAccount).subscribe(expenseAccounts => {
+      this.dataSource.data = expenseAccounts;
     });
   }
+}
 
+/** Flat node with expandable and level information */
+interface FlatNode {
+  expandable: boolean;
+  name: string;
+  level: number;
 }

@@ -1,1 +1,12 @@
-<app-expense-account-list></app-expense-account-list>
+<div>
+    <mat-card class="">
+        <mat-card-actions>
+            <button mat-raised-button color="primary" (click)="openAddDialog()">Ajouter un compte</button>
+            <button mat-raised-button color="primary" (click)="openEditDialog()">Modifier un compte</button>
+            <button mat-raised-button color="primary" (click)="openDeleteDialog()">Supprimer un compte</button>
+        </mat-card-actions>
+        <mat-card-content>
+            <app-expense-account-list></app-expense-account-list>
+        </mat-card-content>
+    </mat-card>
+</div>
