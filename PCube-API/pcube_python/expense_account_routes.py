@@ -98,6 +98,30 @@ def get_all_expense_account():
         abort(403)
 
 
+@expense_account.route('/filter', methods=['GET'])
+@auth_required
+def get_expense_account_by_filter():
+    """
+    Construit l'arbre des comptes de dépense.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        expense_account = ExpenseAccount()
+        expense_account.name = escape(request.args.get('name', "")).upper().strip()
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        query = ExpenseAccountRequest(connection)
+        parents_dict = query.select_all_parent_by_filter(expense_account)
+        for expense_account in parents_dict:
+            expense_account['child_expense_account'] = find_all_child(expense_account['id'])
+
+        return jsonify(parents_dict)
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+
 @expense_account.route('/is-unique/<name>', methods=['GET'])
 @auth_required
 def is_expense_account_unique(name):

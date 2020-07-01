@@ -1,8 +1,8 @@
 import { OnInit, Component } from '@angular/core';
 import { ProjectItem } from 'src/app/models/project';
 import { ProjectService } from 'src/app/services/project/project.service';
-import {FlatTreeControl} from '@angular/cdk/tree';
-import {MatTreeFlatDataSource, MatTreeFlattener} from '@angular/material/tree';
+import { FlatTreeControl } from '@angular/cdk/tree';
+import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import * as $ from 'jquery/dist/jquery.min.js';
 import { FormControl } from '@angular/forms';
 

@@ -111,7 +111,6 @@ def get_project_by_filter():
         connection = get_db().get_connection()
         query = ProjectRequest(connection)
         parents_dict = query.select_all_parent_by_filter(project)
-        print(parents_dict)
         for project in parents_dict:
             project['child_project'] = find_all_child(project['id'])
 

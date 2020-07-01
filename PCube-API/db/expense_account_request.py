@@ -17,6 +17,15 @@ class ExpenseAccountRequest:
         cursor.close()
         return data
 
+    def select_all_parent_by_filter(self, expense_account):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from accounting_time_category where parent_id = id and name LIKE ?",
+        ('%'+expense_account.name+'%',))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
     def select_expense_account_name_like(self, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
