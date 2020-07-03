@@ -12,4 +12,8 @@
     <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/expense-account-managing">
         <mat-icon>account_balance</mat-icon><span class="nav-caption">Comptes de Dépense</span>
     </a>
+
+    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/timeline">
+        <mat-icon>account_balance</mat-icon><span class="nav-caption">Ligne de temps</span>
+    </a>
 </mat-nav-list>

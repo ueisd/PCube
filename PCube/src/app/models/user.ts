@@ -1,17 +1,17 @@
 export class User {
     id : number;
-    firstName : string;
-    lastName : string;
+    first_name : string;
+    last_name : string;
     email : string;
-    roleId : number;
-    roleName : string;
+    role_id : number;
+    role_name : string;
 
     constructor(userResponse?: any) {
-        this.id = userResponse && userResponse.id || 0;
-        this.firstName = userResponse && userResponse.first_name || "";
-        this.lastName = userResponse && userResponse.last_name || "";
+        this.id = userResponse && userResponse.id || "";
+        this.first_name = userResponse && userResponse.first_name || "";
+        this.last_name = userResponse && userResponse.last_name || "";
         this.email = userResponse && userResponse.email || "";
-        this.roleId = userResponse && userResponse.role_id || "";
-        this.roleName = userResponse && userResponse.role_name || "";
+        this.role_id = userResponse && userResponse.role_id || "";
+        this.role_name = userResponse && userResponse.role_name || "";
     }
 }

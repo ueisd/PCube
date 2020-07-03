@@ -11,3 +11,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     background: #cd4746;
     color: black;
 }
+
+.full-with{
+    width: 100%;
+}

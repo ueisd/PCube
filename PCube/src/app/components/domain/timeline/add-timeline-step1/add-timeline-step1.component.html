@@ -1,0 +1,28 @@
+<div>
+    <div>
+        <h2>Étape 1</h2>
+        <div class="alert {{ messageClasse }}">{{ message }}</div>
+    </div>
+    <div>
+        <p class="one-line toggle-text">Identifiant</p>
+        <mat-slide-toggle (ngModelChange)="searchToggle()" [(ngModel)]="isSearchByEmail" class="one-line"></mat-slide-toggle>
+        <p class="one-line toggle-text">Courriel</p>
+    </div>
+    <div>
+        <mat-form-field appearance="fill" class="form-element" *ngIf="isSearchByEmail">
+            <mat-label>Courriel</mat-label>
+            <input (ngModelChange)="onEmailChange($event)" matInput [formControl]="email">
+        </mat-form-field>
+        <mat-form-field appearance="fill" class="form-element" *ngIf="!isSearchByEmail">
+            <mat-label>Identifiant</mat-label>
+            <input (ngModelChange)="onIdChange($event)" matInput [formControl]="id">
+        </mat-form-field>
+    </div>
+    <div>
+        <p>Identifiant : {{ user.id }}</p>
+        <p>Courriel : {{ user.email }}</p>
+        <p>Prénom : {{ user.first_name }}</p>
+        <p>Nom : {{ user.last_name }}</p>
+        <p>Rôle : {{ user.role_name}}</p>
+    </div>
+</div>

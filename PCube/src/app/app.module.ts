@@ -33,7 +33,11 @@ import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/materia
 import { ModifyUserComponent } from './components/domain/user/modify-user/modify-user.component';
 import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
 import { ExpenseAccountListComponent } from './components/domain/expense-account/expense-account-list/expense-account-list.component';
-
+import { TimelineComponent } from './components/pages/timeline/timeline.component';
+import { AddTimelineComponent } from './components/domain/timeline/add-timeline/add-timeline.component';
+import { AddTimelineStep1Component } from './components/domain/timeline/add-timeline-step1/add-timeline-step1.component';
+import { AddTimelineStep2Component } from './components/domain/timeline/add-timeline-step2/add-timeline-step2.component';
+import { AddTimelineStep3Component } from './components/domain/timeline/add-timeline-step3/add-timeline-step3.component';
 
 @NgModule({
   declarations: [
@@ -58,6 +62,11 @@ import { ExpenseAccountListComponent } from './components/domain/expense-account
     ModifyUserComponent,
     ExpenseAccountsComponent,
     ExpenseAccountListComponent,
+    TimelineComponent,
+    AddTimelineComponent,
+    AddTimelineStep1Component,
+    AddTimelineStep2Component,
+    AddTimelineStep3Component,
   ],
   imports: [
     MatDialogModule,
@@ -74,7 +83,7 @@ import { ExpenseAccountListComponent } from './components/domain/expense-account
   exports:[UserListComponent, AddActivityComponent],
   bootstrap: [AppComponent],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
+    
     { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
     {
       provide: MatDialogRef,
