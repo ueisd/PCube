@@ -107,7 +107,6 @@ def get_project_by_filter():
     try:
         project = Project()
         project.name = escape(request.args.get('name', "")).upper().strip()
-        get_authenticated_user()
         connection = get_db().get_connection()
         query = ProjectRequest(connection)
         parents_dict = query.select_all_parent_by_filter(project)
@@ -115,6 +114,27 @@ def get_project_by_filter():
             project['child_project'] = find_all_child(project['id'])
 
         return jsonify(parents_dict)
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+@project.route('/filter/one-level', methods=['GET'])
+@auth_required
+def get_one_level_project_by_filter():
+    """
+    Permet de trouver des projets selon leur nom et/ou identifiant
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        project = Project()
+        project.name = escape(request.args.get('name', "")).upper().strip()
+        project.id = escape(request.args.get('id', "")).upper().strip()
+        connection = get_db().get_connection()
+        query = ProjectRequest(connection)
+        projects = query.select_project_one_level_filter(project)
+
+        return jsonify(projects)
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)

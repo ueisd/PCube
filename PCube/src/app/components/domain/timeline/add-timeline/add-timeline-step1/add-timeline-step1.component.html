@@ -1,0 +1,65 @@
+<div>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header class="alert-no-padding {{ messageClasse }}">
+        <mat-panel-title class="custom-mat-title">Membre</mat-panel-title>
+        <mat-panel-description>{{ message }}</mat-panel-description>
+      </mat-expansion-panel-header>
+      <div>
+          <p class="one-line toggle-text {{ idClass }}" (click)="onIdClick()">Identifiant</p>
+          <mat-slide-toggle (ngModelChange)="searchToggle()" [(ngModel)]="isSearchByEmail" class="one-line"></mat-slide-toggle>
+          <p class="one-line toggle-text {{ emailClass }}"(click)="onEmailClick()">Courriel</p>
+      </div>
+      <div class="full-width">
+          <mat-form-field appearance="fill" class="form-element full-width" *ngIf="isSearchByEmail">
+              <mat-label>Courriel</mat-label>
+              <input (ngModelChange)="onEmailChange($event)" matInput [formControl]="email" autocomplete="off">
+          </mat-form-field>
+          <mat-form-field appearance="fill" class="form-element full-width" *ngIf="!isSearchByEmail">
+              <mat-label>Identifiant</mat-label>
+              <input (ngModelChange)="onIdChange($event)" matInput [formControl]="id">
+          </mat-form-field>
+      </div>
+      <div>
+          <h3>Profil de l'utilisateur</h3>
+      </div>
+      <div class="full-width profil-utilisateurs">
+          <mat-table [dataSource]="users" class="mat-elevation-z8" class="selectable-profil">
+
+              <!-- Colonne Identifiant -->
+              <ng-container matColumnDef="identifiant">
+                  <mat-header-cell *matHeaderCellDef>Identifiant</mat-header-cell>
+                  <mat-cell *matCellDef="let user"> {{ user.id }} </mat-cell>
+              </ng-container>
+
+              <!-- Colonne Prénom -->
+              <ng-container matColumnDef="firstName">
+                <mat-header-cell *matHeaderCellDef>Prénom</mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{ user.first_name }} </mat-cell>
+              </ng-container>
+            
+              <!-- Colonne Nom de famille -->
+              <ng-container matColumnDef="lastName">
+                <mat-header-cell *matHeaderCellDef>Nom</mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{ user.last_name }} </mat-cell>
+              </ng-container>
+            
+              <!-- Colonne courriel -->
+              <ng-container matColumnDef="email">
+                <mat-header-cell *matHeaderCellDef>Courriel</mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{ user.email }} </mat-cell>
+              </ng-container>
+            
+              <!-- Colonne rôle -->
+              <ng-container matColumnDef="role">
+                <mat-header-cell *matHeaderCellDef>Rôle</mat-header-cell>
+                <mat-cell *matCellDef="let user"> {{ user.role_name }} </mat-cell>
+              </ng-container>
+            
+              <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+              <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></mat-row>
+            </mat-table>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

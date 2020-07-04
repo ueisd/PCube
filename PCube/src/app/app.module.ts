@@ -35,9 +35,11 @@ import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accou
 import { ExpenseAccountListComponent } from './components/domain/expense-account/expense-account-list/expense-account-list.component';
 import { TimelineComponent } from './components/pages/timeline/timeline.component';
 import { AddTimelineComponent } from './components/domain/timeline/add-timeline/add-timeline.component';
-import { AddTimelineStep1Component } from './components/domain/timeline/add-timeline-step1/add-timeline-step1.component';
-import { AddTimelineStep2Component } from './components/domain/timeline/add-timeline-step2/add-timeline-step2.component';
-import { AddTimelineStep3Component } from './components/domain/timeline/add-timeline-step3/add-timeline-step3.component';
+import { AddTimelineStep1Component } from './components/domain/timeline/add-timeline/add-timeline-step1/add-timeline-step1.component';
+import { AddTimelineStep2Component } from './components/domain/timeline/add-timeline/add-timeline-step2/add-timeline-step2.component';
+import { AddTimelineStep3Component } from './components/domain/timeline/add-timeline/add-timeline-step3/add-timeline-step3.component';
+import { AddTimelineStep4Component } from './components/domain/timeline/add-timeline/add-timeline-step4/add-timeline-step4.component';
+import { AddTimelineStep5Component } from './components/domain/timeline/add-timeline/add-timeline-step5/add-timeline-step5.component';
 
 @NgModule({
   declarations: [
@@ -67,6 +69,8 @@ import { AddTimelineStep3Component } from './components/domain/timeline/add-time
     AddTimelineStep1Component,
     AddTimelineStep2Component,
     AddTimelineStep3Component,
+    AddTimelineStep4Component,
+    AddTimelineStep5Component,
   ],
   imports: [
     MatDialogModule,

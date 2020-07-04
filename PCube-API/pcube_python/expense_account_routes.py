@@ -143,6 +143,27 @@ def is_expense_account_unique(name):
         log.error('authentication error: %s', error)
         abort(403)
 
+@expense_account.route('/filter/one-level', methods=['GET'])
+@auth_required
+def get_one_level_expense_account_by_filter():
+    """
+    Permet de trouver des projets selon leur nom et/ou identifiant
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        account = ExpenseAccount()
+        account.name = escape(request.args.get('name', "")).upper().strip()
+        account.id = escape(request.args.get('id', "")).upper().strip()
+        connection = get_db().get_connection()
+        query = ExpenseAccountRequest(connection)
+        accounts = query.select_expense_account_one_level_filter(account)
+
+        return jsonify(accounts)
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
 @expense_account.route('/autocomplete/<name>', methods=['GET'])
 @auth_required
 def expense_account_autocomplete(name):

@@ -12,6 +12,52 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     color: black;
 }
 
-.full-with{
+.full-width{
     width: 100%;
+}
+
+
+/* Alert de bootstrap */
+.alert{
+    position: relative;
+    padding: .75rem 1.25rem;
+    margin-bottom: 1rem;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+
+.alert-no-padding{
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: .25rem;
+}
+
+.alert-warning{
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.alert-success{
+    color: #155724;
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+}
+
+.alert-secondary{
+    color: #383d41;
+    background-color: #e2e3e5;
+    border-color: #d6d8db;
+}
+
+.alert-danger{
+    color: #721c24;
+    background-color: #f8d7da;
+    border-color: #f5c6cb;
+}
+
+.alert-primary{
+    color: #004085;
+    background-color: #cce5ff;
+    border-color: #b8daff;
 }

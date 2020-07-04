@@ -51,10 +51,12 @@ def get_activity_by_filter():
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        name = escape(request.args.get('name', "")).upper().strip()
+        activity = Activity()
+        activity.name = escape(request.args.get('name', "")).upper().strip()
+        activity.id = escape(request.args.get('id', "")).upper().strip()
         connection = get_db().get_connection()
         query = ActivityRequest(connection)
-        activities = query.select_activity_by_filter(name) 
+        activities = query.select_activity_by_filter(activity) 
         return jsonify(activities)
 
     except AuthenticationError as error:
@@ -80,7 +82,8 @@ def add_new_activity():
     """
     try:
         data = request.json
-        activity = Activity(escape(data['name'].upper().strip()))
+        activity = Activity()
+        activity.name = escape(data['name'].upper().strip())
 
         connection = get_db().get_connection()
         query = ActivityRequest(connection)
@@ -107,7 +110,8 @@ def modify_activity():
     try:
         data = request.json
 
-        activity = Activity(escape(data['name'].upper().strip()))
+        activity = Activity()
+        activity.name = escape(data['name'].upper().strip())
         activity.id = escape(data['id']).strip()
         new_name = escape(data['new_name'].upper().strip())
 
