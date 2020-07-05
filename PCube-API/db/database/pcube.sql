@@ -37,7 +37,7 @@ CREATE TABLE accounting_time_category (
 
 CREATE TABLE timeline (
     id INTEGER PRIMARY KEY,
-    day_of_week DATE,
+    day_of_week VARCHAR(40),
     punch_in VARCHAR(20),
     punch_out VARCHAR(20),
     project_id INTEGER,

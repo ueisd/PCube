@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user/user.service';
@@ -21,6 +21,10 @@ const NORMAL_MESSAGE = "Veuillez saisir un utilisateur";
 })
 
 export class AddTimelineStep1Component implements OnInit {
+
+  @Output() isFormValidEvent = new EventEmitter<boolean>();
+  @Output() ouputUser = new EventEmitter<User>();
+
   constructor(
     private userService: UserService
   ) { }
@@ -42,11 +46,17 @@ export class AddTimelineStep1Component implements OnInit {
     this.displayedColumns = ['identifiant','firstName', 'lastName', 'email', 'role'];
   }
 
+  callOuputEvent(isSuccess){
+    this.isFormValidEvent.emit(isSuccess);
+    this.ouputUser.emit(this.user);
+  }
+
   onEmptyValue(){
     this.message = NORMAL_MESSAGE
     this.messageClasse = NORMAL_CLASS;
     this.user = new User();
     this.users = [];
+    this.callOuputEvent(false);
   }
 
   onEmailChange(value){
@@ -75,16 +85,19 @@ export class AddTimelineStep1Component implements OnInit {
   onNoUserFound(){
     this.message = "Aucun utilisateur trouvé"
     this.messageClasse = WARNING_CLASS;
+    this.callOuputEvent(false);
   }
 
   onMultipleUserFound(){
     this.message = "Veuillez sélectionner un utilisateur."
     this.messageClasse = WARNING_CLASS;
+    this.callOuputEvent(false);
   }
 
   onUserFound(){
     this.message = this.user.first_name + " " + this.user.last_name;
     this.messageClasse = SUCCESS_CLASS;
+    this.callOuputEvent(true);
   }
 
   onUserSubscribtionReceive(users:User[], user:User){
@@ -100,8 +113,8 @@ export class AddTimelineStep1Component implements OnInit {
     }
 
     if(users.length == 1 && (users[0].id == user.id || users[0].email.toLocaleUpperCase() == user.email.toLocaleUpperCase())){
-      this.onUserFound();
       this.user = users[0];
+      this.onUserFound();
     }
     else
       this.onMultipleUserFound();

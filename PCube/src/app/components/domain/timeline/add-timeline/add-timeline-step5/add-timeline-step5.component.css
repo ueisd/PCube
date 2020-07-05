@@ -1,0 +1,15 @@
+.time-picker-row .time-picker{
+    display: inline-block;
+}
+
+.time-picker-row{
+    margin-left: 40px;
+}
+
+.button-display {
+    transform: scale(0.5);
+ }
+
+ .icon-display {
+    transform: scale(2);
+ }

@@ -40,3 +40,7 @@
     width: 35% !important;
     flex-grow: 0 !important;
 }
+
+.accordion-container{
+    margin: 15px 0;
+}

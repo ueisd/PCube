@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ActivityItem } from 'src/app/models/activity';
 import { ActivityService } from 'src/app/services/activity/activity.service';
 import { FormControl } from '@angular/forms';
@@ -21,6 +21,9 @@ const NORMAL_MESSAGE = "Veuillez saisir une activité";
 })
 export class AddTimelineStep3Component implements OnInit {
 
+  @Output() isFormValidEvent = new EventEmitter<boolean>();
+  @Output() ouputActivity = new EventEmitter<ActivityItem>();
+
   constructor(
     private activityService: ActivityService
   ) { }
@@ -42,11 +45,17 @@ export class AddTimelineStep3Component implements OnInit {
     this.displayedColumns = ['id','name', 'parent_id'];
   }
 
+  callOuputEvent(isSuccess){
+    this.isFormValidEvent.emit(isSuccess);
+    this.ouputActivity.emit(this.activity);
+  }
+
   onEmptyValue(){
     this.message = NORMAL_MESSAGE
     this.messageClasse = NORMAL_CLASS;
     this.activity = new ActivityItem();
     this.activities = [];
+    this.callOuputEvent(false);
   }
 
   onNameChange(value){
@@ -75,16 +84,19 @@ export class AddTimelineStep3Component implements OnInit {
   onNoProjectFound(){
     this.message = "Aucune activité trouvé"
     this.messageClasse = WARNING_CLASS;
+    this.callOuputEvent(false);
   }
 
   onMultipleProjectFound(){
     this.message = "Veuillez sélectionner une activité."
     this.messageClasse = WARNING_CLASS;
+    this.callOuputEvent(false);
   }
 
   onProjectFound(){
     this.message = this.activity.name;
     this.messageClasse = SUCCESS_CLASS;
+    this.callOuputEvent(true);
   }
 
   onProjectSubscribtionReceive(activities:ActivityItem[], activity:ActivityItem){
@@ -100,8 +112,8 @@ export class AddTimelineStep3Component implements OnInit {
     }
 
     if(activities.length == 1 && (activities[0].id == activity.id || activities[0].name.toLocaleUpperCase() == activity.name.toLocaleUpperCase())){
-      this.onProjectFound();
       this.activity = activities[0];
+      this.onProjectFound();
     }
     else
       this.onMultipleProjectFound();

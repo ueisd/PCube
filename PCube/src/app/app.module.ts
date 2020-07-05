@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { EnvTestComponent } from './components/envtest/envtest.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MatNativeDateModule, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 
 import { AuthInterceptor } from 'src/app/services/auth/auth.interceptor';
 import { LoginComponent } from './components/pages/login/login.component';
@@ -40,6 +40,8 @@ import { AddTimelineStep2Component } from './components/domain/timeline/add-time
 import { AddTimelineStep3Component } from './components/domain/timeline/add-timeline/add-timeline-step3/add-timeline-step3.component';
 import { AddTimelineStep4Component } from './components/domain/timeline/add-timeline/add-timeline-step4/add-timeline-step4.component';
 import { AddTimelineStep5Component } from './components/domain/timeline/add-timeline/add-timeline-step5/add-timeline-step5.component';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+
 
 @NgModule({
   declarations: [
@@ -82,6 +84,7 @@ import { AddTimelineStep5Component } from './components/domain/timeline/add-time
     MatNativeDateModule,
     BrowserAnimationsModule,
     MaterialModule,
+    NgxMaterialTimepickerModule,
   ],
   entryComponents: [AddActivityComponent],
   exports:[UserListComponent, AddActivityComponent],

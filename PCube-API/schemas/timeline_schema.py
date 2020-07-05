@@ -1,13 +1,19 @@
 timeline_insert_schema = {
     "type": "object",
-    "required": ["first_name", "last_name", "email", "role_id", "password", "password_confirmed"],
+    "required": ["timelines"],
     "properties": {
-        "first_name": {"type": "string", "minLength": 1, "maxLength": 250},
-        "last_name": {"type": "string", "minLength": 1, "maxLength": 250},
-        "email": {"type": "string", "format": "email"},
-        "role_id": {"type": "integer"},
-        "password": {"type": "string", "minLength": 1, "maxLength": 250},
-        "password_confirmed": {"type": "string", "minLength": 1, "maxLength": 250}
+        "timelines": {
+            "type": "array",
+            "required": ["day_of_week", "punch_in", "punch_out", "project_id", "accounting_time_category_id", "activity_id", "user_id"],
+            "id": {"type": "integer"},
+            "day_of_week": {"type": "string", "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}"},
+            "punch_in": {"type": "string", "pattern": "([1-2][0-9]|[0-9]):[0-9]{2}"},
+            "punch_out": {"type": "string", "pattern": "([1-2][0-9]|[0-9]):[0-9]{2}"},
+            "project_id": {"type": "integer"},
+            "accounting_time_category_id": {"type": "integer"},
+            "activity_id": {"type": "integer"},
+            "user_id": {"type": "integer"}
+        }
     },
     "additionalProperties": False
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { ProjectItem } from 'src/app/models/project';
 import { ProjectService } from 'src/app/services/project/project.service';
@@ -19,6 +19,9 @@ const NORMAL_MESSAGE = "Veuillez saisir un projet";
   styleUrls: ['../add-timeline.component.css']
 })
 export class AddTimelineStep2Component implements OnInit {
+
+  @Output() isFormValidEvent = new EventEmitter<boolean>();
+  @Output() ouputProject = new EventEmitter<ProjectItem>();
 
   constructor(
     private projectService: ProjectService
@@ -41,11 +44,17 @@ export class AddTimelineStep2Component implements OnInit {
     this.displayedColumns = ['id','name', 'parent_id'];
   }
 
+  callOuputEvent(isSuccess){
+    this.isFormValidEvent.emit(isSuccess);
+    this.ouputProject.emit(this.project);
+  }
+
   onEmptyValue(){
     this.message = NORMAL_MESSAGE
     this.messageClasse = NORMAL_CLASS;
     this.project = new ProjectItem();
     this.projects = [];
+    this.callOuputEvent(false);
   }
 
   onNameChange(value){
@@ -74,16 +83,19 @@ export class AddTimelineStep2Component implements OnInit {
   onNoProjectFound(){
     this.message = "Aucun projet trouvé"
     this.messageClasse = WARNING_CLASS;
+    this.callOuputEvent(false);
   }
 
   onMultipleProjectFound(){
     this.message = "Veuillez sélectionner un projet."
     this.messageClasse = WARNING_CLASS;
+    this.callOuputEvent(false);
   }
 
   onProjectFound(){
     this.message = this.project.name;
     this.messageClasse = SUCCESS_CLASS;
+    this.callOuputEvent(true);
   }
 
   onProjectSubscribtionReceive(projects:ProjectItem[], project:ProjectItem){
@@ -99,8 +111,8 @@ export class AddTimelineStep2Component implements OnInit {
     }
 
     if(projects.length == 1 && (projects[0].id == project.id || projects[0].name.toLocaleUpperCase() == project.name.toLocaleUpperCase())){
-      this.onProjectFound();
       this.project = projects[0];
+      this.onProjectFound();
     }
     else
       this.onMultipleProjectFound();

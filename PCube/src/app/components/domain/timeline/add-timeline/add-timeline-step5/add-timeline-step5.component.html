@@ -5,15 +5,45 @@
             <mat-panel-title class="custom-mat-title">Heures travaillés</mat-panel-title>
             <mat-panel-description>{{ message }}</mat-panel-description>
         </mat-expansion-panel-header>
-        <div>
-            <mat-form-field>
-                <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker">
-                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+        <div class="accordion-container">
+            <div *ngFor="let workingTimeline of workingTimelines; let timeLineIndex=index">
+                <mat-form-field>
+                    <mat-label>Choisir une date </mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="workingTimeline.date" readonly>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle >
+                    <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+                <div class="rtime-picker-containe">
+                    <div class="time-picker-row" *ngFor="let shift of workingTimeline.shift; let shiftIndex=index">
+                        <div class="time-picker">
+                            <p>Heure début :</p>
+                            <ngx-timepicker-field [format]="24" [(ngModel)]="shift.begin"></ngx-timepicker-field>
+                        </div>
+                        <div class="time-picker">
+                            <p>Heure fin :</p>
+                            <ngx-timepicker-field [format]="24" [(ngModel)]="shift.end" ></ngx-timepicker-field>
+                        </div>
+                    </div>
+                    <div>
+                        <button class="button-display" mat-fab color="primary"(click)="addShift(timeLineIndex)">
+                            <mat-icon class="icon-display">alarm_add</mat-icon>
+                        </button>
+                        <button *ngIf="workingTimeline.shift.length > 1" class="button-display" mat-fab color="primary"(click)="removeShift(timeLineIndex)">
+                            <mat-icon class="icon-display">alarm_off</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
             <div>
-                
+                <button class="button-display" mat-fab color="primary"(click)="addTimeline()">
+                    <mat-icon class="icon-display">add</mat-icon>
+                </button>
+                <button *ngIf="workingTimelines.length > 1" class="button-display" mat-fab color="primary"(click)="removeTimeline()">
+                    <mat-icon class="icon-display">remove</mat-icon>
+                </button>
+            </div>
+            <div>
+                <button mat-raised-button color="primary" (click)="validateAllTimeLine()">Je confirme les heures</button>
             </div>
         </div>
     </mat-expansion-panel>

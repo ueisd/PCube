@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { ExpenseAccountService } from 'src/app/services/expense-account/expense-account.service';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
 import { FormControl } from '@angular/forms';
@@ -19,6 +19,9 @@ const NORMAL_MESSAGE = "Veuillez saisir un compte";
   styleUrls: ['../add-timeline.component.css']
 })
 export class AddTimelineStep4Component implements OnInit {
+
+  @Output() isFormValidEvent = new EventEmitter<boolean>();
+  @Output() ouputExpenseAccount = new EventEmitter<ExpenseAccountItem>();
 
   constructor(
     private expenseAccountService: ExpenseAccountService
@@ -41,18 +44,24 @@ export class AddTimelineStep4Component implements OnInit {
     this.displayedColumns = ['id','name', 'parent_id'];
   }
 
+  callOuputEvent(isSuccess){
+    this.isFormValidEvent.emit(isSuccess);
+    this.ouputExpenseAccount.emit(this.account);
+  }
+
   onEmptyValue(){
     this.message = NORMAL_MESSAGE
     this.messageClasse = NORMAL_CLASS;
     this.account = new ExpenseAccountItem();
     this.accounts = [];
+    this.callOuputEvent(false);
   }
 
   onNameChange(value){
     let account = new ExpenseAccountItem();
     account.name = value;
     if(value){
-      this.callProjectService(account);
+      this.callAccountService(account);
     }else{
       this.onEmptyValue();
     }
@@ -62,7 +71,7 @@ export class AddTimelineStep4Component implements OnInit {
     let account = new ExpenseAccountItem();
     account.id = value
     if(value){
-      this.callProjectService(account);
+      this.callAccountService(account);
     }else{
       this.onEmptyValue();
     } 
@@ -71,42 +80,45 @@ export class AddTimelineStep4Component implements OnInit {
   accounts:ExpenseAccountItem[] = [];
   displayedColumns : string[];
 
-  onNoProjectFound(){
+  onNoAccountFound(){
     this.message = "Aucune compte trouvé"
     this.messageClasse = WARNING_CLASS;
+    this.callOuputEvent(false);
   }
 
-  onMultipleProjectFound(){
+  onMultipleAccountFound(){
     this.message = "Veuillez sélectionner une compte."
     this.messageClasse = WARNING_CLASS;
+    this.callOuputEvent(false);
   }
 
-  onProjectFound(){
+  onAccountFound(){
     this.message = this.account.name;
     this.messageClasse = SUCCESS_CLASS;
+    this.callOuputEvent(true);
   }
 
-  onProjectSubscribtionReceive(accounts:ExpenseAccountItem[], account:ExpenseAccountItem){
+  onAccountSubscribtionReceive(accounts:ExpenseAccountItem[], account:ExpenseAccountItem){
     if(accounts.length == 0){
-      this.onNoProjectFound();
+      this.onNoAccountFound();
       return;
     }
 
     if(accounts.length > 1){
       this.accounts = accounts;
-      this.onMultipleProjectFound();
+      this.onMultipleAccountFound();
       return;
     }
 
     if(accounts.length == 1 && (accounts[0].id == account.id || accounts[0].name.toLocaleUpperCase() == account.name.toLocaleUpperCase())){
-      this.onProjectFound();
       this.account = accounts[0];
+      this.onAccountFound();
     }
     else
-      this.onMultipleProjectFound();
+      this.onMultipleAccountFound();
   }
 
-  callProjectService(account:ExpenseAccountItem){
+  callAccountService(account:ExpenseAccountItem){
 
     if(this.isOnRowClicked){
       this.isOnRowClicked = false;
@@ -115,7 +127,7 @@ export class AddTimelineStep4Component implements OnInit {
 
     this.expenseAccountService.oneLevelFilterExpenseAccount(account).subscribe(accounts => {
       this.accounts = accounts;
-      this.onProjectSubscribtionReceive(accounts, account);
+      this.onAccountSubscribtionReceive(accounts, account);
     }, error =>{
       this.message = "Une erreur est survenue, veuillez réessayer."
       this.messageClasse = DANGER_CLASS;
@@ -136,7 +148,7 @@ export class AddTimelineStep4Component implements OnInit {
       this.id.setValue(account.id);
     }
 
-    this.onProjectFound();
+    this.onAccountFound();
 
   }
 
