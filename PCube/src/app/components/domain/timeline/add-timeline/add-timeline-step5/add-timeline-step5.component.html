@@ -13,8 +13,11 @@
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle >
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
-                <div class="rtime-picker-containe">
-                    <div class="time-picker-row" *ngFor="let shift of workingTimeline.shift; let shiftIndex=index">
+                <button *ngIf="workingTimeline.shift.length > 1" class="button-display-3Q button-remove-hours" mat-fab color="primary"(click)="removeShift(timeLineIndex)">
+                    <mat-icon class="icon-display">alarm_off</mat-icon>
+                </button>
+                <div>
+                    <div class="time-picker-row" *ngFor="let shift of workingTimeline.shift; let shiftIndex=index" id="{{(workingTimeline.shift.length - 1) == shiftIndex ? 'row-add-effect': ''}}">
                         <div class="time-picker">
                             <p>Heure début :</p>
                             <ngx-timepicker-field [format]="24" [(ngModel)]="shift.begin"></ngx-timepicker-field>
@@ -24,25 +27,26 @@
                             <ngx-timepicker-field [format]="24" [(ngModel)]="shift.end" ></ngx-timepicker-field>
                         </div>
                     </div>
-                    <div>
-                        <button class="button-display" mat-fab color="primary"(click)="addShift(timeLineIndex)">
+                    <div class="add-button-relative">
+                        <button class="button-add-hours button-display-demi" mat-fab color="primary"(click)="addShift(timeLineIndex)">
                             <mat-icon class="icon-display">alarm_add</mat-icon>
                         </button>
-                        <button *ngIf="workingTimeline.shift.length > 1" class="button-display" mat-fab color="primary"(click)="removeShift(timeLineIndex)">
-                            <mat-icon class="icon-display">alarm_off</mat-icon>
-                        </button>
+                        <div class="under-line"></div>
                     </div>
                 </div>
+                <mat-divider></mat-divider>
+                <div class="div-spacer-30"></div>
             </div>
-            <div>
-                <button class="button-display" mat-fab color="primary"(click)="addTimeline()">
-                    <mat-icon class="icon-display">add</mat-icon>
+            <div style="margin-bottom: 15px;">
+                <button class="" color="primary" mat-raised-button color="primary" (click)="addTimeline()">
+                    Ajouter une plage horaire
                 </button>
-                <button *ngIf="workingTimelines.length > 1" class="button-display" mat-fab color="primary"(click)="removeTimeline()">
-                    <mat-icon class="icon-display">remove</mat-icon>
+                <button *ngIf="workingTimelines.length > 1" mat-raised-button color="warn" (click)="removeTimeline()" style="margin-left:50px">
+                    Retirer la dernière plage horaire
                 </button>
             </div>
-            <div>
+            <mat-divider></mat-divider>
+            <div style="margin-top:30px;">
                 <button mat-raised-button color="primary" (click)="validateAllTimeLine()">Je confirme les heures</button>
             </div>
         </div>

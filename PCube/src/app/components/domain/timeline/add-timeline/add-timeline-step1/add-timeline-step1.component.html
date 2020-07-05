@@ -8,7 +8,7 @@
       <div class="accordion-container">
         <div>
             <p class="one-line toggle-text {{ idClass }}" (click)="onIdClick()">Identifiant</p>
-            <mat-slide-toggle (ngModelChange)="searchToggle()" [(ngModel)]="isSearchByEmail" class="one-line"></mat-slide-toggle>
+            <mat-slide-toggle (ngModelChange)="searchToggle()" [(ngModel)]="isSearchByEmail" class="one-line one-line-middle"></mat-slide-toggle>
             <p class="one-line toggle-text {{ emailClass }}"(click)="onEmailClick()">Courriel</p>
         </div>
         <div class="full-width">

@@ -17,7 +17,7 @@ const NORMAL_MESSAGE = "Veuillez saisir un utilisateur";
 @Component({
   selector: 'app-add-timeline-step1',
   templateUrl: './add-timeline-step1.component.html',
-  styleUrls: ['../add-timeline.component.css']
+  styleUrls: ['../add-timeline.component.css', './add-timeline-step1.component.css']
 })
 
 export class AddTimelineStep1Component implements OnInit {

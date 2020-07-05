@@ -1,4 +1,4 @@
-<mat-nav-list>
+<mat-nav-list class="custom-sidenav">
 
     <a *ngIf="accessLevel == 1" mat-list-item routerLink="/users-managing">
         <mat-icon>account_balance</mat-icon><span class="nav-caption">Utilisateurs</span>
@@ -13,7 +13,18 @@
         <mat-icon>account_balance</mat-icon><span class="nav-caption">Comptes de Dépense</span>
     </a>
 
-    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/timeline">
-        <mat-icon>account_balance</mat-icon><span class="nav-caption">Ligne de temps</span>
-    </a>
+    <mat-accordion>
+        <mat-expansion-panel>
+            <mat-expansion-panel-header>
+                <mat-panel-title>
+                    <mat-icon>access_time</mat-icon><span class="nav-caption">Ligne de temps</span>
+                </mat-panel-title>
+            </mat-expansion-panel-header>
+            <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/timeline">
+                <mat-icon>add</mat-icon><span class="nav-caption">Ajouter</span>
+            </a>
+        </mat-expansion-panel>
+    </mat-accordion>
+
+
 </mat-nav-list>

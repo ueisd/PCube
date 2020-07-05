@@ -2,6 +2,10 @@
     display: inline-block;
 }
 
+.one-line-middle{
+    margin: 0 15px;
+}
+
 .profil-utilisateurs{
     max-height: 200px;
     background-color: rgba(0,0,0,.15);
@@ -14,6 +18,7 @@
 }
 
 .toggle-text{
+    border-radius: 10px;
     font-size: 1.4em;
     font-weight: 500;
     padding: 10px;
@@ -43,4 +48,9 @@
 
 .accordion-container{
     margin: 15px 0;
+}
+
+.submit-container{
+    width: 80%;
+    margin: auto;
 }
