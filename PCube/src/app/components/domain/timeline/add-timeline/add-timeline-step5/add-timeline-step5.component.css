@@ -37,8 +37,8 @@
 
  .add-button-relative{
     position: relative;
-    bottom: 50px;
-    width: 100%;
+    bottom: 46px;
+    width: 0px;
  }
 
  .button-add-hours{
@@ -52,10 +52,11 @@
  .under-line{
     transition: border-color 0.5s ease;
     border: 1px solid #3F51B5;
-    position: relative;
-    width: 100%;
+    position: absolute;
+    width: 2000px;
     bottom: 6px;
     left: 22px;
+
  }
 
  .mat-divider-margin{
