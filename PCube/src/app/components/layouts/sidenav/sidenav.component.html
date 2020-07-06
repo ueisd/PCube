@@ -13,15 +13,18 @@
         <mat-icon>account_balance</mat-icon><span class="nav-caption">Comptes de Dépense</span>
     </a>
 
-    <mat-accordion>
+    <mat-accordion *ngIf="accessLevel == 1 || accessLevel == 2">
         <mat-expansion-panel>
             <mat-expansion-panel-header>
                 <mat-panel-title>
                     <mat-icon>access_time</mat-icon><span class="nav-caption">Ligne de temps</span>
                 </mat-panel-title>
             </mat-expansion-panel-header>
-            <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/timeline">
+            <a  mat-list-item routerLink="/ajouter-ligne-de-temps">
                 <mat-icon>add</mat-icon><span class="nav-caption">Ajouter</span>
+            </a>
+            <a mat-list-item routerLink="/gerer-ligne-de-temps">
+                <mat-icon>add</mat-icon><span class="nav-caption">Gérer</span>
             </a>
         </mat-expansion-panel>
     </mat-accordion>

@@ -33,7 +33,6 @@ import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/materia
 import { ModifyUserComponent } from './components/domain/user/modify-user/modify-user.component';
 import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
 import { ExpenseAccountListComponent } from './components/domain/expense-account/expense-account-list/expense-account-list.component';
-import { TimelineComponent } from './components/pages/timeline/timeline.component';
 import { AddTimelineComponent } from './components/domain/timeline/add-timeline/add-timeline.component';
 import { AddTimelineStep1Component } from './components/domain/timeline/add-timeline/add-timeline-step1/add-timeline-step1.component';
 import { AddTimelineStep2Component } from './components/domain/timeline/add-timeline/add-timeline-step2/add-timeline-step2.component';
@@ -41,6 +40,9 @@ import { AddTimelineStep3Component } from './components/domain/timeline/add-time
 import { AddTimelineStep4Component } from './components/domain/timeline/add-timeline/add-timeline-step4/add-timeline-step4.component';
 import { AddTimelineStep5Component } from './components/domain/timeline/add-timeline/add-timeline-step5/add-timeline-step5.component';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { TimelineListComponent } from './components/domain/timeline/timeline-list/timeline-list.component';
+import { ManageTimelineComponent } from './components/pages/timeline/manage-timeline/manage-timeline.component';
+import { AddingTimelineComponent } from './components/pages/timeline/adding-timeline/adding-timeline.component';
 
 
 @NgModule({
@@ -66,13 +68,15 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     ModifyUserComponent,
     ExpenseAccountsComponent,
     ExpenseAccountListComponent,
-    TimelineComponent,
     AddTimelineComponent,
     AddTimelineStep1Component,
     AddTimelineStep2Component,
     AddTimelineStep3Component,
     AddTimelineStep4Component,
     AddTimelineStep5Component,
+    TimelineListComponent,
+    ManageTimelineComponent,
+    AddingTimelineComponent,
   ],
   imports: [
     MatDialogModule,

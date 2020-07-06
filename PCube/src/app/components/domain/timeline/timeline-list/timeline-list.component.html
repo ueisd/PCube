@@ -1,0 +1,31 @@
+<div>
+    <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="jour">
+            <mat-header-cell *matHeaderCellDef>Jour</mat-header-cell>
+            <mat-cell *matCellDef="let timeline">Jour</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="entree">
+            <mat-header-cell *matHeaderCellDef>Entree</mat-header-cell>
+            <mat-cell *matCellDef="let timeline">Entree</mat-cell>
+        </ng-container>
+
+        <ng-container matColumnDef="sortie">
+            <mat-header-cell *matHeaderCellDef>Sortie</mat-header-cell>
+            <mat-cell *matCellDef="let timeline">Sortie</mat-cell>
+        </ng-container>
+    
+        <!-- Colonne action -->
+        <ng-container matColumnDef="operations">
+            <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
+            <mat-cell *matCellDef="let timeline" align="right">
+                <button mat-raised-button color="primary"><mat-icon>edit</mat-icon></button>
+                <button mat-raised-button color="red"><mat-icon>delete</mat-icon></button>
+            </mat-cell>
+        </ng-container>
+    
+        <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+        <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+    </mat-table>
+</div>

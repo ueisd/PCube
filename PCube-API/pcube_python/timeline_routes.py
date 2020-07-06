@@ -26,7 +26,7 @@ schema = JsonSchema(app)
 @timeline.route('', methods=['POST'])
 @auth_required
 @schema.validate(timeline_insert_schema)
-def get_all_user():
+def create_timeline_from_json_dict():
     """
     Cette route reçois une liste JSON de ligne de temps et l'ajoute à la base de données
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
@@ -44,6 +44,27 @@ def get_all_user():
 
 
         return jsonify({"timelines":timelines})
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+@timeline.route('/filter', methods=['GET'])
+@auth_required
+def get_all_user():
+    """
+    Permet de faire une recherche selon des filtres pour trouver les éléments correspondants.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        timeline = Timeline()
+        
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        query = TimelineRequest(connection)
+        data = query.select_by_filter(timeline)
+
+        return jsonify(data)
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)

@@ -14,8 +14,8 @@ import { HomeComponent } from 'src/app/components/pages/home/home.component';
 import { AccessDeniedComponent } from 'src/app/components/pages/access-denied/access-denied.component';
 import { AddUserComponent } from './components/domain/user/add-user/add-user.component';
 import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
-import { TimelineComponent } from 'src/app/components/pages/timeline/timeline.component';
-
+import { ManageTimelineComponent } from 'src/app/components/pages/timeline/manage-timeline/manage-timeline.component';
+import { AddingTimelineComponent } from 'src/app/components/pages/timeline/adding-timeline/adding-timeline.component';
 
 
 const routes: Routes = [
@@ -50,8 +50,13 @@ const routes: Routes = [
         component: AccessDeniedComponent
       },
       {
-        path: 'timeline',
-        component: TimelineComponent,
+        path: 'gerer-ligne-de-temps',
+        component: ManageTimelineComponent,
+        canActivate: [ProjectManagerGuard]
+      },
+      {
+        path: 'ajouter-ligne-de-temps',
+        component: AddingTimelineComponent,
         canActivate: [ProjectManagerGuard]
       },
       {
