@@ -1,7 +1,6 @@
-<div style="margin: 20px 0; min-height: 500px;">
+<form [formGroup]="newProjectForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
     <h1>Création d'un projet</h1>
-
-    <form [formGroup]="newProjectForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
+    <mat-dialog-content class="mat-typography">
         <div>
             <div *ngIf="isAdded" class="alert alert-success" role="alert">
                 Succès, votre projet a été enregistré !
@@ -29,7 +28,9 @@
                 </table>
             </div>
         </div>
-        <button class="btn btn-success" type="submit" [disabled]="!newProjectForm.valid || !isUnique || !isFormValid || !isParentExist">Ajouter</button>
-    </form>
-</div>
-    
+    </mat-dialog-content>
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Cancel</button>
+        <button mat-button type="submit" [disabled]="!newProjectForm.valid || !isUnique || !isFormValid || !isParentExist">Ajouter</button>
+    </mat-dialog-actions>
+</form>   

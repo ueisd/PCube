@@ -27,8 +27,8 @@ export class ProjectComponent implements OnInit {
     this.fileNameDialogRef = this.dialog.open(AddProjectComponent, dialogConfig);
     
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
-        this.projectListChild.refreshList();
         if(result == true) {
+          this.projectListChild.refreshList({expanded: true});
           this.openSnackBar('L\'activité a été créée', 'notif-success');
         }
       }

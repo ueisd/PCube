@@ -16,12 +16,10 @@ export class ProjectListComponent implements OnInit {
 
   nameFilter = new FormControl('');
 
-  constructor(private projectService: ProjectService ) {
-    this.refreshList(() => this.treeControl.expandAll());
-  }
+  constructor(private projectService: ProjectService ) {}
 
   ngOnInit(): void {
-    this.refreshList(() => this.treeControl.expandAll());
+    this.refreshList({expanded: true});
   }
 
   private _transformer = (node: ProjectItem, level: number) => {
@@ -33,7 +31,7 @@ export class ProjectListComponent implements OnInit {
   }
 
   onFilterChanged(){
-    this.refreshList(() => this.treeControl.expandAll());
+    this.refreshList({expanded: true});
   }
 
   treeControl = new FlatTreeControl<FlatNode>(
@@ -47,14 +45,18 @@ export class ProjectListComponent implements OnInit {
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
-  refreshList(callback: () => void = null){
-    let project = new ProjectItem()
+  refreshList(opts?: refreshOption){
+    let project = new ProjectItem();
     project.name = this.nameFilter.value.trim();
     this.projectService.filterProject(project).subscribe(projets =>{
       this.dataSource.data = projets;
-      callback();
+      if(opts.expanded) this.treeControl.expandAll();
     });
   }
+}
+
+interface refreshOption {
+  expanded: boolean
 }
 
 /** Flat node with expandable and level information */
