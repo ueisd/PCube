@@ -17,7 +17,7 @@ export class ProjectListComponent implements OnInit {
   nameFilter = new FormControl('');
 
   constructor(private projectService: ProjectService ) {
-    this.refreshList();
+    this.refreshList(() => this.treeControl.expandAll());
   }
 
   ngOnInit(): void {
@@ -33,7 +33,7 @@ export class ProjectListComponent implements OnInit {
   }
 
   onFilterChanged(){
-    this.refreshList();
+    this.refreshList(() => this.treeControl.expandAll());
   }
 
   treeControl = new FlatTreeControl<FlatNode>(
