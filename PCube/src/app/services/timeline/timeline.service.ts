@@ -14,10 +14,10 @@ export class TimelineService {
 
   constructor(private http: HttpClient) { }
 
-  addNewProject(timelines:TimelineItem[]): Observable<TimelineItem[]>{
+  addNewTimeline(timelines:TimelineItem[]): Observable<TimelineItem[]>{
     const opts = {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
         'Content-Type': 'application/json'
       })
     };
@@ -31,10 +31,27 @@ export class TimelineService {
     let url = API_GET_FILTER;
     const opts = {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+        'Content-Type' : 'application/json'
       })
     };
 
     return this.http.get<TimelineItem[]>(url, opts);
+  }
+
+  deleteTimeline(id, day_of_week:string, punch_in:string, punch_out:string){
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
+      }),
+      body :{
+        id: id,
+        day_of_week: day_of_week,
+        punch_in: punch_in,
+        punch_out: punch_out
+      }
+    };
+
+    return this.http.delete(API_TIMELINE, opts);
   }
 }

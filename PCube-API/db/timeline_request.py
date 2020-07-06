@@ -28,11 +28,14 @@ class TimelineRequest:
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute(
-        "select timeline.id, day_of_week, punch_in, punch_out, timeline.project_id, project.name, activity.name, accounting_time_category.name"
+        "select timeline.id, day_of_week, punch_in, punch_out, project.name as project_name," 
+        " activity.name as activity_name, accounting_time_category.name as expense_name, " 
+        " user.first_name as first_name, user.last_name as last_name"
         " from timeline inner join project on timeline.project_id = project.id"
         " inner join activity on timeline.activity_id = activity.id"
-        " inner join accounting_time_category on timeline.accounting_time_category_id = accounting_time_category.id" 
-        " where day_of_week LIKE ?",
+        " inner join accounting_time_category on timeline.accounting_time_category_id = accounting_time_category.id "
+        " inner join user on timeline.user_id = user.id"
+        " where day_of_week LIKE ? ORDER BY day_of_week DESC LIMIT 25",
         ('%'+timeline.day_of_week+'%',))
         data = cursor.fetchall()
         cursor.close()

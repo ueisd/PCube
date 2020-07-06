@@ -43,6 +43,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { TimelineListComponent } from './components/domain/timeline/timeline-list/timeline-list.component';
 import { ManageTimelineComponent } from './components/pages/timeline/manage-timeline/manage-timeline.component';
 import { AddingTimelineComponent } from './components/pages/timeline/adding-timeline/adding-timeline.component';
+import { DeleteTimelineComponent } from './components/domain/timeline/delete-timeline/delete-timeline.component';
 
 
 @NgModule({
@@ -77,6 +78,7 @@ import { AddingTimelineComponent } from './components/pages/timeline/adding-time
     TimelineListComponent,
     ManageTimelineComponent,
     AddingTimelineComponent,
+    DeleteTimelineComponent,
   ],
   imports: [
     MatDialogModule,

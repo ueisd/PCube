@@ -10,7 +10,7 @@ from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from .db_controller import get_db
 from flask.logging import create_logger
-from ..schemas.timeline_schema import (timeline_insert_schema)
+from ..schemas.timeline_schema import (timeline_insert_schema, timeline_delete_schema)
 from ..db.timeline_request import TimelineRequest
 from ..domain.timeline import Timeline
 from ..utility.auth import (get_authenticated_user,
@@ -49,6 +49,33 @@ def create_timeline_from_json_dict():
         log.error('authentication error: %s', error)
         abort(403)
 
+@timeline.route('', methods=['DELETE'])
+@auth_required
+@schema.validate(timeline_delete_schema)
+def delete_timeline():
+    """
+    Supprimer une ligne de temps de la BD.
+    Les champs id, day_of_week, punch_in, punch_out doivent être présent pour confirmer la suppression.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        data = request.json
+        timelines = data['timelines']
+        
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        query = TimelineRequest(connection)
+
+        for timeline in timelines:
+            timeline = query.insert(timeline)
+
+
+        return jsonify({"timelines":timelines})
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
 @timeline.route('/filter', methods=['GET'])
 @auth_required
 def get_all_user():
@@ -63,6 +90,8 @@ def get_all_user():
         connection = get_db().get_connection()
         query = TimelineRequest(connection)
         data = query.select_by_filter(timeline)
+
+        print(data)
 
         return jsonify(data)
 

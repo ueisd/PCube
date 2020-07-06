@@ -17,3 +17,15 @@ timeline_insert_schema = {
     },
     "additionalProperties": False
 }
+
+timeline_delete_schema = {
+    "type": "object",
+    "required": ["id","day_of_week","punch_in","punch_out"],
+    "properties": {
+        "id": {"type": "integer"},
+        "day_of_week": {"type": "string", "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}"},
+        "punch_in": {"type": "string", "pattern": "([1-2][0-9]|[0-9]):[0-9]{2}"},
+        "punch_out": {"type": "string", "pattern": "([1-2][0-9]|[0-9]):[0-9]{2}"}
+    },
+    "additionalProperties": False
+}

@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TimelineService } from 'src/app/services/timeline/timeline.service';
 import { TimelineItem } from 'src/app/models/timeline';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { DeleteTimelineComponent } from 'src/app/components/domain/timeline/delete-timeline/delete-timeline.component';
 
 @Component({
   selector: 'app-timeline-list',
@@ -11,7 +14,9 @@ import { TimelineItem } from 'src/app/models/timeline';
 export class TimelineListComponent implements OnInit {
 
   constructor(
-    private timelineService: TimelineService
+    private timelineService: TimelineService,
+    private dialog: MatDialog,
+    private snackBar : MatSnackBar
   ) { }
 
 
@@ -21,7 +26,7 @@ export class TimelineListComponent implements OnInit {
 
   dataSource:TimelineItem[] = [];
 
-  displayedColumns:string[] = ['jour', 'entree', 'sortie'];;
+  displayedColumns:string[] = ['jour', 'heures', 'membre', 'projet', 'activiter', 'compteDepense', 'operations'];;
 
   refreshList(){
     let timeline = new TimelineItem();
@@ -31,5 +36,38 @@ export class TimelineListComponent implements OnInit {
       console.log(timelines);
     });
   }
+
+  onDeleteTimeline(timeline:any){
+    
+    const dialogRef = this.dialog.open(DeleteTimelineComponent, {
+      data: { 
+        id: timeline.id, 
+        firstName: timeline.first_name, 
+        lastName: timeline.last_name, 
+      }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result !== undefined) {
+        this.timelineService.deleteTimeline(timeline.id, timeline.day_of_week, timeline.punch_in, timeline.punch_out).subscribe((data) => {
+          this.openSnackBar("La ligne de temps a été supprimé", 'notif-success');
+          this.refreshList();
+        },
+        (error) => {
+          this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+        });
+      }
+    });
+  }
+
+  openSnackBar(message, panelClass) {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 10000,
+      horizontalPosition: "right",
+      verticalPosition: "bottom",
+      panelClass: [panelClass]
+    });
+  }
+
 
 }

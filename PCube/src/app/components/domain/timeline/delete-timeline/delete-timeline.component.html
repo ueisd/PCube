@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>Supprimer une ligne de temps</h2>
+<div mat-dialog-content>
+  <p>Vous êtes sur le point du supprimer {{ data.last_name }}, {{ data.first_name }}.</p>
+  <p>Voulez-vous vraiment supprimer cet utilisateur?</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Confirmer</button>
+  <button mat-button (click)="onNoClick()">Annuler</button>
+</div>
