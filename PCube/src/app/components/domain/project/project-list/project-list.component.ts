@@ -21,7 +21,7 @@ export class ProjectListComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.refreshList();
+    this.refreshList(() => this.treeControl.expandAll());
   }
 
   private _transformer = (node: ProjectItem, level: number) => {
@@ -47,13 +47,13 @@ export class ProjectListComponent implements OnInit {
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
-  refreshList(){
+  refreshList(callback: () => void = null){
     let project = new ProjectItem()
     project.name = this.nameFilter.value.trim();
     this.projectService.filterProject(project).subscribe(projets =>{
       this.dataSource.data = projets;
+      callback();
     });
-    
   }
 }
 
