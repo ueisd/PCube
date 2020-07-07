@@ -5,6 +5,7 @@ import { TimelineItem } from 'src/app/models/timeline';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DeleteTimelineComponent } from 'src/app/components/domain/timeline/delete-timeline/delete-timeline.component';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -17,7 +18,8 @@ export class TimelineListComponent implements OnInit {
   constructor(
     private timelineService: TimelineService,
     private dialog: MatDialog,
-    private snackBar : MatSnackBar
+    private snackBar : MatSnackBar,
+    private router: Router
   ) { }
 
 
@@ -72,6 +74,10 @@ export class TimelineListComponent implements OnInit {
       verticalPosition: "bottom",
       panelClass: [panelClass]
     });
+  }
+
+  onModifyTimeline(timeline){
+    this.router.navigate(['/modifier-ligne-de-temps/' + timeline.id]);
   }
 
 

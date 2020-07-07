@@ -16,6 +16,7 @@ import { AddUserComponent } from './components/domain/user/add-user/add-user.com
 import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
 import { ManageTimelineComponent } from 'src/app/components/pages/timeline/manage-timeline/manage-timeline.component';
 import { AddingTimelineComponent } from 'src/app/components/pages/timeline/adding-timeline/adding-timeline.component';
+import { ModifyingTimelineComponent } from 'src/app/components/pages/timeline/modifying-timeline/modifying-timeline.component';
 
 
 const routes: Routes = [
@@ -57,6 +58,11 @@ const routes: Routes = [
       {
         path: 'ajouter-ligne-de-temps',
         component: AddingTimelineComponent,
+        canActivate: [ProjectManagerGuard]
+      },
+      {
+        path: 'modifier-ligne-de-temps/:id',
+        component: ModifyingTimelineComponent,
         canActivate: [ProjectManagerGuard]
       },
       {

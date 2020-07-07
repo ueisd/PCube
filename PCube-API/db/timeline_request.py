@@ -50,3 +50,12 @@ class TimelineRequest:
         (timeline.id, timeline.day_of_week, timeline.punch_in, timeline.punch_out))
         self.connection.commit()
         cursor.close()
+
+    def get_timeline_by_id(self, id):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute(
+        "select * from timeline where id = ?",(id,))
+        data = cursor.fetchone()
+        cursor.close()
+        return data

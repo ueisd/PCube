@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TimelineItem } from 'src/app/models/timeline';
+import { Time } from '@angular/common';
 
 const API_TIMELINE = "/api/timeline";
 const API_GET_FILTER = "/api/timeline/filter";
@@ -37,6 +38,18 @@ export class TimelineService {
     };
 
     return this.http.get<TimelineItem[]>(url, opts);
+  }
+
+  getTimelineById(id:number): Observable<TimelineItem>{
+    let url = API_TIMELINE + '/' + id;
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+        'Content-Type' : 'application/json'
+      })
+    };
+
+    return this.http.get<TimelineItem>(url, opts);
   }
 
   deleteTimeline(id, day_of_week:string, punch_in:string, punch_out:string){

@@ -87,13 +87,39 @@ def get_all_user():
     """
     try:
         timeline = Timeline()
-        
-        get_authenticated_user()
+
         connection = get_db().get_connection()
         query = TimelineRequest(connection)
         data = query.select_by_filter(timeline)
 
         return jsonify(data), 200
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+@timeline.route('/<id>', methods=['GET'])
+@auth_required
+def get_timeline_by_id(id):
+    """
+    Permet de faire une recherche selon des filtres pour trouver les éléments correspondants.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+    
+        if not id or not id.isnumeric():
+            log.error("L'identifiant n'est pas valide")
+            abort(400)
+
+        connection = get_db().get_connection()
+        query = TimelineRequest(connection)
+        timeline = query.get_timeline_by_id(id)
+
+        if timeline:
+            return jsonify(timeline), 200
+        else:
+            log.error("La ressource n'existe pas.")
+            abort(404)
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
