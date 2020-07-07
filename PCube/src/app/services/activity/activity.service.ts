@@ -65,6 +65,20 @@ export class ActivityService {
     return this.http.put<ActivityItem>(API_ACTIVITY, body, opts);
   }
 
+  deleteActivity(id): Observable<{}> {
+    var url = API_ACTIVITY + "/" + id
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Content-Type' : 'application/json'
+      }),
+      body : {
+        id: id
+      }
+    };
+    return this.http.delete(url, opts);
+  }
+
   filterActivity(activity: ActivityItem): Observable<ActivityItem[]>{
     let url = API_FILTER_BY_NAME + "?name=" + activity.name;
     url += "&id=" + activity.id;
