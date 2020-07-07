@@ -23,7 +23,7 @@
         <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
         <mat-cell *matCellDef="let activity" align="right">
             <button mat-raised-button color="primary" (click)="editAction(activity)"><mat-icon>edit</mat-icon></button>
-            <button mat-raised-button color="red"><mat-icon>delete</mat-icon></button>
+            <button mat-raised-button color="warn" (click)="openDeleteDialog(activity)"><mat-icon>delete</mat-icon></button>
         </mat-cell>
     </ng-container>
 
