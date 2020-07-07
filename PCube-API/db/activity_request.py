@@ -61,11 +61,18 @@ class ActivityRequest:
         activity.name = new_name
         return activity
 
+    def delete_activity(self, activity_id):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("delete from activity where id = ?", (activity_id))
+        self.connection.commit()
+        cursor.close()
+
     def is_id_name_combo_exist(self, id, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from activity where id = ? and name = ?",
-        (id, name))
+            (id, name))
         data = cursor.fetchone()
         cursor.close()
         return True if data else False

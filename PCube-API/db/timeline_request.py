@@ -40,3 +40,13 @@ class TimelineRequest:
         data = cursor.fetchall()
         cursor.close()
         return data
+
+    def delete_timeline(self, timeline):
+        """
+        Permet de supprimer une timeline
+        """
+        cursor = self.connection.cursor()
+        cursor.execute("delete from timeline where id = ? and day_of_week = ? and punch_in = ? and punch_out = ?", 
+        (timeline.id, timeline.day_of_week, timeline.punch_in, timeline.punch_out))
+        self.connection.commit()
+        cursor.close()

@@ -1,6 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DeleteUserComponent } from '../../user/delete-user/delete-user.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 @Component({
   selector: 'app-delete-timeline',
@@ -11,7 +13,8 @@ export class DeleteTimelineComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<DeleteUserComponent>,
-    @Inject(MAT_DIALOG_DATA) public data:any
+    @Inject(MAT_DIALOG_DATA) public data:any,
+    private snackBar : MatSnackBar
     ) { }
 
   ngOnInit(): void {
@@ -19,6 +22,16 @@ export class DeleteTimelineComponent implements OnInit {
 
   onNoClick() : void {
     this.dialogRef.close();
+    this.openSnackBar("L'action a été annulé.", 'notif-success');
+  }
+
+  openSnackBar(message, panelClass) {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 10000,
+      horizontalPosition: "right",
+      verticalPosition: "bottom",
+      panelClass: [panelClass]
+    });
   }
 
 }

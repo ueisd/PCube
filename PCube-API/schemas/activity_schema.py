@@ -17,3 +17,12 @@ activity_update_schema = {
     },
     "additionalProperties": False
 }
+
+activity_delete_schema = {
+    "type": "object",
+    "required": ["id"],
+    "properties": {
+        "id": {"type": "integer"}
+    },
+    "additionalProperties": False
+}

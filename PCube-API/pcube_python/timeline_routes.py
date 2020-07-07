@@ -43,7 +43,7 @@ def create_timeline_from_json_dict():
             timeline = query.insert(timeline)
 
 
-        return jsonify({"timelines":timelines})
+        return jsonify({"timelines":timelines}), 201
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
@@ -60,17 +60,19 @@ def delete_timeline():
     """
     try:
         data = request.json
-        timelines = data['timelines']
-        
+        timeline = Timeline()
+        timeline.id = data["id"]
+        timeline.day_of_week = data["day_of_week"]
+        timeline.punch_out = data["punch_out"]
+        timeline.punch_in = data["punch_in"]
+
         get_authenticated_user()
         connection = get_db().get_connection()
         query = TimelineRequest(connection)
 
-        for timeline in timelines:
-            timeline = query.insert(timeline)
+        query.delete_timeline(timeline)
 
-
-        return jsonify({"timelines":timelines})
+        return jsonify(""), 200
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
@@ -91,9 +93,7 @@ def get_all_user():
         query = TimelineRequest(connection)
         data = query.select_by_filter(timeline)
 
-        print(data)
-
-        return jsonify(data)
+        return jsonify(data), 200
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)

@@ -1,0 +1,12 @@
+<h2 mat-dialog-title>Supprimer une activité</h2>
+<div mat-dialog-content>
+  <p>Vous êtes sur le point du supprimer l'activité {{ data.name }}</p>
+  <p>Voulez-vous vraiment supprimer cette activité?</p>
+  <p>Cela aura pour conséquence de rendre vide tous les champs activiés
+      des lignes de temps associés à cette activité.
+  </p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Confirmer</button>
+  <button mat-button (click)="onNoClick()">Annuler</button>
+</div>

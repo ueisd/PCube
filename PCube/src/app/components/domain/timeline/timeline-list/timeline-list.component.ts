@@ -33,7 +33,6 @@ export class TimelineListComponent implements OnInit {
 
     this.timelineService.getTimelineByFilter(timeline).subscribe(timelines => {
       this.dataSource = timelines;
-      console.log(timelines);
     });
   }
 
@@ -44,7 +43,8 @@ export class TimelineListComponent implements OnInit {
         id: timeline.id, 
         firstName: timeline.first_name, 
         lastName: timeline.last_name, 
-      }
+      },
+      panelClass: 'warning-dialog'
     });
 
     dialogRef.afterClosed().subscribe(result => {

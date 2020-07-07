@@ -9,7 +9,7 @@ from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
 from ..domain.activity import Activity
-from ..schemas.activity_schema import (activity_insert_schema, activity_update_schema)
+from ..schemas.activity_schema import (activity_insert_schema, activity_update_schema, activity_delete_schema)
 from .db_controller import get_db
 from ..db.activity_request import ActivityRequest
 from ..domain.activity import Activity
@@ -102,7 +102,7 @@ def add_new_activity():
 
 @activity.route('', methods=['PUT'])
 @auth_required
-@schema.validate(activity_update_schema)
+@schema.validate(activity_delete_schema)
 def modify_activity():
     """
     Permet de modifier une activité dans le système.
@@ -132,6 +132,32 @@ def modify_activity():
 
         new_activity = query.update_activity(activity, new_name)
         return jsonify(new_activity.asDictionnary())
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+@activity.route('<id>', methods=['DELETE'])
+@auth_required
+@schema.validate(activity_delete_schema)
+def delete_activity(id):
+    """
+    Permet de supprimer une activité.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        data = request.json
+
+        print(data)
+
+        connection = get_db().get_connection()
+        query = ActivityRequest(connection)
+
+        id = escape(id).strip()
+
+
+        query.delete_activity(id)
+        return jsonify(""),200
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
