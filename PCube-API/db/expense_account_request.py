@@ -52,3 +52,39 @@ class ExpenseAccountRequest:
         data = cursor.fetchone()
         cursor.close()
         return data
+
+    def create_expense_account(self, expense_account):
+        cursor = self.connection.cursor()
+        isSelfReference = expense_account.name == expense_account.parent_name
+
+        if (isSelfReference):
+            cursor.execute("Insert into accounting_time_category(name, parent_id) "
+                           "Values(?, ?) ", (expense_account.name, None))
+        else:
+            cursor.execute("Insert into accounting_time_category(name, parent_id) "
+                           "Values(?, ?) ", (expense_account.name, expense_account.parent_id))
+        self.connection.commit()
+        expense_account.id = cursor.lastrowid
+        cursor.close
+
+        if (isSelfReference):
+            new_expense_account = ExpenseAccount()
+            new_expense_account.parent_id = expense_account.id
+            new_expense_account.name = expense_account.name
+            new_expense_account.parent_name = expense_account.parent_name
+            expense_account = self.update_expense_account(expense_account, new_expense_account)
+
+        return expense_account
+
+    def update_expense_account(self, expense_account, new_expense_account):
+        """
+        Modifiy un projet existante et retourne un nouveau projet
+        avec l'identifiant de l'activité modifié.
+        """
+        cursor = self.connection.cursor()
+        cursor.execute("update accounting_time_category set name = ?, parent_id = ? where name = ? and id = ?",
+                       (new_expense_account.name, new_expense_account.parent_id, expense_account.name, expense_account.id))
+        self.connection.commit()
+        cursor.close()
+        new_expense_account.id = expense_account.id
+        return new_expense_account

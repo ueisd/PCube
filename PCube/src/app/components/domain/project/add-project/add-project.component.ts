@@ -172,6 +172,7 @@ export class AddProjectComponent implements OnInit {
     }
 
     this.isFormValid = true;
+    console.log("LE validator " + this.isFormValid)
     return null;
   }
 

@@ -1,0 +1,23 @@
+<div style="margin: 20px 0; min-height: 500px;">
+    <h1>Création d'un compte de dépense</h1>
+
+    <form [formGroup]="ExpenseForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">  
+        <label for="expenseAccountName">Nom du compte de dépense:</label>
+            <input (ngModelChange)="ExpenseNameOnChange($event)" id="expenseAccountName" class="form-control" formControlName="expenseAccountName" autocomplete="off" matInput>
+            <br>
+            <div>
+                <mat-checkbox (ngModelChange)="isChildChecked($event)" id="isChild" class="form-control" formControlName="isChild">Est un sous-projet</mat-checkbox>
+            </div>
+            <div class="hidden" id="parentName-div">
+                <mat-label>Nom du compte de dépense parent</mat-label>
+                <input (ngModelChange)="NameOnChange($event)" (focus)="NameOnChange($event.target.value)" (focusout)="parentNameFocusOut()" id="parentName" class="form-control" formControlName="parentName" autocomplete="off" matInput>
+                <div>
+                    <table id="autocomplete-table" *ngFor="let accountExpense of autocomplete" (click)="autocompleteChoice($event, accountExpense)">
+                        <tr><td id="{{accountExpense.id}}">{{ accountExpense.name }}</td></tr>      
+                    </table>
+                </div>
+            </div>
+            <button class="btn btn-success" type="submit" [disabled]="!ExpenseForm.valid || !isUnique || !isFormValid || !isParentExist">Ajouter</button>
+    </form>
+</div>
+ 

@@ -33,6 +33,7 @@ import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/materia
 import { ModifyUserComponent } from './components/domain/user/modify-user/modify-user.component';
 import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
 import { ExpenseAccountListComponent } from './components/domain/expense-account/expense-account-list/expense-account-list.component';
+import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 
 
 @NgModule({
@@ -58,6 +59,7 @@ import { ExpenseAccountListComponent } from './components/domain/expense-account
     ModifyUserComponent,
     ExpenseAccountsComponent,
     ExpenseAccountListComponent,
+    AddExpenseAccountComponent,
   ],
   imports: [
     MatDialogModule,
