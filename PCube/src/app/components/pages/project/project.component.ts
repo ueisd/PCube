@@ -3,6 +3,7 @@ import { ProjectListComponent } from 'src/app/components/domain/project/project-
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { AddProjectComponent } from 'src/app/components/domain/project/add-project/add-project.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProjectItem } from 'src/app/models/project';
 
 @Component({
   selector: 'app-project',
@@ -23,7 +24,15 @@ export class ProjectComponent implements OnInit {
   @ViewChild(ProjectListComponent) projectListChild;
 
   openDialog() {
+    
+    let projet : ProjectItem = new ProjectItem();
+
+    projet.name = "";
+
     const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = { 
+      projet : projet,
+    }
     this.fileNameDialogRef = this.dialog.open(AddProjectComponent, dialogConfig);
     
     this.fileNameDialogRef.afterClosed().subscribe(result => { 

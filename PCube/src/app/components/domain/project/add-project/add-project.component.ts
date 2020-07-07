@@ -1,13 +1,17 @@
 import { Component, OnInit, Output, EventEmitter, Inject, Optional } from '@angular/core';
 import { ProjectService } from 'src/app/services/project/project.service';
-import { FormControl, FormGroup, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
+import { FormControl, FormGroup, Validators, ValidatorFn, ValidationErrors, FormBuilder, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import * as $ from 'jquery/dist/jquery.min.js';
 import { ProjectItem } from '../../../../models/project';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-
-const PARENT_NAME_INPUT_ID = "parentName";
-const PROJECT_NAME_INPUT_ID = "projectName";
-const TABLE_AUTOCOMPLETE_ID = "autocomplete-table";
+import { __values } from 'tslib';
+import { map } from 'rxjs/internal/operators/map';
+import { of } from 'rxjs/internal/observable/of';
+import { Observable } from 'rxjs/internal/Observable';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { timer } from 'rxjs/internal/observable/timer';
+import { first } from 'rxjs/internal/operators/first';
+import { startWith } from 'rxjs/internal/operators/startWith';
 
 @Component({
   selector: 'app-project',
@@ -18,29 +22,43 @@ export class AddProjectComponent implements OnInit {
 
   @Output() refreshDataEvent = new EventEmitter<boolean>();
 
-  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,
-  private projectService: ProjectService, private dialogRef: MatDialogRef<AddProjectComponent>) { }
-
   newProjectForm: FormGroup;
-
   hasToRefresh: boolean = true;
+  projet: ProjectItem;
+  isAddedFailled: boolean = false;
+  parentNameOptions: string[];
+
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+  private fb: FormBuilder, private projectService: ProjectService, 
+  private dialogRef: MatDialogRef<AddProjectComponent>) { }
+
+  filteredOptions: Observable<string[]>;
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+    return this.parentNameOptions.filter(option => option.toLowerCase().includes(filterValue));
+  }
 
   askForDataRefresh() {
     this.refreshDataEvent.emit(this.hasToRefresh);
   }
 
   ngOnInit(): void {
+    this.projet = this.data.projet;
     this.initForm();
-    this.isAdded = false;
-    this.isUnique = true;
-    this.isAddedFailled = false;
+
+    this.projectService.getAllProject().subscribe(projets =>{
+      this.parentNameOptions = projets.map((val)=> val.name);
+    });
+
+    this.filteredOptions = this.newProjectForm.get('parentName').valueChanges
+      .pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
   }
 
-  isAdded: boolean;
-  isAddedFailled: boolean;
-
   private onSubmitSuccess(){
-    this.isAdded = true;
     this.askForDataRefresh();
     this.isAddedFailled = false;
     this.newProjectForm.reset();
@@ -48,7 +66,6 @@ export class AddProjectComponent implements OnInit {
   }
 
   private onSubmitFailled(){
-    this.isAdded = false;
     this.isAddedFailled = true;
   }
 
@@ -70,117 +87,85 @@ export class AddProjectComponent implements OnInit {
     }
   }
 
-  isUnique: boolean;
-
-  projectNameOnChange(newValue){
-    if(newValue != null && newValue.trim().length != 0){
-      this.projectService.isNameUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
-    }
-  }
-
-  autocomplete: ProjectItem[]
-
-  parentNameOnChange(parentName){
-
-    if(parentName == null || parentName.trim().length == 0){
-      this.autocomplete = [];
-      return;
-    }
-    
-    this.projectService.getProjectNameForAutocomplete(parentName).subscribe(projects => {
-
-      this.autocomplete = [];
-
-      if(projects.length == 1 && parentName.toUpperCase() == projects[0].name.toUpperCase())
-        return;
-
-      $("#"+TABLE_AUTOCOMPLETE_ID).empty();
-      projects.forEach(project => {
-        this.autocomplete.push(project);
-      });
-
-    });
-
-  }
-
-  delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-  }
-
-  async parentNameFocusOut(){
-    await this.delay(200);
-    this.autocomplete = [];
-  }
-
-  autocompleteChoice(event, item){
-    console.log(item.name);
-    this.newProjectForm.get('parentName').setValue(item.name);
-    this.autocomplete = [];
-    this.checkParentExist(item.name);
-  }
-
-  isParentExist: boolean
-
-  checkParentExist(parentName){
-    if(parentName != null && parentName.trim().length != 0){
-      this.projectService.isNameUnique(parentName).subscribe(isUnique => {
-        this.isParentExist = !isUnique;
-      });
-    }
-  }
-
-  private addOrRemoveHiddenClass(id, isHidden){
-    if(isHidden)
-      $("#"+id).addClass("hidden");
-    else
-      $("#"+id).removeClass("hidden");
-  }
-
-  isChild: boolean = false;
-
   isChildChecked(checked: boolean){
-
-    if(!checked)
-      this.newProjectForm.get('parentName').reset();
-
-    this.isChild = checked
-    this.addOrRemoveHiddenClass("parentName-div", !checked);
+    if(!checked) this.newProjectForm.get('parentName').reset();
   }
 
-  isFormValid: boolean = false;
+
+
 
   validateForm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
-    const projectName = control.get('projectName').value;
-    const isChild = control.get('isChild').value;
-    const parentName = control.get('parentName').value;
-
-    if(projectName == null || projectName.trim().length == 0){
-      this.isFormValid = false;
-      return null;
-    }
-      
-
-    if(isChild && (parentName == null || parentName.trim().length == 0)){
-      this.isFormValid = false;
-      return null;
-    }
-    
-    if(this.isChild){
-      this.checkParentExist(parentName);
-    }else{
-      this.isParentExist = true;
-    }
-
-    this.isFormValid = true;
     return null;
   }
 
+  nomProjetUniqueValidation(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return timer(500)
+        .pipe(
+          switchMap(() =>  this.projectService.isNameUnique(control.value)
+            .pipe(
+              map((isUnique: boolean) => {
+                return (isUnique) ? null : { ereureNonUnique: true };
+              })
+            ).pipe(first())
+          )
+        )
+    };
+  }
+  
+  nomParentExist(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      if(control.value === null || control.value.trim().length == 0) return of(null);
+      return timer(500)
+        .pipe(
+          switchMap(() =>  this.projectService.isNameUnique(control.value)
+            .pipe(
+              map((isUnique: boolean) => {
+                return (isUnique) ? { ereurParentNonExistant: true } : null;
+              })
+            ).pipe(first())
+          )
+        );
+    };
+  }
+
+  validationMessages = {
+    'projectName': [
+        { type: 'required', message: 'Une Nom est requis' },
+        { type: 'minlength', message: 'Minimum 5 caractères' },
+        { type: 'ereureNonUnique', message: 'Le nom du projet doit être unique' }
+    ],
+    'parentName': [
+        { type: 'minlength', message: 'Minimum 4 caractères' },
+        { type: 'ereurParentNonExistant', message: 'Le nom du projet doit exister' }
+    ],
+  };
+
+
+
   private initForm(){
-    
-    this.newProjectForm = new FormGroup({
-      'projectName': new FormControl(),
-      'isChild': new FormControl(),
-      'parentName': new FormControl()
-    }, {validators: this.validateForm});
+    this.newProjectForm = this.fb.group(
+      {
+        projectName: [
+          this.projet.name, 
+          Validators.compose([
+            Validators.required, 
+            Validators.minLength(5),
+          ]),
+          [this.nomProjetUniqueValidation()]
+        ],
+        isChild: [
+          false
+        ],
+        parentName: [
+          '',
+          Validators.compose([
+            Validators.minLength(4),
+          ]),
+          [this.nomParentExist()]
+        ],
+      },
+      {validators: this.validateForm}
+    );
   }
 }
