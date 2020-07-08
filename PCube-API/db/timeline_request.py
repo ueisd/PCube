@@ -59,3 +59,12 @@ class TimelineRequest:
         data = cursor.fetchone()
         cursor.close()
         return data
+
+    def update(self, timeline):
+        cursor = self.connection.cursor()
+        cursor.execute("update timeline set day_of_week = ?, punch_in = ?, punch_out = ?, project_id = ?," 
+        " accounting_time_category_id = ?, activity_id = ?, user_id = ? where id = ?", 
+                        (timeline.day_of_week, timeline.punch_in, timeline.punch_out, timeline.project_id,
+                        timeline.accounting_time_category_id, timeline.activity_id, timeline.user_id, timeline.id))
+        self.connection.commit()
+        cursor.close()

@@ -10,7 +10,7 @@ from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from .db_controller import get_db
 from flask.logging import create_logger
-from ..schemas.timeline_schema import (timeline_insert_schema, timeline_delete_schema)
+from ..schemas.timeline_schema import (timeline_insert_schema, timeline_delete_schema, timeline_update_schema)
 from ..db.timeline_request import TimelineRequest
 from ..domain.timeline import Timeline
 from ..utility.auth import (get_authenticated_user,
@@ -44,6 +44,39 @@ def create_timeline_from_json_dict():
 
 
         return jsonify({"timelines":timelines}), 201
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+@timeline.route('', methods=['PUT'])
+@auth_required
+@schema.validate(timeline_update_schema)
+def update_timeline_from_json_dict():
+    """
+    Reçois une ligne de temps en format JSON et update celle-ci avec les nouvelles informations.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        data = request.json
+        
+        timeline = Timeline()
+        timeline.id = escape(data["id"]).strip()
+        timeline.punch_in = escape(data["punch_in"]).strip()
+        timeline.punch_out = escape(data["punch_out"]).strip()
+        timeline.project_id = escape(data["project_id"]).strip()
+        timeline.activity_id = escape(data["activity_id"]).strip()
+        timeline.accounting_time_category_id = escape(data["accounting_time_category_id"]).strip()
+        timeline.user_id = escape(data["user_id"]).strip()
+        timeline.day_of_week = escape(data["day_of_week"]).strip()
+
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        query = TimelineRequest(connection)
+        query.update(timeline)
+
+
+        return jsonify(""), 200
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)

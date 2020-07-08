@@ -13,7 +13,7 @@
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle >
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
-                <button *ngIf="workingTimeline.shift.length > 1" class="button-display-3Q button-remove-hours" mat-fab color="primary"(click)="removeShift(timeLineIndex)">
+                <button *ngIf="workingTimeline.shift.length > 1 && canAddMoreHours" class="button-display-3Q button-remove-hours" mat-fab color="primary"(click)="removeShift(timeLineIndex)">
                     <mat-icon class="icon-display">alarm_off</mat-icon>
                 </button>
                 <div>
@@ -27,7 +27,7 @@
                             <ngx-timepicker-field [format]="24" [(ngModel)]="shift.end" ></ngx-timepicker-field>
                         </div>
                     </div>
-                    <div class="add-button-relative">
+                    <div class="add-button-relative" *ngIf="canAddMoreHours">
                         <button class="button-add-hours button-display-demi" mat-fab color="primary"(click)="addShift(timeLineIndex)">
                             <mat-icon class="icon-display">alarm_add</mat-icon>
                         </button>
@@ -37,7 +37,7 @@
                 <mat-divider></mat-divider>
                 <div class="div-spacer-30"></div>
             </div>
-            <div style="margin-bottom: 15px;">
+            <div style="margin-bottom: 15px;" *ngIf="canAddMoreHours">
                 <button class="" color="primary" mat-raised-button color="primary" (click)="addTimeline()">
                     Ajouter une plage horaire
                 </button>
@@ -45,7 +45,7 @@
                     Retirer la dernière plage horaire
                 </button>
             </div>
-            <mat-divider></mat-divider>
+            <mat-divider *mgIf="canAddMoreHours"></mat-divider>
             <div style="margin-top:30px;">
                 <button mat-raised-button color="primary" (click)="validateAllTimeLine()">Je confirme les heures</button>
             </div>

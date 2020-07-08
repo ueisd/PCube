@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TimelineItem } from 'src/app/models/timeline';
-import { Time } from '@angular/common';
 
 const API_TIMELINE = "/api/timeline";
 const API_GET_FILTER = "/api/timeline/filter";
@@ -26,6 +25,28 @@ export class TimelineService {
         timelines: timelines
     }
     return this.http.post<TimelineItem[]>(API_TIMELINE, body, opts);
+  }
+
+  updateTimeline(timeline:TimelineItem):Observable<TimelineItem>{
+    
+    console.log(timeline);
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+        'Content-Type': 'application/json'
+      })
+    };
+    let body = {
+      id: timeline.id,
+      day_of_week: timeline.day_of_week,
+      punch_in: timeline.punch_in,
+      punch_out: timeline.punch_out,
+      project_id: timeline.project_id,
+      accounting_time_category_id: timeline.accounting_time_category_id,
+      activity_id: timeline.activity_id,
+      user_id: timeline.user_id
+    }
+    return this.http.put<TimelineItem>(API_TIMELINE, body, opts);
   }
 
   getTimelineByFilter(timeline:TimelineItem): Observable<any[]>{

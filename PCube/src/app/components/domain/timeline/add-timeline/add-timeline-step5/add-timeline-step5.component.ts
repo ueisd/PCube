@@ -40,8 +40,9 @@ export class AddTimelineStep5Component implements OnInit {
   message:string = NORMAL_MESSAGE;
   messageClasse:string = NORMAL_CLASS;
 
-  ngOnInit(): void {
+  canAddMoreHours:boolean = true;
 
+  ngOnInit(): void {
     this.placeDefaultWorkingTimeline();
   }
 
@@ -80,25 +81,26 @@ export class AddTimelineStep5Component implements OnInit {
     this.onAddOrRemoveRow();
   }
 
+  showPannelMessage(message:string, cssClass:string){
+    this.message = message;
+    this.messageClasse = cssClass;
+  }
+
   onErrorFoundFromConfirmation(){
-    this.message = "Veuillez corriger les erreurs."
-    this.messageClasse = WARNING_CLASS;
+    this.showPannelMessage("Veuillez corriger les erreurs.", WARNING_CLASS);
   }
 
   onConfirmationSuccess(){
-    this.message = "Les heures sont valides.";
-    this.messageClasse = SUCCESS_CLASS;
+    this.showPannelMessage("Les heures sont valides.", SUCCESS_CLASS);
   }
 
   onAddOrRemoveRow(){
-    this.message = "Veuillez saisir les heures travaillées";
-    this.messageClasse = WARNING_CLASS;
+    this.showPannelMessage("Veuillez saisir les heures travaillées", WARNING_CLASS);
     this.callOuputEvent(false)
   }
 
   onFormSubmitSuccess(){
-    this.message = "Vous pouvez réutiliser les heures saisies.";
-    this.messageClasse = WARNING_CLASS;
+    this.showPannelMessage("Vous pouvez réutiliser les heures saisies.", WARNING_CLASS);
     this.callOuputEvent(false)
   }
 
@@ -115,7 +117,7 @@ export class AddTimelineStep5Component implements OnInit {
       let begin = shift[i].begin;
       let end = shift[i].end;
 
-      isValid = begin.match(TIME_PATTERN) != null && end.match(TIME_PATTERN) != null ;
+      isValid = begin.match(TIME_PATTERN) != null && end.match(TIME_PATTERN) != null;
     }
 
     return isValid;
@@ -142,5 +144,14 @@ export class AddTimelineStep5Component implements OnInit {
       this.onErrorFoundFromConfirmation();
 
     this.callOuputEvent(isValid)
+  }
+
+  setGeneratedValue(workgingShift:WorkingShift, canAddMoreHours:boolean){
+    this.canAddMoreHours = canAddMoreHours;
+    this.workingTimelines[0].shift[0].begin = workgingShift.shift[0].begin;
+    this.workingTimelines[0].shift[0].end = workgingShift.shift[0].end;
+
+    let date:Date = new Date(workgingShift.date.getDate());
+    this.workingTimelines[0].date = workgingShift.date;
   }
 }
