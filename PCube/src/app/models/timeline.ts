@@ -1,5 +1,3 @@
-import { Time } from '@angular/common';
-
 export class TimelineItem{
     id : number;
     day_of_week : string;

@@ -13,6 +13,7 @@ from flask.logging import create_logger
 from ..schemas.timeline_schema import (timeline_insert_schema, timeline_delete_schema, timeline_update_schema)
 from ..db.timeline_request import TimelineRequest
 from ..domain.timeline import Timeline
+from ..domain.timelineFilter import TimelineFilter
 from ..utility.auth import (get_authenticated_user,
                     auth_required, auth_refresh_required, AuthenticationError,
                     admin_required, project_manager_required, member_required
@@ -119,7 +120,12 @@ def get_all_user():
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        timeline = Timeline()
+        timeline = TimelineFilter()
+        timeline.day_of_week = escape(request.args.get('day_of_week', "")).upper().strip()
+        timeline.accounting_time_category_name = escape(request.args.get('expense_name', "")).upper().strip()
+        timeline.activity_name = escape(request.args.get('activity_name', "")).upper().strip()
+        timeline.member_name = escape(request.args.get('member_name', "")).upper().strip()
+        timeline.project_name = escape(request.args.get('project_name', "")).upper().strip()
 
         connection = get_db().get_connection()
         query = TimelineRequest(connection)

@@ -4,14 +4,24 @@ import { TimelineService } from 'src/app/services/timeline/timeline.service';
 import { TimelineItem } from 'src/app/models/timeline';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { AppDateAdapter, APP_DATE_FORMATS } from 'src/app/models/format-datepicker';
+import { DatePipe } from '@angular/common';
 import { DeleteTimelineComponent } from 'src/app/components/domain/timeline/delete-timeline/delete-timeline.component';
 import { Router } from '@angular/router';
+import { TimelineFilterItem } from 'src/app/models/timelineFilter';
 
 
 @Component({
   selector: 'app-timeline-list',
   templateUrl: './timeline-list.component.html',
-  styleUrls: ['./timeline-list.component.css']
+  styleUrls: ['./timeline-list.component.css'],
+  providers:[
+    {provide: DateAdapter, useClass: AppDateAdapter},
+    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS},
+    {provide: DatePipe},
+    {provide: MAT_DATE_LOCALE, useValue: 'en-CA'}
+  ]
 })
 export class TimelineListComponent implements OnInit {
 
@@ -19,9 +29,14 @@ export class TimelineListComponent implements OnInit {
     private timelineService: TimelineService,
     private dialog: MatDialog,
     private snackBar : MatSnackBar,
-    private router: Router
+    private router: Router,
   ) { }
 
+  dateFilter:Date;
+  memberFilter:FormControl =  new FormControl('');
+  expenseFilter:FormControl =  new FormControl('');
+  projectFilter:FormControl =  new FormControl('');
+  activityFilter:FormControl =  new FormControl('');
 
   ngOnInit(): void {
     this.refreshList();
@@ -32,9 +47,14 @@ export class TimelineListComponent implements OnInit {
   displayedColumns:string[] = ['jour', 'heures', 'membre', 'projet', 'activiter', 'compteDepense', 'operations'];;
 
   refreshList(){
-    let timeline = new TimelineItem();
+    let timelineFilter:TimelineFilterItem = new TimelineFilterItem();
+    timelineFilter.day_of_week = this.dateFormatISO8601(this.dateFilter);
+    timelineFilter.activity_name = this.activityFilter.value;
+    timelineFilter.project_name = this.projectFilter.value;
+    timelineFilter.member_name = this.memberFilter.value;
+    timelineFilter.accounting_time_category_name = this.expenseFilter.value;
 
-    this.timelineService.getTimelineByFilter(timeline).subscribe(timelines => {
+    this.timelineService.getTimelineByFilter(timelineFilter).subscribe(timelines => {
       this.dataSource = timelines;
     });
   }
@@ -67,6 +87,18 @@ export class TimelineListComponent implements OnInit {
     });
   }
 
+  dateFormatISO8601(date:Date): string{
+
+    if(!date)
+      return "";
+
+    let iso = date.toISOString();
+    let index = iso.indexOf('T');
+    iso = iso.substr(0, index);
+
+    return iso;
+  }
+
   openSnackBar(message, panelClass) {
     this.snackBar.open(message, 'Fermer', {
       duration: 10000,
@@ -78,6 +110,10 @@ export class TimelineListComponent implements OnInit {
 
   onModifyTimeline(timeline){
     this.router.navigate(['/modifier-ligne-de-temps/' + timeline.id]);
+  }
+
+  onFilterChanged(){
+    this.refreshList();
   }
 
 

@@ -2,6 +2,7 @@ import sqlite3
 from .database import Database
 from .dict_factory import dict_factory
 from ..domain.timeline import Timeline
+from ..domain.timelineFilter import TimelineFilter
 
 class TimelineRequest:
 
@@ -30,13 +31,15 @@ class TimelineRequest:
         cursor.execute(
         "select timeline.id, day_of_week, punch_in, punch_out, project.name as project_name," 
         " activity.name as activity_name, accounting_time_category.name as expense_name, " 
-        " user.first_name as first_name, user.last_name as last_name"
-        " from timeline inner join project on timeline.project_id = project.id"
+        " user.first_name as first_name, user.last_name as last_name from timeline" 
+        " inner join project on timeline.project_id = project.id"
         " inner join activity on timeline.activity_id = activity.id"
         " inner join accounting_time_category on timeline.accounting_time_category_id = accounting_time_category.id "
         " inner join user on timeline.user_id = user.id"
-        " where day_of_week LIKE ? ORDER BY day_of_week DESC LIMIT 25",
-        ('%'+timeline.day_of_week+'%',))
+        " where day_of_week LIKE ? and project.name LIKE ? and activity.name LIKE ? and "
+        " (user.first_name LIKE ? or user.last_name LIKE ?) and accounting_time_category.name LIKE ? ORDER BY day_of_week DESC LIMIT 25",
+        ('%'+timeline.day_of_week+'%', '%'+timeline.project_name+'%', '%'+timeline.activity_name+'%', 
+        '%'+timeline.member_name+'%', '%'+timeline.member_name+'%', '%'+timeline.accounting_time_category_name+'%'))
         data = cursor.fetchall()
         cursor.close()
         return data

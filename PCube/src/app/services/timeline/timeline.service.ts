@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TimelineItem } from 'src/app/models/timeline';
+import { TimelineFilterItem } from 'src/app/models/timelineFilter';
 
 const API_TIMELINE = "/api/timeline";
 const API_GET_FILTER = "/api/timeline/filter";
@@ -49,8 +50,14 @@ export class TimelineService {
     return this.http.put<TimelineItem>(API_TIMELINE, body, opts);
   }
 
-  getTimelineByFilter(timeline:TimelineItem): Observable<any[]>{
-    let url = API_GET_FILTER;
+  getTimelineByFilter(timelineFilter:TimelineFilterItem): Observable<any[]>{
+
+    let url = API_GET_FILTER + '?day_of_week=' + timelineFilter.day_of_week;
+    url += "&expense_name=" + timelineFilter.accounting_time_category_name;
+    url += "&activity_name=" + timelineFilter.activity_name;
+    url += "&member_name=" + timelineFilter.member_name;
+    url += "&project_name=" + timelineFilter.project_name;
+
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
