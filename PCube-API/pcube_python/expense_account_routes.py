@@ -206,10 +206,10 @@ def delete_expense_account():
             abort(404)
         if query.has_child(id, name):
             log.error("Le compte a un enfant")
-            abort(409)
+            abort(412)
         if query.is_in_timeline_table(id):
             log.error("Le compte est dans la table Timeline")
-            abort(409)
+            abort(412)
 
 
 
