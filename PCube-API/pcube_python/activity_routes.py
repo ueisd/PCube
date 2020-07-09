@@ -102,7 +102,7 @@ def add_new_activity():
 
 @activity.route('', methods=['PUT'])
 @auth_required
-@schema.validate(activity_delete_schema)
+@schema.validate(activity_update_schema)
 def modify_activity():
     """
     Permet de modifier une activité dans le système.
