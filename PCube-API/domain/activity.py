@@ -1,8 +1,8 @@
 class Activity:
 
-    def __init__(self, name):
-        self.id = -1
-        self.name = name
+    def __init__(self):
+        self.id = ""
+        self.name = ""
         
 
     def asDictionnary(self):

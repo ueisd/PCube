@@ -52,6 +52,7 @@ def get_user_by_filter():
     """
     try:
         user = User()
+        user.id = escape(request.args.get('id', "")).upper().strip()
         user.first_name = escape(request.args.get('name', "")).upper().strip()
         user.last_name = escape(request.args.get('lastName', "")).upper().strip()
         user.email = escape(request.args.get('email', "")).upper().strip()
@@ -101,7 +102,9 @@ def delete_user():
 def is_unique_user(email):
         connection = get_db().get_connection()
         request = UserRequest(connection)
-        isUnique = request.select_one_user(email.upper())
+        user = User()
+        user.email = escape(email).upper().strip()
+        isUnique = request.select_one_user(user)
         if isUnique is None:
             return jsonify(True)
         else:
@@ -125,7 +128,7 @@ def add_new_user():
 
         connection = get_db().get_connection()
         query = UserRequest(connection)
-        isUnique = query.select_one_user(user.email)
+        isUnique = query.select_one_user(user)
 
         if isUnique is not None:
             log.error('The email is not unique')
@@ -145,6 +148,35 @@ def add_new_user():
         log.error('authentication error: %s', error)
         abort(403)
 
+
+@user.route('/profil', methods=['GET'])
+@auth_required
+def get_user_profil():
+    """
+    Permet d'obtenir un utilisateur selon un champs spécifié.
+    Implémenter :
+    - Recherche par identifiant
+    - Recherche par courriel
+    """
+    try:
+        user = User()
+        user.id = escape(request.args.get('id', "")).upper().strip()
+        user.email = escape(request.args.get('email', "")).upper().strip()
+
+        connection = get_db().get_connection()
+        query = UserRequest(connection)
+        data = query.select_one_user(user)
+
+        if data:
+            return jsonify(data), 200
+        else:
+            log.error('Le profil de l\'utilisateur n\'existe pas')
+            abort(404)
+        
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
 
 @user.route('', methods=['PUT'])
 @auth_required

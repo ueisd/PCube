@@ -5,9 +5,9 @@ export class ExpenseAccountItem {
     child_expense_account: ExpenseAccountItem[];
 
     constructor(expenseAccountResponse?: any) {
-        this.id = expenseAccountResponse && expenseAccountResponse.id || -1;
+        this.id = expenseAccountResponse && expenseAccountResponse.id || "";
         this.name = expenseAccountResponse && expenseAccountResponse.name || "";
-        this.parent_id = expenseAccountResponse && expenseAccountResponse.parent_id || -1;
+        this.parent_id = expenseAccountResponse && expenseAccountResponse.parent_id || "";
         this.child_expense_account = expenseAccountResponse && expenseAccountResponse.child || [];
     }
 }

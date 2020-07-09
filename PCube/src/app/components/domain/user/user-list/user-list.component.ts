@@ -91,10 +91,10 @@ export class UserListComponent implements OnInit {
   refreshList() {
 
     let user = new User();
-    user.firstName = this.nameFilter.value.trim();
-    user.lastName = this.lastNameFilter.value.trim();
+    user.first_name = this.nameFilter.value.trim();
+    user.last_name = this.lastNameFilter.value.trim();
     user.email = this.emailFilter.value.trim();
-    user.roleName = this.roleFilter.value.trim();
+    user.role_name = this.roleFilter.value.trim();
 
     this.displayedColumns = ['firstName', 'lastName', 'email', 'role', 'operations'];
     this.userService.getUserByFilter(user).subscribe(users => {

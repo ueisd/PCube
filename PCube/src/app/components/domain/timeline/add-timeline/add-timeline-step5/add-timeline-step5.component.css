@@ -1,0 +1,63 @@
+.time-picker-row .time-picker{
+    display: inline-block;
+}
+
+.time-picker-row{
+    margin-left: 40px;
+}
+
+.button-display-demi {
+    transform: scale(0.5);
+ }
+
+ .button-display-3Q {
+    transform: scale(0.75);
+ }
+
+ .button-add-hours:hover ~ .under-line{
+    border: 1px solid #04af20;
+ }
+
+ .button-add-hours:hover{
+     background-color: #04af20;
+ }
+
+.button-remove-hours:hover{
+    background-color: #F44336;
+}
+
+ .button-remove-hours{
+    transition: background-color 0.5s ease;
+    margin-left: 70px;
+ }
+
+ .icon-display {
+    transform: scale(2);
+ }
+
+ .add-button-relative{
+    position: relative;
+    bottom: 46px;
+    width: 0px;
+ }
+
+ .button-add-hours{
+    transition: background-color 0.5s ease;
+    position: relative;
+    bottom: -15px;
+    z-index: 10;
+    left: -16px;
+ }
+
+ .under-line{
+    transition: border-color 0.5s ease;
+    border: 1px solid #3F51B5;
+    position: absolute;
+    width: 2000px;
+    bottom: 6px;
+    left: 22px;
+ }
+
+ .mat-divider-margin{
+    margin-bottom: 10px;
+ }
