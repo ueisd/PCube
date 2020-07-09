@@ -7,6 +7,7 @@ const API_PROJECT = "/api/project";
 const API_IS_UNIQUE = "api/project/is-unique";
 const API_AUTOCOMPLTE = "api/project/autocomplete";
 const API_FILTER = "/api/project/filter";
+const API_APPARENTABLE = "/api/project/getApparentableProjects";
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,16 @@ export class ProjectService {
       })
     };
     return this.http.get<ProjectItem[]>(API_PROJECT, opts);
+  }
+
+  getApparentableProject(id: number): Observable<ProjectItem[]>{
+    // now get user info
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<ProjectItem[]>(API_APPARENTABLE + "/" + id, opts);
   }
 
   addNewProject(name, parent_name): Observable<ProjectItem>{

@@ -233,12 +233,43 @@ def getDescendants(_idA, _idB):
         log.error('authentication error: %s', error)
         abort(403)
 
+### @param id: l'identifiant du noeud de la racine du sous-arbre à ne pas inclure
+def construireArbreSansSousArbre(projects, parent, id):
+    if (parent == None or parent['id'] == id): 
+        return []
+        
+    parent['child_project'] = [number for number in projects 
+        if number['parent_id'] == parent['id']  
+        and number['parent_id'] != number['id'] and number['id'] != id
+    ]
+    for enfant in parent['child_project']:
+        enfant = construireArbreSansSousArbre(projects, enfant, id)
+    return parent
+
 @project.route('/getApparentableProjects/<_id>', methods=['GET'])
 @auth_required
 def getApparentable(_id):
     """
     Permet d'obtenir la liste des projets auquels le projet peut s'aparenter sabs circularité
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        id = escape(_id).strip()
+        id = int(id)
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        request = ProjectRequest(connection)
+        projects = request.select_all()
+
+        parents = [x for x in projects if x['id'] == x['parent_id']]
+        for parent in parents:
+            parent = construireArbreSansSousArbre(projects, parent, id);
+        return jsonify(parents)
+        
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
     """
     try:
         id = escape(_id).strip()
@@ -258,6 +289,7 @@ def getApparentable(_id):
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
+    """
 
 @project.route('/autocomplete/<name>', methods=['GET'])
 @auth_required

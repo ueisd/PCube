@@ -1,5 +1,5 @@
 <form [formGroup]="newProjectForm" (ngSubmit)="onSubmit()">
-    <h1>{{ (isCreateForm) ? "Création" : "Modification" }} d'un projet GGG</h1>
+    <h1>{{ (isCreateForm) ? "Création" : "Modification" }} d'un projet</h1>
     <mat-dialog-content class="mat-typography">
         <div>
             <div *ngIf="isAddedFailled" class="alert alert-danger" role="alert">
@@ -24,46 +24,24 @@
                 Est enfant?
             </mat-slide-toggle>
         </div>
-        <div *ngIf="newProjectForm.value.isChild && isCreateForm">
-            <mat-form-field class="example-full-width">
-                <mat-label>Nom du projet parent</mat-label>
-                <input type="text"
-                        placeholder="Choisir un seul"
-                        aria-label="ParentName"
-                        matInput
-                        formControlName="parentName"
-                        [matAutocomplete]="auto">
-                <mat-autocomplete #auto="matAutocomplete">
-                    <mat-option *ngFor="let option of filteredOptions | async" [value]="option.name">
-                    {{option.name}}
-                    </mat-option>
-                </mat-autocomplete>
-                <mat-error *ngFor="let validation of validationMessages.parentName">
-                    <mat-error class="error-message" 
-                    *ngIf="newProjectForm.get('parentName').hasError(validation.type) && 
-                    ((newProjectForm.get('parentName').dirty || newProjectForm.get('parentName').touched))">
-                        {{validation.message}}
-                    </mat-error>
-                </mat-error>
-            </mat-form-field>
-            AAAAAAAAA
-            <ng-select [items]="cities"
-                    bindLabel="name"
+        <div *ngIf="newProjectForm.value.isChild">
+            <ng-select [items]="parentNameOptions"
+                    bindLabel="nomAffichage"
                     placeholder="Select item"
                     appendTo="body"
-                    formControlName="parent_id">
+                    formControlName="parentName">
             </ng-select>
-            BBBBBBBBBBB
+            <mat-error *ngFor="let validation of validationMessages.parentName">
+                <mat-error class="error-message" 
+                *ngIf="newProjectForm.get('parentName').hasError(validation.type) && 
+                ((newProjectForm.get('parentName').dirty || newProjectForm.get('parentName').touched))">
+                    {{validation.message}}
+                </mat-error>
+            </mat-error>
         </div>
-
-        
-        
-
-        
+  
     </mat-dialog-content>
     <pre>{{newProjectForm.value | json}}</pre>
-    projet:
-    <pre>{{projet | json}}</pre>
     <mat-dialog-actions align="end">
         <button mat-button mat-dialog-close>Anuler</button>
         <button mat-button type="submit" [disabled]="newProjectForm.invalid">Ajouter</button>

@@ -12,7 +12,6 @@ import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { timer } from 'rxjs/internal/observable/timer';
 import { first } from 'rxjs/internal/operators/first';
 import { startWith } from 'rxjs/internal/operators/startWith';
-import {NgSelectModule, NgOption} from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-project',
@@ -29,7 +28,7 @@ export class AddProjectComponent implements OnInit {
   projet: ProjectItem;
   isAddedFailled: boolean = false;
   parentNameOptions: ProjectItem[];
-  filteredOptions: Observable<ProjectItem[]>;
+  //filteredOptions: Observable<ProjectItem[]>;
   isCreateForm = false;
   cities = [
     {id: 1, name: 'Vilnius'},
@@ -58,6 +57,26 @@ export class AddProjectComponent implements OnInit {
 
   }
 
+  generateParentOption(projets: ProjectItem[], level:number) : ProjectItem[] {
+    if(projets === null) return [];
+    let retour: ProjectItem[] = [];
+
+    for (var projet of projets) {
+      let item : ProjectItem = new ProjectItem(projet);
+      item.child_project = null;
+      item.nomAffichage = item.name;
+      for(let i = 0; i<level; i++) {
+        item.nomAffichage = " * " + item.nomAffichage;
+      }
+      retour.push(item);
+      if(projet.child_project.length != undefined) {
+        for(var sprojet of this.generateParentOption(projet.child_project, level+1))
+          retour.push(sprojet);
+      }
+    }
+    return retour;
+  }
+
   ngOnInit(): void {
     this.projet = this.data.projet;
     if(this.projet.parent_id === undefined ||  this.projet.parent_id <= 0) {
@@ -65,17 +84,8 @@ export class AddProjectComponent implements OnInit {
     }
     this.initForm();
 
-    this.projectService.getAllProject().subscribe(projets =>{
-      this.parentNameOptions = projets;
-      //projets.map((val)=> val.name);
-
-      this.filteredOptions = this.newProjectForm.get('parentName').valueChanges
-      .pipe(
-        startWith(''),
-        map(value => {
-          return this._filter(value)
-        } )
-      );
+    this.projectService.getApparentableProject(this.projet.id).subscribe(projets =>{
+      this.parentNameOptions = this.generateParentOption(projets, 0);
     });
 
   }
@@ -95,11 +105,9 @@ export class AddProjectComponent implements OnInit {
           (this.projet.parent_id > 0 && this.projet.parent_id != this.projet.id)
         ],
         parentName: [
-          '',
-          Validators.compose([
-            Validators.minLength(4),
-          ]),
-          [this.nomParentExist()]
+          null,
+          Validators.compose([]),
+          []
         ],
         parent_id: [
           this.projet.parent_id,
@@ -119,9 +127,9 @@ export class AddProjectComponent implements OnInit {
 
     if(this.newProjectForm.valid){
 
-      let name: string = this.newProjectForm.controls['projectName'].value;
-      let isChild: boolean = this.newProjectForm.controls['isChild'].value;
-      let parentName:string = (isChild) ? this.newProjectForm.controls['parentName'].value: name;
+      let name: string = this.newProjectForm.controls['projectName'].value
+      let projetParent : ProjectItem = this.newProjectForm.controls['parentName'].value;
+      let parentName: string = (projetParent != null) ? projetParent.name : name;
 
       this.projectService.addNewProject(name, parentName).subscribe(project => {
           if(project.id != -1){
@@ -143,13 +151,6 @@ export class AddProjectComponent implements OnInit {
   private onSubmitFailled(){
     this.isAddedFailled = true;
   }
-
-  private _filter(value: string): ProjectItem[] {
-    const filterValue = value.toLowerCase();
-    return this.parentNameOptions.filter(option => option.name.toLowerCase().includes(filterValue));
-  }
-
-  
 
   isChildChecked(checked: boolean){
     if(!checked) this.newProjectForm.get('parentName').reset();
@@ -189,7 +190,5 @@ export class AddProjectComponent implements OnInit {
         );
     };
   }
-
-
   
 }
