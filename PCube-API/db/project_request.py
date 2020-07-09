@@ -17,6 +17,14 @@ class ProjectRequest:
         cursor.close()
         return data
 
+    def select_all(self):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from project")
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
     def select_all_parent_by_filter(self, project):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()

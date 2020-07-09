@@ -17,7 +17,7 @@
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
-                <button mat-menu-item>
+                <button mat-menu-item (click)="openEditDialog(node.projectItem)">
                   <mat-icon color="primary">edit</mat-icon>
                   <span>Éditer</span>
                 </button>
@@ -47,7 +47,7 @@
                 <mat-icon>more_vert</mat-icon>
               </button>
               <mat-menu #menu="matMenu">
-                <button mat-menu-item>
+                <button mat-menu-item (click)="openEditDialog(node.projectItem)">
                   <mat-icon color="primary">edit</mat-icon>
                   <span>Éditer</span>
                 </button>
@@ -61,3 +61,7 @@
         </mat-tree-node>
     </mat-tree>
 </div>
+
+<pre>
+  {{ dataSource.data | json }}
+</pre>

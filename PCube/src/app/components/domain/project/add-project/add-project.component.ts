@@ -12,6 +12,7 @@ import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { timer } from 'rxjs/internal/observable/timer';
 import { first } from 'rxjs/internal/operators/first';
 import { startWith } from 'rxjs/internal/operators/startWith';
+import {NgSelectModule, NgOption} from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-project',
@@ -22,51 +23,96 @@ export class AddProjectComponent implements OnInit {
 
   @Output() refreshDataEvent = new EventEmitter<boolean>();
 
+  selectedCity: any;
   newProjectForm: FormGroup;
   hasToRefresh: boolean = true;
   projet: ProjectItem;
   isAddedFailled: boolean = false;
-  parentNameOptions: string[];
+  parentNameOptions: ProjectItem[];
+  filteredOptions: Observable<ProjectItem[]>;
+  isCreateForm = false;
+  cities = [
+    {id: 1, name: 'Vilnius'},
+    {id: 2, name: 'Kaunas'},
+    {id: 3, name: 'Pavilnys', disabled: true},
+    {id: 4, name: 'Pabradė'},
+    {id: 5, name: 'Klaipėda'}
+  ];
+  validationMessages = {
+    'projectName': [
+        { type: 'required', message: 'Une Nom est requis' },
+        { type: 'minlength', message: 'Minimum 5 caractères' },
+        { type: 'ereureNonUnique', message: 'Le nom du projet doit être unique' }
+    ],
+    'parentName': [
+        { type: 'minlength', message: 'Minimum 4 caractères' },
+        { type: 'ereurParentNonExistant', message: 'Le nom du projet doit exister' }
+    ],
+    'parent_id': [
+    ],
+  };
 
   constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,
   private fb: FormBuilder, private projectService: ProjectService, 
-  private dialogRef: MatDialogRef<AddProjectComponent>) { }
+  private dialogRef: MatDialogRef<AddProjectComponent>) { 
 
-  filteredOptions: Observable<string[]>;
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.parentNameOptions.filter(option => option.toLowerCase().includes(filterValue));
-  }
-
-  askForDataRefresh() {
-    this.refreshDataEvent.emit(this.hasToRefresh);
   }
 
   ngOnInit(): void {
     this.projet = this.data.projet;
+    if(this.projet.parent_id === undefined ||  this.projet.parent_id <= 0) {
+      this.isCreateForm = true;
+    }
     this.initForm();
 
     this.projectService.getAllProject().subscribe(projets =>{
-      this.parentNameOptions = projets.map((val)=> val.name);
-    });
+      this.parentNameOptions = projets;
+      //projets.map((val)=> val.name);
 
-    this.filteredOptions = this.newProjectForm.get('parentName').valueChanges
+      this.filteredOptions = this.newProjectForm.get('parentName').valueChanges
       .pipe(
         startWith(''),
-        map(value => this._filter(value))
+        map(value => {
+          return this._filter(value)
+        } )
       );
+    });
+
   }
 
-  private onSubmitSuccess(){
-    this.askForDataRefresh();
-    this.isAddedFailled = false;
-    this.newProjectForm.reset();
-    this.dialogRef.close(true);
+  private initForm(){
+    this.newProjectForm = this.fb.group(
+      {
+        projectName: [
+          this.projet.name, 
+          Validators.compose([
+            Validators.required, 
+            Validators.minLength(5),
+          ]),
+          [this.nomProjetUniqueValidation()]
+        ],
+        isChild: [
+          (this.projet.parent_id > 0 && this.projet.parent_id != this.projet.id)
+        ],
+        parentName: [
+          '',
+          Validators.compose([
+            Validators.minLength(4),
+          ]),
+          [this.nomParentExist()]
+        ],
+        parent_id: [
+          this.projet.parent_id,
+          Validators.compose([]),
+          [] //vérifier si est descendant
+        ],
+      },
+      {validators: this.validateForm}
+    );
   }
 
-  private onSubmitFailled(){
-    this.isAddedFailled = true;
+  askForDataRefresh() {
+    this.refreshDataEvent.emit(this.hasToRefresh);
   }
 
   onSubmit(){
@@ -87,12 +133,27 @@ export class AddProjectComponent implements OnInit {
     }
   }
 
+  private onSubmitSuccess(){
+    this.askForDataRefresh();
+    this.isAddedFailled = false;
+    this.newProjectForm.reset();
+    this.dialogRef.close(true);
+  }
+
+  private onSubmitFailled(){
+    this.isAddedFailled = true;
+  }
+
+  private _filter(value: string): ProjectItem[] {
+    const filterValue = value.toLowerCase();
+    return this.parentNameOptions.filter(option => option.name.toLowerCase().includes(filterValue));
+  }
+
+  
+
   isChildChecked(checked: boolean){
     if(!checked) this.newProjectForm.get('parentName').reset();
   }
-
-
-
 
   validateForm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
     return null;
@@ -105,7 +166,7 @@ export class AddProjectComponent implements OnInit {
           switchMap(() =>  this.projectService.isNameUnique(control.value)
             .pipe(
               map((isUnique: boolean) => {
-                return (isUnique) ? null : { ereureNonUnique: true };
+                return (isUnique || control.value == this.projet.name) ? null : { ereureNonUnique: true };
               })
             ).pipe(first())
           )
@@ -129,43 +190,6 @@ export class AddProjectComponent implements OnInit {
     };
   }
 
-  validationMessages = {
-    'projectName': [
-        { type: 'required', message: 'Une Nom est requis' },
-        { type: 'minlength', message: 'Minimum 5 caractères' },
-        { type: 'ereureNonUnique', message: 'Le nom du projet doit être unique' }
-    ],
-    'parentName': [
-        { type: 'minlength', message: 'Minimum 4 caractères' },
-        { type: 'ereurParentNonExistant', message: 'Le nom du projet doit exister' }
-    ],
-  };
 
-
-
-  private initForm(){
-    this.newProjectForm = this.fb.group(
-      {
-        projectName: [
-          this.projet.name, 
-          Validators.compose([
-            Validators.required, 
-            Validators.minLength(5),
-          ]),
-          [this.nomProjetUniqueValidation()]
-        ],
-        isChild: [
-          false
-        ],
-        parentName: [
-          '',
-          Validators.compose([
-            Validators.minLength(4),
-          ]),
-          [this.nomParentExist()]
-        ],
-      },
-      {validators: this.validateForm}
-    );
-  }
+  
 }

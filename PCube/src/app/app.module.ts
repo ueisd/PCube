@@ -33,6 +33,7 @@ import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/materia
 import { ModifyUserComponent } from './components/domain/user/modify-user/modify-user.component';
 import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
 import { ExpenseAccountListComponent } from './components/domain/expense-account/expense-account-list/expense-account-list.component';
+import { NgSelectModule, NgOption, } from '@ng-select/ng-select';
 
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { DeleteActivityComponent } from './components/domain/activity/delete-activity/delete-activity.component';
@@ -75,6 +76,7 @@ import { DeleteActivityComponent } from './components/domain/activity/delete-act
     BrowserAnimationsModule,
     MaterialModule,
     FlexLayoutModule,
+    NgSelectModule
   ],
   entryComponents: [AddActivityComponent],
   exports:[UserListComponent, AddActivityComponent],

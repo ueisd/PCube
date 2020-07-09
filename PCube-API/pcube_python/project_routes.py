@@ -196,6 +196,69 @@ def is_project_unique(name):
         log.error('authentication error: %s', error)
         abort(403)
 
+def obtenirLesDesendants(projects, parent):
+    if parent == None: 
+        return []
+    enfants = [number for number in projects if number['parent_id'] == parent['id']]
+    retour = enfants;
+    for enfant in enfants:
+        retour = retour + obtenirLesDesendants(projects, enfant)
+    return retour
+
+@project.route('/ifAIsDescendantOfB/<_idA>/<_idB>', methods=['GET'])
+@auth_required
+def getDescendants(_idA, _idB):
+    """
+    Permet d'obtenir la liste des descendants
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        idA = escape(_idA).strip()
+        idA = int(idA)
+        idB = escape(_idB).strip()
+        idB = int(idB)
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        request = ProjectRequest(connection)
+        projects = request.select_all()
+        parent = next((projet for projet in projects if projet['id'] == idB), None)
+        
+        listeDescedantsDeB = obtenirLesDesendants(projects, parent)
+        descendantIdA = next((
+            projet for projet in listeDescedantsDeB if projet['id'] == idA
+            ), None)
+        return jsonify(descendantIdA != None)
+        
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+@project.route('/getApparentableProjects/<_id>', methods=['GET'])
+@auth_required
+def getApparentable(_id):
+    """
+    Permet d'obtenir la liste des projets auquels le projet peut s'aparenter sabs circularité
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        id = escape(_id).strip()
+        id = int(id)
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        request = ProjectRequest(connection)
+        projects = request.select_all()
+        if id > 0:
+            parent = next((projet for projet in projects if projet['id'] == id), None)
+            arbreProjet = obtenirLesDesendants(projects, parent) + [parent]
+            apparentable = [x for x in projects if x not in arbreProjet]
+        else:
+            apparentable = projects
+        return jsonify(apparentable)
+        
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
 @project.route('/autocomplete/<name>', methods=['GET'])
 @auth_required
 def project_autocomplte(name):
