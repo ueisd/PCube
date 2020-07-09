@@ -80,7 +80,7 @@ export class ModifyTimelineComponent implements OnInit {
 
   onCancel(){
     this.openSnackBar('Modification annulée','notif-success');
-    this.router.navigate(['/gerer-ligne-de-temps']);
+    this.router.navigate(['/ligne-de-temps']);
   }
 
   onSubmit(){
@@ -89,7 +89,7 @@ export class ModifyTimelineComponent implements OnInit {
     this.timelineService.updateTimeline(timesLine).subscribe( timelines => {
 
       this.openSnackBar('Les lignes de temps ont été ajouté','notif-success');
-      this.router.navigate(['/gerer-ligne-de-temps']);
+      this.router.navigate(['/ligne-de-temps']);
 
     }, error =>{
       this.openSnackBar("Une erreur s'est produit. Veuillez réessayer.",'notif-error');
@@ -161,7 +161,7 @@ export class ModifyTimelineComponent implements OnInit {
       this.timeline = timeline;
       this.initChildren(timeline);
     },error =>{
-      this.router.navigate(['/gerer-ligne-de-temps']);
+      this.router.navigate(['/ligne-de-temps']);
     });
   }
 

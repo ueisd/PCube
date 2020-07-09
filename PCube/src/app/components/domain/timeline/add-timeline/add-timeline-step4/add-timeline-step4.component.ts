@@ -104,9 +104,17 @@ export class AddTimelineStep4Component implements OnInit {
       return;
     }
 
-    if(accounts.length > 1){
+    if(accounts.length > 1 && !this.isItemAlreadyFound){
       this.accounts = accounts;
       this.onMultipleAccountFound();
+      return;
+    }
+
+    if(accounts.length > 1 && this.isItemAlreadyFound){
+      this.account = accounts.find(a => a.id == account.id || a.name == account.name)
+      this.accounts = [account];
+      this.onAccountFound();
+      this.isItemAlreadyFound = false;
       return;
     }
 
@@ -176,7 +184,10 @@ export class AddTimelineStep4Component implements OnInit {
     }
   }
 
+  isItemAlreadyFound:boolean = false;
+
   setAlreadyFoundItem(isSearchByName:boolean, info:string){
+    this.isItemAlreadyFound = true;
     this.isSearchByName = isSearchByName;
     this.changeToggleTexteDisplay(isSearchByName);
     if(isSearchByName){

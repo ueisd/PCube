@@ -104,9 +104,17 @@ export class AddTimelineStep2Component implements OnInit {
       return;
     }
 
-    if(projects.length > 1){
+    if(projects.length > 1 && !this.isItemAlreadyFound){
       this.projects = projects;
       this.onMultipleProjectFound();
+      return;
+    }
+
+    if(projects.length > 1 && this.isItemAlreadyFound){
+      this.project = projects.find(a => a.id == project.id || a.name == project.name)
+      this.projects = [project];
+      this.onProjectFound();
+      this.isItemAlreadyFound = false;
       return;
     }
 
@@ -176,7 +184,10 @@ export class AddTimelineStep2Component implements OnInit {
     }
   }
 
+  isItemAlreadyFound:boolean = false;
+
   setAlreadyFoundItem(isSearchByName:boolean, info:string){
+    this.isItemAlreadyFound = true;
     this.isSearchByName = isSearchByName;
     this.changeToggleTexteDisplay(isSearchByName);
     if(isSearchByName){

@@ -17,6 +17,7 @@ import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accou
 import { ManageTimelineComponent } from 'src/app/components/pages/timeline/manage-timeline/manage-timeline.component';
 import { AddingTimelineComponent } from 'src/app/components/pages/timeline/adding-timeline/adding-timeline.component';
 import { ModifyingTimelineComponent } from 'src/app/components/pages/timeline/modifying-timeline/modifying-timeline.component';
+import { TimelineComponent } from './components/pages/timeline/timeline.component';
 
 
 const routes: Routes = [
@@ -51,8 +52,8 @@ const routes: Routes = [
         component: AccessDeniedComponent
       },
       {
-        path: 'gerer-ligne-de-temps',
-        component: ManageTimelineComponent,
+        path: 'ligne-de-temps',
+        component: TimelineComponent,
         canActivate: [ProjectManagerGuard]
       },
       {
