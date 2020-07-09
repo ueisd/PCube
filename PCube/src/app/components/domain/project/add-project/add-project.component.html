@@ -20,10 +20,10 @@
             </mat-form-field>
         </div>
         <div class="container"  fxLayout="row" fxLayoutAlign="start center">
-            <div fxflex fxFlex="50%" class="container" fxLayout="row" fxLayoutAlign="start center">
-                <mat-label> {{ newProjectForm.get('projectName').value }} &nbsp;&nbsp;</mat-label>
+            <div fxflex class="container" fxLayout="row" fxLayoutAlign="start center">
+                <mat-label> Le projet {{ newProjectForm.get('projectName').value }} &nbsp;&nbsp;</mat-label>
                 <mat-slide-toggle (ngModelChange)="isChildChecked($event)" formControlName="isChild">
-                    {{ (newProjectForm.get('isChild').value) ? "est enfant de:" : "est à la racine" }}
+                    {{ (newProjectForm.get('isChild').value) ? "sera enfant de:" : "sera à la racine" }}
                     </mat-slide-toggle>
             </div>
             <div fxflex fxFlex="50%" *ngIf="newProjectForm.value.isChild">
