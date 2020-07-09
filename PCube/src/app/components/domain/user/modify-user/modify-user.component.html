@@ -7,10 +7,10 @@
         <input type="hidden" id="email" class="form-control" formControlName="email" [ngModel]="data.email">
         
         <label for="firstName">Prénom</label><br>
-        <input type="text" id="firstName" class="form-control" formControlName="firstName" [ngModel]="data.firstName"><br>
+        <input type="text" id="firstName" class="form-control" formControlName="firstName" [ngModel]="data.first_name"><br>
         
         <label for="lastName">Nom de famille</label><br>
-        <input type="text" id="lastName" class="form-control" formControlName="lastName" [ngModel]="data.lastName"><br>
+        <input type="text" id="lastName" class="form-control" formControlName="lastName" [ngModel]="data.last_name"><br>
  
         <label for="newEmail">Adresse Courriel</label><br>
         <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
@@ -19,7 +19,7 @@
         <input (ngModelChange)="checkUniqueEmail($event)" type="text" id="newEmail" class="form-control" formControlName="newEmail" [ngModel]="data.email"><br>
 
         <label for="roleId">Rôle</label><br>
-        <select formControlName="roleId" id="roleId" [ngModel]="data.roleId">
+        <select formControlName="roleId" id="roleId" [ngModel]="data.role_id">
             <option id="roleId" *ngFor="let role of roles; let i = index" [ngValue]="roles[i].id">
                 {{roles[i].role_name}}
                 </option>

@@ -18,8 +18,11 @@ export class AddProjectComponent implements OnInit {
 
   @Output() refreshDataEvent = new EventEmitter<boolean>();
 
-  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,
-  private projectService: ProjectService, private dialogRef: MatDialogRef<AddProjectComponent>) { }
+  constructor(
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+    private projectService: ProjectService, 
+    private dialogRef: MatDialogRef<AddProjectComponent>
+    ){}
 
   newProjectForm: FormGroup;
 

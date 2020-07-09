@@ -26,6 +26,16 @@ class ExpenseAccountRequest:
         cursor.close()
         return data
 
+    def select_expense_account_one_level_filter(self, expense_account):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from accounting_time_category where name LIKE ? and id LIKE ?",
+        ('%'+expense_account.name+'%', '%'+expense_account.id+'%'))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+    
+
     def select_expense_account_name_like(self, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()

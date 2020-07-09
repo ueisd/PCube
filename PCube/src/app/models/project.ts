@@ -5,9 +5,9 @@ export class ProjectItem {
     child_project?: ProjectItem[];
 
     constructor(projectResponse?: any) {
-        this.id = projectResponse && projectResponse.id || -1;
+        this.id = projectResponse && projectResponse.id || "";
         this.name = projectResponse && projectResponse.name || "";
-        this.parent_id = projectResponse && projectResponse.parent_id || -1;
+        this.parent_id = projectResponse && projectResponse.parent_id || "";
         this.child_project = projectResponse && projectResponse.child_project || [];
     }
 }

@@ -7,6 +7,7 @@ const API_PROJECT = "/api/project";
 const API_IS_UNIQUE = "api/project/is-unique";
 const API_AUTOCOMPLTE = "api/project/autocomplete";
 const API_FILTER = "/api/project/filter";
+const API_ONE_LEVEL_FILTER = "/api/project/filter/one-level";
 
 @Injectable({
   providedIn: 'root'
@@ -63,6 +64,17 @@ export class ProjectService {
 
   filterProject(projet: ProjectItem): Observable<ProjectItem[]>{
     let url = API_FILTER + "?name=" + projet.name;
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<ProjectItem[]>(url, opts);
+  }
+
+  getOneLevelProjectByFilter(projet: ProjectItem): Observable<ProjectItem[]> {
+    let url = API_ONE_LEVEL_FILTER + "?name=" + projet.name;
+    url += "&id=" + projet.id;
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
