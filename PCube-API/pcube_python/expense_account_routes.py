@@ -183,7 +183,7 @@ def expense_account_autocomplete(name):
         abort(403)
 
 @expense_account.route('', methods=['DELETE'])
-#@auth_required
+@auth_required
 @schema.validate(expense_account_delete_schema)
 def delete_expense_account():
     """
@@ -202,7 +202,7 @@ def delete_expense_account():
         name = escape(data['name']).strip()
 
         if not query.is_id_name_combo_exist(id, name):
-            log.error("Le compte n'existe pas")
+            log.error("La combinaison id-nom est erronée.")
             abort(404)
         if query.has_child(id, name):
             log.error("Le compte a un enfant")
