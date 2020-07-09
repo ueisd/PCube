@@ -175,4 +175,17 @@ export class AddTimelineStep4Component implements OnInit {
       this.onIdChange(this.id.value);
     }
   }
+
+  setAlreadyFoundItem(isSearchByName:boolean, info:string){
+    this.isSearchByName = isSearchByName;
+    this.changeToggleTexteDisplay(isSearchByName);
+    if(isSearchByName){
+      this.name.setValue(info);
+      this.onNameChange(info);
+    }
+    else{
+      this.id.setValue(info);
+      this.onIdChange(info);
+    }
+  }
 }

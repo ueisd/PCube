@@ -180,4 +180,18 @@ export class AddTimelineStep1Component implements OnInit {
     }
       
   }
+
+  setAlreadyFoundItem(isSearchByEmail:boolean, info:string){
+    this.isSearchByEmail = isSearchByEmail;
+    this.changeToggleTexteDisplay(isSearchByEmail);
+    if(isSearchByEmail){
+      this.email.setValue(info);
+      this.onEmailChange(info);
+    }
+    else{
+      this.id.setValue(info);
+      this.onIdChange(info);
+    }
+      
+  }
 }

@@ -77,7 +77,7 @@ export class AddTimelineComponent implements OnInit {
   submit(){
 
     let timesLines = this.generateTimelinesFromSubmit();
-    this.timelineService.addNewProject(timesLines).subscribe( timelines => {
+    this.timelineService.addNewTimeline(timesLines).subscribe( timelines => {
 
       this.openSnackBar('Les lignes de temps ont été ajouté','notif-success');
       this.step5Component.onFormSubmitSuccess();

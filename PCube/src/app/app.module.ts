@@ -40,9 +40,16 @@ import { AddTimelineStep2Component } from './components/domain/timeline/add-time
 import { AddTimelineStep3Component } from './components/domain/timeline/add-timeline/add-timeline-step3/add-timeline-step3.component';
 import { AddTimelineStep4Component } from './components/domain/timeline/add-timeline/add-timeline-step4/add-timeline-step4.component';
 import { AddTimelineStep5Component } from './components/domain/timeline/add-timeline/add-timeline-step5/add-timeline-step5.component';
-import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 import { DeleteActivityComponent } from './components/domain/activity/delete-activity/delete-activity.component';
 
+import { TimelineListComponent } from './components/domain/timeline/timeline-list/timeline-list.component';
+import { ManageTimelineComponent } from './components/pages/timeline/manage-timeline/manage-timeline.component';
+import { AddingTimelineComponent } from './components/pages/timeline/adding-timeline/adding-timeline.component';
+import { DeleteTimelineComponent } from './components/domain/timeline/delete-timeline/delete-timeline.component';
+import { DeleteActivityComponent } from './components/domain/activity/delete-activity/delete-activity.component';
+import { ModifyTimelineComponent } from './components/domain/timeline/modify-timeline/modify-timeline.component';
+import { ModifyingTimelineComponent } from './components/pages/timeline/modifying-timeline/modifying-timeline.component';
 
 
 @NgModule({
@@ -76,6 +83,13 @@ import { DeleteActivityComponent } from './components/domain/activity/delete-act
     AddTimelineStep4Component,
     AddTimelineStep5Component,
     DeleteActivityComponent,
+    TimelineListComponent,
+    ManageTimelineComponent,
+    AddingTimelineComponent,
+    DeleteTimelineComponent,
+    DeleteActivityComponent,
+    ModifyTimelineComponent,
+    ModifyingTimelineComponent,
   ],
   imports: [
     MatDialogModule,
