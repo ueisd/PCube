@@ -8,7 +8,7 @@ from flask import escape
 from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
-from ..schemas.project_schema import (project_insert_schema)
+from ..schemas.project_schema import (project_insert_schema, project_update_schema)
 from .db_controller import get_db
 from ..db.project_request import ProjectRequest
 from ..domain.project import Project
@@ -155,21 +155,24 @@ def create_project():
 
 @project.route('', methods=['PUT'])
 @auth_required
-def modify_project():
+@schema.validate(project_update_schema)
+def update_project():
     """
-    Sert à modifier l'information d'un projet
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    Permet de modifier un utilisateur dans le système.
     """
     try:
-        #get_authenticated_user()
+        data = request.json
+        project = Project();
+        project.id = escape(data['id']).strip()
+        project.parent_id = escape(data['parent_id']).strip()
+        project.name = escape(data['projectName']).strip()
+
         connection = get_db().get_connection()
-        request = ProjectRequest(connection)
-        parents_dict = request.select_all_parent()
+        query = ProjectRequest(connection)
 
-        for project in parents_dict:
-            project['child'] = find_all_child(project['id'])
+        project = query.update_project_std(project)
 
-        return jsonify(parents_dict)
+        return jsonify(project.asDictionary()), 200
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)

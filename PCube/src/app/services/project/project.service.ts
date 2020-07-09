@@ -18,7 +18,6 @@ export class ProjectService {
   constructor(private http: HttpClient) { }
 
   getAllProject(): Observable<ProjectItem[]>{
-    // now get user info
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
@@ -28,7 +27,6 @@ export class ProjectService {
   }
 
   getApparentableProject(id: number): Observable<ProjectItem[]>{
-    // now get user info
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
@@ -49,6 +47,24 @@ export class ProjectService {
       parent_name: parent_name
     }
     return this.http.post<ProjectItem>(API_PROJECT, body, opts);
+  }
+
+  updateProject(projetct: ProjectItem): Observable<ProjectItem>{
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Content-Type': 'application/json'
+      })
+    };
+   
+    let body = {
+      id: projetct.id,
+      projectName: projetct.name,
+      parent_id: projetct.parent_id,
+    }
+    alert(JSON.stringify(body));
+    
+    return this.http.put<ProjectItem>(API_PROJECT, body, opts);
   }
   
   isNameUnique(name): Observable<boolean> {

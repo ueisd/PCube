@@ -69,12 +69,24 @@ export class AddProjectComponent implements OnInit {
         item.nomAffichage = " * " + item.nomAffichage;
       }
       retour.push(item);
-      if(projet.child_project.length != undefined) {
+      if(projet.child_project != undefined && projet.child_project.length != undefined) {
         for(var sprojet of this.generateParentOption(projet.child_project, level+1))
           retour.push(sprojet);
       }
     }
     return retour;
+  }
+
+  findProject(projets:ProjectItem[], id: number) {
+    for(let projet of projets){
+      if(projet.id == id) return projet;
+      if(projet.id != projet.parent_id && projet.child_project != null) {
+        var trouve : ProjectItem = null;
+        trouve = this.findProject(projet.child_project, id);
+        return trouve;
+      }
+    }
+    return null;
   }
 
   ngOnInit(): void {
@@ -86,6 +98,11 @@ export class AddProjectComponent implements OnInit {
 
     this.projectService.getApparentableProject(this.projet.id).subscribe(projets =>{
       this.parentNameOptions = this.generateParentOption(projets, 0);
+
+      let selected: ProjectItem = this.findProject(this.parentNameOptions, this.projet.parent_id);
+      if(this.newProjectForm.value['id'] != this.newProjectForm.value['parent_id']) {
+        this.newProjectForm.controls['parentName'].setValue(selected);
+      }
     });
 
   }
@@ -93,6 +110,9 @@ export class AddProjectComponent implements OnInit {
   private initForm(){
     this.newProjectForm = this.fb.group(
       {
+        id: [
+          this.projet.id
+        ],
         projectName: [
           this.projet.name, 
           Validators.compose([
@@ -131,13 +151,31 @@ export class AddProjectComponent implements OnInit {
       let projetParent : ProjectItem = this.newProjectForm.controls['parentName'].value;
       let parentName: string = (projetParent != null) ? projetParent.name : name;
 
-      this.projectService.addNewProject(name, parentName).subscribe(project => {
+      if(this.isCreateForm) {
+        this.projectService.addNewProject(name, parentName).subscribe(project => {
           if(project.id != -1){
             this.onSubmitSuccess();
           }else{
             this.onSubmitFailled();
           }
-      });
+        });
+      }else {
+        let proj :ProjectItem = new ProjectItem();
+        proj.id = this.newProjectForm.value['id'];
+        
+        if(this.newProjectForm.value['isChild'] == false) {
+          proj.parent_id = this.projet.id;
+        }else if(this.newProjectForm.value['parentName'] != undefined) {
+          proj.parent_id = this.newProjectForm.value['parentName']['id'];
+        }else {
+          proj.parent_id = this.projet.parent_id;
+        }
+        proj.name = this.newProjectForm.value['projectName'];
+        this.projectService.updateProject(proj).subscribe(project => {
+          this.onSubmitSuccess();
+        });
+      }
+      
     }
   }
 
@@ -154,6 +192,10 @@ export class AddProjectComponent implements OnInit {
 
   isChildChecked(checked: boolean){
     if(!checked) this.newProjectForm.get('parentName').reset();
+    else if(!this.isCreateForm && this.newProjectForm.value['id'] != this.newProjectForm.value['parent_id']) {
+      let selected: ProjectItem = this.findProject(this.parentNameOptions, this.projet.parent_id);
+      this.newProjectForm.controls['parentName'].setValue(selected);
+    }
   }
 
   validateForm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {

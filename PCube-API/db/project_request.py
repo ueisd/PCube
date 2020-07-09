@@ -105,4 +105,17 @@ class ProjectRequest:
         cursor.close()
         newProject.id = project.id
         return newProject
+
+
+    def update_project_std(self, project):
+        """
+        Modifiy un projet existante et retourne un nouveau projet
+        avec l'identifiant de l'activité modifié.
+        """
+        cursor = self.connection.cursor()
+        cursor.execute("update project set name = ?, parent_id = ? where id = ?", 
+            (project.name, project.parent_id, project.id))
+        self.connection.commit()
+        cursor.close()
+        return project
     

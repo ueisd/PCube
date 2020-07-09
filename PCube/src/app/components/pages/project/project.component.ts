@@ -33,6 +33,7 @@ export class ProjectComponent implements OnInit {
     dialogConfig.data = { 
       projet : projet,
     }
+    dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddProjectComponent, dialogConfig);
     
     this.fileNameDialogRef.afterClosed().subscribe(result => { 

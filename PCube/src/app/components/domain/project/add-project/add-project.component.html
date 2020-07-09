@@ -1,7 +1,7 @@
 <form [formGroup]="newProjectForm" (ngSubmit)="onSubmit()">
     <h1>{{ (isCreateForm) ? "Création" : "Modification" }} d'un projet</h1>
-    <mat-dialog-content class="mat-typography">
-        <div>
+
+        <div class="container">
             <div *ngIf="isAddedFailled" class="alert alert-danger" role="alert">
                 Une erreur s'est produit lors de la soumission du formulaire.<br />
                 Veuillez vérifier les champs et essayer de nouveau.
@@ -19,31 +19,38 @@
                 
             </mat-form-field>
         </div>
-        <div>
-            <mat-slide-toggle (ngModelChange)="isChildChecked($event)" formControlName="isChild">
-                Est enfant?
-            </mat-slide-toggle>
-        </div>
-        <div *ngIf="newProjectForm.value.isChild">
-            <ng-select [items]="parentNameOptions"
-                    bindLabel="nomAffichage"
-                    placeholder="Select item"
-                    appendTo="body"
-                    formControlName="parentName">
-            </ng-select>
-            <mat-error *ngFor="let validation of validationMessages.parentName">
-                <mat-error class="error-message" 
-                *ngIf="newProjectForm.get('parentName').hasError(validation.type) && 
-                ((newProjectForm.get('parentName').dirty || newProjectForm.get('parentName').touched))">
-                    {{validation.message}}
-                </mat-error>
-            </mat-error>
+        <div class="container"  fxLayout="row" fxLayoutAlign="start center">
+            <div fxflex fxFlex="50%" class="container" fxLayout="row" fxLayoutAlign="start center">
+                <mat-label> {{ newProjectForm.get('projectName').value }} &nbsp;&nbsp;</mat-label>
+                <mat-slide-toggle (ngModelChange)="isChildChecked($event)" formControlName="isChild">
+                    {{ (newProjectForm.get('isChild').value) ? "est enfant de:" : "est à la racine" }}
+                    </mat-slide-toggle>
+            </div>
+            <div fxflex fxFlex="50%" *ngIf="newProjectForm.value.isChild">
+
+                    <ng-select 
+                        [items]="parentNameOptions"
+                        bindLabel="nomAffichage"
+                        placeholder="projet parent choisi"
+                        appendTo="body"
+                        formControlName="parentName">         
+                    </ng-select>
+                    <mat-error *ngFor="let validation of validationMessages.parentName">
+                        <mat-error class="error-message" 
+                        *ngIf="newProjectForm.get('parentName').hasError(validation.type) && 
+                        ((newProjectForm.get('parentName').dirty || newProjectForm.get('parentName').touched))">
+                            {{validation.message}}
+                        </mat-error>
+                    </mat-error>
+
+            </div>
         </div>
   
-    </mat-dialog-content>
-    <pre>{{newProjectForm.value | json}}</pre>
+    <!-- <pre>{{newProjectForm.value | json}}</pre> --> 
     <mat-dialog-actions align="end">
         <button mat-button mat-dialog-close>Anuler</button>
-        <button mat-button type="submit" [disabled]="newProjectForm.invalid">Ajouter</button>
+        <button mat-button type="submit" [disabled]="newProjectForm.invalid">
+            {{(isCreateForm) ? "Ajouter" : "Enregidtrer"}}
+        </button>
     </mat-dialog-actions>
 </form>   
