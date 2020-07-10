@@ -11,6 +11,7 @@ from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
 from ..schemas.auth_schema import (auth_login_schema)
 from ..db.auth_request import AuthRequest
+from ..domain.user import User
 from ..utility.auth import (authenticate_user, deauthenticate_user,
                     refresh_authentication, get_authenticated_user,
                     auth_required, auth_refresh_required, AuthenticationError,

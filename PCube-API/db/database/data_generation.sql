@@ -36,7 +36,6 @@ INSERT INTO user VALUES (19,'Georgie','Nelson','Georgie@Nelson.qc','$2b$12$iEkP1
 INSERT INTO user VALUES (20,'Roosevelt','Bradford','Roosevelt@Bradford.eu','$2b$12$aS488ctRvGJWpWsp7sm7xeVRZGmKRg5AYMXL9P9oUG03NuTUfMe/i','qBVr0foma3TfV+TVyMMpBQ==',1,3);
 INSERT INTO user VALUES (21,'Marcel','Wilcox','Marcel@Wilcox.ku','$2b$12$rOKlBrpddcKSKQ0DO2VpJu6Ksm0DbmJUVa/tNL06kk/Ov1nxTpX7e','Ok4lz/UpY1JsTK7lGzlGfg==',1,3);
 
-
 /*************************************/
 /*          TABLE PROJECT            */
 /*************************************/
@@ -117,3 +116,8 @@ INSERT INTO timeline VALUES (45,'2020-07-08','17:00','21:00',2,2,1,19);
 INSERT INTO timeline VALUES (46,'2020-07-09','8:00','12:00',2,2,1,19);
 INSERT INTO timeline VALUES (47,'2020-07-09','13:00','16:00',2,2,1,19);
 INSERT INTO timeline VALUES (48,'2020-07-10','8:00','12:00',2,2,1,19);
+
+/*************************************/
+/*             CORRECTIONS           */
+/*************************************/
+UPDATE user SET first_name = UPPER(first_name), last_name = UPPER(last_name), email = UPPER(email) where id = id
