@@ -1,13 +1,15 @@
 import { Component, OnInit, Output, EventEmitter, Inject, Optional } from '@angular/core';
 import { ProjectService } from 'src/app/services/project/project.service';
-import { FormControl, FormGroup, Validators, ValidatorFn, ValidationErrors } from '@angular/forms';
-import * as $ from 'jquery/dist/jquery.min.js';
+import { FormControl, FormGroup, Validators, ValidatorFn, ValidationErrors, FormBuilder, AbstractControl, AsyncValidatorFn } from '@angular/forms';
 import { ProjectItem } from '../../../../models/project';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
-
-const PARENT_NAME_INPUT_ID = "parentName";
-const PROJECT_NAME_INPUT_ID = "projectName";
-const TABLE_AUTOCOMPLETE_ID = "autocomplete-table";
+import { __values } from 'tslib';
+import { map } from 'rxjs/internal/operators/map';
+import { Observable } from 'rxjs/internal/Observable';
+import { switchMap } from 'rxjs/internal/operators/switchMap';
+import { timer } from 'rxjs/internal/observable/timer';
+import { first } from 'rxjs/internal/operators/first';
+const SEPARATOR: string = " * ";
 
 @Component({
   selector: 'app-project',
@@ -18,172 +20,195 @@ export class AddProjectComponent implements OnInit {
 
   @Output() refreshDataEvent = new EventEmitter<boolean>();
 
-  constructor(
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
-    private projectService: ProjectService, 
-    private dialogRef: MatDialogRef<AddProjectComponent>
-    ){}
-
+  isCreateForm = false;
+  projet: ProjectItem;
   newProjectForm: FormGroup;
-
+  parentOptions: ProjectItem[];
   hasToRefresh: boolean = true;
+  isAddedFailled: boolean = false;
+  validationMessages = {
+    'projectName': [
+        { type: 'required', message: 'Une Nom est requis' },
+        { type: 'minlength', message: 'Minimum 5 caractères' },
+        { type: 'ereureNonUnique', message: 'Le nom du projet doit être unique' }
+    ],
+    'parent': [],
+  };
 
-  askForDataRefresh() {
+
+  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+  private fb: FormBuilder, private projectService: ProjectService, 
+  private dialogRef: MatDialogRef<AddProjectComponent>) { }
+
+  
+  ngOnInit(): void {
+    this.projet = this.data.projet;
+    if(!(this.projet.id > 0)) this.projet.id = -1;
+    if(!(this.projet.parent_id > 0)) this.projet.id = -1;
+
+    if(this.projet.parent_id === undefined ||  this.projet.parent_id <= 0) {
+      this.isCreateForm = true;
+    }
+    this.initForm();
+
+    this.projectService.getApparentableProject(this.projet.id).subscribe(projets =>{
+      this.parentOptions = this.generateParentOption(projets, 0);
+
+      let selected: ProjectItem = this.findProject(this.parentOptions, this.projet.parent_id);
+      if(this.projet.id != this.projet.parent_id) {
+        this.newProjectForm.controls['parent'].setValue(selected);
+      }
+    });
+
+  }
+
+
+  private initForm(){
+    this.newProjectForm = this.fb.group(
+      {
+        projectName: [
+          this.projet.name, 
+          Validators.compose([
+            Validators.required, 
+            Validators.minLength(5),
+          ]),
+          [this.nomProjetUniqueValidation()]
+        ],
+        isChild: [
+          (this.projet.parent_id > 0 && this.projet.parent_id != this.projet.id)
+        ],
+        parent: [
+          null,
+          Validators.compose([]),
+          []
+        ],
+      },
+      {validators: this.validateForm}
+    );
+  }
+
+
+  /* Crée une liste des noeuds de l'arborescence 
+   * avec un affichage identé selon le niveua de profondeur @level
+   */
+  private generateParentOption(projets: ProjectItem[], level:number) : ProjectItem[] {
+    if(projets === null) return [];
+    let retour: ProjectItem[] = [];
+
+    for (var projet of projets) {
+      let item : ProjectItem = new ProjectItem(projet);
+      item.child_project = null;
+      item.nomAffichage = item.name;
+      for(let i = 0; i<level; i++) {
+        item.nomAffichage = SEPARATOR + item.nomAffichage;
+      }
+      retour.push(item);
+      if(projet.child_project != undefined && projet.child_project.length != undefined) {
+        for(var sprojet of this.generateParentOption(projet.child_project, level+1))
+          retour.push(sprojet);
+      }
+    }
+    return retour;
+  }
+
+
+  /* Trouve et retourne le ProjetItem avec id = @id dans une arborescence de projet 
+   *  Si ne trouve pas retourne null
+   */
+  private findProject(projets:ProjectItem[], id: number) {
+    for(let projet of projets){
+      if(projet.id == id) return projet;
+      if(projet.id != projet.parent_id && projet.child_project != null) {
+        var trouve : ProjectItem = null;
+        trouve = this.findProject(projet.child_project, id);
+        return trouve;
+      }
+    }
+    return null;
+  }
+
+
+  private askForDataRefresh() {
     this.refreshDataEvent.emit(this.hasToRefresh);
   }
 
-  ngOnInit(): void {
-    this.initForm();
-    this.isAdded = false;
-    this.isUnique = true;
-    this.isAddedFailled = false;
+
+  public onSubmit(){
+    if(this.newProjectForm.valid){
+
+      let name: string = this.newProjectForm.controls['projectName'].value
+      let projetParent : ProjectItem = this.newProjectForm.controls['parent'].value;
+      let parentName: string = (projetParent != null) ? projetParent.name : name;
+
+      if(this.isCreateForm) {
+        this.projectService.addNewProject(name, parentName).subscribe(project => {
+          if(project.id != -1){
+            this.onSubmitSuccess();
+          }else{
+            this.onSubmitFailled();
+          }
+        });
+      }else {
+        let proj :ProjectItem = new ProjectItem();
+        proj.id = this.projet.id
+        
+        if(this.newProjectForm.value['isChild'] == false) {
+          proj.parent_id = this.projet.id;
+        }else if(this.newProjectForm.value['parent'] != undefined) {
+          proj.parent_id = this.newProjectForm.value['parent']['id'];
+        }else {
+          proj.parent_id = this.projet.parent_id;
+        }
+        proj.name = this.newProjectForm.value['projectName'];
+        this.projectService.updateProject(proj).subscribe(project => {
+          this.onSubmitSuccess();
+        });
+      }
+      
+    }
   }
 
-  isAdded: boolean;
-  isAddedFailled: boolean;
-
   private onSubmitSuccess(){
-    this.isAdded = true;
     this.askForDataRefresh();
     this.isAddedFailled = false;
     this.newProjectForm.reset();
     this.dialogRef.close(true);
   }
 
+
   private onSubmitFailled(){
-    this.isAdded = false;
     this.isAddedFailled = true;
   }
 
-  onSubmit(){
 
-    if(this.newProjectForm.valid){
-
-      let name: string = this.newProjectForm.controls['projectName'].value;
-      let isChild: boolean = this.newProjectForm.controls['isChild'].value;
-      let parentName:string = (isChild) ? this.newProjectForm.controls['parentName'].value: name;
-
-      this.projectService.addNewProject(name, parentName).subscribe(project => {
-          if(project.id != -1){
-            this.onSubmitSuccess();
-          }else{
-            this.onSubmitFailled();
-          }
-      });
-    }
-  }
-
-  isUnique: boolean;
-
-  projectNameOnChange(newValue){
-    if(newValue != null && newValue.trim().length != 0){
-      this.projectService.isNameUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
-    }
-  }
-
-  autocomplete: ProjectItem[]
-
-  parentNameOnChange(parentName){
-
-    if(parentName == null || parentName.trim().length == 0){
-      this.autocomplete = [];
-      return;
-    }
-    
-    this.projectService.getProjectNameForAutocomplete(parentName).subscribe(projects => {
-
-      this.autocomplete = [];
-
-      if(projects.length == 1 && parentName.toUpperCase() == projects[0].name.toUpperCase())
-        return;
-
-      $("#"+TABLE_AUTOCOMPLETE_ID).empty();
-      projects.forEach(project => {
-        this.autocomplete.push(project);
-      });
-
-    });
-
-  }
-
-  delay(ms: number) {
-    return new Promise( resolve => setTimeout(resolve, ms) );
-  }
-
-  async parentNameFocusOut(){
-    await this.delay(200);
-    this.autocomplete = [];
-  }
-
-  autocompleteChoice(event, item){
-    console.log(item.name);
-    this.newProjectForm.get('parentName').setValue(item.name);
-    this.autocomplete = [];
-    this.checkParentExist(item.name);
-  }
-
-  isParentExist: boolean
-
-  checkParentExist(parentName){
-    if(parentName != null && parentName.trim().length != 0){
-      this.projectService.isNameUnique(parentName).subscribe(isUnique => {
-        this.isParentExist = !isUnique;
-      });
-    }
-  }
-
-  private addOrRemoveHiddenClass(id, isHidden){
-    if(isHidden)
-      $("#"+id).addClass("hidden");
-    else
-      $("#"+id).removeClass("hidden");
-  }
-
-  isChild: boolean = false;
-
+  // gère le champ "parent" par rapport à la spécification est child que l'utilisateur change
   isChildChecked(checked: boolean){
-
-    if(!checked)
-      this.newProjectForm.get('parentName').reset();
-
-    this.isChild = checked
-    this.addOrRemoveHiddenClass("parentName-div", !checked);
+    if(!checked) this.newProjectForm.get('parent').reset();
+    else if(!this.isCreateForm && this.projet.id != this.projet.parent_id) {
+      let selected: ProjectItem = this.findProject(this.parentOptions, this.projet.parent_id);
+      this.newProjectForm.controls['parent'].setValue(selected);
+    }
   }
 
-  isFormValid: boolean = false;
 
-  validateForm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
-    const projectName = control.get('projectName').value;
-    const isChild = control.get('isChild').value;
-    const parentName = control.get('parentName').value;
+  // vérifie qu'un nom de projet est unique en interrogant le backend
+  private nomProjetUniqueValidation(): AsyncValidatorFn {
+    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
+      return timer(500)
+        .pipe(
+          switchMap(() =>  this.projectService.isNameUnique(control.value)
+            .pipe(
+              map((isUnique: boolean) => {
+                return (isUnique || control.value == this.projet.name) ? null : { ereureNonUnique: true };
+              })
+            ).pipe(first())
+          )
+        )
+    };
+  }
 
-    if(projectName == null || projectName.trim().length == 0){
-      this.isFormValid = false;
-      return null;
-    }
-      
-
-    if(isChild && (parentName == null || parentName.trim().length == 0)){
-      this.isFormValid = false;
-      return null;
-    }
-    
-    if(this.isChild){
-      this.checkParentExist(parentName);
-    }else{
-      this.isParentExist = true;
-    }
-
-    this.isFormValid = true;
+  // validateur global return null quand aucune erreure n'existe
+  private validateForm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
     return null;
-  }
-
-  private initForm(){
-    
-    this.newProjectForm = new FormGroup({
-      'projectName': new FormControl(),
-      'isChild': new FormControl(),
-      'parentName': new FormControl()
-    }, {validators: this.validateForm});
   }
 }
