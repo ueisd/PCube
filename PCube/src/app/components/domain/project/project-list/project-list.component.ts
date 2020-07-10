@@ -6,6 +6,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import * as $ from 'jquery/dist/jquery.min.js';
 import { FormControl } from '@angular/forms';
 import { AddProjectComponent } from '../add-project/add-project.component';
+import { DeleteProjectComponent } from 'src/app/components/domain/project/delete-project/delete-project.component';
 import { MatDialogRef, MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -19,7 +20,7 @@ export class ProjectListComponent implements OnInit {
 
   nameFilter = new FormControl('');
   fileNameDialogRef: MatDialogRef<AddProjectComponent>;
-  
+  deleteProjectDialogRef: MatDialogRef<DeleteProjectComponent>;  
 
   constructor(private projectService: ProjectService, private dialog: MatDialog,
     private snackBar : MatSnackBar) {}
@@ -53,7 +54,31 @@ export class ProjectListComponent implements OnInit {
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
         if(result == true) {
           this.refreshList({expanded: true});
-          this.openSnackBar('L\'activité a été modifiée', 'notif-success');
+          this.openSnackBar('Le projet a été modifiée', 'notif-success');
+        }
+      }
+    );
+  }
+
+  openDeleteDialog(project : ProjectItem) {
+
+    const dialogConfig = this.dialog.open(DeleteProjectComponent, {
+      data: {
+        id: project.id,
+        name: project.name
+      },
+      panelClass: 'warning-dialog'
+    });
+    
+    dialogConfig.afterClosed().subscribe(result => { 
+        if(result !== undefined) {
+          this.projectService.deleteProject(project.id, project.name).subscribe((data) => {
+            this.openSnackBar('Le projet a été supprimé', 'notif-success');
+            this.refreshList({expanded: true});
+          },
+          (error) => {
+            this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+          });
         }
       }
     );

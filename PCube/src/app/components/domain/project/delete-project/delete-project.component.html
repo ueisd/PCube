@@ -1,0 +1,11 @@
+<div>
+  <h2 mat-dialog-title>Supprimer un projet</h2>
+  <div mat-dialog-content>
+    <p>Vous êtes sur le point de supprimer {{ data.name }}.</p>
+    <p>Voulez-vous vraiment supprimer ce projet?</p>
+  </div>
+  <div mat-dialog-actions>
+    <button mat-button class="delete-confirm-button" [mat-dialog-close]="data" cdkFocusInitial>Confirmer</button>
+    <button mat-button class="delete-cancel-button" (click)="onNoClick()">Annuler</button>
+  </div>
+</div>  

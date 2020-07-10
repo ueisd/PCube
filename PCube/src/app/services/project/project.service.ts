@@ -108,4 +108,18 @@ export class ProjectService {
     };
     return this.http.get<ProjectItem[]>(url, opts);
   }
+
+  deleteProject(id, name:string) {
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
+      }),
+      body: {
+        id: id,
+        name: name
+      }
+    };
+
+    return this.http.delete(API_PROJECT, opts);
+  }
 }
