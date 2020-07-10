@@ -8,7 +8,7 @@ from flask import escape
 from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
-from ..schemas.expense_account_schema import (expense_account_insert_schema)
+from ..schemas.expense_account_schema import (expense_account_insert_schema, expense_account_delete_schema)
 from .db_controller import get_db
 from ..db.expense_account_request import ExpenseAccountRequest
 from ..domain.expense_account import ExpenseAccount
@@ -76,14 +76,14 @@ def find_all_child(parent_id):
 
 
 @expense_account.route('', methods=['GET'])
-@auth_required
+#@auth_required
 def get_all_expense_account():
     """
     Construit l'arbre des comptes de dépense.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        get_authenticated_user()
+        #get_authenticated_user()
         connection = get_db().get_connection()
         request = ExpenseAccountRequest(connection)
         parents_dict = request.select_all_parent()
@@ -181,6 +181,41 @@ def expense_account_autocomplete(name):
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
+
+@expense_account.route('', methods=['DELETE'])
+@auth_required
+@schema.validate(expense_account_delete_schema)
+def delete_expense_account():
+    """
+        Permet de supprimer un compte de dépense.
+        AuthenticationError : Si l'authentification de l'utilisateur échoue.
+        """
+    try:
+        data = request.json
+
+        connection = get_db().get_connection()
+        query = ExpenseAccountRequest(connection)
+
+        id = escape(data['id']).upper().strip()
+        name = escape(data['name']).upper().strip()
+
+        if not query.is_id_name_combo_exist(id, name):
+            log.error("La combinaison id-nom est erronée.")
+            abort(404)
+        if query.has_child(id, name):
+            log.error("Le compte a un enfant")
+            abort(412)
+        if query.is_in_timeline_table(id):
+            log.error("Le compte est dans la table Timeline")
+            abort(412)
+
+        query.delete_expense_account(id, name)
+        return jsonify(""),200
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
 
 @expense_account.errorhandler(JsonValidationError)
 def validation_error(e):
