@@ -17,23 +17,19 @@ export class ProjectComponent implements OnInit {
     private snackBar : MatSnackBar
     ){}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   fileNameDialogRef: MatDialogRef<AddProjectComponent>;
   @ViewChild(ProjectListComponent) projectListChild;
 
   openDialog() {
     
-    let projet : ProjectItem = new ProjectItem();
-
-    projet.name = "";
-
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = { 
-      projet : projet,
+      projet : new ProjectItem(),
     }
     dialogConfig.minWidth = 600;
+    dialogConfig.minHeight = 300;
     this.fileNameDialogRef = this.dialog.open(AddProjectComponent, dialogConfig);
     
     this.fileNameDialogRef.afterClosed().subscribe(result => { 

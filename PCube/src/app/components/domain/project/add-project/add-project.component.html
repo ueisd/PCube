@@ -29,24 +29,25 @@
             <div fxflex fxFlex="50%" *ngIf="newProjectForm.value.isChild">
 
                     <ng-select 
-                        [items]="parentNameOptions"
+                        [items]="parentOptions"
                         bindLabel="nomAffichage"
                         placeholder="projet parent choisi"
                         appendTo="body"
-                        formControlName="parentName">         
+                        formControlName="parent">         
                     </ng-select>
-                    <mat-error *ngFor="let validation of validationMessages.parentName">
+                    <mat-error *ngFor="let validation of validationMessages.parent">
                         <mat-error class="error-message" 
-                        *ngIf="newProjectForm.get('parentName').hasError(validation.type) && 
-                        ((newProjectForm.get('parentName').dirty || newProjectForm.get('parentName').touched))">
+                        *ngIf="newProjectForm.get('parent').hasError(validation.type) && 
+                        ((newProjectForm.get('parent').dirty || newProjectForm.get('parent').touched))">
                             {{validation.message}}
                         </mat-error>
                     </mat-error>
 
             </div>
         </div>
-  
-    <!-- <pre>{{newProjectForm.value | json}}</pre> --> 
+        <pre>{{this.projet.parent_id}}</pre>
+        lllll______________
+    <pre>{{newProjectForm.value | json}}</pre>
     <mat-dialog-actions align="end">
         <button mat-button mat-dialog-close>Anuler</button>
         <button mat-button type="submit" [disabled]="newProjectForm.invalid">

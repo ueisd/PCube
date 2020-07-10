@@ -62,7 +62,6 @@ export class ProjectService {
       projectName: projetct.name,
       parent_id: projetct.parent_id,
     }
-    alert(JSON.stringify(body));
     
     return this.http.put<ProjectItem>(API_PROJECT, body, opts);
   }

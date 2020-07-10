@@ -1,17 +1,15 @@
 import { Component, OnInit, Output, EventEmitter, Inject, Optional } from '@angular/core';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { FormControl, FormGroup, Validators, ValidatorFn, ValidationErrors, FormBuilder, AbstractControl, AsyncValidatorFn } from '@angular/forms';
-import * as $ from 'jquery/dist/jquery.min.js';
 import { ProjectItem } from '../../../../models/project';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { __values } from 'tslib';
 import { map } from 'rxjs/internal/operators/map';
-import { of } from 'rxjs/internal/observable/of';
 import { Observable } from 'rxjs/internal/Observable';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { timer } from 'rxjs/internal/observable/timer';
 import { first } from 'rxjs/internal/operators/first';
-import { startWith } from 'rxjs/internal/operators/startWith';
+const SEPARATOR: string = " * ";
 
 @Component({
   selector: 'app-project',
@@ -22,73 +20,27 @@ export class AddProjectComponent implements OnInit {
 
   @Output() refreshDataEvent = new EventEmitter<boolean>();
 
-  selectedCity: any;
-  newProjectForm: FormGroup;
-  hasToRefresh: boolean = true;
-  projet: ProjectItem;
-  isAddedFailled: boolean = false;
-  parentNameOptions: ProjectItem[];
-  //filteredOptions: Observable<ProjectItem[]>;
   isCreateForm = false;
-  cities = [
-    {id: 1, name: 'Vilnius'},
-    {id: 2, name: 'Kaunas'},
-    {id: 3, name: 'Pavilnys', disabled: true},
-    {id: 4, name: 'Pabradė'},
-    {id: 5, name: 'Klaipėda'}
-  ];
+  projet: ProjectItem;
+  newProjectForm: FormGroup;
+  parentOptions: ProjectItem[];
+  hasToRefresh: boolean = true;
+  isAddedFailled: boolean = false;
   validationMessages = {
     'projectName': [
         { type: 'required', message: 'Une Nom est requis' },
         { type: 'minlength', message: 'Minimum 5 caractères' },
         { type: 'ereureNonUnique', message: 'Le nom du projet doit être unique' }
     ],
-    'parentName': [
-        { type: 'minlength', message: 'Minimum 4 caractères' },
-        { type: 'ereurParentNonExistant', message: 'Le nom du projet doit exister' }
-    ],
-    'parent_id': [
-    ],
+    'parent': [],
   };
+
 
   constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,
   private fb: FormBuilder, private projectService: ProjectService, 
-  private dialogRef: MatDialogRef<AddProjectComponent>) { 
+  private dialogRef: MatDialogRef<AddProjectComponent>) { }
 
-  }
-
-  generateParentOption(projets: ProjectItem[], level:number) : ProjectItem[] {
-    if(projets === null) return [];
-    let retour: ProjectItem[] = [];
-
-    for (var projet of projets) {
-      let item : ProjectItem = new ProjectItem(projet);
-      item.child_project = null;
-      item.nomAffichage = item.name;
-      for(let i = 0; i<level; i++) {
-        item.nomAffichage = " * " + item.nomAffichage;
-      }
-      retour.push(item);
-      if(projet.child_project != undefined && projet.child_project.length != undefined) {
-        for(var sprojet of this.generateParentOption(projet.child_project, level+1))
-          retour.push(sprojet);
-      }
-    }
-    return retour;
-  }
-
-  findProject(projets:ProjectItem[], id: number) {
-    for(let projet of projets){
-      if(projet.id == id) return projet;
-      if(projet.id != projet.parent_id && projet.child_project != null) {
-        var trouve : ProjectItem = null;
-        trouve = this.findProject(projet.child_project, id);
-        return trouve;
-      }
-    }
-    return null;
-  }
-
+  
   ngOnInit(): void {
     this.projet = this.data.projet;
     if(this.projet.parent_id === undefined ||  this.projet.parent_id <= 0) {
@@ -97,22 +49,20 @@ export class AddProjectComponent implements OnInit {
     this.initForm();
 
     this.projectService.getApparentableProject(this.projet.id).subscribe(projets =>{
-      this.parentNameOptions = this.generateParentOption(projets, 0);
+      this.parentOptions = this.generateParentOption(projets, 0);
 
-      let selected: ProjectItem = this.findProject(this.parentNameOptions, this.projet.parent_id);
-      if(this.newProjectForm.value['id'] != this.newProjectForm.value['parent_id']) {
-        this.newProjectForm.controls['parentName'].setValue(selected);
+      let selected: ProjectItem = this.findProject(this.parentOptions, this.projet.parent_id);
+      if(this.projet.id != this.projet.parent_id) {
+        this.newProjectForm.controls['parent'].setValue(selected);
       }
     });
 
   }
 
+
   private initForm(){
     this.newProjectForm = this.fb.group(
       {
-        id: [
-          this.projet.id
-        ],
         projectName: [
           this.projet.name, 
           Validators.compose([
@@ -124,31 +74,67 @@ export class AddProjectComponent implements OnInit {
         isChild: [
           (this.projet.parent_id > 0 && this.projet.parent_id != this.projet.id)
         ],
-        parentName: [
+        parent: [
           null,
           Validators.compose([]),
           []
-        ],
-        parent_id: [
-          this.projet.parent_id,
-          Validators.compose([]),
-          [] //vérifier si est descendant
         ],
       },
       {validators: this.validateForm}
     );
   }
 
-  askForDataRefresh() {
+
+  /* Crée une liste des noeuds de l'arborescence 
+   * avec un affichage identé selon le niveua de profondeur @level
+   */
+  private generateParentOption(projets: ProjectItem[], level:number) : ProjectItem[] {
+    if(projets === null) return [];
+    let retour: ProjectItem[] = [];
+
+    for (var projet of projets) {
+      let item : ProjectItem = new ProjectItem(projet);
+      item.child_project = null;
+      item.nomAffichage = item.name;
+      for(let i = 0; i<level; i++) {
+        item.nomAffichage = SEPARATOR + item.nomAffichage;
+      }
+      retour.push(item);
+      if(projet.child_project != undefined && projet.child_project.length != undefined) {
+        for(var sprojet of this.generateParentOption(projet.child_project, level+1))
+          retour.push(sprojet);
+      }
+    }
+    return retour;
+  }
+
+
+  /* Trouve et retourne le ProjetItem avec id = @id dans une arborescence de projet 
+   *  Si ne trouve pas retourne null
+   */
+  private findProject(projets:ProjectItem[], id: number) {
+    for(let projet of projets){
+      if(projet.id == id) return projet;
+      if(projet.id != projet.parent_id && projet.child_project != null) {
+        var trouve : ProjectItem = null;
+        trouve = this.findProject(projet.child_project, id);
+        return trouve;
+      }
+    }
+    return null;
+  }
+
+
+  private askForDataRefresh() {
     this.refreshDataEvent.emit(this.hasToRefresh);
   }
 
-  onSubmit(){
 
+  public onSubmit(){
     if(this.newProjectForm.valid){
 
       let name: string = this.newProjectForm.controls['projectName'].value
-      let projetParent : ProjectItem = this.newProjectForm.controls['parentName'].value;
+      let projetParent : ProjectItem = this.newProjectForm.controls['parent'].value;
       let parentName: string = (projetParent != null) ? projetParent.name : name;
 
       if(this.isCreateForm) {
@@ -161,12 +147,12 @@ export class AddProjectComponent implements OnInit {
         });
       }else {
         let proj :ProjectItem = new ProjectItem();
-        proj.id = this.newProjectForm.value['id'];
+        proj.id = this.projet.id
         
         if(this.newProjectForm.value['isChild'] == false) {
           proj.parent_id = this.projet.id;
-        }else if(this.newProjectForm.value['parentName'] != undefined) {
-          proj.parent_id = this.newProjectForm.value['parentName']['id'];
+        }else if(this.newProjectForm.value['parent'] != undefined) {
+          proj.parent_id = this.newProjectForm.value['parent']['id'];
         }else {
           proj.parent_id = this.projet.parent_id;
         }
@@ -186,23 +172,24 @@ export class AddProjectComponent implements OnInit {
     this.dialogRef.close(true);
   }
 
+
   private onSubmitFailled(){
     this.isAddedFailled = true;
   }
 
+
+  // gère le champ "parent" par rapport à la spécification est child que l'utilisateur change
   isChildChecked(checked: boolean){
-    if(!checked) this.newProjectForm.get('parentName').reset();
-    else if(!this.isCreateForm && this.newProjectForm.value['id'] != this.newProjectForm.value['parent_id']) {
-      let selected: ProjectItem = this.findProject(this.parentNameOptions, this.projet.parent_id);
-      this.newProjectForm.controls['parentName'].setValue(selected);
+    if(!checked) this.newProjectForm.get('parent').reset();
+    else if(!this.isCreateForm && this.projet.id != this.projet.parent_id) {
+      let selected: ProjectItem = this.findProject(this.parentOptions, this.projet.parent_id);
+      this.newProjectForm.controls['parent'].setValue(selected);
     }
   }
 
-  validateForm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
-    return null;
-  }
 
-  nomProjetUniqueValidation(): AsyncValidatorFn {
+  // vérifie qu'un nom de projet est unique en interrogant le backend
+  private nomProjetUniqueValidation(): AsyncValidatorFn {
     return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
       return timer(500)
         .pipe(
@@ -216,21 +203,9 @@ export class AddProjectComponent implements OnInit {
         )
     };
   }
-  
-  nomParentExist(): AsyncValidatorFn {
-    return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-      if(control.value === null || control.value.trim().length == 0) return of(null);
-      return timer(500)
-        .pipe(
-          switchMap(() =>  this.projectService.isNameUnique(control.value)
-            .pipe(
-              map((isUnique: boolean) => {
-                return (isUnique) ? { ereurParentNonExistant: true } : null;
-              })
-            ).pipe(first())
-          )
-        );
-    };
+
+  // validateur global return null quand aucune erreure n'existe
+  private validateForm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
+    return null;
   }
-  
 }
