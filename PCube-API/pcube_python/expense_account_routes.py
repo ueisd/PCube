@@ -196,8 +196,8 @@ def delete_expense_account():
         connection = get_db().get_connection()
         query = ExpenseAccountRequest(connection)
 
-        id = escape(data['id']).strip()
-        name = escape(data['name']).strip()
+        id = escape(data['id']).upper().strip()
+        name = escape(data['name']).upper().strip()
 
         if not query.is_id_name_combo_exist(id, name):
             log.error("La combinaison id-nom est erronée.")
