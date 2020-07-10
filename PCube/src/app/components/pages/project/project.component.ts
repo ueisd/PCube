@@ -3,6 +3,7 @@ import { ProjectListComponent } from 'src/app/components/domain/project/project-
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { AddProjectComponent } from 'src/app/components/domain/project/add-project/add-project.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ProjectItem } from 'src/app/models/project';
 
 @Component({
   selector: 'app-project',
@@ -16,19 +17,23 @@ export class ProjectComponent implements OnInit {
     private snackBar : MatSnackBar
     ){}
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
   fileNameDialogRef: MatDialogRef<AddProjectComponent>;
   @ViewChild(ProjectListComponent) projectListChild;
 
   openDialog() {
+    
     const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = { 
+      projet : new ProjectItem(),
+    }
+    dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddProjectComponent, dialogConfig);
     
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
-        this.projectListChild.refreshList();
         if(result == true) {
+          this.projectListChild.refreshList({expanded: true});
           this.openSnackBar('L\'activité a été créée', 'notif-success');
         }
       }

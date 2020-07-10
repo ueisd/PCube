@@ -17,6 +17,14 @@ class ProjectRequest:
         cursor.close()
         return data
 
+    def select_all(self):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from project")
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
     def select_all_parent_by_filter(self, project):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
@@ -112,4 +120,17 @@ class ProjectRequest:
         cursor.close()
         newProject.id = project.id
         return newProject
+
+
+    def update_project_std(self, project):
+        """
+        Modifiy un projet existante et retourne un nouveau projet
+        avec l'identifiant de l'activité modifié.
+        """
+        cursor = self.connection.cursor()
+        cursor.execute("update project set name = ?, parent_id = ? where id = ?", 
+            (project.name, project.parent_id, project.id))
+        self.connection.commit()
+        cursor.close()
+        return project
     
