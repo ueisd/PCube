@@ -158,7 +158,8 @@ def create_project():
 @schema.validate(project_update_schema)
 def update_project():
     """
-    Permet de modifier un utilisateur dans le système.
+    Permet de modifier un projet dans le système.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
         data = request.json
@@ -212,7 +213,7 @@ def obtenirLesDesendants(projects, parent):
 @auth_required
 def getDescendants(_idA, _idB):
     """
-    Permet d'obtenir la liste des descendants
+    Permet de tester si A est un descendant de B
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
@@ -253,7 +254,7 @@ def construireArbreSansSousArbre(projects, parent, id):
 @auth_required
 def getApparentable(_id):
     """
-    Permet d'obtenir la liste des projets auquels le projet peut s'aparenter sabs circularité
+    Permet d'obtenir la liste des projets auquels le projet peut s'aparenter sans circularité
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
@@ -272,27 +273,6 @@ def getApparentable(_id):
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
-
-    """
-    try:
-        id = escape(_id).strip()
-        id = int(id)
-        get_authenticated_user()
-        connection = get_db().get_connection()
-        request = ProjectRequest(connection)
-        projects = request.select_all()
-        if id > 0:
-            parent = next((projet for projet in projects if projet['id'] == id), None)
-            arbreProjet = obtenirLesDesendants(projects, parent) + [parent]
-            apparentable = [x for x in projects if x not in arbreProjet]
-        else:
-            apparentable = projects
-        return jsonify(apparentable)
-        
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
-    """
 
 @project.route('/autocomplete/<name>', methods=['GET'])
 @auth_required
