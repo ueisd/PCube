@@ -33,6 +33,9 @@ import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/materia
 import { ModifyUserComponent } from './components/domain/user/modify-user/modify-user.component';
 import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
 import { ExpenseAccountListComponent } from './components/domain/expense-account/expense-account-list/expense-account-list.component';
+import { NgSelectModule, NgOption, } from '@ng-select/ng-select';
+
+import { FlexLayoutModule } from "@angular/flex-layout";
 import { AddTimelineComponent } from './components/domain/timeline/add-timeline/add-timeline.component';
 import { AddTimelineStep1Component } from './components/domain/timeline/add-timeline/add-timeline-step1/add-timeline-step1.component';
 import { AddTimelineStep2Component } from './components/domain/timeline/add-timeline/add-timeline-step2/add-timeline-step2.component';
@@ -45,9 +48,11 @@ import { TimelineListComponent } from './components/domain/timeline/timeline-lis
 import { ManageTimelineComponent } from './components/pages/timeline/manage-timeline/manage-timeline.component';
 import { AddingTimelineComponent } from './components/pages/timeline/adding-timeline/adding-timeline.component';
 import { DeleteTimelineComponent } from './components/domain/timeline/delete-timeline/delete-timeline.component';
+
 import { DeleteActivityComponent } from './components/domain/activity/delete-activity/delete-activity.component';
 import { ModifyTimelineComponent } from './components/domain/timeline/modify-timeline/modify-timeline.component';
 import { ModifyingTimelineComponent } from './components/pages/timeline/modifying-timeline/modifying-timeline.component';
+
 
 
 @NgModule({
@@ -97,6 +102,8 @@ import { ModifyingTimelineComponent } from './components/pages/timeline/modifyin
     MatNativeDateModule,
     BrowserAnimationsModule,
     MaterialModule,
+    FlexLayoutModule,
+    NgSelectModule,
     NgxMaterialTimepickerModule,
   ],
   entryComponents: [AddActivityComponent],
