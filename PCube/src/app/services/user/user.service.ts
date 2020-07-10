@@ -8,6 +8,7 @@ const API_ALL_USER = environment.api_url + "/api/user";
 const API_IS_UNIQUE = environment.api_url + "/api/user/is-unique-user";
 const API_USER = environment.api_url + "/api/user";
 const API_GET_BY_FILTER = environment.api_url + "/api/user/filter";
+const API_GET_PROFIL = environment.api_url + "/api/user/profil";
 
 @Injectable({
   providedIn: 'root'
@@ -16,16 +17,18 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
-  getUsers() {
-    let response = "{ \"users\" : [{\"id\" : 1, \"first_name\" : \"Mitesh\", \"last_name\" : \"Patel\", \"email\" : \"test@test.com\", \"role\" : { \"id\" : 1, \"role_name\" : \"admin\"}},{\"id\" : 2, \"first_name\" : \"George\", \"last_name\" : \"Smith\", \"email\" : \"test2@test.com\", \"role\" : { \"id\" : 3, \"role_name\" : \"member\"}}]}"; 
-    let json = JSON.parse(response)
-    let users : User[] = [];
+  getUser(user:User): Observable<User> {
 
-    json.users.forEach(user => {
-      users.push(new User(user))
-    });
+    let url = API_GET_PROFIL + "?email=" + user.email;
+    url += "&id=" + user.id;
 
-    return users;
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    
+    return this.http.get<User>(url, opts);
   }
 
   getAllUser():Observable<User[]> {
@@ -95,9 +98,9 @@ export class UserService {
 
     let body = {
       email: user.email,
-      first_name: user.firstName,
-      last_name: user.lastName,
-      role_id: user.roleId,
+      first_name: user.first_name,
+      last_name: user.last_name,
+      role_id: user.role_id,
       password: pwd,
       password_confirmed: confirmedPwd
     }
@@ -107,10 +110,11 @@ export class UserService {
 
   getUserByFilter(user: User){
 
-    let url = API_GET_BY_FILTER + "?name=" + user.firstName;
-    url += "&lastName=" + user.lastName;
+    let url = API_GET_BY_FILTER + "?name=" + user.first_name;
+    url += "&lastName=" + user.last_name;
     url += "&email=" + user.email;
-    url += "&role=" + user.roleName;
+    url += "&role=" + user.role_name;
+    url += "&id=" + user.id;
 
     const opts = {
       headers: new HttpHeaders({

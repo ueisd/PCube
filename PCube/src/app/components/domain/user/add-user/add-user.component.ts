@@ -53,10 +53,10 @@ export class AddUserComponent implements OnInit {
 
   onSubmit(){
     let user = new User();
-    user.firstName = this.userForm.get("name").value;
-    user.lastName = this.userForm.get("lname").value;
+    user.first_name = this.userForm.get("name").value;
+    user.last_name = this.userForm.get("lname").value;
     user.email = this.userForm.get("email").value;
-    user.roleId = this.userForm.get("roles").value;
+    user.role_id = this.userForm.get("roles").value;
     const password = this.userForm.get("password").value
     const passwordConfirmation = this.userForm.get("passwordConfirmation").value;
     

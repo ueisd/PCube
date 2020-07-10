@@ -81,6 +81,7 @@ export class ActivityService {
 
   filterActivity(activity: ActivityItem): Observable<ActivityItem[]>{
     let url = API_FILTER_BY_NAME + "?name=" + activity.name;
+    url += "&id=" + activity.id;
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes

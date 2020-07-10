@@ -7,6 +7,7 @@ const API_EXPENSE_ACCOUNT = "/api/expense-account";
 const API_IS_UNIQUE = "api/expense-account/is-unique";
 const API_AUTOCOMPLTE = "api/expense-account/autocomplete";
 const API_FILTER = "/api/expense-account/filter";
+const API_ONE_LEVEL_FILTER = "/api/expense-account/filter/one-level";
 
 @Injectable({
   providedIn: 'root'
@@ -48,6 +49,18 @@ export class ExpenseAccountService {
 
   filterExpenseAccount(expenseAccount: ExpenseAccountItem): Observable<ExpenseAccountItem[]>{
     let url = API_FILTER + "?name=" + expenseAccount.name;
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<ExpenseAccountItem[]>(url, opts);
+  }
+
+  oneLevelFilterExpenseAccount(expenseAccount: ExpenseAccountItem): Observable<ExpenseAccountItem[]>{
+    let url = API_ONE_LEVEL_FILTER + "?name=" + expenseAccount.name;
+    url += "&id=" + expenseAccount.id;
+
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
