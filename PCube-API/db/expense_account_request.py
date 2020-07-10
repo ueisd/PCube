@@ -64,14 +64,14 @@ class ExpenseAccountRequest:
         return data
 
     def delete_expense_account(self, id, name):
-        self.connection.row_factory = dict_factory
+        """
+        Permet de supprimer un compte de dépense
+        """
         cursor = self.connection.cursor()
         cursor.execute("delete from accounting_time_category where id = ? and name = ?",
         (id, name,))
-        data = cursor.fetchone()
         self.connection.commit()
         cursor.close()
-        return data
 
     def is_id_name_combo_exist(self, id, name):
         self.connection.row_factory = dict_factory

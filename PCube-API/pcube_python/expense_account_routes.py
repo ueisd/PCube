@@ -193,8 +193,6 @@ def delete_expense_account():
     try:
         data = request.json
 
-        print(data)
-
         connection = get_db().get_connection()
         query = ExpenseAccountRequest(connection)
 
@@ -210,8 +208,6 @@ def delete_expense_account():
         if query.is_in_timeline_table(id):
             log.error("Le compte est dans la table Timeline")
             abort(412)
-
-
 
         query.delete_expense_account(id, name)
         return jsonify(""),200
