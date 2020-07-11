@@ -97,4 +97,36 @@ class ProjectRequest:
         cursor.close()
         newProject.id = project.id
         return newProject
+
+    def is_id_name_combo_exist(self, id, name):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from project where id = ? and name = ?", (id, name))
+        data = cursor.fetchone()
+        cursor.close()
+        return True if data else False
     
+    def delete_project(self, project_id, name):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("delete from project where id = ? and name = ?", (project_id, name))
+        self.connection.commit()
+        cursor.close()
+
+    def has_child(self, id, name):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from accounting_time_category where parent_id = ? and name != ?",
+        (id, name,))
+        data = cursor.fetchone()
+        cursor.close()
+        return True if data else False
+
+    def is_in_timeline_table(self, id):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from timeline where accounting_time_category_id = ?",
+        (id,))
+        data = cursor.fetchone()
+        cursor.close()
+        return True if data else False

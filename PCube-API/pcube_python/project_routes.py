@@ -8,7 +8,7 @@ from flask import escape
 from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
-from ..schemas.project_schema import (project_insert_schema)
+from ..schemas.project_schema import (project_insert_schema, project_delete_schema)
 from .db_controller import get_db
 from ..db.project_request import ProjectRequest
 from ..domain.project import Project
@@ -76,14 +76,14 @@ def find_all_child(parent_id):
 
 
 @project.route('', methods=['GET'])
-@auth_required
+#@auth_required
 def get_all_project():
     """
     Construit l'abre des projets.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        get_authenticated_user()
+        #get_authenticated_user()
         connection = get_db().get_connection()
         request = ProjectRequest(connection)
         parents_dict = request.select_all_parent()
@@ -219,3 +219,36 @@ def validation_error(e):
     errors = [validation_error.message for validation_error in e.errors]
     return jsonify({'error': e.message, 'errors': errors}), 400
         
+@project.route('', methods=['DELETE'])
+#@auth_required
+@schema.validate(project_delete_schema)
+def delete_project():
+    """
+        Permet de supprimer un compte de dépense.
+        AuthenticationError : Si l'authentification de l'utilisateur échoue.
+        """
+    try:
+        data = request.json
+
+        connection = get_db().get_connection()
+        query = ProjectRequest(connection)
+
+        id = escape(data['id']).upper().strip()
+        name = escape(data['name']).upper().strip()
+
+        if not query.is_id_name_combo_exist(id, name):
+            log.error("La combinaison id-nom n'existe pas.")
+            abort(404)
+        if query.has_child(id, name):
+            log.error("Le compte a un enfant")
+            abort(412)
+        if query.is_in_timeline_table(id):
+            log.error("Le compte est dans la table Timeline")
+            abort(412)
+
+        query.delete_project(id, name)
+        return jsonify(""),200
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
