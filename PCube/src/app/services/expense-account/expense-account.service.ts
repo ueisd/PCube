@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
 
 const API_EXPENSE_ACCOUNT = "/api/expense-account";
+const API_APPARENTABLE = API_EXPENSE_ACCOUNT + "/getApparentable";
 const API_IS_UNIQUE = "api/expense-account/is-unique";
 const API_AUTOCOMPLTE = "api/expense-account/autocomplete";
 const API_FILTER = "/api/expense-account/filter";
@@ -24,6 +25,15 @@ export class ExpenseAccountService {
       })
     };
     return this.http.get<ExpenseAccountItem[]>(API_EXPENSE_ACCOUNT, opts);
+  }
+
+  getApparentableExpanseAccounts(id : number): Observable<ExpenseAccountItem[]>{
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<ExpenseAccountItem[]>(API_APPARENTABLE + "/" + id, opts);
   }
 
   isNameUnique(name): Observable<boolean> {

@@ -49,7 +49,7 @@ export class AddExpenseAccountComponent implements OnInit {
     }
     this.initForm();
 
-    this.expenseAccountServices.getAllExpenseAccount().subscribe(projets =>{
+    this.expenseAccountServices.getApparentableExpanseAccounts(this.expenseAccount.id).subscribe(projets =>{
       this.parentOptions = this.generateParentOption(projets, 0);
       let selected: ExpenseAccountItem = this.findExpanseAccount(this.parentOptions, this.expenseAccount.parent_id);
       if(this.expenseAccount.id != this.expenseAccount.parent_id) {

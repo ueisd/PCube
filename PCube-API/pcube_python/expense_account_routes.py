@@ -98,6 +98,44 @@ def get_all_expense_account():
         abort(403)
 
 
+### @param id: l'identifiant du noeud de la racine du sous-arbre à ne pas inclure
+def construireArbreSansSousArbre(comptes, parent, id):
+    if (parent == None or parent['id'] == id): 
+        return []
+        
+    parent['child'] = [child for child in comptes 
+        if child['parent_id'] == parent['id']  
+        and child['parent_id'] != child['id'] and child['id'] != id
+    ]
+    for child in parent['child']:
+        child = construireArbreSansSousArbre(comptes, child, id)
+    return parent
+
+@expense_account.route('/getApparentable/<_id>', methods=['GET'])
+@auth_required
+def getApparentable(_id):
+    """
+    Permet d'obtenir la liste des projets auquels le projet peut s'aparenter sans circularité
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        id = escape(_id).strip()
+        id = int(id)
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        request = ExpenseAccountRequest(connection)
+        comptes = request.select_all()
+
+        parents = [x for x in comptes if x['id'] == x['parent_id']]
+        for parent in parents:
+            parent = construireArbreSansSousArbre(comptes, parent, id);
+        return jsonify(parents)
+        
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+
 @expense_account.route('/filter', methods=['GET'])
 @auth_required
 def get_expense_account_by_filter():

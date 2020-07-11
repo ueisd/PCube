@@ -17,6 +17,14 @@ class ExpenseAccountRequest:
         cursor.close()
         return data
 
+    def select_all(self):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from accounting_time_category")
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
     def select_all_parent_by_filter(self, expense_account):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
