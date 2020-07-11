@@ -113,7 +113,7 @@ def get_expense_account_by_filter():
         query = ExpenseAccountRequest(connection)
         parents_dict = query.select_all_parent_by_filter(expense_account)
         for expense_account in parents_dict:
-            expense_account['child_expense_account'] = find_all_child(expense_account['id'])
+            expense_account['child'] = find_all_child(expense_account['id'])
 
         return jsonify(parents_dict)
 
@@ -221,4 +221,26 @@ def delete_expense_account():
 def validation_error(e):
     errors = [validation_error.message for validation_error in e.errors]
     return jsonify({'error': e.message, 'errors': errors}), 400
-        
+
+@expense_account.route('', methods=['POST'])
+@auth_required
+def create_expense_account():
+    try:
+        data = request.json
+        expense_account = ExpenseAccount()
+        expense_account.name = escape(data['name'].upper().strip())
+        expense_account.parent_name = escape(data['parent_name'].upper().strip())
+        connection = get_db().get_connection()
+        query = ExpenseAccountRequest(connection)
+        if (expense_account.parent_name != expense_account.name):
+            parent = query.select_one_expense_account(expense_account.parent_name)
+            if parent:
+                expense_account.parent_id = parent['id'];
+            else:
+                log.error("Le parent n'existe pas")
+                abort(404)
+        expense_account = query.create_expense_account(expense_account)
+        return jsonify(expense_account.asDictionary()), 201
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
