@@ -9,6 +9,11 @@
 	right: 0;
 }
 
+.login-container h1{
+  font-size: 500;
+  color: white;
+}
+
 .fill-remaining-space {
     /* This fills the remaining space, by using flexbox. 
        Every toolbar row uses a flexbox row layout. */
@@ -44,7 +49,7 @@
 ::ng-deep .mat-form-field-flex:focus-within,
 ::ng-deep .mat-form-field-flex:hover{
   background-color: rgba(255, 255, 255, 1) !important; 
-  color: green;
+  color: #3665AF;
 }
 
 ::ng-deep  mat-label{
@@ -57,7 +62,7 @@
 
 ::ng-deep .mat-form-field-flex:focus-within mat-label,
 ::ng-deep .mat-form-field-flex:hover mat-label{
-  color: green !important;
+  color: #3665AF !important;
 }
 
 .show-name{
@@ -112,9 +117,9 @@
   font-weight: 300;
 }
 .wrapper {
-  background: #50a3a2;
-  background: -webkit-gradient(linear, left top, right bottom, from(#50a3a2), to(#53e3a6));
-  background: linear-gradient(to bottom right, #50a3a2 0%, #53e3a6 100%);
+  background: #3665AF;
+  background: -webkit-gradient(linear, left top, right bottom, from(#3665AF), to(#7AB162));
+  background: linear-gradient(to bottom right, #3665AF 0%, #7AB162 100%);
   position: absolute;
   top: 50%;
   left: 0;
