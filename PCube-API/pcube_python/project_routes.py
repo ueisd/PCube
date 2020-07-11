@@ -312,17 +312,13 @@ def project_autocomplte(name):
         log.error('authentication error: %s', error)
         abort(403)
 
-@project.errorhandler(JsonValidationError)
-def validation_error(e):
-    errors = [validation_error.message for validation_error in e.errors]
-    return jsonify({'error': e.message, 'errors': errors}), 400
-        
+
 @project.route('', methods=['DELETE'])
 #@auth_required
 @schema.validate(project_delete_schema)
 def delete_project():
     """
-        Permet de supprimer un compte de dépense.
+        Permet de supprimer un projet.
         AuthenticationError : Si l'authentification de l'utilisateur échoue.
         """
     try:
@@ -338,10 +334,10 @@ def delete_project():
             log.error("La combinaison id-nom n'existe pas.")
             abort(404)
         if query.has_child(id, name):
-            log.error("Le compte a un enfant")
+            log.error("Le projet a un enfant")
             abort(412)
         if query.is_in_timeline_table(id):
-            log.error("Le compte est dans la table Timeline")
+            log.error("Le projet est dans la table Timeline")
             abort(412)
 
         query.delete_project(id, name)
@@ -350,3 +346,9 @@ def delete_project():
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
+
+
+@project.errorhandler(JsonValidationError)
+def validation_error(e):
+    errors = [validation_error.message for validation_error in e.errors]
+    return jsonify({'error': e.message, 'errors': errors}), 400

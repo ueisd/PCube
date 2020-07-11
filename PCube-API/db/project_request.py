@@ -151,7 +151,7 @@ class ProjectRequest:
     def has_child(self, id, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from accounting_time_category where parent_id = ? and name != ?",
+        cursor.execute("select * from project where parent_id = ? and name != ?",
         (id, name,))
         data = cursor.fetchone()
         cursor.close()
@@ -160,7 +160,7 @@ class ProjectRequest:
     def is_in_timeline_table(self, id):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from timeline where accounting_time_category_id = ?",
+        cursor.execute("select * from timeline where project_id = ?",
         (id,))
         data = cursor.fetchone()
         cursor.close()
