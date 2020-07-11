@@ -1,9 +1,9 @@
 class ExpenseAccount:
 
     def __init__(self):
-        self.id = ""
+        self.id = -1
         self.name = ""
-        self.parent_id = ""
+        self.parent_id = -1
         self.parent_name = ""
         self.child = {}
         

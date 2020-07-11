@@ -113,7 +113,7 @@ def get_expense_account_by_filter():
         query = ExpenseAccountRequest(connection)
         parents_dict = query.select_all_parent_by_filter(expense_account)
         for expense_account in parents_dict:
-            expense_account['child_expense_account'] = find_all_child(expense_account['id'])
+            expense_account['child'] = find_all_child(expense_account['id'])
 
         return jsonify(parents_dict)
 
@@ -235,7 +235,7 @@ def create_expense_account():
         if (expense_account.parent_name != expense_account.name):
             parent = query.select_one_expense_account(expense_account.parent_name)
             if parent:
-                expense_account.parent_id = parent.id
+                expense_account.parent_id = parent['id'];
             else:
                 log.error("Le parent n'existe pas")
                 abort(404)
