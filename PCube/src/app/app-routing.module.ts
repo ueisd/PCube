@@ -24,9 +24,11 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
     children: [
+      {
+        path: 'login',
+        component: LoginComponent
+      },
       {
         path: 'activity-managing',
         component: ActivityComponent,
@@ -72,10 +74,6 @@ const routes: Routes = [
         canActivate: [AdminGuard]
       }
     ]
-  },
-  {
-    path: 'login',
-    component: LoginComponent
   },
 ];
 

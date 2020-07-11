@@ -5,7 +5,7 @@
 
             <p style="color:red">{{ message }}</p>
 
-            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form">
+            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form" *ngIf="isShowingForm">
                 <mat-form-field appearance="fill" class="form-element" >
                     <mat-label>Courriel</mat-label>
                     <input matInput formControlName="email">

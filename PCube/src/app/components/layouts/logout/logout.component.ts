@@ -17,10 +17,13 @@ export class LogoutComponent implements OnInit {
   }
 
   logout() {
-    console.log('logging out');
     this.auth.deauthenticate().subscribe(
       () => {
-        this.router.navigate(['/login']);
+
+        if(this.router.url == "/")
+          location.reload();
+        else
+          this.router.navigate(['/']);
       }
     );
   }

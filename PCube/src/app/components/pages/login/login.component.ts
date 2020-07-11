@@ -18,6 +18,8 @@ export class LoginComponent implements OnInit {
   pageTitle = "Authentification";
   userName = "";
 
+  isShowingForm:boolean = true;
+
   constructor(private auth: AuthService,
               private router: Router,
               private formBuilder: FormBuilder,
@@ -25,10 +27,11 @@ export class LoginComponent implements OnInit {
               ) { }
 
   ngOnInit() {
-    if(this.auth.isAuthenticated()){
-      this.router.navigate(['/']);
-    }
     this.createForm();
+    if(this.auth.isAuthenticated()){
+      this.isShowingForm = false;
+      this.showWelcomeMessage(true);
+    }
   }
 
   createForm(){
@@ -40,18 +43,17 @@ export class LoginComponent implements OnInit {
 
   isAuthAccepted:boolean = false;
 
-  showWelcomeMessage(){
-
-    this.userService.getUserPublicData(this.formGroup.get('email').value).subscribe(user => {
+  showWelcomeMessage(isAlreadyAuth:boolean){
+    this.isAuthAccepted = true;
+    this.userService.getUserPublicData(localStorage.getItem('email')).subscribe(user => {
       this.pageTitle = "Bienvenue";
-      $('form').fadeOut(500);
+      if(!isAlreadyAuth){
+        $('form').fadeOut(500);
+      }
       $('.wrapper').addClass('form-success');
       setTimeout(() => {
         this.userName = user.first_name + " " + user.last_name;
       }, 500);
-      setTimeout(() => {
-        this.router.navigate(['/']);
-    }, 2200);  //2.2s
     });
   }
 
@@ -60,8 +62,8 @@ export class LoginComponent implements OnInit {
     const password = this.formGroup.get('password').value;
     this.auth.authenticate(email, password).subscribe(
       () => {
-        this.isAuthAccepted = true;
-        this.showWelcomeMessage();
+        this.message = "";
+        this.showWelcomeMessage(false);
       },
       (error) => {
         this.message = error;
