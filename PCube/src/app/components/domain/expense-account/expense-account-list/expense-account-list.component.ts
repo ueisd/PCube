@@ -4,6 +4,9 @@ import { ExpenseAccountService } from 'src/app/services/expense-account/expense-
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
 import { FormControl } from '@angular/forms';
+import { MatDialogConfig, MatDialogRef, MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AddExpenseAccountComponent } from '../add-expense-account/add-expense-account.component';
 
 @Component({
   selector: 'app-expense-account-list',
@@ -13,26 +16,62 @@ import { FormControl } from '@angular/forms';
 export class ExpenseAccountListComponent implements OnInit {
 
   nameFilter = new FormControl('');
+  fileNameDialogRef: MatDialogRef<AddExpenseAccountComponent>;
 
-  constructor(private expenseAccountService: ExpenseAccountService) { }
+  constructor(private expenseAccountService: ExpenseAccountService,
+    private dialog: MatDialog, private snackBar : MatSnackBar) { }
 
   ngOnInit(): void {
     this.refreshList();
   }
 
-  private transformer = (node : ExpenseAccountItem, level: number) => {
+
+  private _transformer = (node : ExpenseAccountItem, level: number) => {
+    let expensenoChild: ExpenseAccountItem = new ExpenseAccountItem(node);
+    expensenoChild.child = [];
     return {
-      expandable: !!node.child_expense_account && node.child_expense_account.length > 0,
+      expandable: !!node.child && node.child.length > 0,
+      id: node.id,
       name: node.name,
       level: level,
+      parent_id: node.parent_id,
+      expenseAcount: expensenoChild, 
     };
   }
+
+  openEditDialog(compte : ExpenseAccountItem) {
+
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = { 
+      expenseAccount : compte,
+    }
+    dialogConfig.minWidth = 600;
+    this.fileNameDialogRef = this.dialog.open(AddExpenseAccountComponent, dialogConfig);
+    
+    this.fileNameDialogRef.afterClosed().subscribe(result => { 
+        if(result == true) {
+          this.refreshList();
+          this.openSnackBar('Le compte de dépense a été modifiée', 'notif-success');
+        }
+      }
+    );
+  }
+
+  openSnackBar(message, panelClass) {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 2000,
+      horizontalPosition: "right",
+      verticalPosition: "bottom",
+      panelClass: [panelClass]
+    });
+  }
+
 
   treeControl = new FlatTreeControl<FlatNode>(
     node => node.level, node => node.expandable);
   
   treeFlattener = new MatTreeFlattener(
-    this.transformer, node => node.level, node => node.expandable, node => node.child_expense_account);
+    this._transformer, node => node.level, node => node.expandable, node => node.child);
   
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   
@@ -47,6 +86,7 @@ export class ExpenseAccountListComponent implements OnInit {
     expenseAccount.name = this.nameFilter.value.trim();
     this.expenseAccountService.filterExpenseAccount(expenseAccount).subscribe(expenseAccounts => {
       this.dataSource.data = expenseAccounts;
+      this.treeControl.expandAll();
     });
   }
 }
