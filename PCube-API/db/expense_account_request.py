@@ -135,7 +135,7 @@ class ExpenseAccountRequest:
 
     def update_expense_account(self, expense_account, new_expense_account):
         """
-        Modifiy un projet existante et retourne un nouveau projet
+        Modify un compte de dépense existante et retourne un nouveau compte
         avec l'identifiant de l'activité modifié.
         """
         cursor = self.connection.cursor()

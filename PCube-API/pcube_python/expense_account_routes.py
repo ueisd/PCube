@@ -115,7 +115,7 @@ def construireArbreSansSousArbre(comptes, parent, id):
 @auth_required
 def getApparentable(_id):
     """
-    Permet d'obtenir la liste des projets auquels le projet peut s'aparenter sans circularité
+    Permet d'obtenir la liste des comptes de dépense auquels le compte peut s'aparenter sans circularité
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
@@ -128,7 +128,7 @@ def getApparentable(_id):
 
         parents = [x for x in comptes if x['id'] == x['parent_id']]
         for parent in parents:
-            parent = construireArbreSansSousArbre(comptes, parent, id);
+            parent = construireArbreSansSousArbre(comptes, parent, id)
         return jsonify(parents)
         
     except AuthenticationError as error:
@@ -185,7 +185,7 @@ def is_expense_account_unique(name):
 @auth_required
 def get_one_level_expense_account_by_filter():
     """
-    Permet de trouver des projets selon leur nom et/ou identifiant
+    Permet de trouver des comptes de dépense selon leur nom et/ou identifiant
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
@@ -270,7 +270,7 @@ def update_expanseAccount():
     """
     try:
         data = request.json
-        expenseAcount = ExpenseAccount();
+        expenseAcount = ExpenseAccount()
         expenseAcount.id = escape(data['id']).strip()
         expenseAcount.parent_id = escape(data['parent_id']).strip()
         expenseAcount.name = escape(data['name']).strip()
@@ -296,15 +296,18 @@ def create_expense_account():
         expense_account.parent_name = escape(data['parent_name'].upper().strip())
         connection = get_db().get_connection()
         query = ExpenseAccountRequest(connection)
+
         if (expense_account.parent_name != expense_account.name):
             parent = query.select_one_expense_account(expense_account.parent_name)
             if parent:
-                expense_account.parent_id = parent['id'];
+                expense_account.parent_id = parent['id']
             else:
                 log.error("Le parent n'existe pas")
                 abort(404)
+
         expense_account = query.create_expense_account(expense_account)
         return jsonify(expense_account.asDictionary()), 201
+
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
