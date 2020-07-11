@@ -16,3 +16,14 @@ project_delete_schema = {
     },
     "additionalProperties": False
 }
+
+project_update_schema = {
+    "type": "object",
+    "required": ["id", "projectName", "parent_id"],
+    "properties": {
+        "id": {"type": "integer"},
+        "projectName": {"type": "string", "minLength": 1, "maxLength": 250},
+        "parent_id": {"type": "integer"},
+    },
+    "additionalProperties": True
+}

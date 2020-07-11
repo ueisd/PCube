@@ -17,6 +17,14 @@ class ProjectRequest:
         cursor.close()
         return data
 
+    def select_all(self):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from project")
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
     def select_all_parent_by_filter(self, project):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
@@ -26,6 +34,7 @@ class ProjectRequest:
         cursor.close()
         return data
 
+
     def select_project_name_like(self, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
@@ -34,6 +43,20 @@ class ProjectRequest:
         cursor.close()
         return data
     
+
+    def select_project_one_level_filter(self, project):
+        """
+        Permet de trouver les projects selon un filtre.
+        Retourne un dictionnaire des correspondances.
+        """
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from project where name LIKE ? and id LIKE ? and parent_id LIKE ?",
+        ('%'+project.name+'%', '%'+project.id+'%', '%'+project.parent_id+'%'))
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
 
     def select_all_project_from_parent(self, parent_id):
         self.connection.row_factory = dict_factory
@@ -105,6 +128,18 @@ class ProjectRequest:
         data = cursor.fetchone()
         cursor.close()
         return True if data else False
+
+    def update_project_std(self, project):
+        """
+        Modifiy un projet existante et retourne un nouveau projet
+        avec l'identifiant de l'activité modifié.
+        """
+        cursor = self.connection.cursor()
+        cursor.execute("update project set name = ?, parent_id = ? where id = ?", 
+            (project.name, project.parent_id, project.id))
+        self.connection.commit()
+        cursor.close()
+        return project
     
     def delete_project(self, project_id, name):
         self.connection.row_factory = dict_factory

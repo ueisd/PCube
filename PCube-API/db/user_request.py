@@ -25,8 +25,8 @@ class UserRequest:
         cursor.execute("select user.id, first_name, last_name, email, role_id, isActive, role_name, access_level "
                        "from user "
                        "inner join role on user.role_id = role.id "
-                       "where isActive = 1 and first_name LIKE ? and last_name LIKE ? and email LIKE ? and role_name LIKE ?", 
-        ('%'+user.first_name+'%','%'+user.last_name+'%','%'+user.email+'%','%'+role_name+'%'))
+                       "where isActive = 1 and user.id LIKE ? and first_name LIKE ? and last_name LIKE ? and email LIKE ? and role_name LIKE ?", 
+        ('%'+user.id+'%','%'+user.first_name+'%','%'+user.last_name+'%','%'+user.email+'%','%'+role_name+'%'))
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -38,11 +38,15 @@ class UserRequest:
         self.connection.commit()
         cursor.close()
     
-    def select_one_user(self, email):
+    def select_one_user(self, user):
+        """
+        Permet de sélectionner un utilisateur actif soit par son email ou son identifiant.
+        """
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select first_name, last_name, email, role_id, isActive from user where email = ?",
-        (email,))
+        cursor.execute("select user.id, first_name, last_name, email, role_name from user "
+        "inner join role on user.role_id = role.id where email = ? or user.id = ? and isActive = 1",
+        (user.email, user.id))
         data = cursor.fetchone()
         cursor.close()
         return data
@@ -65,7 +69,6 @@ class UserRequest:
         cursor.close()
         user.email = new_email
         return user
-
 
     def insert_user(self, user, hashed_password, salt):
         """

@@ -8,7 +8,7 @@ from flask import escape
 from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
-from ..schemas.project_schema import (project_insert_schema, project_delete_schema)
+from ..schemas.project_schema import (project_insert_schema, project_update_schema, project_delete_schema)
 from .db_controller import get_db
 from ..db.project_request import ProjectRequest
 from ..domain.project import Project
@@ -107,7 +107,6 @@ def get_project_by_filter():
     try:
         project = Project()
         project.name = escape(request.args.get('name', "")).upper().strip()
-        get_authenticated_user()
         connection = get_db().get_connection()
         query = ProjectRequest(connection)
         parents_dict = query.select_all_parent_by_filter(project)
@@ -115,6 +114,27 @@ def get_project_by_filter():
             project['child_project'] = find_all_child(project['id'])
 
         return jsonify(parents_dict)
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+@project.route('/filter/one-level', methods=['GET'])
+@auth_required
+def get_one_level_project_by_filter():
+    """
+    Permet de trouver des projets selon leur nom et/ou identifiant
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        project = Project()
+        project.name = escape(request.args.get('name', "")).upper().strip()
+        project.id = escape(request.args.get('id', "")).upper().strip()
+        connection = get_db().get_connection()
+        query = ProjectRequest(connection)
+        projects = query.select_project_one_level_filter(project)
+
+        return jsonify(projects)
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
@@ -155,21 +175,25 @@ def create_project():
 
 @project.route('', methods=['PUT'])
 @auth_required
-def modify_project():
+@schema.validate(project_update_schema)
+def update_project():
     """
-    Sert à modifier l'information d'un projet
+    Permet de modifier un projet dans le système.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        #get_authenticated_user()
+        data = request.json
+        project = Project();
+        project.id = escape(data['id']).strip()
+        project.parent_id = escape(data['parent_id']).strip()
+        project.name = escape(data['projectName']).strip()
+
         connection = get_db().get_connection()
-        request = ProjectRequest(connection)
-        parents_dict = request.select_all_parent()
+        query = ProjectRequest(connection)
 
-        for project in parents_dict:
-            project['child'] = find_all_child(project['id'])
+        project = query.update_project_std(project)
 
-        return jsonify(parents_dict)
+        return jsonify(project.asDictionary()), 200
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
@@ -192,6 +216,80 @@ def is_project_unique(name):
         else:
             return jsonify(False)
 
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+def obtenirLesDesendants(projects, parent):
+    if parent == None: 
+        return []
+    enfants = [number for number in projects if number['parent_id'] == parent['id']]
+    retour = enfants;
+    for enfant in enfants:
+        retour = retour + obtenirLesDesendants(projects, enfant)
+    return retour
+
+@project.route('/ifAIsDescendantOfB/<_idA>/<_idB>', methods=['GET'])
+@auth_required
+def getDescendants(_idA, _idB):
+    """
+    Permet de tester si A est un descendant de B
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        idA = escape(_idA).strip()
+        idA = int(idA)
+        idB = escape(_idB).strip()
+        idB = int(idB)
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        request = ProjectRequest(connection)
+        projects = request.select_all()
+        parent = next((projet for projet in projects if projet['id'] == idB), None)
+        
+        listeDescedantsDeB = obtenirLesDesendants(projects, parent)
+        descendantIdA = next((
+            projet for projet in listeDescedantsDeB if projet['id'] == idA
+            ), None)
+        return jsonify(descendantIdA != None)
+        
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+### @param id: l'identifiant du noeud de la racine du sous-arbre à ne pas inclure
+def construireArbreSansSousArbre(projects, parent, id):
+    if (parent == None or parent['id'] == id): 
+        return []
+        
+    parent['child_project'] = [number for number in projects 
+        if number['parent_id'] == parent['id']  
+        and number['parent_id'] != number['id'] and number['id'] != id
+    ]
+    for enfant in parent['child_project']:
+        enfant = construireArbreSansSousArbre(projects, enfant, id)
+    return parent
+
+@project.route('/getApparentableProjects/<_id>', methods=['GET'])
+@auth_required
+def getApparentable(_id):
+    """
+    Permet d'obtenir la liste des projets auquels le projet peut s'aparenter sans circularité
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        id = escape(_id).strip()
+        id = int(id)
+        get_authenticated_user()
+        connection = get_db().get_connection()
+        request = ProjectRequest(connection)
+        projects = request.select_all()
+
+        parents = [x for x in projects if x['id'] == x['parent_id']]
+        for parent in parents:
+            parent = construireArbreSansSousArbre(projects, parent, id);
+        return jsonify(parents)
+        
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)

@@ -31,7 +31,7 @@ def login_user():
     try:
         data = request.json
 
-        email = escape(data['email']).strip()
+        email = escape(data['email']).upper().strip()
         password = escape(data['password']).strip()
         access_token, refresh_token = authenticate_user(email, password)
         return make_response(jsonify({

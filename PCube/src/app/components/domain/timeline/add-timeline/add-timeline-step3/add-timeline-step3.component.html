@@ -1,0 +1,55 @@
+<div>
+    <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header class="alert-no-padding {{ messageClasse }}">
+            <mat-panel-title class="custom-mat-title">Activité</mat-panel-title>
+            <mat-panel-description>{{ message }}</mat-panel-description>
+        </mat-expansion-panel-header>
+        <div class="accordion-container">
+          <div>
+              <p class="one-line toggle-text {{ idClass }}" (click)="onIdClick()">Identifiant</p>
+              <mat-slide-toggle (ngModelChange)="searchToggle()" [(ngModel)]="isSearchByName" class="one-line one-line-middle"></mat-slide-toggle>
+              <p class="one-line toggle-text {{ nameClass }}"(click)="onNameClick()">Nom</p>
+          </div>
+          <div class="full-width">
+              <mat-form-field appearance="fill" class="form-element full-width" *ngIf="isSearchByName">
+                  <mat-label>Nom de l'activité</mat-label>
+                  <input (ngModelChange)="onNameChange($event)" matInput [formControl]="name" autocomplete="off">
+              </mat-form-field>
+              <mat-form-field appearance="fill" class="form-element full-width" *ngIf="!isSearchByName">
+                  <mat-label>Identifiant</mat-label>
+                  <input (ngModelChange)="onIdChange($event)" matInput [formControl]="id">
+              </mat-form-field>
+          </div>
+          <div>
+              <h3>Activités</h3>
+          </div>
+          <div class="full-width profil-utilisateurs">
+              <mat-table [dataSource]="activities" class="mat-elevation-z8" class="selectable-profil">
+
+                  <!-- Colonne Identifiant -->
+                  <ng-container matColumnDef="id">
+                      <mat-header-cell *matHeaderCellDef>Identifiant</mat-header-cell>
+                      <mat-cell *matCellDef="let activity"> {{ activity.id }} </mat-cell>
+                  </ng-container>
+
+                  <!-- Colonne Nom -->
+                  <ng-container matColumnDef="name">
+                    <mat-header-cell *matHeaderCellDef>Nom</mat-header-cell>
+                    <mat-cell *matCellDef="let activity"> {{ activity.name }} </mat-cell>
+                  </ng-container>
+                
+                  <!-- Colonne Parent -->
+                  <ng-container matColumnDef="parent_id">
+                    <mat-header-cell *matHeaderCellDef>Identifiant du parent</mat-header-cell>
+                    <mat-cell *matCellDef="let activity"> {{ activity.parent_id }} </mat-cell>
+                  </ng-container>
+                
+                  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                  <mat-row *matRowDef="let row; columns: displayedColumns;" (click)="onRowClicked(row)"></mat-row>
+                </mat-table>
+          </div>
+        </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

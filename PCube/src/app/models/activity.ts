@@ -3,7 +3,7 @@ export class ActivityItem {
     name : string;
 
     constructor(activityResponse?: any) {
-        this.id = activityResponse && activityResponse.id || -1;
+        this.id = activityResponse && activityResponse.id || "";
         this.name = activityResponse && activityResponse.name || "";
     }
 }

@@ -3,7 +3,7 @@
     "DEBUG": true,
     "SECRET_KEY": "'/B3o-p8-9iua`3421~FS'",
     "JWT_TOKEN_LOCATION": "headers",
-    "JWT_ACCESS_TOKEN_EXPIRES": 1800,
+    "JWT_ACCESS_TOKEN_EXPIRES": 3600,
     "JWT_REFRESH_TOKEN_EXPIRES": 3600,
     "JSON_AS_ASCII": false,
     "JSON_SORT_KEYS": false

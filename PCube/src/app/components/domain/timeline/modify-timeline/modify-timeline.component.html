@@ -1,0 +1,18 @@
+<div>
+    <div>
+        <h1>Modifier une ligne de temps</h1>
+    </div>
+
+    <app-add-timeline-step1 (isFormValidEvent)="onChildStateChange(1, $event)" (ouputUser)="setUser($event)" #memberChild></app-add-timeline-step1>
+    <app-add-timeline-step2 (isFormValidEvent)="onChildStateChange(2, $event)" (ouputProject)="setProject($event)" #projectChild></app-add-timeline-step2>
+    <app-add-timeline-step3 (isFormValidEvent)="onChildStateChange(3, $event)" (ouputActivity)="setActivity($event)" #activityChild></app-add-timeline-step3>
+    <app-add-timeline-step4 (isFormValidEvent)="onChildStateChange(4, $event)" (ouputExpenseAccount)="setExpenseAccount($event)" #expenseChild></app-add-timeline-step4>
+    <app-add-timeline-step5 (isFormValidEvent)="onChildStateChange(5, $event)" (ouputWorkingShift)="setWorkingShift($event)" #timelineChild></app-add-timeline-step5>
+
+    <div class="div-spacer-60"></div>
+
+    <div class="submit-container">
+        <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]='!isReadyToSubmit'>Modifier la ligne de temps</button>
+        <button mat-raised-button color="primary" class="cancel-timeline-button" (click)="onCancel()" >Annuler la modification</button>
+    </div>
+</div>
