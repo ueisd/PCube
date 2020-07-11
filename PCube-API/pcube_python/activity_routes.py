@@ -158,7 +158,7 @@ def delete_activity(id):
         number = query.countTimeline(id)
         number = number['nbLignesDeTemps']
         if number > 0:
-            return jsonify({'error': 'attention l\'activité a des lignes de temps associées'}), 400
+            return jsonify({'error': 'attention l\'activité a des lignes de temps associées'}), 412
         
 
         query.delete_activity(id)
