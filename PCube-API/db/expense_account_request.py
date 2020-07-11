@@ -137,3 +137,15 @@ class ExpenseAccountRequest:
         cursor.close()
         new_expense_account.id = expense_account.id
         return new_expense_account
+
+    def update_expense_account_std(self, accountTime):
+        """
+        Modifiy un compte de dépense et retourne le compte de dépense modifié
+        avec l'identifiant de l'activité modifié.
+        """
+        cursor = self.connection.cursor()
+        cursor.execute("update accounting_time_category set name = ?, parent_id = ? where id = ?", 
+            (accountTime.name, accountTime.parent_id, accountTime.id))
+        self.connection.commit()
+        cursor.close()
+        return accountTime

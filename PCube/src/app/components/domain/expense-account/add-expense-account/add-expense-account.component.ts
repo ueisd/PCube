@@ -143,6 +143,21 @@ export class AddExpenseAccountComponent implements OnInit {
             this.onSubmitFailled();
           }
         });
+      }else {
+        let proj :ExpenseAccountItem = new ExpenseAccountItem();
+        proj.id = this.expenseAccount.id
+        
+        if(this.ExpenseForm.value['isChild'] == false) {
+          proj.parent_id = this.expenseAccount.id;
+        }else if(this.ExpenseForm.value['parent']) {
+          proj.parent_id = this.ExpenseForm.value['parent']['id'];
+        }else {
+          proj.parent_id = this.expenseAccount.parent_id;
+        }
+        proj.name = this.ExpenseForm.value['name'];
+        this.expenseAccountServices.updateExpanseAccount(proj).subscribe(project => {
+          this.onSubmitSuccess();
+        });
       }
     }
   }

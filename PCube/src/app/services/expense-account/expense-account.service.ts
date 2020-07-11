@@ -84,4 +84,22 @@ export class ExpenseAccountService {
     return this.http.get<ExpenseAccountItem[]>(url, opts);
   }
 
+
+  updateExpanseAccount(compte: ExpenseAccountItem): Observable<ExpenseAccountItem>{
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Content-Type': 'application/json'
+      })
+    };
+   
+    let body = {
+      id: compte.id,
+      name: compte.name,
+      parent_id: compte.parent_id,
+    }
+    
+    return this.http.put<ExpenseAccountItem>(API_EXPENSE_ACCOUNT, body, opts);
+  }
+
 }

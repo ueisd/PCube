@@ -8,7 +8,7 @@ from flask import escape
 from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
-from ..schemas.expense_account_schema import (expense_account_insert_schema, expense_account_delete_schema)
+from ..schemas.expense_account_schema import (expense_account_insert_schema, expense_account_update_schema, expense_account_delete_schema)
 from .db_controller import get_db
 from ..db.expense_account_request import ExpenseAccountRequest
 from ..domain.expense_account import ExpenseAccount
@@ -221,6 +221,32 @@ def delete_expense_account():
 def validation_error(e):
     errors = [validation_error.message for validation_error in e.errors]
     return jsonify({'error': e.message, 'errors': errors}), 400
+
+@expense_account.route('', methods=['PUT'])
+@auth_required
+@schema.validate(expense_account_update_schema)
+def update_expanseAccount():
+    """
+    Permet de modifier un compte de dépense dans le système.
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        data = request.json
+        expenseAcount = ExpenseAccount();
+        expenseAcount.id = escape(data['id']).strip()
+        expenseAcount.parent_id = escape(data['parent_id']).strip()
+        expenseAcount.name = escape(data['name']).strip()
+
+        connection = get_db().get_connection()
+        query = ExpenseAccountRequest(connection)
+
+        expenseAcount = query.update_expense_account_std(expenseAcount)
+
+        return jsonify(expenseAcount.asDictionary()), 200
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
 
 @expense_account.route('', methods=['POST'])
 @auth_required
