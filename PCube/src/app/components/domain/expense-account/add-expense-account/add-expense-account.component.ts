@@ -20,7 +20,6 @@ export class AddExpenseAccountComponent implements OnInit {
   @Output() refreshDataEvent = new EventEmitter<boolean>();
 
   hasToRefresh: boolean = true;
-  autocomplete: ExpenseAccountItem[];
   expenseAccount: ExpenseAccountItem;
   isCreateForm: boolean = false;
   isAddedFailled = false;
@@ -204,13 +203,6 @@ export class AddExpenseAccountComponent implements OnInit {
 
 
   validateForm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
-    const expenseAccountName = control.get('name').value;
-    //const isChild = control.get('isChild').value;
-    //const parentName = control.get('parent').value.name;
-
-    if(expenseAccountName == null || expenseAccountName.trim().length == 0)
-      return null;
-    
     return null;
   }
 }
