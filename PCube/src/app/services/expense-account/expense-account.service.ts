@@ -57,6 +57,21 @@ export class ExpenseAccountService {
     return this.http.get<ExpenseAccountItem[]>(url, opts);
   }
 
+  addExpenseAccount(name, parent_name): Observable<ExpenseAccountItem>{
+    let url = API_EXPENSE_ACCOUNT;
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Content-Type': 'application/json'
+      })
+    };
+    let body = {
+      name: name,
+      parent_name: parent_name
+    }
+    return this.http.post<ExpenseAccountItem>(API_EXPENSE_ACCOUNT, body, opts)
+  }
+
   oneLevelFilterExpenseAccount(expenseAccount: ExpenseAccountItem): Observable<ExpenseAccountItem[]>{
     let url = API_ONE_LEVEL_FILTER + "?name=" + expenseAccount.name;
     url += "&id=" + expenseAccount.id;
@@ -68,4 +83,5 @@ export class ExpenseAccountService {
     };
     return this.http.get<ExpenseAccountItem[]>(url, opts);
   }
+
 }
