@@ -70,14 +70,6 @@ export class AddExpenseAccountComponent implements OnInit {
           ]),
           [this.nomCompteUniqueValidation()]
         ],
-        parentName: [
-          '',
-          Validators.compose([
-            Validators.required, 
-            Validators.minLength(5),
-          ]),
-          []
-        ],
         isChild: [
           (this.expenseAccount.parent_id > 0 && this.expenseAccount.parent_id != this.expenseAccount.id)
         ],
@@ -139,17 +131,19 @@ export class AddExpenseAccountComponent implements OnInit {
   onSubmit(){
     if(this.ExpenseForm.valid){
 
-      let name: string = this.ExpenseForm.controls['name'].value;
-      let isChild: boolean = this.ExpenseForm.controls['isChild'].value;
-      let parentName:string = (isChild) ? this.ExpenseForm.controls['parentName'].value: name;
+      let name: string = this.ExpenseForm.controls['name'].value
+      let projetParent : ExpenseAccountItem = this.ExpenseForm.controls['parent'].value;
+      let parentName: string = (projetParent != null) ? projetParent.name : name;
 
-      this.expenseAccountServices.addExpenseAccount(name, parentName).subscribe(expenseAccount => {
-          if(expenseAccount.id != -1){
+      if(this.isCreateForm) {
+        this.expenseAccountServices.addExpenseAccount(name, parentName).subscribe(project => {
+          if(project.id != -1){
             this.onSubmitSuccess();
           }else{
             this.onSubmitFailled();
           }
-      });
+        });
+      }
     }
   }
 

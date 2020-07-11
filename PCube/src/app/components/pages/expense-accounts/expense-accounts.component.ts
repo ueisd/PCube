@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ExpenseAccountListComponent } from 'src/app/components/domain/expense-account/expense-account-list/expense-account-list.component';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,6 +19,7 @@ export class ExpenseAccountsComponent implements OnInit {
   ngOnInit(): void {
   }
   fileNameDialogRef: MatDialogRef<AddExpenseAccountComponent>;
+  @ViewChild(ExpenseAccountListComponent) expanseAccountListChild;
 
   openAddDialog() {
     this.openSnackBar('Le compte de dépense a été créé', 'notif-success');
@@ -28,14 +29,13 @@ export class ExpenseAccountsComponent implements OnInit {
       expenseAccount : new ExpenseAccountItem(),
     }
     this.fileNameDialogRef = this.dialog.open(AddExpenseAccountComponent, dialogConfig);
-    }
 
-  openEditDialog() {
-    this.openSnackBar('Le compte de dépense a été modifié', 'notif-success');
-  }
-
-  openDeleteDialog() {
-    this.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
+    this.fileNameDialogRef.afterClosed().subscribe(result => { 
+      if(result == true) {
+        this.expanseAccountListChild.refreshList({expanded: true});
+        this.openSnackBar('le compte de dépense a été créée', 'notif-success');
+      }
+    });
   }
 
   openSnackBar(message, panelClass) {
