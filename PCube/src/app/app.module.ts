@@ -52,7 +52,7 @@ import { DeleteTimelineComponent } from './components/domain/timeline/delete-tim
 import { DeleteActivityComponent } from './components/domain/activity/delete-activity/delete-activity.component';
 import { ModifyTimelineComponent } from './components/domain/timeline/modify-timeline/modify-timeline.component';
 import { ModifyingTimelineComponent } from './components/pages/timeline/modifying-timeline/modifying-timeline.component';
-
+import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 
 
 @NgModule({
@@ -91,6 +91,7 @@ import { ModifyingTimelineComponent } from './components/pages/timeline/modifyin
     DeleteTimelineComponent,
     ModifyTimelineComponent,
     ModifyingTimelineComponent,
+    AddExpenseAccountComponent,
   ],
   imports: [
     MatDialogModule,

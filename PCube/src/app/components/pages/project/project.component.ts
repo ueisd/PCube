@@ -34,7 +34,7 @@ export class ProjectComponent implements OnInit {
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
         if(result == true) {
           this.projectListChild.refreshList({expanded: true});
-          this.openSnackBar('L\'activité a été créée', 'notif-success');
+          this.openSnackBar('Le projet a été créée', 'notif-success');
         }
       }
     );

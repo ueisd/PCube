@@ -44,7 +44,7 @@ export class AddProjectComponent implements OnInit {
   ngOnInit(): void {
     this.projet = this.data.projet;
     if(!(this.projet.id > 0)) this.projet.id = -1;
-    if(!(this.projet.parent_id > 0)) this.projet.id = -1;
+    if(!(this.projet.parent_id > 0)) this.projet.parent_id = -1;
 
     if(this.projet.parent_id === undefined ||  this.projet.parent_id <= 0) {
       this.isCreateForm = true;
