@@ -21,6 +21,7 @@ export class ProjectListComponent implements OnInit {
   nameFilter = new FormControl('');
   fileNameDialogRef: MatDialogRef<AddProjectComponent>;
   deleteProjectDialogRef: MatDialogRef<DeleteProjectComponent>;  
+  isDeletable : Boolean = true;
 
   constructor(private projectService: ProjectService, private dialog: MatDialog,
     private snackBar : MatSnackBar) {}
@@ -61,11 +62,16 @@ export class ProjectListComponent implements OnInit {
   }
 
   openDeleteDialog(project : ProjectItem) {
+    
+    this.projectService.isProjectDeletable(project.id, project.name).subscribe((data) => {
+      this.isDeletable = data;
+    });
 
     const dialogConfig = this.dialog.open(DeleteProjectComponent, {
       data: {
         id: project.id,
-        name: project.name
+        name: project.name,
+        isDeletable : this.isDeletable
       },
       panelClass: 'warning-dialog'
     });
