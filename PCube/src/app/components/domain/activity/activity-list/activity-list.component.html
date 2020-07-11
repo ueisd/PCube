@@ -22,7 +22,11 @@
         <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
         <mat-cell *matCellDef="let activity" align="right">
             <button mat-raised-button color="primary" (click)="editAction(activity)"><mat-icon>edit</mat-icon></button>
-            <button mat-raised-button color="warn" (click)="openDeleteDialog(activity)"><mat-icon>delete</mat-icon></button>
+            <button mat-raised-button color="warn" [disabled]="activity.nbLignesDeTemps > 0"
+                matTooltip="Ne peut être supprimé car contient {{ activity.nbLignesDeTemps }} lignes de temps"
+                matTooltipPosition="after"
+                [matTooltipDisabled]="activity.nbLignesDeTemps <= 0"
+                (click)="openDeleteDialog(activity)"><mat-icon>delete</mat-icon></button>
         </mat-cell>
     </ng-container>
 
