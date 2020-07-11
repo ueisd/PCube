@@ -314,7 +314,7 @@ def project_autocomplte(name):
 
 
 @project.route('', methods=['DELETE'])
-#@auth_required
+@auth_required
 @schema.validate(project_delete_schema)
 def delete_project():
     """
