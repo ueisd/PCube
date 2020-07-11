@@ -1,5 +1,5 @@
 <form [formGroup]="ExpenseForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
-    <h1>Création d'un compte de dépense</h1>
+    <h1>{{ (isCreateForm) ? "Création" : "Modification" }} d'un compte de dépense</h1>
     <div class="container">
         <div *ngIf="isAddedFailled" class="alert alert-danger" role="alert">
             Une erreur s'est produit lors de la soumission du formulaire.<br />
@@ -43,13 +43,6 @@
             </mat-error>
         </div>
     </div>
-
-    <pre>
-        {{ isCreateForm + " obj: " + (expenseAccount | json) }}
-    </pre>
-    <pre>
-        {{ ExpenseForm.value | json }}
-    </pre>
 
     <mat-dialog-actions align="end">
         <button mat-button mat-dialog-close>Anuler</button>

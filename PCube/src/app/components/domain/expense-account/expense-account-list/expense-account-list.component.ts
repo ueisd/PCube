@@ -51,7 +51,7 @@ export class ExpenseAccountListComponent implements OnInit {
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
         if(result == true) {
           this.refreshList();
-          this.openSnackBar('L\'activité a été modifiée', 'notif-success');
+          this.openSnackBar('Le compte de dépense a été modifiée', 'notif-success');
         }
       }
     );

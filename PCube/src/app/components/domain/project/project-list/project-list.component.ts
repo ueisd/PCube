@@ -53,7 +53,8 @@ export class ProjectListComponent implements OnInit {
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
         if(result == true) {
           this.refreshList({expanded: true});
-          this.openSnackBar('L\'activité a été modifiée', 'notif-success');
+          alert("test");
+          this.openSnackBar('Le projet a été modifiée', 'notif-success');
         }
       }
     );
