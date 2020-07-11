@@ -7,6 +7,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialogConfig, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddExpenseAccountComponent } from '../add-expense-account/add-expense-account.component';
+import { DeleteExpenseAccountComponent} from 'src/app/components/domain/expense-account/delete-expense-account/delete-expense-account.component';
 
 @Component({
   selector: 'app-expense-account-list',
@@ -17,14 +18,15 @@ export class ExpenseAccountListComponent implements OnInit {
 
   nameFilter = new FormControl('');
   fileNameDialogRef: MatDialogRef<AddExpenseAccountComponent>;
+  deleteProjectDialogRef: MatDialogRef<DeleteExpenseAccountComponent>;  
+  isDeletable : Boolean = true;
 
   constructor(private expenseAccountService: ExpenseAccountService,
     private dialog: MatDialog, private snackBar : MatSnackBar) { }
 
   ngOnInit(): void {
-    this.refreshList();
+    this.refreshList({expanded: true});
   }
-
 
   private _transformer = (node : ExpenseAccountItem, level: number) => {
     let expensenoChild: ExpenseAccountItem = new ExpenseAccountItem(node);
@@ -50,8 +52,37 @@ export class ExpenseAccountListComponent implements OnInit {
     
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
         if(result == true) {
-          this.refreshList();
-          this.openSnackBar('L\'activité a été modifiée', 'notif-success');
+          this.refreshList({expanded: true});
+          this.openSnackBar('Le compte de dépense a été modifié', 'notif-success');
+        }
+      }
+    );
+  }
+
+  openDeleteDialog(expenseAccount : ExpenseAccountItem) {
+    
+    this.expenseAccountService.isExpenseAccountDeletable(expenseAccount.id, expenseAccount.name).subscribe((data) => {
+      this.isDeletable = data;
+    });
+
+    const dialogConfig = this.dialog.open(DeleteExpenseAccountComponent, {
+      data: {
+        id: expenseAccount.id,
+        name: expenseAccount.name,
+        isDeletable : this.isDeletable
+      },
+      panelClass: 'warning-dialog'
+    });
+    
+    dialogConfig.afterClosed().subscribe(result => { 
+        if(result !== undefined) {
+          this.expenseAccountService.deleteExpenseAccount(expenseAccount.id, expenseAccount.name).subscribe((data) => {
+            this.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
+            this.refreshList({expanded: true});
+          },
+          (error) => {
+            this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+          });
         }
       }
     );
@@ -65,8 +96,7 @@ export class ExpenseAccountListComponent implements OnInit {
       panelClass: [panelClass]
     });
   }
-
-
+  
   treeControl = new FlatTreeControl<FlatNode>(
     node => node.level, node => node.expandable);
   
@@ -78,17 +108,21 @@ export class ExpenseAccountListComponent implements OnInit {
   hasChild = (_: number, node: FlatNode) => node.expandable;
   
   onFilterChanged() {
-    this.refreshList();
+    this.refreshList({expanded: true});
   }
 
-  refreshList() {
+  refreshList(opts?: refreshOption) {
     let expenseAccount = new ExpenseAccountItem();
     expenseAccount.name = this.nameFilter.value.trim();
     this.expenseAccountService.filterExpenseAccount(expenseAccount).subscribe(expenseAccounts => {
       this.dataSource.data = expenseAccounts;
-      this.treeControl.expandAll();
+      if(opts.expanded) this.treeControl.expandAll();
     });
   }
+}
+
+interface refreshOption {
+  expanded: boolean
 }
 
 /** Flat node with expandable and level information */

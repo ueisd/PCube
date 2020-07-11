@@ -8,6 +8,8 @@ const API_IS_UNIQUE = "api/expense-account/is-unique";
 const API_AUTOCOMPLTE = "api/expense-account/autocomplete";
 const API_FILTER = "/api/expense-account/filter";
 const API_ONE_LEVEL_FILTER = "/api/expense-account/filter/one-level";
+const API_IS_DELETABLE = "/api/project/is-deletable";
+
 
 @Injectable({
   providedIn: 'root'
@@ -84,4 +86,28 @@ export class ExpenseAccountService {
     return this.http.get<ExpenseAccountItem[]>(url, opts);
   }
 
+  deleteExpenseAccount(id, name:string) {
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
+      }),
+      body: {
+        id: id,
+        name: name
+      }
+    };
+
+    return this.http.delete(API_EXPENSE_ACCOUNT, opts);
+  }
+
+  isExpenseAccountDeletable(id, name:string): Observable<boolean> {
+    var url = API_IS_DELETABLE + "/" + id + "/" + name;
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
+      })
+    };
+
+    return this.http.get<boolean>(url, opts);
+  }
 }
