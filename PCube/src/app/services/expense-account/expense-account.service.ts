@@ -8,7 +8,7 @@ const API_IS_UNIQUE = "api/expense-account/is-unique";
 const API_AUTOCOMPLTE = "api/expense-account/autocomplete";
 const API_FILTER = "/api/expense-account/filter";
 const API_ONE_LEVEL_FILTER = "/api/expense-account/filter/one-level";
-const API_IS_DELETABLE = "/api/project/is-deletable";
+const API_IS_DELETABLE = "/api/expense-account/is-deletable";
 
 
 @Injectable({
@@ -101,7 +101,7 @@ export class ExpenseAccountService {
   }
 
   isExpenseAccountDeletable(id, name:string): Observable<boolean> {
-    var url = API_IS_DELETABLE + "/" + id + "/" + name;
+    let url = API_IS_DELETABLE + "/" + id + "/" + name;
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  

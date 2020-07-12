@@ -126,7 +126,7 @@ export class ProjectService {
   }
 
   isProjectDeletable(id, name:string): Observable<boolean> {
-    var url = API_IS_DELETABLE + "/" + id + "/" + name;
+    let url = API_IS_DELETABLE + "/" + id + "/" + name;
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  

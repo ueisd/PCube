@@ -218,7 +218,7 @@ def delete_expense_account():
 
 
 @expense_account.route('/is-deletable/<id>/<name>', methods=['GET'])
-#@auth_required
+@auth_required
 def is_expense_account_deletable(id, name):
     """
         Permet de vérifier si un compte de dépense est supprimable.

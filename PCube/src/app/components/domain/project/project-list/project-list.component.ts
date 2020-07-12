@@ -65,29 +65,28 @@ export class ProjectListComponent implements OnInit {
     
     this.projectService.isProjectDeletable(project.id, project.name).subscribe((data) => {
       this.isDeletable = data;
-    });
-
-    const dialogConfig = this.dialog.open(DeleteProjectComponent, {
-      data: {
-        id: project.id,
-        name: project.name,
-        isDeletable : this.isDeletable
-      },
-      panelClass: 'warning-dialog'
-    });
-    
-    dialogConfig.afterClosed().subscribe(result => { 
-        if(result !== undefined) {
-          this.projectService.deleteProject(project.id, project.name).subscribe((data) => {
-            this.openSnackBar('Le projet a été supprimé', 'notif-success');
-            this.refreshList({expanded: true});
-          },
-          (error) => {
-            this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
-          });
+      const dialogConfig = this.dialog.open(DeleteProjectComponent, {
+        data: {
+          id: project.id,
+          name: project.name,
+          isDeletable : this.isDeletable
+        },
+        panelClass: 'warning-dialog'
+      });
+      
+      dialogConfig.afterClosed().subscribe(result => { 
+          if(result !== undefined) {
+            this.projectService.deleteProject(project.id, project.name).subscribe((data) => {
+              this.openSnackBar('Le projet a été supprimé', 'notif-success');
+              this.refreshList({expanded: true});
+            },
+            (error) => {
+              this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+            });
+          }
         }
-      }
-    );
+      );
+    });
   }
 
   openSnackBar(message, panelClass) {
@@ -110,7 +109,6 @@ export class ProjectListComponent implements OnInit {
       this._transformer, node => node.level, node => node.expandable, node => node.child_project);
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 

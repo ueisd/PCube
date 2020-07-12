@@ -63,29 +63,28 @@ export class ExpenseAccountListComponent implements OnInit {
     
     this.expenseAccountService.isExpenseAccountDeletable(expenseAccount.id, expenseAccount.name).subscribe((data) => {
       this.isDeletable = data;
-    });
-
-    const dialogConfig = this.dialog.open(DeleteExpenseAccountComponent, {
-      data: {
-        id: expenseAccount.id,
-        name: expenseAccount.name,
-        isDeletable : this.isDeletable
-      },
-      panelClass: 'warning-dialog'
-    });
-    
-    dialogConfig.afterClosed().subscribe(result => { 
-        if(result !== undefined) {
-          this.expenseAccountService.deleteExpenseAccount(expenseAccount.id, expenseAccount.name).subscribe((data) => {
-            this.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
-            this.refreshList({expanded: true});
-          },
-          (error) => {
-            this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
-          });
+      const dialogConfig = this.dialog.open(DeleteExpenseAccountComponent, {
+        data: {
+          id: expenseAccount.id,
+          name: expenseAccount.name,
+          isDeletable : this.isDeletable
+        },
+        panelClass: 'warning-dialog'
+      });
+      
+      dialogConfig.afterClosed().subscribe(result => { 
+          if(result !== undefined) {
+            this.expenseAccountService.deleteExpenseAccount(expenseAccount.id, expenseAccount.name).subscribe((data) => {
+              this.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
+              this.refreshList({expanded: true});
+            },
+            (error) => {
+              this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+            });
+          }
         }
-      }
-    );
+      );
+    });
   }
 
   openSnackBar(message, panelClass) {
