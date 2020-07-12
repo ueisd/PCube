@@ -11,7 +11,7 @@ class ActivityRequest:
     def select_all_activity(self):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from activity")
+        cursor.execute("select activity.*, count(timeline.id) as nbLignesDeTemps from activity LEFT JOIN timeline ON activity.id = timeline.activity_id GROUP BY activity.id")
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -19,7 +19,7 @@ class ActivityRequest:
     def select_activity_by_filter(self, activity):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from activity where name LIKE ? and id LIKE ?", ('%'+activity.name+'%','%'+activity.id+'%'))
+        cursor.execute("select activity.*, count(timeline.id) as nbLignesDeTemps from activity  LEFT JOIN timeline ON activity.id = timeline.activity_id  WHERE activity.name LIKE ? and activity.id LIKE ? GROUP BY activity.id", ('%'+activity.name+'%','%'+activity.id+'%'))
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -32,6 +32,18 @@ class ActivityRequest:
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from activity where name = ?", (name,))
+        data = cursor.fetchone()
+        cursor.close()
+        return data
+
+    def countTimeline(self, id):
+        """
+        Permet de compter le nombre de lignes de temps associé à l'activité
+        Retourne un chiffre
+        """
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select count(timeline.id) as nbLignesDeTemps from timeline where timeline.activity_id = ?", (id))
         data = cursor.fetchone()
         cursor.close()
         return data

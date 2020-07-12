@@ -18,6 +18,7 @@ import { ManageTimelineComponent } from 'src/app/components/pages/timeline/manag
 import { AddingTimelineComponent } from 'src/app/components/pages/timeline/adding-timeline/adding-timeline.component';
 import { ModifyingTimelineComponent } from 'src/app/components/pages/timeline/modifying-timeline/modifying-timeline.component';
 import { TimelineComponent } from './components/pages/timeline/timeline.component';
+import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 
 
 const routes: Routes = [
@@ -71,6 +72,11 @@ const routes: Routes = [
       {
         path: 'addUser',
         component: AddUserComponent,
+        canActivate: [AdminGuard]
+      },
+      {
+        path: 'add-account-expense',
+        component: AddExpenseAccountComponent,
         canActivate: [AdminGuard]
       }
     ]

@@ -155,6 +155,11 @@ def delete_activity(id):
 
         id = escape(id).strip()
 
+        number = query.countTimeline(id)
+        number = number['nbLignesDeTemps']
+        if number > 0:
+            return jsonify({'error': 'attention l\'activité a des lignes de temps associées'}), 412
+        
 
         query.delete_activity(id)
         return jsonify(""),200

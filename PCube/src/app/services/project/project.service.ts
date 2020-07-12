@@ -9,6 +9,8 @@ const API_AUTOCOMPLTE = "api/project/autocomplete";
 const API_FILTER = "/api/project/filter";
 const API_APPARENTABLE = "/api/project/getApparentableProjects";
 const API_ONE_LEVEL_FILTER = "/api/project/filter/one-level";
+const API_IS_DELETABLE = "/api/project/is-deletable";
+
 
 @Injectable({
   providedIn: 'root'
@@ -107,5 +109,30 @@ export class ProjectService {
       })
     };
     return this.http.get<ProjectItem[]>(url, opts);
+  }
+
+  deleteProject(id, name:string) {
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
+      }),
+      body: {
+        id: id,
+        name: name
+      }
+    };
+
+    return this.http.delete(API_PROJECT, opts);
+  }
+
+  isProjectDeletable(id, name:string): Observable<boolean> {
+    let url = API_IS_DELETABLE + "/" + id + "/" + name;
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
+      })
+    };
+
+    return this.http.get<boolean>(url, opts);
   }
 }

@@ -21,10 +21,16 @@
                   <mat-icon color="primary">edit</mat-icon>
                   <span>Modifier</span>
                 </button>
-                <button mat-menu-item>
-                  <mat-icon color="primary">delete</mat-icon>
-                  <span>Supprimer</span>
-                </button>
+                <div matTooltip="Ne peut être supprimé car contient {{ node.nbLignesDeTemps }} lignes de temps"
+                  matTooltipPosition="after"
+                  [matTooltipDisabled]="node.nbLignesDeTemps <= 0"
+                  matTooltipClass="custom-tooltip">
+                  <button mat-menu-item [disabled]="node.nbLignesDeTemps > 0"   
+                    (click)="openDeleteDialog(node.projectItem)">
+                      <mat-icon color="primary">delete</mat-icon>
+                      <span>Supprimer</span>
+                  </button>
+                </div>
               </mat-menu>
             </div>
           </div>
@@ -39,7 +45,7 @@
                   {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
               </button>
-            {{node.name}}
+              {{node.name}}
             </div>
             <div fxflex fxFlex="50%"
             fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
@@ -51,10 +57,17 @@
                   <mat-icon color="primary">edit</mat-icon>
                   <span>Modifier</span>
                 </button>
-                <button mat-menu-item>
-                  <mat-icon color="primary">delete</mat-icon>
-                  <span>Supprimer</span>
-                </button>
+                <div matTooltip="Ne peut être supprimé car contient {{ node.nbChild }} enfants
+                      {{ (node.nbLignesDeTemps > 0) ? ' et ' + node.nbLignesDeTemps +  ' lignes de temps ': ''}}."
+                  matTooltipPosition="after"
+                  matTooltipClass="custom-tooltip">
+                  <button mat-menu-item disabled 
+                    (click)="openDeleteDialog(node.projectItem)">
+                      <mat-icon color="primary">delete</mat-icon>
+                      <span>Supprimer</span>
+                  </button>
+                </div>
+
               </mat-menu>
             </div>
           </div>

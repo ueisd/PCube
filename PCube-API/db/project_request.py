@@ -28,7 +28,7 @@ class ProjectRequest:
     def select_all_parent_by_filter(self, project):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from project where parent_id = id and name LIKE ?",
+        cursor.execute("select p.*, count(t.id) as nbLignesDeTemps from project p LEFT JOIN timeline t ON p.id = t.project_id where p.parent_id = p.id and p.name LIKE ? GROUP BY p.id",
         ('%'+project.name+'%',))
         data = cursor.fetchall()
         cursor.close()
@@ -61,7 +61,7 @@ class ProjectRequest:
     def select_all_project_from_parent(self, parent_id):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from project where parent_id = ? and parent_id != id",
+        cursor.execute("select p.*, count(t.id) as nbLignesDeTemps from project p  LEFT JOIN timeline t ON p.id = t.project_id  where p.parent_id = ? and p.parent_id != p.id GROUP BY p.id",
         (parent_id,))
         data = cursor.fetchall()
         cursor.close()
@@ -121,6 +121,13 @@ class ProjectRequest:
         newProject.id = project.id
         return newProject
 
+    def is_id_name_combo_exist(self, id, name):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from project where id = ? and name = ?", (id, name))
+        data = cursor.fetchone()
+        cursor.close()
+        return True if data else False
 
     def update_project_std(self, project):
         """
@@ -134,3 +141,27 @@ class ProjectRequest:
         cursor.close()
         return project
     
+    def delete_project(self, project_id, name):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("delete from project where id = ? and name = ?", (project_id, name))
+        self.connection.commit()
+        cursor.close()
+
+    def has_child(self, id, name):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from project where parent_id = ? and name != ?",
+        (id, name,))
+        data = cursor.fetchone()
+        cursor.close()
+        return True if data else False
+
+    def is_in_timeline_table(self, id):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from timeline where project_id = ?",
+        (id,))
+        data = cursor.fetchone()
+        cursor.close()
+        return True if data else False

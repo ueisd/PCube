@@ -21,8 +21,20 @@
     <ng-container matColumnDef="operations">
         <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
         <mat-cell *matCellDef="let activity" align="right">
-            <button mat-raised-button color="primary" (click)="editAction(activity)"><mat-icon>edit</mat-icon></button>
-            <button mat-raised-button color="warn" (click)="openDeleteDialog(activity)"><mat-icon>delete</mat-icon></button>
+            <div class="container width100">
+                <div fxflex fxFlex="100%"
+                fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+                    <button mat-raised-button color="primary" (click)="editAction(activity)"><mat-icon>edit</mat-icon></button>
+                    <button mat-raised-button color="warn" [disabled]="activity.nbLignesDeTemps > 0"
+                        matTooltip="Ne peut être supprimé car contient {{ activity.nbLignesDeTemps }} lignes de temps"
+                        matTooltipPosition="after"
+                        [matTooltipDisabled]="activity.nbLignesDeTemps <= 0"
+                        matTooltipClass="custom-tooltip"
+                        (click)="openDeleteDialog(activity)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </div>
+            </div>
         </mat-cell>
     </ng-container>
 
