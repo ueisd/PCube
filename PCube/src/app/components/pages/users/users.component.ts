@@ -24,6 +24,7 @@ export class UsersComponent implements OnInit {
   
   openDialog() {
     const dialogConfig = new MatDialogConfig();
+    dialogConfig.width = "500px";
     this.fileNameDialogRef = this.dialog.open(AddUserComponent, dialogConfig);
 
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
