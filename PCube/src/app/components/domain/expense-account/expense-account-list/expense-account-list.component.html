@@ -20,7 +20,7 @@
                   <mat-icon color="primary">edit</mat-icon>
                   <span>Modifier</span>
                 </button>
-                <button mat-menu-item>
+                <button mat-menu-item (click)="openDeleteDialog(node.expenseAcount)">
                   <mat-icon color="primary">delete</mat-icon>
                   <span>Supprimer</span>
                 </button>
@@ -50,7 +50,7 @@
                   <mat-icon color="primary">edit</mat-icon>
                   <span>Modifier</span>
                 </button>
-                <button mat-menu-item>
+                <button mat-menu-item (click)="openDeleteDialog(node.expenseAcount)">
                   <mat-icon color="primary">delete</mat-icon>
                   <span>Supprimer</span>
                 </button>

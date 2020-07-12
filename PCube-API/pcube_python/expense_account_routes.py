@@ -255,6 +255,37 @@ def delete_expense_account():
         abort(403)
 
 
+@expense_account.route('/is-deletable/<id>/<name>', methods=['GET'])
+@auth_required
+def is_expense_account_deletable(id, name):
+    """
+        Permet de vérifier si un compte de dépense est supprimable.
+        AuthenticationError : Si l'authentification de l'utilisateur échoue.
+        """
+    try:
+        data = request.json
+
+        connection = get_db().get_connection()
+        query = ExpenseAccountRequest(connection)
+
+        id = id.upper().strip()
+        name = name.upper().strip()
+        isDeletable = True
+
+        if not query.is_id_name_combo_exist(id, name):
+            isDeletable = False
+        if query.has_child(id, name):
+            isDeletable = False
+        if query.is_in_timeline_table(id):
+            isDeletable = False
+
+        return jsonify(isDeletable),200
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
+
 @expense_account.errorhandler(JsonValidationError)
 def validation_error(e):
     errors = [validation_error.message for validation_error in e.errors]

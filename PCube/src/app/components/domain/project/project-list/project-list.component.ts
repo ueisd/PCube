@@ -6,6 +6,7 @@ import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree'
 import * as $ from 'jquery/dist/jquery.min.js';
 import { FormControl } from '@angular/forms';
 import { AddProjectComponent } from '../add-project/add-project.component';
+import { DeleteProjectComponent } from 'src/app/components/domain/project/delete-project/delete-project.component';
 import { MatDialogRef, MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -19,7 +20,8 @@ export class ProjectListComponent implements OnInit {
 
   nameFilter = new FormControl('');
   fileNameDialogRef: MatDialogRef<AddProjectComponent>;
-  
+  deleteProjectDialogRef: MatDialogRef<DeleteProjectComponent>;  
+  isDeletable : Boolean = true;
 
   constructor(private projectService: ProjectService, private dialog: MatDialog,
     private snackBar : MatSnackBar) {}
@@ -53,11 +55,38 @@ export class ProjectListComponent implements OnInit {
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
         if(result == true) {
           this.refreshList({expanded: true});
-          alert("test");
           this.openSnackBar('Le projet a été modifiée', 'notif-success');
         }
       }
     );
+  }
+
+  openDeleteDialog(project : ProjectItem) {
+    
+    this.projectService.isProjectDeletable(project.id, project.name).subscribe((data) => {
+      this.isDeletable = data;
+      const dialogConfig = this.dialog.open(DeleteProjectComponent, {
+        data: {
+          id: project.id,
+          name: project.name,
+          isDeletable : this.isDeletable
+        },
+        panelClass: 'warning-dialog'
+      });
+      
+      dialogConfig.afterClosed().subscribe(result => { 
+          if(result !== undefined) {
+            this.projectService.deleteProject(project.id, project.name).subscribe((data) => {
+              this.openSnackBar('Le projet a été supprimé', 'notif-success');
+              this.refreshList({expanded: true});
+            },
+            (error) => {
+              this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+            });
+          }
+        }
+      );
+    });
   }
 
   openSnackBar(message, panelClass) {
@@ -80,7 +109,6 @@ export class ProjectListComponent implements OnInit {
       this._transformer, node => node.level, node => node.expandable, node => node.child_project);
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
