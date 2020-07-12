@@ -9,6 +9,7 @@ const API_IS_UNIQUE = environment.api_url + "/api/user/is-unique-user";
 const API_USER = environment.api_url + "/api/user";
 const API_GET_BY_FILTER = environment.api_url + "/api/user/filter";
 const API_GET_PROFIL = environment.api_url + "/api/user/profil";
+const API_GET_PUBLIC_DATA = environment.api_url + "/api/user/auth-info";
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,18 @@ const API_GET_PROFIL = environment.api_url + "/api/user/profil";
 export class UserService {
 
   constructor(private http: HttpClient) { }
+
+  getUserPublicData(email:string): Observable<User> {
+    let url = API_GET_PUBLIC_DATA + "?email=" + email;
+
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+      })
+    };
+    
+    return this.http.get<User>(url, opts);
+  }
 
   getUser(user:User): Observable<User> {
 

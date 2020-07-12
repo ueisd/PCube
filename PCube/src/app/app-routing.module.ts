@@ -18,15 +18,17 @@ import { ManageTimelineComponent } from 'src/app/components/pages/timeline/manag
 import { AddingTimelineComponent } from 'src/app/components/pages/timeline/adding-timeline/adding-timeline.component';
 import { ModifyingTimelineComponent } from 'src/app/components/pages/timeline/modifying-timeline/modifying-timeline.component';
 import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
-
+import { TimelineComponent } from './components/pages/timeline/timeline.component';
 
 const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-    canActivate: [AuthGuard],
-    canActivateChild: [AuthGuard],
     children: [
+      {
+        path: 'login',
+        component: LoginComponent
+      },
       {
         path: 'activity-managing',
         component: ActivityComponent,
@@ -52,8 +54,8 @@ const routes: Routes = [
         component: AccessDeniedComponent
       },
       {
-        path: 'gerer-ligne-de-temps',
-        component: ManageTimelineComponent,
+        path: 'ligne-de-temps',
+        component: TimelineComponent,
         canActivate: [ProjectManagerGuard]
       },
       {
@@ -77,10 +79,6 @@ const routes: Routes = [
         canActivate: [AdminGuard]
       }
     ]
-  },
-  {
-    path: 'login',
-    component: LoginComponent
   },
 ];
 

@@ -77,7 +77,7 @@ def authenticate_user(email, password):
     else:
         return (
             create_access_token(identity=email),
-            create_refresh_token(identity=email)
+            create_refresh_token(identity=email),
         )
 
 

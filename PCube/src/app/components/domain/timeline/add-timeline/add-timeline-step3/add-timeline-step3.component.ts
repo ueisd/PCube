@@ -105,15 +105,24 @@ export class AddTimelineStep3Component implements OnInit {
       return;
     }
 
-    if(activities.length > 1){
+    if(activities.length > 1 && !this.isItemAlreadyFound){
       this.activities = activities;
       this.onMultipleProjectFound();
+      return;
+    }
+
+    if(activities.length > 1 && this.isItemAlreadyFound){
+      this.activity = activities.find(a => a.id == activity.id || a.name == activity.name)
+      this.activities = [activity];
+      this.onProjectFound();
+      this.isItemAlreadyFound = false;
       return;
     }
 
     if(activities.length == 1 && (activities[0].id == activity.id || activities[0].name.toLocaleUpperCase() == activity.name.toLocaleUpperCase())){
       this.activity = activities[0];
       this.onProjectFound();
+      return;
     }
     else
       this.onMultipleProjectFound();
@@ -177,7 +186,10 @@ export class AddTimelineStep3Component implements OnInit {
     }
   }
 
+  isItemAlreadyFound:boolean = false;
+
   setAlreadyFoundItem(isSearchByName:boolean, info:string){
+    this.isItemAlreadyFound = true;
     this.isSearchByName = isSearchByName;
     this.changeToggleTexteDisplay(isSearchByName);
     if(isSearchByName){

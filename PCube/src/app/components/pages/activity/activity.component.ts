@@ -24,6 +24,7 @@ export class ActivityComponent implements OnInit {
 
   openDialog() {
     const dialogConfig = new MatDialogConfig();
+    dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddActivityComponent, dialogConfig);
     
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
@@ -37,7 +38,7 @@ export class ActivityComponent implements OnInit {
 
   openSnackBar(message, panelClass) {
     this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
+      duration: 10000,
       horizontalPosition: "right",
       verticalPosition: "bottom",
       panelClass: [panelClass]

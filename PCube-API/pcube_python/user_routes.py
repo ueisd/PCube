@@ -42,6 +42,23 @@ def get_all_user():
         log.error('authentication error: %s', error)
         abort(403)
 
+@user.route('/auth-info', methods=['GET'])
+@auth_required
+def get_auth_user():
+    """
+    Permet d'obtenir les informations de l'utilisateur connecté
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        user = get_authenticated_user()
+        connection = get_db().get_connection()
+        query = UserRequest(connection)
+        data = query.get_public_user_info(user['email'])
+        return jsonify(data),200
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
 
 @user.route('/filter', methods=['GET'])
 @auth_required
@@ -121,9 +138,9 @@ def add_new_user():
     try:
         data = request.json
         user = User()
-        user.first_name = escape(data['first_name']).strip()
-        user.last_name = escape(data['last_name']).strip()
-        user.email = escape(data['email']).strip()
+        user.first_name = escape(data['first_name']).upper().strip()
+        user.last_name = escape(data['last_name']).upper().strip()
+        user.email = escape(data['email']).upper().strip()
         user.role_id = escape(data['role_id']).strip()
 
         connection = get_db().get_connection()
