@@ -28,7 +28,7 @@ class ExpenseAccountRequest:
     def select_all_parent_by_filter(self, expense_account):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from accounting_time_category where parent_id = id and name LIKE ?",
+        cursor.execute("select a.*, count(t.id) as nbLignesDeTemps from accounting_time_category a  LEFT JOIN timeline t ON a.id = t.accounting_time_category_id  where a.parent_id = a.id and a.name LIKE ? GROUP BY a.id",
         ('%'+expense_account.name+'%',))
         data = cursor.fetchall()
         cursor.close()
@@ -56,8 +56,10 @@ class ExpenseAccountRequest:
     def select_all_expense_account_from_parent(self, parent_id):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from accounting_time_category where parent_id = ? and parent_id != id",
+        cursor.execute("select a.*, count(t.id) as nbLignesDeTemps from accounting_time_category a  LEFT JOIN timeline t ON a.id = t.accounting_time_category_id  where a.parent_id = ? and a.parent_id != a.id GROUP BY a.id",
         (parent_id,))
+
+        ##cursor.execute("select a.*, count(t.id) as nbLignesDeTemps from accounting_time_category a  LEFT JOIN timeline t ON a.id = t.accounting_time_category_id  where a.parent_id = a.id and a.name LIKE ? GROUP BY a.id",
         data = cursor.fetchall()
         cursor.close()
         return data

@@ -63,7 +63,6 @@ class ProjectRequest:
         cursor = self.connection.cursor()
         cursor.execute("select p.*, count(t.id) as nbLignesDeTemps from project p  LEFT JOIN timeline t ON p.id = t.project_id  where p.parent_id = ? and p.parent_id != p.id GROUP BY p.id",
         (parent_id,))
-        ##select p.*, count(t.id) as nbLignesDeTemps from project p LEFT JOIN timeline t ON p.id = t.project_id where p.parent_id = p.id and p.name LIKE ? GROUP BY p.id
         data = cursor.fetchall()
         cursor.close()
         return data
