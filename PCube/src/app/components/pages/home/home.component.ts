@@ -13,6 +13,7 @@ import { Router } from '@angular/router';
 
 export class HomeComponent implements OnInit {
   @ViewChild(SidenavComponent) sideNavReference;
+  @ViewChild("drawer") drawerComponent;
 
   authenticated: boolean;
   accessLevel: number;
@@ -29,6 +30,11 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkForAuth();
+
+  }
+
+  ngAfterViewInit(){
+    this.isShowTitle =  this.sideNavReference.isShowTitle;
   }
 
   isDrawerHidden:boolean = false;
@@ -43,6 +49,9 @@ export class HomeComponent implements OnInit {
           this.authSubscription = this.auth.getAccessLevel().subscribe(userInfo => {
             this.accessLevel = parseInt(userInfo.level)
             this.sideNavReference.accessLevel = this.accessLevel;
+            setTimeout(() => {
+              this.drawerComponent.toggle();
+            }, 1000);
           });
         }else{
           this.accessLevel = -1;
@@ -54,6 +63,13 @@ export class HomeComponent implements OnInit {
 
   ngOnDestroy() { 
     this.authSubscription.unsubscribe();
+  }
+
+  isShowTitle:boolean = true;
+
+  toggleDrawer(){
+    this.sideNavReference.isShowTitle = !this.sideNavReference.isShowTitle;
+    this.isShowTitle =  this.sideNavReference.isShowTitle;
   }
 
 }

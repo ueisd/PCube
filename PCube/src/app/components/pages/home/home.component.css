@@ -9,3 +9,54 @@
 .hide-drawer{
     display: none;
 }
+
+.sidenav-drawer-button{
+    transition: background-color 0.5s ease;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    background-color: #6a8bc8;
+    cursor: pointer;
+    border-top: 1px solid rgba(0, 0, 0, 1);
+    padding-top: 11px;
+}
+
+::ng-deep .sidenav-drawer-button mat-icon{
+    transition: color 0.5s ease;
+    width: 10px;
+}
+
+::ng-deep .sidenav-drawer-button:hover mat-icon{
+    color: white !important;
+}
+
+.sidenav-drawer-button{
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none;
+}
+
+.drawer-arrow{
+    margin-left: 10px;
+    display: inline-block;
+    margin-bottom: 7px;
+}
+
+.sidenav-drawer-button p{
+    display: inline-block;
+    vertical-align: middle;
+    margin-left: 10px;
+    font-weight: 500;
+    transition: color 0.5s ease;
+}
+
+
+.sidenav-drawer-button:hover p{
+    color: white;
+}
+.sidenav-drawer-button:hover{
+    background-color: #3E63A7;
+}

@@ -19,11 +19,13 @@ export class LogoutComponent implements OnInit {
   logout() {
     this.auth.deauthenticate().subscribe(
       () => {
-
         if(this.router.url == "/")
           location.reload();
-        else
-          this.router.navigate(['/']);
+        else{
+          this.router.navigate(['/']).then(()=>{
+            window.location.reload();
+          });
+        }
       }
     );
   }
