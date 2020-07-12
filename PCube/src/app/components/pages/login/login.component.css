@@ -124,8 +124,8 @@ input{
 }
 .wrapper {
   background: #3665AF;
-  background: -webkit-gradient(linear, left top, right bottom, from(#3665AF), to(#7AB162));
-  background: linear-gradient(to bottom right, #3665AF 0%, #7AB162 100%);
+  background: -webkit-gradient(linear, right top, right bottom, from(#3665AF), to(#7AB162));
+  background: linear-gradient(to bottom left, #3665AF 0%, #7AB162 100%);
   position: absolute;
   top: 50%;
   left: 0;

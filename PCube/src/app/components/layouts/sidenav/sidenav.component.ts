@@ -9,6 +9,8 @@ export class SidenavComponent implements OnInit {
 
   accessLevel: number = -1;
 
+  isShowTitle:boolean = true;
+
   constructor() { }
 
   ngOnInit(): void {
