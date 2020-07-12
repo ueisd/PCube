@@ -3,14 +3,15 @@
     <app-header></app-header>
     
     <mat-drawer-container class="sidenav-container" autosize>
-      <mat-drawer #drawer class="example-sidenav" mode="side" opened="true">
+      <mat-drawer #drawer class="example-sidenav side-drawer" mode="side" opened="true" [ngClass]="isDrawerHidden ? 'hide-drawer' : ''">
         <app-sidenav></app-sidenav>
       </mat-drawer>
     
       <div class="example-sidenav-content">
-        <button type="button" mat-button (click)="drawer.toggle()">
+        <button type="button" mat-button (click)="drawer.toggle()" [ngClass]="isDrawerHidden ? 'hide-drawer' : 'show-drawer'">
           Toggle sidenav
         </button>
+        <app-login *ngIf="router.url === '/'"></app-login>
         <router-outlet></router-outlet>
       </div>
     

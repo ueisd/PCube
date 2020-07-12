@@ -1,20 +1,35 @@
-<div class="login-container">
-    <h1>Authentification</h1>
+<div class="wrapper">
+	<div class="container">
+        <div class="login-container">
+            <h1>{{ pageTitle }}<span style="opacity: 0;" [ngClass]="isAuthAccepted ? 'show-name' : 'hidden'" >{{ userName | titlecase }}</span></h1>
 
-    <p style="color:red">{{ message }}</p>
+            <p style="color:red">{{ message }}</p>
 
-    <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form">
-        <mat-form-field appearance="fill" class="form-element" >
-            <mat-label>Courriel</mat-label>
-            <input matInput formControlName="email">
-        </mat-form-field>
-        <mat-form-field appearance="fill" class="form-element">
-            <mat-label>Mot de passe</mat-label>
-            <input matInput formControlName="password">
-        </mat-form-field>
-        <div class="form-element">
-            <button mat-raised-button color="primary" type="submit" class="button" [disabled]="!formGroup.valid">Connexion</button>
+            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form" *ngIf="isShowingForm">
+                <mat-form-field appearance="fill" class="form-element" >
+                    <mat-label>Courriel</mat-label>
+                    <input matInput formControlName="email">
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="form-element">
+                    <mat-label>Mot de passe</mat-label>
+                    <input type="password" matInput formControlName="password">
+                </mat-form-field>
+                <div class="form-element">
+                    <button id="login-button" mat-raised-button color="primary" type="submit" class="button" [disabled]="!formGroup.valid">Connexion</button>
+                </div>
+            </form>
         </div>
-    </form>
-    
+    </div>
+    <ul class="bg-bubbles">
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+		<li></li>
+	</ul>
 </div>

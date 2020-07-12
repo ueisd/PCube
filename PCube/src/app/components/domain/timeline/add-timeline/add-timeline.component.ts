@@ -9,6 +9,7 @@ import { TimelineItem } from 'src/app/models/timeline';
 import { TimelineService } from 'src/app/services/timeline/timeline.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddTimelineStep5Component } from './add-timeline-step5/add-timeline-step5.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-add-timeline',
@@ -22,7 +23,8 @@ export class AddTimelineComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private timelineService: TimelineService,
-    private snackBar : MatSnackBar
+    private snackBar : MatSnackBar,
+    private router: Router
     ) { }
 
   ngOnInit(): void {
@@ -86,6 +88,10 @@ export class AddTimelineComponent implements OnInit {
       this.openSnackBar("Une erreur s'est produit. Veuillez réessayer.",'notif-error');
     });
 
+  }
+
+  onCancel(){
+    this.router.navigate(['/ligne-de-temps']);
   }
 
   setUser(user:User){

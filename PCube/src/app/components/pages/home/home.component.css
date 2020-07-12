@@ -5,3 +5,7 @@
 .page-container{
     height: calc(100vh - 64px);
 }
+
+.hide-drawer{
+    display: none;
+}
