@@ -20,7 +20,6 @@ import { ModifyingTimelineComponent } from 'src/app/components/pages/timeline/mo
 import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 import { TimelineComponent } from './components/pages/timeline/timeline.component';
 
-
 const routes: Routes = [
   {
     path: '',
