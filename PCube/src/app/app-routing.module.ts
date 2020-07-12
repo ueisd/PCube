@@ -17,9 +17,8 @@ import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accou
 import { ManageTimelineComponent } from 'src/app/components/pages/timeline/manage-timeline/manage-timeline.component';
 import { AddingTimelineComponent } from 'src/app/components/pages/timeline/adding-timeline/adding-timeline.component';
 import { ModifyingTimelineComponent } from 'src/app/components/pages/timeline/modifying-timeline/modifying-timeline.component';
-import { TimelineComponent } from './components/pages/timeline/timeline.component';
 import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
-
+import { TimelineComponent } from './components/pages/timeline/timeline.component';
 
 const routes: Routes = [
   {
