@@ -42,3 +42,7 @@
     color: black;
     text-align: left;
 }
+
+.width100 {
+    width: 100%;
+}
