@@ -4,6 +4,7 @@ export class ProjectItem {
     parent_id: number;
     child_project?: ProjectItem[];
     nomAffichage? : string;
+    nbLignesDeTemps? : number;
 
     constructor(projectResponse?: any) {
         this.id = projectResponse && projectResponse.id || "";
@@ -11,5 +12,6 @@ export class ProjectItem {
         this.parent_id = projectResponse && projectResponse.parent_id || "";
         this.nomAffichage = projectResponse && projectResponse.nomAffichage || "";
         this.child_project = projectResponse && projectResponse.child_project || [];
+        this.nbLignesDeTemps = projectResponse && projectResponse.nbLignesDeTemps || "";
     }
 }
