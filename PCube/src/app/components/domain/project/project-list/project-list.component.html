@@ -9,7 +9,7 @@
           <div class="container width100">
             <div fxflex fxFlex="80%">
               <button mat-icon-button disabled></button>
-              {{node.name}} nb lignes: {{ node.nbLignesDeTemps }} nb enfants: {{ node.nbChild > 0 }}
+              {{node.name}}
             </div>
             <div fxflex fxFlex="20%"
             fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
@@ -58,9 +58,8 @@
                   <mat-icon color="primary">edit</mat-icon>
                   <span>Modifier</span>
                 </button>
-                <div matTooltip="Ne peut être supprimé car contient {{ node.nbChild }} enfants et 
-                      {{ (node.nbLignesDeTemps > 0) ? ' ' + node.nbLignesDeTemps +  ' lignes de temps ': ''}}
-                      "
+                <div matTooltip="Ne peut être supprimé car contient {{ node.nbChild }} enfants
+                      {{ (node.nbLignesDeTemps > 0) ? ' et ' + node.nbLignesDeTemps +  ' lignes de temps ': ''}}."
                   matTooltipPosition="after"
                   matTooltipClass="custom-tooltip">
                   <button mat-menu-item disabled 
