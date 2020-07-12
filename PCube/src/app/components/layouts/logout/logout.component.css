@@ -12,14 +12,14 @@
     transition: color 0.5s ease;
     transition: background-color 0.5s ease;
     cursor: pointer;
-    background-color: #bcd8b0;
+    background-color: rgb(230, 230, 230);
     width: 140px;
-    border: 1px solid #24351d;
+    border: 1px solid black;
     border-radius: 4px;
 }
 
 .logout-button:hover{
-    background-color: #7AB162;
+    background-color: #6699cc;
     color: white;
 }
 
