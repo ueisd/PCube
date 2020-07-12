@@ -38,6 +38,8 @@ export class ExpenseAccountListComponent implements OnInit {
       level: level,
       parent_id: node.parent_id,
       expenseAcount: expensenoChild, 
+      nbLignesDeTemps: node.nbLignesDeTemps,
+      nbChild: node.child.length,
     };
   }
 

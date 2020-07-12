@@ -28,7 +28,7 @@ class ProjectRequest:
     def select_all_parent_by_filter(self, project):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from project where parent_id = id and name LIKE ?",
+        cursor.execute("select p.*, count(t.id) as nbLignesDeTemps from project p LEFT JOIN timeline t ON p.id = t.project_id where p.parent_id = p.id and p.name LIKE ? GROUP BY p.id",
         ('%'+project.name+'%',))
         data = cursor.fetchall()
         cursor.close()
@@ -61,7 +61,7 @@ class ProjectRequest:
     def select_all_project_from_parent(self, parent_id):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from project where parent_id = ? and parent_id != id",
+        cursor.execute("select p.*, count(t.id) as nbLignesDeTemps from project p  LEFT JOIN timeline t ON p.id = t.project_id  where p.parent_id = ? and p.parent_id != p.id GROUP BY p.id",
         (parent_id,))
         data = cursor.fetchall()
         cursor.close()

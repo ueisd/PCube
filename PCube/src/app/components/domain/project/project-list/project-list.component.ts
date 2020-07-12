@@ -39,6 +39,8 @@ export class ProjectListComponent implements OnInit {
       projectItem : nodeNochild,
       id: node.id,
       parent_id: node.parent_id,
+      nbLignesDeTemps: node.nbLignesDeTemps,
+      nbChild: node.child_project.length,
       level: level,
     };
   }
