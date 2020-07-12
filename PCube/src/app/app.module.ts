@@ -54,7 +54,6 @@ import { ModifyTimelineComponent } from './components/domain/timeline/modify-tim
 import { ModifyingTimelineComponent } from './components/pages/timeline/modifying-timeline/modifying-timeline.component';
 import { DeleteProjectComponent } from './components/domain/project/delete-project/delete-project.component';
 import { TimelineComponent } from './components/pages/timeline/timeline.component';
-
 import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 import { DeleteExpenseAccountComponent } from './components/domain/expense-account/delete-expense-account/delete-expense-account.component';
 
@@ -95,10 +94,10 @@ import { DeleteExpenseAccountComponent } from './components/domain/expense-accou
     DeleteTimelineComponent,
     ModifyTimelineComponent,
     ModifyingTimelineComponent,
+    TimelineComponent,
     DeleteProjectComponent,
     AddExpenseAccountComponent,
     DeleteExpenseAccountComponent,
-    TimelineComponent,
   ],
   imports: [
     MatDialogModule,

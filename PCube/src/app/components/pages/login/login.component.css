@@ -37,7 +37,7 @@
   width: 100%;
 }
 
-::ng-deep .mat-form-field-flex{
+::ng-deep .login-container .mat-form-field-flex{
     color: white;
     font-weight: 500;
     -webkit-transition: background-color 500ms linear;
@@ -52,13 +52,13 @@ input{
   transition: color 500ms linear;
 }
 
-::ng-deep .mat-form-field-flex:focus-within,
-::ng-deep .mat-form-field-flex:hover{
+::ng-deep .login-container .mat-form-field-flex:focus-within,
+::ng-deep .login-container .mat-form-field-flex:hover{
   background-color: rgba(255, 255, 255, 1) !important; 
   color: #3665AF;
 }
 
-::ng-deep  mat-label{
+::ng-deep .login-container  mat-label{
   -webkit-transition: color 500ms linear;
   -ms-transition: color 500ms linear;
   transition: color 500ms linear;
@@ -66,8 +66,8 @@ input{
   color: white !important;
 }
 
-::ng-deep .mat-form-field-flex:focus-within mat-label,
-::ng-deep .mat-form-field-flex:hover mat-label{
+::ng-deep .login-container .mat-form-field-flex:focus-within mat-label,
+::ng-deep .login-container .mat-form-field-flex:hover mat-label{
   color: #3665AF !important;
 }
 
@@ -124,8 +124,8 @@ input{
 }
 .wrapper {
   background: #3665AF;
-  background: -webkit-gradient(linear, left top, right bottom, from(#3665AF), to(#7AB162));
-  background: linear-gradient(to bottom right, #3665AF 0%, #7AB162 100%);
+  background: -webkit-gradient(linear, right top, right bottom, from(#3665AF), to(#7AB162));
+  background: linear-gradient(to bottom left, #3665AF 0%, #7AB162 100%);
   position: absolute;
   top: 50%;
   left: 0;

@@ -1,20 +1,20 @@
 <mat-nav-list class="custom-sidenav">
 
     <a *ngIf="accessLevel == 1" mat-list-item routerLink="/users-managing">
-        <mat-icon>account_balance</mat-icon><span class="nav-caption">Utilisateurs</span>
+        <mat-icon>account_box</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Utilisateurs</span>
     </a>
     <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/activity-managing">
-        <mat-icon>account_balance</mat-icon><span class="nav-caption">Activités</span>
+        <mat-icon>local_activity</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Activités</span>
     </a>
     <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/project-managing">
-        <mat-icon>account_balance</mat-icon><span class="nav-caption">Projets</span>
+        <mat-icon>source</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Projets</span>
     </a>
     <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/expense-account-managing">
-        <mat-icon>account_balance</mat-icon><span class="nav-caption">Comptes de Dépense</span>
+        <mat-icon>monetization_on</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Comptes de Dépense</span>
     </a>
 
     <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/ligne-de-temps">
-        <mat-icon>account_balance</mat-icon><span class="nav-caption">Ligne de temps</span>
+        <mat-icon>timelapse</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Ligne de temps</span>
     </a>
 
 </mat-nav-list>

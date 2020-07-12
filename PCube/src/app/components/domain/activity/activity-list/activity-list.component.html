@@ -4,12 +4,6 @@
             <input class="name-filter" matInput placeholder="Nom" (ngModelChange)="onNameFilterChanged()" [formControl]="nameFilter">
         </mat-header-cell>
         <mat-cell *matCellDef="let activity">
-            <div id="modification-{{activity.id}}" class="hidden">
-                <input id="input-{{activity.id}}" type="text" value="{{activity.name}}">
-                <button disabled id="accept-{{activity.id}}" mat-raised-button class="green-icon" (click)="acceptModification(activity)"><mat-icon>done</mat-icon></button>
-                <button mat-raised-button class="red-icon" (click)="cancelModification(activity)"><mat-icon>cancel</mat-icon></button>
-                <div id="error-{{activity.id}}" class="hidden red-message">Le nom doit être unique</div>
-            </div>
             <div id="showName-{{activity.id}}">
                 {{activity.name}}
             </div>
@@ -24,7 +18,7 @@
             <div class="container width100">
                 <div fxflex fxFlex="100%"
                 fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
-                    <button mat-raised-button color="primary" (click)="editAction(activity)"><mat-icon>edit</mat-icon></button>
+                    <button mat-raised-button color="primary" (click)="openEditDialog(activity)"><mat-icon>edit</mat-icon></button>
                     <button mat-raised-button color="warn" [disabled]="activity.nbLignesDeTemps > 0"
                         matTooltip="Ne peut être supprimé car contient {{ activity.nbLignesDeTemps }} lignes de temps"
                         matTooltipPosition="after"

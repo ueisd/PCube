@@ -1,0 +1,29 @@
+.logout-button span{
+    display: inline-block;
+    font-size: 16px;
+}
+
+::ng-deep .logout-button mat-icon{
+    margin: auto;
+    vertical-align: middle;
+}
+
+.logout-button{
+    transition: color 0.5s ease;
+    transition: background-color 0.5s ease;
+    cursor: pointer;
+    background-color: rgb(230, 230, 230);
+    width: 140px;
+    border: 1px solid black;
+    border-radius: 4px;
+}
+
+.logout-button:hover{
+    background-color: #6699cc;
+    color: white;
+}
+
+.logout-inside-container{
+    width: 120px;
+    margin: auto;
+}

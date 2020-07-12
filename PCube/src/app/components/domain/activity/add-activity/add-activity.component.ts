@@ -2,6 +2,8 @@ import { Component, OnInit, Output, EventEmitter, Inject, Optional } from '@angu
 import { ActivityService } from 'src/app/services/activity/activity.service';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { ActivityItem } from 'src/app/models/activity';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({
@@ -12,44 +14,99 @@ import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 
 export class AddActivityComponent implements OnInit{
 
-  constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,
-    private activityService: ActivityService, private dialogRef: MatDialogRef<AddActivityComponent>) { }
+  constructor(
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+    private activityService: ActivityService, 
+    private dialogRef: MatDialogRef<AddActivityComponent>,
+    private snackBar : MatSnackBar
+    ) { }
 
   newActivityForm: FormGroup;
+  activityItem:ActivityItem;
+
+  isUnmodifiedValue:boolean = false;
 
   ngOnInit(): void {
+  
     this.initForm();
+
+    if(this.data){
+      this.activityItem = this.data.activity;
+      this.isCreateForm = false;
+      this.isUnmodifiedValue = true;
+      this.newActivityForm.get("activityName").setValue(this.activityItem.name);
+    }
+    else
+      this.isCreateForm = true;
+
+
     this.isAdded = false;
     this.isUnique = true;
   }
 
   isAdded: boolean;
-
+  isCreateForm:boolean = true;
 
   private onSubmitSuccess(){
-    this.isAdded = true;
-    this.newActivityForm.reset();
     this.dialogRef.close(true);
+  }
+
+  createNewActivity(){
+    this.activityService.addNewActivity(this.newActivityForm.controls['activityName'].value).subscribe(activity => {
+      if(activity.id != -1){
+        this.onSubmitSuccess();
+      }else{
+        this.isAdded = false;
+      }
+    });
+  }
+
+  openSnackBar(message, panelClass) {
+    this.snackBar.open(message, 'Fermer', {
+      duration: 10000,
+      horizontalPosition: "right",
+      verticalPosition: "bottom",
+      panelClass: [panelClass]
+    });
+  }
+
+  updateAnActivity(newName:string){
+
+      this.activityService.updateActivity(this.activityItem.id, this.activityItem.name, newName).subscribe(activity=>{
+        this.dialogRef.close(true);
+      },(error)=>{
+        this.openSnackBar("Une erreur s'est produit, veuillez", 'notif-error');
+        this.isAdded = false;
+      });
   }
 
   onSubmit(){
 
-    if(this.newActivityForm.valid){
-      this.activityService.addNewActivity(this.newActivityForm.controls['activityName'].value).subscribe(activity => {
-          if(activity.id != -1){
-            this.onSubmitSuccess();
-          }else{
-            this.isAdded = false;
-          }
-      });
-    }
+    if(!this.newActivityForm.valid)
+      return;
+
+    if(this.isCreateForm)
+      this.createNewActivity();
+    else
+      this.updateAnActivity(this.newActivityForm.get("activityName").value);
+
   }
 
   isUnique: boolean;
 
   checkUniqueName(newValue){
+
+    if(!this.isCreateForm && newValue == this.activityItem.name){
+      this.isUnique = true;
+      this.isUnmodifiedValue = true;
+      return;
+    }
+
     if(newValue != null && newValue.trim().length != 0){
-      this.activityService.isNameUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
+      this.activityService.isNameUnique(newValue).subscribe(isUnique => {
+        this.isUnique = isUnique
+        this.isUnmodifiedValue = false;
+      });
     }
   }
 
