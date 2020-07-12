@@ -5,8 +5,6 @@ a:hover, a:active{
 .header{
     height: 50px;
     background-color: #3E63A7;
-    background: -webkit-gradient(linear, right top, right bottom, from(#3665AF), to(#7AB162));
-    background: linear-gradient(to bottom left, #3665AF 0%, #7AB162 100%);
 }
 
 .example-spacer {

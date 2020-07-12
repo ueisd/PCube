@@ -4,6 +4,7 @@
 
 .page-container{
     height: calc(100vh - 64px);
+    background-color: #FAFAFA;
 }
 
 .hide-drawer{
@@ -59,4 +60,14 @@
 }
 .sidenav-drawer-button:hover{
     background-color: #3E63A7;
+}
+
+.home-header{
+    background-color: #FAFAFA;
+    transition-duration: 0.5s;
+    transform: translateY(0);
+}
+
+.hide-header{
+    transform: translateY(-100%);
 }

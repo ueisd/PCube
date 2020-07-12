@@ -15,6 +15,7 @@ export class HomeComponent implements OnInit {
   @ViewChild(SidenavComponent) sideNavReference;
   @ViewChild("drawer") drawerComponent;
 
+
   authenticated: boolean;
   accessLevel: number;
 
@@ -30,7 +31,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.checkForAuth();
-
   }
 
   ngAfterViewInit(){
@@ -38,6 +38,7 @@ export class HomeComponent implements OnInit {
   }
 
   isDrawerHidden:boolean = false;
+  isHeaderHidden:boolean = true;
 
   checkForAuth(){
     this.auth.subscribe(
@@ -50,12 +51,16 @@ export class HomeComponent implements OnInit {
             this.accessLevel = parseInt(userInfo.level)
             this.sideNavReference.accessLevel = this.accessLevel;
             setTimeout(() => {
+              this.isHeaderHidden = false;
+            }, 800);
+            setTimeout(() => {
               this.drawerComponent.toggle();
-            }, 1000);
+            }, 1200);
           });
         }else{
           this.accessLevel = -1;
           this.isDrawerHidden = true;
+          this.isHeaderHidden = true;
         }
       }
     );

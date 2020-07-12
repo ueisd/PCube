@@ -14,7 +14,10 @@ export class LogoutComponent implements OnInit {
               private auth: AuthService) { }
 
   ngOnInit() {
+    this.showLogOutButton = true;
   }
+
+  showLogOutButton:boolean;
 
   logout() {
     this.auth.deauthenticate().subscribe(
