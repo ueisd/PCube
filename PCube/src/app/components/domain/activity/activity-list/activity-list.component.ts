@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivityItem } from 'src/app/models/activity';
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { ActivityService } from 'src/app/services/activity/activity.service';
 import * as $ from 'jquery/dist/jquery.min.js';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { Observable, } from 'rxjs';
 import { DeleteActivityComponent } from '../delete-activity/delete-activity.component';
+import { AddActivityComponent } from '../add-activity/add-activity.component';
 
 const HIDDEN_CLASS = 'hidden';
 
@@ -30,50 +31,9 @@ export class ActivityListComponent implements OnInit {
   ngOnInit(): void {
     this.refreshList();
   }
-  
-  changeAcceptModificationButtonState(buttonId, desactivate: boolean){
-    $("#accept-"+buttonId).attr("disabled", desactivate);
-  }
-
-  changeNotUniqueMessageState(id, isHidden: boolean){
-    if(isHidden)
-      $("#error-"+id).addClass('hidden');
-    else
-    $("#error-"+id).removeClass('hidden');
-  }
 
   onNameFilterChanged(){
     this.refreshList();
-  }
-
-  bindKeypress(){
-    $( document ).ready(function() {
-      this.dataSource.forEach(element => {
-        $("#input-"+element.id).bind('keyup', function(e){
-
-          let newName = $("#"+e.target.id).val().trim();
-          let dashIndex = e.target.id.indexOf('-');
-          let id = e.target.id.substring(dashIndex + 1);
-
-          if(!this.isNewValueValid(newName)){
-            this.changeAcceptModificationButtonState(id, true);
-            this.changeNotUniqueMessageState(id, false);
-            return;
-          }
-
-          this.activityService.isNameUnique(newName).subscribe(isUnique => {
-            if(isUnique){
-              this.changeAcceptModificationButtonState(id, false);
-              this.changeNotUniqueMessageState(id, true);
-            }else{
-              this.changeAcceptModificationButtonState(id, true);
-              this.changeNotUniqueMessageState(id, false);
-            }
-          });
-
-        }.bind(this));
-      });
-    }.bind(this));
   }
 
   openDeleteDialog(activity) {
@@ -99,7 +59,7 @@ export class ActivityListComponent implements OnInit {
 
   openSnackBar(message, panelClass) {
     this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
+      duration: 10000,
       horizontalPosition: "right",
       verticalPosition: "bottom",
       panelClass: [panelClass]
@@ -112,13 +72,7 @@ export class ActivityListComponent implements OnInit {
     this.displayedColumns = ['name', 'operations'];
     this.activityService.filterActivity(activity).subscribe(activities => {
       this.dataSource = activities;
-      this.bindKeypress();
     });
-  }
-
-  editAction(activity){
-    $("#modification-"+activity.id).removeClass(HIDDEN_CLASS);
-    $("#showName-"+activity.id).addClass(HIDDEN_CLASS);
   }
 
   isNewValueValid(newValue): boolean{
@@ -128,26 +82,24 @@ export class ActivityListComponent implements OnInit {
       return true;
   }
 
-  acceptModification(activity){
-    let newName = $("#input-"+activity.id).val();
+  fileNameDialogRef: MatDialogRef<AddActivityComponent>;
 
-    if(!this.isNewValueValid(newName))
-      return;
+  openEditDialog(activity:ActivityItem) {
 
-    this.activityService.isNameUnique(newName).subscribe(isUnique => {
-      if(isUnique){
-        this.activityService.updateActivity(activity.id, activity.name, newName).subscribe(isUpdated => {
+    const dialogConfig = new MatDialogConfig();
+    dialogConfig.data = { 
+      activity : activity,
+    }
+    dialogConfig.minWidth = 600;
+    this.fileNameDialogRef = this.dialog.open(AddActivityComponent, dialogConfig);
+    
+    this.fileNameDialogRef.afterClosed().subscribe(result => { 
+        if(result == true) {
           this.refreshList();
-        });
+          this.openSnackBar("L'activité a été modifiée", 'notif-success');
+        }
       }
-    });
-  }
-
-  cancelModification(activity){
-    $("#modification-"+activity.id).addClass(HIDDEN_CLASS);
-    $("#showName-"+activity.id).removeClass(HIDDEN_CLASS);
-    $("#input-"+activity.id).val(activity.name);
-    this.changeAcceptModificationButtonState(activity.id, true);
+    );
   }
 
 }
