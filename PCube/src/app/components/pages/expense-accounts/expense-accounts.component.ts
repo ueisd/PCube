@@ -22,7 +22,6 @@ export class ExpenseAccountsComponent implements OnInit {
   @ViewChild(ExpenseAccountListComponent) expanseAccountListChild;
 
   openAddDialog() {
-    this.openSnackBar('Le compte de dépense a été créé', 'notif-success');
     const dialogConfig = new MatDialogConfig();
     dialogConfig.minWidth = 600;
     dialogConfig.data = {
@@ -33,7 +32,7 @@ export class ExpenseAccountsComponent implements OnInit {
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
       if(result == true) {
         this.expanseAccountListChild.refreshList({expanded: true});
-        this.openSnackBar('le compte de dépense a été créée', 'notif-success');
+        this.openSnackBar('Le compte de dépense a été créée', 'notif-success');
       }
     });
   }
