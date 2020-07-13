@@ -86,3 +86,13 @@ class UserRequest:
         user.id = id
         return user
 
+    def get_public_user_info(self,email):
+        """
+        Permet d'obtenir les informations d'un utilisateur non sensible.
+        """
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select first_name, last_name, email from user where email = ?", (email,))
+        data = cursor.fetchone()
+        cursor.close()
+        return data

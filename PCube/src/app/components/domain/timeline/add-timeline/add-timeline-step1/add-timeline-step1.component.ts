@@ -106,15 +106,24 @@ export class AddTimelineStep1Component implements OnInit {
       return;
     }
 
-    if(users.length > 1){
+    if(users.length > 1 && !this.isItemAlreadyFound){
       this.users = users;
       this.onMultipleUserFound();
+      return;
+    }
+
+    if(users.length > 1 && this.isItemAlreadyFound){
+      this.user = users.find(a => a.id == user.id || a.email == user.email)
+      this.users = [user];
+      this.onUserFound();
+      this.isItemAlreadyFound = false;
       return;
     }
 
     if(users.length == 1 && (users[0].id == user.id || users[0].email.toLocaleUpperCase() == user.email.toLocaleUpperCase())){
       this.user = users[0];
       this.onUserFound();
+      return;
     }
     else
       this.onMultipleUserFound();
@@ -181,9 +190,12 @@ export class AddTimelineStep1Component implements OnInit {
       
   }
 
+  isItemAlreadyFound: boolean = false;
+
   setAlreadyFoundItem(isSearchByEmail:boolean, info:string){
     this.isSearchByEmail = isSearchByEmail;
     this.changeToggleTexteDisplay(isSearchByEmail);
+    this.isItemAlreadyFound = true;
     if(isSearchByEmail){
       this.email.setValue(info);
       this.onEmailChange(info);

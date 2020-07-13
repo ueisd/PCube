@@ -14,13 +14,21 @@ export class LogoutComponent implements OnInit {
               private auth: AuthService) { }
 
   ngOnInit() {
+    this.showLogOutButton = true;
   }
 
+  showLogOutButton:boolean;
+
   logout() {
-    console.log('logging out');
     this.auth.deauthenticate().subscribe(
       () => {
-        this.router.navigate(['/login']);
+        if(this.router.url == "/")
+          location.reload();
+        else{
+          this.router.navigate(['/']).then(()=>{
+            window.location.reload();
+          });
+        }
       }
     );
   }

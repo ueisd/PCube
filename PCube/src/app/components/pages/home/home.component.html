@@ -1,16 +1,26 @@
 <div class="page-container">
-
-    <app-header></app-header>
+    <div class="home-header" [ngClass]="isHeaderHidden ? 'hide-header' : ''">
+      <app-header #header></app-header>
+    </div>
     
     <mat-drawer-container class="sidenav-container" autosize>
-      <mat-drawer #drawer class="example-sidenav" mode="side" opened="true">
+      <mat-drawer #drawer class="example-sidenav side-drawer" mode="side" opened="false" [ngClass]="isDrawerHidden ? 'hide-drawer' : ''">
         <app-sidenav></app-sidenav>
+        <div class="sidenav-drawer-button" (click)="toggleDrawer()">
+          <div class="drawer-arrow" *ngIf="isShowTitle">
+            <mat-icon>arrow_back_ios</mat-icon>
+            <mat-icon>arrow_back_ios</mat-icon>
+          </div>
+          <div class="drawer-arrow" *ngIf="!isShowTitle">
+            <mat-icon>arrow_forward_ios</mat-icon>
+            <mat-icon>arrow_forward_ios</mat-icon>
+          </div>
+            <p *ngIf="isShowTitle">Cacher navigation</p>
+        </div>  
       </mat-drawer>
     
-      <div class="example-sidenav-content">
-        <button type="button" mat-button (click)="drawer.toggle()">
-          Toggle sidenav
-        </button>
+      <div class="sidenav-content">
+        <app-login *ngIf="router.url === '/'"></app-login>
         <router-outlet></router-outlet>
       </div>
     

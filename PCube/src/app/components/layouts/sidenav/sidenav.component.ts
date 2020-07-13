@@ -14,7 +14,10 @@ export class SidenavComponent implements OnInit {
   accessLevel: number = -1;
   fileNameDialogRef: MatDialogRef<RequestFormComponent>;
 
+
   constructor(private dialog: MatDialog, private router: Router, private snackBar : MatSnackBar) { }
+
+  isShowTitle:boolean = true;
 
   ngOnInit(): void {
   }
