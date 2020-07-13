@@ -19,6 +19,7 @@ import { ModifyingTimelineComponent } from 'src/app/components/pages/timeline/mo
 import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 import { TimelineComponent } from './components/pages/timeline/timeline.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
+import { ServerDownComponent } from './components/pages/server-down/server-down.component';
 
 const routes: Routes = [
   {
@@ -77,6 +78,10 @@ const routes: Routes = [
       {
         path: '404', 
         component: NotFoundComponent
+      },
+      {
+        path: 'server-down', 
+        component: ServerDownComponent
       },
     ]
   },

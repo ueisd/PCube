@@ -1,0 +1,21 @@
+.container-500{
+    width: 400px;
+    height: 388px;
+
+    position: absolute;
+	top:0;
+	bottom: 0;
+	left: 0;
+    right: 0;
+    
+    margin: auto;
+}
+
+.container-500 button{
+    background-color: #3E63A7;
+    color: white;
+}
+
+.container-500 img{
+    width: 100%;
+}
