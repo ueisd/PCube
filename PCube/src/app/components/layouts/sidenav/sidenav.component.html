@@ -13,6 +13,10 @@
         <mat-icon>account_balance</mat-icon><span class="nav-caption">Comptes de Dépense</span>
     </a>
 
+    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item (click)="openReportReqDialog()">
+        <mat-icon>account_balance</mat-icon><span class="nav-caption">Générer rapport</span>
+    </a>
+
     <mat-accordion *ngIf="accessLevel == 1 || accessLevel == 2">
         <mat-expansion-panel>
             <mat-expansion-panel-header>

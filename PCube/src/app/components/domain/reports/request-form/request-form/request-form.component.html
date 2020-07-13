@@ -1,0 +1,93 @@
+
+<form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
+    <h2 mat-dialog-title>Génération d'un rapport</h2>
+    <mat-dialog-content class="mat-typography">
+        <p>Ceci est le formulaire de requête  </p>
+        <div class="container"  fxLayout="row" fxLayoutAlign="start center">
+            <div fxflex class="container" fxLayout="row" fxLayoutAlign="start center">
+                <mat-slide-toggle (ngModelChange)="isProjets($event)" formControlName="isProjets">
+                    {{ (requestForm.get('isProjets').value) ? " limité aux projets: " : "Tous les projets" }} &nbsp;&nbsp;
+                </mat-slide-toggle>
+            </div>
+            <div fxflex fxFlex="70%" *ngIf="requestForm.value.isProjets">
+                <ng-select 
+                    [items]="projetsOptions"
+                    [multiple]="true"
+                    bindLabel="nomAffichage"
+                    placeholder="Listedes projets"
+                    appendTo="body"
+                    formControlName="projects">         
+                </ng-select>
+            </div>
+        </div>
+
+        <div class="container"  fxLayout="row" fxLayoutAlign="start center">
+            <div fxflex class="container" fxLayout="row" fxLayoutAlign="start center">
+                <mat-slide-toggle (ngModelChange)="isActivitys($event)" formControlName="isActivitys">
+                    {{ (requestForm.get('isActivitys').value) ? " limité aux activités: " : "Toutes les activités" }} &nbsp;&nbsp;
+                </mat-slide-toggle>
+            </div>
+            <div fxflex fxFlex="70%" *ngIf="requestForm.value.isActivitys">
+                <ng-select 
+                    [items]="activityOptions"
+                    [multiple]="true"
+                    bindLabel="name"
+                    placeholder="Liste des activités"
+                    appendTo="body"
+                    formControlName="activitys">         
+                </ng-select>
+            </div>
+        </div>
+
+        <div class="container"  fxLayout="row" fxLayoutAlign="start center">
+            <div fxflex class="container" fxLayout="row" fxLayoutAlign="start center">
+                <mat-slide-toggle (ngModelChange)="isUsers($event)" formControlName="isUsers">
+                    {{ (requestForm.get('isUsers').value) ? " limité aux utilisateurs: " : "Toutes les utilisateurs" }} &nbsp;&nbsp;
+                </mat-slide-toggle>
+            </div>
+            <div fxflex fxFlex="70%" *ngIf="requestForm.value.isUsers">
+                <ng-select 
+                    [items]="usersOptions"
+                    [multiple]="true"
+                    bindLabel="display_string"
+                    placeholder="Liste des utilisateurs"
+                    appendTo="body"
+                    formControlName="users">         
+                </ng-select>
+            </div>
+        </div>
+
+        <mat-form-field color="accent">
+            <mat-label>Date de début</mat-label>
+            <input matInput [matDatepicker]="picker1" formControlName="dateDebut">
+            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+            <mat-datepicker #picker1></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field color="accent">
+            <mat-label>Date de fin</mat-label>
+            <input matInput [matDatepicker]="picker2" formControlName="dateFin" [errorStateMatcher]="matcher">
+            <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+            <mat-datepicker #picker2></mat-datepicker>
+            <mat-error class="error-message" *ngIf="requestForm.hasError('dateFinAvantDebut')">
+                Date de fin trop petite
+            </mat-error>
+        </mat-form-field>
+    </mat-dialog-content>
+
+    <mat-dialog-actions align="end">
+        <button mat-button mat-dialog-close>Annuler</button>
+        <button mat-button type="submit" [disabled]="requestForm.invalid">Générer</button>
+    </mat-dialog-actions>
+
+
+    <!--<pre>
+        {{ usersOptions | json }}
+    </pre>-->
+
+     <pre>
+        {{ requestForm.value | json }}
+    </pre>
+
+    <!-- -->
+</form>
