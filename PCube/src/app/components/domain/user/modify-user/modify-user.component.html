@@ -1,33 +1,42 @@
-<form [formGroup]="modifyUserForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
+<form [formGroup]="modifyUserForm" (ngSubmit)="onSubmit()">
     <h2 mat-dialog-title>Modifier un utilisateur</h2>
     
     <mat-dialog-content class="mat-typography">
 
-        <input type="hidden" id="id" class="form-control" formControlName="id" [ngModel]="data.id">
-        <input type="hidden" id="email" class="form-control" formControlName="email" [ngModel]="data.email">
+        <input type="hidden" id="id" class="form-control" formControlName="id">
+        <input type="hidden" id="email" class="form-control" formControlName="email">
         
-        <label for="firstName">Prénom</label><br>
-        <input type="text" id="firstName" class="form-control" formControlName="firstName" [ngModel]="data.first_name"><br>
-        
-        <label for="lastName">Nom de famille</label><br>
-        <input type="text" id="lastName" class="form-control" formControlName="lastName" [ngModel]="data.last_name"><br>
- 
-        <label for="newEmail">Adresse Courriel</label><br>
+        <mat-form-field class="full-width">
+            <mat-label>Prénom</mat-label>
+            <input matInput placeholder="Prénom" formControlName="firstName">
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+            <mat-label>Nom de famille</mat-label>
+            <input matInput placeholder="Nom de famille" formControlName="lastName">
+        </mat-form-field>
+
+        <mat-form-field class="full-width">
+            <mat-label>Adresse courriel</mat-label>
+            <input matInput placeholder="Adresse courriel" formControlName="email" (ngModelChange)="checkUniqueEmail($event)">
+        </mat-form-field>
+
         <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
             L'adresse courriel doit être unique!
         </div>
-        <input (ngModelChange)="checkUniqueEmail($event)" type="text" id="newEmail" class="form-control" formControlName="newEmail" [ngModel]="data.email"><br>
 
-        <label for="roleId">Rôle</label><br>
-        <select formControlName="roleId" id="roleId" [ngModel]="data.role_id">
-            <option id="roleId" *ngFor="let role of roles; let i = index" [ngValue]="roles[i].id">
-                {{roles[i].role_name}}
-                </option>
-        </select><br>
+        <ng-select 
+            [items]="roles"
+            bindLabel="role_name"
+            placeholder="Rôle choisi"
+            appendTo="body"
+            formControlName="roles">
+        </ng-select>
 
     </mat-dialog-content>
-    <mat-dialog-actions>
-        <button mat-button type="submit" [disabled]="!modifyUserForm.valid || !isUnique">Sauvegarder</button>
-        <button mat-button mat-dialog-close>Annuler</button>
+    <br/>
+    <mat-dialog-actions align="end">
+        <button mat-raised-button color="warn" mat-dialog-close>Annuler</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!modifyUserForm.valid || !isUnique">Sauvegarder</button>
     </mat-dialog-actions>
 </form>
