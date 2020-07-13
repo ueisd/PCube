@@ -152,8 +152,8 @@ export class RequestFormComponent implements OnInit {
       this.params.users.push(user.id);
 
     let navigationExtras: NavigationExtras = { state: { params: this.params } };
-    this.router.navigate(['/reports'], navigationExtras);
-    this.dialogRef.close(true);
+    this.reportReqService.emitParams(this.params);
+    this.dialogRef.close(this.params);
   }
 
 }

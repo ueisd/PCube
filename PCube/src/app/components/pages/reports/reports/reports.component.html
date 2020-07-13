@@ -1,10 +1,37 @@
-<p>reports works!</p>
-<pre>
-    {{ reportRequest | json }}
-</pre>
-
-<pre>
-    {{reportsItems | json}}
-</pre>
-
-:)
+<div fxLayout.xs="column">
+    <mat-card fxflex fxflex-gt-xs="100" fxFlexOffset="2" fxFlex="20">
+        <mat-card-header>
+            <mat-card-title><h2>Affichage du rapport</h2></mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                    <div class="container width100">
+                        <div fxflex fxFlex="70%">
+                            {{node.name}}
+                        </div>
+                        <div fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+                            {{ (node.sommeHeure) ? heureSommeToStr(node.sommeHeure) : '0h00' }}
+                        </div>  
+                    </div>
+                </mat-tree-node>
+                <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+                    <div class="container width100">
+                        <div fxflex fxFlex="70%">
+                            <button mat-icon-button matTreeNodeToggle
+                            [attr.aria-label]="'toggle ' + node.name">
+                                <mat-icon class="mat-icon-rtl-mirror">
+                                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                </mat-icon>
+                            </button>
+                            {{node.name}}
+                        </div>
+                        <div fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+                            {{ (node.sommeHeure) ? heureSommeToStr(node.sommeHeure) : '0h00' }}
+                        </div>
+                    </div>
+                </mat-tree-node>
+            </mat-tree>      
+        </mat-card-content>
+    </mat-card>
+</div>

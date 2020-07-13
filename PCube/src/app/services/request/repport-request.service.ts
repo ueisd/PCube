@@ -12,6 +12,10 @@ const API_REPORT = '/api/timeline/testsum';
 })
 export class RepportRequestService {
 
+  private missionAnnouncedSource = new Subject<ReportRequest>();
+
+  paramsAnnounced$ = this.missionAnnouncedSource.asObservable();
+
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {}
@@ -24,5 +28,10 @@ export class RepportRequestService {
       })
     };
     return this.http.post<ReportItem[]>(API_REPORT, params, opts);
+  }
+
+  // Service message commands
+  emitParams(mission: ReportRequest) {
+    this.missionAnnouncedSource.next(mission);
   }
 }
