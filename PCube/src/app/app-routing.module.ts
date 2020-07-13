@@ -11,7 +11,6 @@ import { ProjectManagerGuard } from './services/auth/project_manager.guard';
 import { MemberGuard } from './services/auth/member.guard';
 
 import { HomeComponent } from 'src/app/components/pages/home/home.component';
-import { AccessDeniedComponent } from 'src/app/components/pages/access-denied/access-denied.component';
 import { AddUserComponent } from './components/domain/user/add-user/add-user.component';
 import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
 import { ManageTimelineComponent } from 'src/app/components/pages/timeline/manage-timeline/manage-timeline.component';
@@ -19,6 +18,7 @@ import { AddingTimelineComponent } from 'src/app/components/pages/timeline/addin
 import { ModifyingTimelineComponent } from 'src/app/components/pages/timeline/modifying-timeline/modifying-timeline.component';
 import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 import { TimelineComponent } from './components/pages/timeline/timeline.component';
+import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 
 const routes: Routes = [
   {
@@ -50,10 +50,6 @@ const routes: Routes = [
         canActivate: [AdminGuard]
       },
       {
-        path: 'denied',
-        component: AccessDeniedComponent
-      },
-      {
         path: 'ligne-de-temps',
         component: TimelineComponent,
         canActivate: [ProjectManagerGuard]
@@ -77,9 +73,17 @@ const routes: Routes = [
         path: 'add-account-expense',
         component: AddExpenseAccountComponent,
         canActivate: [AdminGuard]
-      }
+      },
+      {
+        path: '404', 
+        component: NotFoundComponent
+      },
     ]
   },
+  {
+    path: '**',
+    redirectTo: '/404'
+  }
 ];
 
 @NgModule({

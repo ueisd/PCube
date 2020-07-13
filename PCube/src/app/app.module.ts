@@ -13,7 +13,6 @@ import { AuthInterceptor } from 'src/app/services/auth/auth.interceptor';
 import { LoginComponent } from './components/pages/login/login.component';
 import { LogoutComponent } from './components/layouts/logout/logout.component';
 import { HomeComponent } from './components/pages/home/home.component';
-import { AccessDeniedComponent } from './components/pages/access-denied/access-denied.component';
 import { AddUserComponent } from './components/domain/user/add-user/add-user.component';
 import { UserListComponent } from './components/domain/user/user-list/user-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -56,6 +55,7 @@ import { TimelineComponent } from './components/pages/timeline/timeline.componen
 import { DeleteProjectComponent } from './components/domain/project/delete-project/delete-project.component';
 import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 import { DeleteExpenseAccountComponent } from './components/domain/expense-account/delete-expense-account/delete-expense-account.component';
+import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 
 
 @NgModule({
@@ -65,7 +65,6 @@ import { DeleteExpenseAccountComponent } from './components/domain/expense-accou
     LoginComponent,
     LogoutComponent,
     HomeComponent,
-    AccessDeniedComponent,
     AddUserComponent,
     UserListComponent,
     AddActivityComponent,
@@ -98,6 +97,7 @@ import { DeleteExpenseAccountComponent } from './components/domain/expense-accou
     DeleteProjectComponent,
     AddExpenseAccountComponent,
     DeleteExpenseAccountComponent,
+    NotFoundComponent,
   ],
   imports: [
     MatDialogModule,
