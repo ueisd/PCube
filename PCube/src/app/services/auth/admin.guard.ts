@@ -18,7 +18,7 @@ export class AdminGuard implements CanActivate, CanActivateChild {
     if (this.auth.isAdmin()) {
       return true;
     } else {
-      this.router.navigate(['/denied']);
+      this.router.navigate(['/']);
     }
   }
 
@@ -29,7 +29,7 @@ export class AdminGuard implements CanActivate, CanActivateChild {
     if (this.auth.isAdmin()) {
       return true;
     } else {
-      this.router.navigate(['/denied']);
+      this.router.navigate(['/']);
     }
   }
 }
