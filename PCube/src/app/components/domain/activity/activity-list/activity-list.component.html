@@ -4,22 +4,21 @@
             <input class="name-filter" matInput placeholder="Nom" (ngModelChange)="onNameFilterChanged()" [formControl]="nameFilter">
         </mat-header-cell>
         <mat-cell *matCellDef="let activity">
-            <div id="showName-{{activity.id}}">
+            <div id="showName-{{activity.id}}" style="text-align: left;">
                 {{activity.name}}
             </div>
             
         </mat-cell>
     </ng-container>
 
-        <!-- Colonne rôle -->
+        <!-- Colonne opération -->
     <ng-container matColumnDef="operations">
         <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
-        <mat-cell *matCellDef="let activity" align="right">
-            <div class="container width100">
-                <div fxflex fxFlex="100%"
-                fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+        <mat-cell *matCellDef="let activity" align="left">
+            <div>
+                <div>
                     <button mat-raised-button color="primary" (click)="openEditDialog(activity)"><mat-icon>edit</mat-icon></button>
-                    <button mat-raised-button color="warn" [disabled]="activity.nbLignesDeTemps > 0"
+                    <button mat-raised-button color="warn" [disabled]="isViewInitDone && activity.nbLignesDeTemps > 0"
                         matTooltip="Ne peut être supprimé car contient {{ activity.nbLignesDeTemps }} lignes de temps"
                         matTooltipPosition="after"
                         [matTooltipDisabled]="activity.nbLignesDeTemps <= 0"

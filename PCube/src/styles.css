@@ -201,3 +201,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     width: 95%;
     margin: auto;
 }
+
+.mat-column-operations{
+    flex: 0 0 150px;
+ }

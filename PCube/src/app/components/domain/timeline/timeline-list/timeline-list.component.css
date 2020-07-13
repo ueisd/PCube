@@ -1,5 +1,28 @@
+.mat-column-jour{
+    flex: 0 0 115px;
+ }
+
+ .mat-column-jour mat-form-field-wrapper{
+    padding-bottom: 0px !important;
+ }
+
+ .mat-column-heures{
+    flex: 0 0 100px;
+    padding-left: 10px !important;
+ }
+
+ .mat-column-membre, .mat-column-projet, .mat-column-activiter, .mat-column-compteDepense{
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-left: 10px;
+ }
+
+
+
 .date-filter-field{
     width: 115px;
+    padding-top: 16px;
 }
 
 .on-small-screen-hide{
@@ -17,6 +40,11 @@
     width: 160px;
     color: black;
     text-align: left;
+}
+
+button {
+    margin-right: 5px;
+    margin-left: 5px;
 }
 
 @media only screen and (max-width: 900px) {

@@ -39,6 +39,12 @@ export class ActivityListComponent implements OnInit {
     this.refreshList();
   }
 
+  isViewInitDone:boolean = false;
+
+  ngAfterViewInit(){
+    this.isViewInitDone = true;
+  }
+
   onNameFilterChanged(){
     this.refreshList();
   }

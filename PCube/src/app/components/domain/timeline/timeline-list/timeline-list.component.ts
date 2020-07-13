@@ -118,5 +118,10 @@ export class TimelineListComponent implements OnInit {
     this.refreshList();
   }
 
+  resetDateFilter(){
+    let emptyDate:Date;
+    this.dateFilter = emptyDate;
+    this.refreshList();
+  }
 
 }
