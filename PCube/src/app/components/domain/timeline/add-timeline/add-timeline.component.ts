@@ -10,6 +10,7 @@ import { TimelineService } from 'src/app/services/timeline/timeline.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddTimelineStep5Component } from './add-timeline-step5/add-timeline-step5.component';
 import { Router } from '@angular/router';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-add-timeline',
@@ -44,6 +45,8 @@ export class AddTimelineComponent implements OnInit {
   project:ProjectItem;
   account:ExpenseAccountItem;
   workingShifts: WorkingShift[];
+
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   dateFormatISO8601(date:Date): string{
 
@@ -81,11 +84,11 @@ export class AddTimelineComponent implements OnInit {
     let timesLines = this.generateTimelinesFromSubmit();
     this.timelineService.addNewTimeline(timesLines).subscribe( timelines => {
 
-      this.openSnackBar('Les lignes de temps ont été ajouté','notif-success');
+      this.customSnackBar.openSnackBar('Les lignes de temps ont été ajouté','notif-success');
       this.step5Component.onFormSubmitSuccess();
 
     }, error =>{
-      this.openSnackBar("Une erreur s'est produit. Veuillez réessayer.",'notif-error');
+      this.customSnackBar.openSnackBar("Une erreur s'est produit. Veuillez réessayer.",'notif-error');
     });
 
   }
@@ -123,15 +126,6 @@ export class AddTimelineComponent implements OnInit {
       case 5:this.step5 = isValid;break;
     }
     this.isReadyToSubmit = this.step1 && this.step2 && this.step3 && this.step4 && this.step5;
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 10000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
-    });
   }
 
 }

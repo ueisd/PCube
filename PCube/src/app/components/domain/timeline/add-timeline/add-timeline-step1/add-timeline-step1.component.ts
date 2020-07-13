@@ -112,7 +112,7 @@ export class AddTimelineStep1Component implements OnInit {
       return;
     }
 
-    if(users.length > 1 && this.isItemAlreadyFound){
+    if(users.length >= 1 && this.isItemAlreadyFound){
       this.user = users.find(a => a.id == user.id || a.email == user.email)
       this.users = [user];
       this.onUserFound();

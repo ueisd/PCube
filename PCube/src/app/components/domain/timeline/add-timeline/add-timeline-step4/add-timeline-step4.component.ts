@@ -110,7 +110,7 @@ export class AddTimelineStep4Component implements OnInit {
       return;
     }
 
-    if(accounts.length > 1 && this.isItemAlreadyFound){
+    if(accounts.length >= 1 && this.isItemAlreadyFound){
       this.account = accounts.find(a => a.id == account.id || a.name == account.name)
       this.accounts = [account];
       this.onAccountFound();

@@ -9,6 +9,7 @@ import { AddProjectComponent } from '../add-project/add-project.component';
 import { DeleteProjectComponent } from 'src/app/components/domain/project/delete-project/delete-project.component';
 import { MatDialogRef, MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-project-list',
@@ -25,6 +26,9 @@ export class ProjectListComponent implements OnInit {
 
   constructor(private projectService: ProjectService, private dialog: MatDialog,
     private snackBar : MatSnackBar) {}
+
+
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   ngOnInit(): void {
     this.refreshList({expanded: true});
@@ -57,7 +61,7 @@ export class ProjectListComponent implements OnInit {
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
         if(result == true) {
           this.refreshList({expanded: true});
-          this.openSnackBar('Le projet a été modifiée', 'notif-success');
+          this.customSnackBar.openSnackBar('Le projet a été modifiée', 'notif-success');
         }
       }
     );
@@ -79,24 +83,15 @@ export class ProjectListComponent implements OnInit {
       dialogConfig.afterClosed().subscribe(result => { 
           if(result !== undefined) {
             this.projectService.deleteProject(project.id, project.name).subscribe((data) => {
-              this.openSnackBar('Le projet a été supprimé', 'notif-success');
+              this.customSnackBar.openSnackBar('Le projet a été supprimé', 'notif-success');
               this.refreshList({expanded: true});
             },
             (error) => {
-              this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+              this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
             });
           }
         }
       );
-    });
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
     });
   }
 

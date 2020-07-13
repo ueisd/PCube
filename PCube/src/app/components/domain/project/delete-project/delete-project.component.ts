@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-delete-project',
@@ -15,20 +16,13 @@ export class DeleteProjectComponent implements OnInit {
     private snackBar : MatSnackBar
   ) { }
 
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
+
   ngOnInit(): void {
   }
 
   onNoClick() : void {
     this.dialogRef.close();
-    this.openSnackBar("L'action a été annulé.", 'notif-success');
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 10000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
-    });
+    this.customSnackBar.openSnackBar("L'action a été annulé.", 'notif-success');
   }
 }

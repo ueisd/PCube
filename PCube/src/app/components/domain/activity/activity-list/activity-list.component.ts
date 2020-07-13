@@ -8,6 +8,8 @@ import { FormControl } from '@angular/forms';
 import { Observable, } from 'rxjs';
 import { DeleteActivityComponent } from '../delete-activity/delete-activity.component';
 import { AddActivityComponent } from '../add-activity/add-activity.component';
+import { CustomDiaglogConfig } from 'src/app/utils/custom-dialog-config';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 const HIDDEN_CLASS = 'hidden';
 
@@ -21,15 +23,26 @@ export class ActivityListComponent implements OnInit {
 
   nameFilter = new FormControl('');
 
-  constructor(private activityService: ActivityService, 
-    private dialog: MatDialog, 
-    private snackBar : MatSnackBar ) { }
+  constructor(
+    private activityService: ActivityService, 
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    ) { }
 
   displayedColumns : string[];
   dataSource: ActivityItem[];
 
+  customDiagConfig:CustomDiaglogConfig = new CustomDiaglogConfig();
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
+
   ngOnInit(): void {
     this.refreshList();
+  }
+
+  isViewInitDone:boolean = false;
+
+  ngAfterViewInit(){
+    this.isViewInitDone = true;
   }
 
   onNameFilterChanged(){
@@ -41,28 +54,20 @@ export class ActivityListComponent implements OnInit {
       data: {
         id: activity.id,
         name: activity.name,
-      }
+      },
+      panelClass: 'warning-dialog'
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
         this.activityService.deleteActivity(result.id).subscribe((data) => {
-          this.openSnackBar('L\'activité a été supprimé!', 'notif-success');
+          this.customSnackBar.openSnackBar('L\'activité a été supprimé!', 'notif-success');
           this.refreshList();
         },
         (error) => {
-          this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+          this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
         });
       }
-    });
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 10000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
     });
   }
 
@@ -86,17 +91,16 @@ export class ActivityListComponent implements OnInit {
 
   openEditDialog(activity:ActivityItem) {
 
-    const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = { 
+    this.customDiagConfig.config.data = { 
       activity : activity,
     }
-    dialogConfig.minWidth = 600;
-    this.fileNameDialogRef = this.dialog.open(AddActivityComponent, dialogConfig);
+
+    this.fileNameDialogRef = this.dialog.open(AddActivityComponent, this.customDiagConfig.getDefaultConfig());
     
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
         if(result == true) {
           this.refreshList();
-          this.openSnackBar("L'activité a été modifiée", 'notif-success');
+          this.customSnackBar.openSnackBar("L'activité a été modifiée", 'notif-success');
         }
       }
     );

@@ -110,7 +110,7 @@ export class AddTimelineStep2Component implements OnInit {
       return;
     }
 
-    if(projects.length > 1 && this.isItemAlreadyFound){
+    if(projects.length >= 1 && this.isItemAlreadyFound){
       this.project = projects.find(a => a.id == project.id || a.name == project.name)
       this.projects = [project];
       this.onProjectFound();
