@@ -6,6 +6,7 @@ import { Role } from 'src/app/models/role';
 import { User } from '../../../../models/user';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-add-user',
@@ -23,6 +24,8 @@ export class AddUserComponent implements OnInit {
   @Input() isChecked = false;
   @Output() createUser : EventEmitter<any> = new EventEmitter;
   @Output() refreshDataEvent = new EventEmitter<boolean>();
+
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   constructor(private userService:UserService, 
     private roleService: RoleService, 
@@ -62,25 +65,16 @@ export class AddUserComponent implements OnInit {
     
     if (this.passwordsMatch(password, passwordConfirmation)){
       this.userService.createUser(user, password, passwordConfirmation).subscribe((data) => {
-        this.openSnackBar('L\'utilisateur a été ajouté!','notif-success');
+        this.customSnackBar.openSnackBar('L\'utilisateur a été ajouté!','notif-success');
         this.onSubmitSuccess();
       },
       (error) => {
-        this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+        this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
       });
     }else{
       this.isAdded = false;
       console.log(passwordConfirmation, password, password === passwordConfirmation)
     }
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
-    });
   }
 
   clicked = (any) => {  

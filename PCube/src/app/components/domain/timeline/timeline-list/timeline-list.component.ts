@@ -10,6 +10,7 @@ import { DatePipe } from '@angular/common';
 import { DeleteTimelineComponent } from 'src/app/components/domain/timeline/delete-timeline/delete-timeline.component';
 import { Router } from '@angular/router';
 import { TimelineFilterItem } from 'src/app/models/timelineFilter';
+import { CustomDiaglogConfig } from 'src/app/utils/custom-dialog-config';
 
 
 @Component({
@@ -73,6 +74,7 @@ export class TimelineListComponent implements OnInit {
       },
       panelClass: 'warning-dialog'
     });
+    
 
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {

@@ -8,6 +8,7 @@ import { MatDialogConfig, MatDialogRef, MatDialog } from '@angular/material/dial
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddExpenseAccountComponent } from '../add-expense-account/add-expense-account.component';
 import { DeleteExpenseAccountComponent} from 'src/app/components/domain/expense-account/delete-expense-account/delete-expense-account.component';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-expense-account-list',
@@ -23,6 +24,8 @@ export class ExpenseAccountListComponent implements OnInit {
 
   constructor(private expenseAccountService: ExpenseAccountService,
     private dialog: MatDialog, private snackBar : MatSnackBar) { }
+
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   ngOnInit(): void {
     this.refreshList({expanded: true});
@@ -55,7 +58,7 @@ export class ExpenseAccountListComponent implements OnInit {
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
         if(result == true) {
           this.refreshList({expanded: true});
-          this.openSnackBar('Le compte de dépense a été modifié', 'notif-success');
+          this.customSnackBar.openSnackBar('Le compte de dépense a été modifié', 'notif-success');
         }
       }
     );
@@ -77,24 +80,15 @@ export class ExpenseAccountListComponent implements OnInit {
       dialogConfig.afterClosed().subscribe(result => { 
           if(result !== undefined) {
             this.expenseAccountService.deleteExpenseAccount(expenseAccount.id, expenseAccount.name).subscribe((data) => {
-              this.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
+              this.customSnackBar.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
               this.refreshList({expanded: true});
             },
             (error) => {
-              this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+              this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
             });
           }
         }
       );
-    });
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
     });
   }
   
