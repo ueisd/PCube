@@ -140,6 +140,15 @@ export class RequestFormComponent implements OnInit {
     if(dateFin) this.params.dateFin = formatDate(dateFin, format, locale);
 
     if(this.requestForm.controls['projects'].value)
+      this.params.projects = this.requestForm.controls['projects'].value;
+
+    if(this.requestForm.controls['activitys'].value)
+      this.params.activitys = this.requestForm.controls['activitys'].value;
+
+    if(this.requestForm.controls['users'].value)
+      this.params.users = this.requestForm.controls['users'].value;
+
+    /*if(this.requestForm.controls['projects'].value)
       for(let project of this.requestForm.controls['projects'].value)
       this.params.projects.push(project.id);
 
@@ -149,9 +158,8 @@ export class RequestFormComponent implements OnInit {
 
     if(this.requestForm.controls['users'].value)
       for(let user of this.requestForm.controls['users'].value)
-      this.params.users.push(user.id);
+      this.params.users.push(user.id);*/
 
-    let navigationExtras: NavigationExtras = { state: { params: this.params } };
     this.reportReqService.emitParams(this.params);
     this.dialogRef.close(this.params);
   }

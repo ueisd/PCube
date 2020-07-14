@@ -5,6 +5,7 @@ import { ReportItem } from 'src/app/models/report-item';
 import { Router } from '@angular/router';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
+import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
 
 @Component({
   selector: 'app-reports',
@@ -14,6 +15,7 @@ import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree'
 export class ReportsComponent implements OnInit {
 
   reportRequest : ReportRequest;
+  reportRequestBackend : ReportRequestForBackend;
   reportsItems: ReportItem[];
 
   private _transformer = (node: ReportItem, level: number) => {
@@ -55,14 +57,22 @@ export class ReportsComponent implements OnInit {
 
   }
 
+  refreshRequestBackend(req: ReportRequest) {
+    this.reportRequestBackend = new ReportRequestForBackend();
+    this.reportRequestBackend.buildFromReportRequest(req);
+  }
+
   ngOnInit(): void {
     this.reportRequest = history.state.params;
+    this.refreshRequestBackend(history.state.params);
+
     this.refreshReport();
     this.reportReqService.paramsAnnounced$.subscribe()
 
     this.reportReqService.paramsAnnounced$.subscribe(
       params => {
         this.reportRequest = params;
+        this.refreshRequestBackend(params);
         this.refreshReport();
       }
     );
@@ -71,7 +81,20 @@ export class ReportsComponent implements OnInit {
   }
 
   refreshReport() {
-    this.reportReqService.getReport(this.reportRequest).subscribe(reportsI =>{
+
+    /*if(this.requestForm.controls['projects'].value)
+      for(let project of this.requestForm.controls['projects'].value)
+      this.params.projects.push(project.id);
+
+    if(this.requestForm.controls['activitys'].value)
+      for(let activity of this.requestForm.controls['activitys'].value)
+      this.params.activitys.push(activity.id);
+
+    if(this.requestForm.controls['users'].value)
+      for(let user of this.requestForm.controls['users'].value)
+      this.params.users.push(user.id);*/
+
+    this.reportReqService.getReport(this.reportRequestBackend).subscribe(reportsI =>{
       this.dataSource.data = reportsI;
       this.reportsItems = reportsI;
       this.treeControl.expandAll();

@@ -1,9 +1,13 @@
+import { ProjectItem } from './project';
+import { User } from './user';
+import { ActivityItem } from './activity';
+
 export class ReportRequest {
-    projects? : number[];
+    projects? : ProjectItem[];
     dateDebut? : string;
     dateFin?: string;
-    activitys?: number[];
-    users? : number[];
+    activitys?: ActivityItem[];
+    users? : User[];
 
     constructor(reportResponse?: any) {
         this.projects = reportResponse && reportResponse.projects || [];
