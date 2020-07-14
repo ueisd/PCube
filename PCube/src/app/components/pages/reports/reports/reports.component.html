@@ -1,5 +1,5 @@
 <div fxLayout.xs="column">
-    <mat-card fxflex fxflex-gt-xs="100" fxFlexOffset="2" fxFlex="20">
+    <mat-card fxflex fxflex-gt-xs="100" fxFlexOffset="10" fxFlex="80">
         <mat-card-header>
             <mat-card-title><h2>Affichage du rapport</h2></mat-card-title>
         </mat-card-header>
@@ -8,10 +8,17 @@
                 <div>
                     {{ afficherPeriodes() }}
                 </div>
-                <div *ngIf="reportRequest.activitys.length > 0">
-                    activités:
-                    <div *ngFor="let activity of reportRequest.activitys">
-                        {{ activity.name }}
+                <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px">
+                    <div>
+                        activités:
+                    </div>
+                    <mat-chip-list aria-label="Fish selection" *ngIf="reportRequest.activitys.length > 0">
+                        <mat-chip color="primary" *ngFor="let activity of reportRequest.activitys">
+                            {{ activity.name }}
+                        </mat-chip>
+                    </mat-chip-list>
+                    <div *ngIf="!(reportRequest.activitys.length > 0)">
+                        Toutes les activités
                     </div>
                 </div>
                 <div *ngIf="reportRequest.users.length > 0">
@@ -60,4 +67,3 @@
         </mat-card-content>
     </mat-card>
 </div>
-

@@ -12,6 +12,7 @@ import { Router, NavigationExtras } from '@angular/router';
 import { MatDialogRef } from '@angular/material/dialog';
 import { RepportRequestService } from 'src/app/services/request/repport-request.service';
 import { ReportRequest } from 'src/app/models/report-request';
+import { DateManip } from 'src/app/utils/date-manip';
 
 const format = 'yyyy-MM-dd';
 const locale = 'en-US';
@@ -77,9 +78,10 @@ export class RequestFormComponent implements OnInit {
       if(this.params.users.length && this.params.users.length > 0)
         this.requestForm.controls['isUsers'].setValue(true);
     });
-
-    this.requestForm.controls['dateDebut'].setValue(this.params.dateDebut);
-    this.requestForm.controls['dateFin'].setValue(this.params.dateFin);
+    if(this.params.dateDebut != "")
+      this.requestForm.controls['dateDebut'].setValue(DateManip.chaineToDate(this.params.dateDebut));
+    if(this.params.dateFin != "")
+      this.requestForm.controls['dateFin'].setValue(DateManip.chaineToDate(this.params.dateFin));
   }
 
   private initForm(){
