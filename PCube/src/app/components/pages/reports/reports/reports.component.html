@@ -27,7 +27,7 @@
                                     <div>
                                         <h3>Limité aux projets suivants:</h3>
                                     </div>
-                                    <mat-chip-list>
+                                    <mat-chip-list class="mat-chip-list-stacked">
                                         <mat-chip color="primary" *ngFor="let projet of reportRequest.projects">
                                             {{ projet.name }}
                                         </mat-chip>
@@ -42,7 +42,7 @@
                                     <div>
                                         <h3>Limité aux activités suivantes:</h3>
                                     </div>
-                                    <mat-chip-list>
+                                    <mat-chip-list class="mat-chip-list-stacked">
                                         <mat-chip color="primary" *ngFor="let activity of reportRequest.activitys">
                                             {{ activity.name }}
                                         </mat-chip>
@@ -58,9 +58,11 @@
                                     <div>
                                         <h3>Limité aux utilisateurs suivants:</h3>
                                     </div>
-                                    <mat-chip color="primary" *ngFor="let user of reportRequest.users">
-                                        {{ user.display_string }}
-                                    </mat-chip>
+                                    <mat-chip-list class="mat-chip-list-stacked">
+                                        <mat-chip color="primary" *ngFor="let user of reportRequest.users">
+                                            {{ user.display_string }}
+                                        </mat-chip>
+                                    </mat-chip-list>
                                 </div>
                             </div>
                         </div>
@@ -68,21 +70,20 @@
                 </mat-accordion>
             </div>
 
-            <div fxLayout="row">
-                <div fxflex
+            <div fxLayout="row" *ngIf="this.reportRequest" >
+                <mat-card
                     class="panel width100"
-                    *ngIf="this.reportRequest" 
                     fxLayout="column" fxLayoutAlign="start center"
                     fxFlexOffset.gt-md="20" fxFlex.gt-md="60"
-                    fxFlexOffset.lt-md="20" fxflex.lt-md="80">
-                    <div class="width100">
+                    fxFlexOffset.lt-md="5" fxflex.lt-md="90">
+                    <mat-card-header class="width100">
                         <h3 fxFlex="70">
                             Compte de dépense
                         </h3>
                         <h3 fxflex fxFlex="30" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
                             Somme des heures
                         </h3>  
-                    </div>
+                    </mat-card-header>
                     
                     
                     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="width100">
@@ -113,7 +114,7 @@
                             </div>
                         </mat-tree-node>
                     </mat-tree>  
-                </div>
+                </mat-card>
             </div>
         </mat-card-content>
     </mat-card>
