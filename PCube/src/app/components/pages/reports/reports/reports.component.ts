@@ -93,10 +93,11 @@ export class ReportsComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.reportRequest = history.state.params;
-    this.refreshRequestBackend(history.state.params);
-
-    this.refreshReport();
+    if(history.state.params) {
+      this.reportRequest = history.state.params;
+      this.refreshRequestBackend(history.state.params);
+      this.refreshReport();
+    }
 
     this.reportReqService.paramsAnnounced$.subscribe(
       params => {
@@ -104,25 +105,10 @@ export class ReportsComponent implements OnInit {
         this.refreshRequestBackend(params);
         this.refreshReport();
       }
-    );
-
-    
+    ); 
   }
 
   refreshReport() {
-
-    /*if(this.requestForm.controls['projects'].value)
-      for(let project of this.requestForm.controls['projects'].value)
-      this.params.projects.push(project.id);
-
-    if(this.requestForm.controls['activitys'].value)
-      for(let activity of this.requestForm.controls['activitys'].value)
-      this.params.activitys.push(activity.id);
-
-    if(this.requestForm.controls['users'].value)
-      for(let user of this.requestForm.controls['users'].value)
-      this.params.users.push(user.id);*/
-
     this.reportReqService.getReport(this.reportRequestBackend).subscribe(reportsI =>{
       this.dataSource.data = reportsI;
       this.reportsItems = reportsI;
