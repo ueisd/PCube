@@ -82,7 +82,7 @@ class TimelineRequest:
         clauseLignes = ' AND '.join(map(str, req))
 
         if(clauseLignes == '') :
-            clauseLignes = 'TRUE'
+            clauseLignes = '1'
 
 
         self.connection.row_factory = dict_factory
