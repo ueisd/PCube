@@ -62,6 +62,36 @@ export class ReportsComponent implements OnInit {
     this.reportRequestBackend.buildFromReportRequest(req);
   }
 
+  afficherDate(d: Date) {
+    const montFormater = new Intl.DateTimeFormat('fr', { month: 'long' });
+        const weekDayFormater = new Intl.DateTimeFormat('fr', { weekday: 'long' });
+        const month1 = montFormater.format(d);
+        const weekday = weekDayFormater.format(d);
+        let jour = d.getDay() + "";
+        if(d.getDay() == 1) jour += 'er';
+        return weekday + ' le ' + jour + " " + month1 + " " + d.getFullYear();
+  }
+
+  afficherPeriodes() {
+    let chaineAff = '';
+    let dateDebut = this.reportRequest.dateDebut;
+    let dateFin = this.reportRequest.dateFin;
+    if(dateDebut == '' && dateFin == ''){
+      chaineAff += 'Sans limite de période';
+    }else{
+      chaineAff += 'Pour la prériode';
+      if (dateDebut != ''){
+        chaineAff += ' commencant le ' + " " + this.afficherDate(new Date(dateDebut));
+      }
+      if(dateFin != ''){
+        if(dateDebut != '') chaineAff += ' et';
+        chaineAff += ' se terminant le ' + this.afficherDate(new Date(dateFin));
+      }
+    }
+    return chaineAff;
+  }
+
+
   ngOnInit(): void {
     this.reportRequest = history.state.params;
     this.refreshRequestBackend(history.state.params);

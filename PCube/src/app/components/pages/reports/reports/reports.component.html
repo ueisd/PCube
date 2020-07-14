@@ -4,6 +4,24 @@
             <mat-card-title><h2>Affichage du rapport</h2></mat-card-title>
         </mat-card-header>
         <mat-card-content>
+            <div>
+                {{ afficherPeriodes() }}
+            </div>
+            <div>
+                <div *ngFor="let project of reportRequest.projects">
+                    {{ project.name }}
+                </div>
+
+                <div *ngFor="let activity of reportRequest.activitys">
+                    {{ activity.name }}
+                </div>
+
+                <div *ngFor="let user of reportRequest.users">
+                    {{ user.display_string }}
+                </div>
+            </div>
+
+
             <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
                 <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
                     <div class="container width100">
@@ -35,3 +53,8 @@
         </mat-card-content>
     </mat-card>
 </div>
+
+<pre>
+    {{ reportRequest | json }}
+</pre>
+
