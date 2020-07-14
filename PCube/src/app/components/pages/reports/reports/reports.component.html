@@ -1,69 +1,106 @@
-<div fxLayout.xs="column">
     <mat-card fxflex fxflex-gt-xs="100" fxFlexOffset="10" fxFlex="80">
-        <mat-card-header>
-            <mat-card-title><h2>Affichage du rapport</h2></mat-card-title>
+        <mat-card-header fxLayoutAlign="center" fxLayout="row">
+            <mat-card-title><h2>Rapport d'heures de travail</h2></mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <div *ngIf="this.reportRequest">
-                <div>
+
+            <mat-list *ngIf="this.reportRequest">
+                <mat-list-item>
                     {{ afficherPeriodes() }}
-                </div>
-                <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px">
-                    <div>
-                        activités:
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <div *ngIf="!(reportRequest.projects.length > 0)">
+                        Sans limite de projets
                     </div>
-                    <mat-chip-list aria-label="Fish selection" *ngIf="reportRequest.activitys.length > 0">
-                        <mat-chip color="primary" *ngFor="let activity of reportRequest.activitys">
-                            {{ activity.name }}
-                        </mat-chip>
-                    </mat-chip-list>
+                    <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px" *ngIf="reportRequest.projects.length > 0">
+                        <div>
+                            Limité aux projets suivants:
+                        </div>
+                        <mat-chip-list>
+                            <mat-chip color="primary" *ngFor="let projet of reportRequest.projects">
+                                {{ projet.name }}
+                            </mat-chip>
+                        </mat-chip-list>
+                    </div>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+
+                <mat-list-item>
                     <div *ngIf="!(reportRequest.activitys.length > 0)">
-                        Toutes les activités
+                        Sans limite d'activités
                     </div>
-                </div>
-                <div *ngIf="reportRequest.users.length > 0">
-                    utilisateurs:
-                    <div *ngFor="let user of reportRequest.users">
-                        {{ user.display_string }}
+                    <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px" *ngIf="reportRequest.activitys.length > 0">
+                        <div>
+                            Limité aux activités suivantes:
+                        </div>
+                        <mat-chip-list>
+                            <mat-chip color="primary" *ngFor="let activity of reportRequest.activitys">
+                                {{ activity.name }}
+                            </mat-chip>
+                        </mat-chip-list>
                     </div>
-                </div>
-                <div *ngIf="reportRequest.projects.length > 0">
-                    projets:
-                    <div *ngFor="let project of reportRequest.projects">
-                        {{ project.name }}
-                    </div>
-                </div>
-            </div>
+                </mat-list-item>
+                <mat-divider></mat-divider>
 
+                <mat-list-item>
+                    <div *ngIf="!(reportRequest.users.length > 0)">
+                        Sans limite d'utilisateurs
+                    </div>
+                    <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px" *ngIf="reportRequest.users.length > 0">
+                        <div>
+                            Limité aux utilisateurs suivants:
+                        </div>
+                        <mat-chip-list>
+                            <mat-chip color="primary" *ngFor="let user of reportRequest.users">
+                                {{ user.display_string }}
+                            </mat-chip>
+                        </mat-chip-list>
+                    </div>
+                </mat-list-item>
+                <mat-divider>fin</mat-divider>
+            </mat-list>
 
-            <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
-                <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+            <div fxLayout="row">
+                <div fxflex-gt-xs="100" fxFlexOffset="10" fxFlex="60">
                     <div class="container width100">
-                        <div fxflex fxFlex="70%">
-                            {{node.name}}
-                        </div>
-                        <div fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
-                            {{ (node.sommeHeure) ? heureSommeToStr(node.sommeHeure) : '0h00' }}
-                        </div>  
+                        <h3 fxflex fxFlex="70%">
+                            Compte de dépense
+                        </h3>
+                        <h3 fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+                            Somme des heures
+                        </h3>  
                     </div>
-                </mat-tree-node>
-                <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-                    <div class="container width100">
-                        <div fxflex fxFlex="70%">
-                            <button mat-icon-button matTreeNodeToggle
-                            [attr.aria-label]="'toggle ' + node.name">
-                                <mat-icon class="mat-icon-rtl-mirror">
-                                    {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-                                </mat-icon>
-                            </button>
-                            {{node.name}}
-                        </div>
-                        <div fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
-                            {{ (node.sommeHeure) ? heureSommeToStr(node.sommeHeure) : '0h00' }}
-                        </div>
-                    </div>
-                </mat-tree-node>
-            </mat-tree>      
+                    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                            <div class="container width100">
+                                <div fxflex fxFlex="70%">
+                                    {{node.name}}
+                                </div>
+                                <div fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+                                    {{ (node.sommeHeure) ? heureSommeToStr(node.sommeHeure) : '0h00' }}
+                                </div>  
+                            </div>
+                        </mat-tree-node>
+                        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+                            <div class="container width100">
+                                <div fxflex fxFlex="70%">
+                                    <button mat-icon-button matTreeNodeToggle
+                                    [attr.aria-label]="'toggle ' + node.name">
+                                        <mat-icon class="mat-icon-rtl-mirror">
+                                            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                        </mat-icon>
+                                    </button>
+                                    {{node.name}}
+                                </div>
+                                <div fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+                                    {{ (node.sommeHeure) ? heureSommeToStr(node.sommeHeure) : '0h00' }}
+                                </div>
+                            </div>
+                        </mat-tree-node>
+                    </mat-tree>  
+                </div>
+            </div>    
         </mat-card-content>
     </mat-card>
-</div>
+
