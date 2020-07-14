@@ -76,14 +76,14 @@ def find_all_child(parent_id):
 
 
 @expense_account.route('', methods=['GET'])
-#@auth_required
+@auth_required
 def get_all_expense_account():
     """
     Construit l'arbre des comptes de dépense.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        #get_authenticated_user()
+        get_authenticated_user()
         connection = get_db().get_connection()
         request = ExpenseAccountRequest(connection)
         parents_dict = request.select_all_parent()
@@ -294,7 +294,7 @@ def validation_error(e):
 @expense_account.route('', methods=['PUT'])
 @auth_required
 @schema.validate(expense_account_update_schema)
-def update_expanseAccount():
+def update_expense_account():
     """
     Permet de modifier un compte de dépense dans le système.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
@@ -319,7 +319,12 @@ def update_expanseAccount():
 
 @expense_account.route('', methods=['POST'])
 @auth_required
+@schema.validate(expense_account_insert_schema)
 def create_expense_account():
+    """
+    Création d'un nouveau compte de dépense
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
     try:
         data = request.json
         expense_account = ExpenseAccount()
