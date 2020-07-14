@@ -17,6 +17,8 @@ export class RepportRequestService {
 
   paramsAnnounced$ = this.missionAnnouncedSource.asObservable();
 
+  paramForForm: ReportRequest = new ReportRequest();
+
   constructor(private http: HttpClient) { }
 
   ngOnInit(): void {}
@@ -32,7 +34,8 @@ export class RepportRequestService {
   }
 
   // Service message commands
-  emitParams(mission: ReportRequest) {
-    this.missionAnnouncedSource.next(mission);
+  emitParams(params: ReportRequest) {
+    this.paramForForm = params;
+    this.missionAnnouncedSource.next(params);
   }
 }

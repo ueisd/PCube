@@ -67,7 +67,6 @@ export class ReportsComponent implements OnInit {
     this.refreshRequestBackend(history.state.params);
 
     this.refreshReport();
-    this.reportReqService.paramsAnnounced$.subscribe()
 
     this.reportReqService.paramsAnnounced$.subscribe(
       params => {

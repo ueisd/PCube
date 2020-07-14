@@ -52,12 +52,20 @@ export class RequestFormComponent implements OnInit {
   ngOnInit(): void {
     this.initForm();
 
+    this.params = this.reportReqService.paramForForm;
+
     this.projectService.getApparentableProject(-1).subscribe(projets =>{
       this.projetsOptions = this.projectService.generateParentOption(projets, 0);
+      this.requestForm.controls['projects'].setValue(this.params.projects);
+      if(this.params.projects.length && this.params.projects.length > 0)
+        this.requestForm.controls['isProjets'].setValue(true);
     });
 
     this.activityService.getAllActivity().subscribe(activitys =>{
       this.activityOptions = activitys;
+      this.requestForm.controls['activitys'].setValue(this.params.activitys);
+      if(this.params.activitys.length && this.params.activitys.length > 0)
+        this.requestForm.controls['isActivitys'].setValue(true);
     });
 
     this.userService.getAllUser().subscribe(users =>{
@@ -65,7 +73,13 @@ export class RequestFormComponent implements OnInit {
       for(let user of this.usersOptions) {
         user.display_string = user.first_name + " " + user.last_name;
       }
+      this.requestForm.controls['users'].setValue(this.params.users);
+      if(this.params.users.length && this.params.users.length > 0)
+        this.requestForm.controls['isUsers'].setValue(true);
     });
+
+    this.requestForm.controls['dateDebut'].setValue(this.params.dateDebut);
+    this.requestForm.controls['dateFin'].setValue(this.params.dateFin);
   }
 
   private initForm(){
@@ -135,9 +149,11 @@ export class RequestFormComponent implements OnInit {
   onSubmit() {
     let dateDeb = this.requestForm.controls['dateDebut'].value;
     if(dateDeb) this.params.dateDebut = formatDate(dateDeb, format, locale);
+    else this.params.dateDebut = "";
 
     let dateFin = this.requestForm.controls['dateFin'].value;
     if(dateFin) this.params.dateFin = formatDate(dateFin, format, locale);
+    else this.params.dateFin = "";
 
     if(this.requestForm.controls['projects'].value)
       this.params.projects = this.requestForm.controls['projects'].value;
@@ -147,18 +163,6 @@ export class RequestFormComponent implements OnInit {
 
     if(this.requestForm.controls['users'].value)
       this.params.users = this.requestForm.controls['users'].value;
-
-    /*if(this.requestForm.controls['projects'].value)
-      for(let project of this.requestForm.controls['projects'].value)
-      this.params.projects.push(project.id);
-
-    if(this.requestForm.controls['activitys'].value)
-      for(let activity of this.requestForm.controls['activitys'].value)
-      this.params.activitys.push(activity.id);
-
-    if(this.requestForm.controls['users'].value)
-      for(let user of this.requestForm.controls['users'].value)
-      this.params.users.push(user.id);*/
 
     this.reportReqService.emitParams(this.params);
     this.dialogRef.close(this.params);
