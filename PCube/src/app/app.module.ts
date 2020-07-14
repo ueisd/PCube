@@ -56,6 +56,8 @@ import { TimelineComponent } from './components/pages/timeline/timeline.componen
 import { DeleteProjectComponent } from './components/domain/project/delete-project/delete-project.component';
 import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 import { DeleteExpenseAccountComponent } from './components/domain/expense-account/delete-expense-account/delete-expense-account.component';
+import { RequestFormComponent } from './components/domain/reports/request-form/request-form/request-form.component';
+import { ReportsComponent } from './components/pages/reports/reports/reports.component';
 
 
 @NgModule({
@@ -98,6 +100,8 @@ import { DeleteExpenseAccountComponent } from './components/domain/expense-accou
     DeleteProjectComponent,
     AddExpenseAccountComponent,
     DeleteExpenseAccountComponent,
+    RequestFormComponent,
+    ReportsComponent,
   ],
   imports: [
     MatDialogModule,

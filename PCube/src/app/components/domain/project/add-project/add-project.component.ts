@@ -52,7 +52,7 @@ export class AddProjectComponent implements OnInit {
     this.initForm();
 
     this.projectService.getApparentableProject(this.projet.id).subscribe(projets =>{
-      this.parentOptions = this.generateParentOption(projets, 0);
+      this.parentOptions = this.projectService.generateParentOption(projets, 0);
 
       let selected: ProjectItem = this.findProject(this.parentOptions, this.projet.parent_id);
       if(this.projet.id != this.projet.parent_id) {
@@ -85,30 +85,6 @@ export class AddProjectComponent implements OnInit {
       },
       {validators: this.validateForm}
     );
-  }
-
-
-  /* Crée une liste des noeuds de l'arborescence 
-   * avec un affichage identé selon le niveua de profondeur @level
-   */
-  private generateParentOption(projets: ProjectItem[], level:number) : ProjectItem[] {
-    if(projets === null) return [];
-    let retour: ProjectItem[] = [];
-
-    for (var projet of projets) {
-      let item : ProjectItem = new ProjectItem(projet);
-      item.child_project = null;
-      item.nomAffichage = item.name;
-      for(let i = 0; i<level; i++) {
-        item.nomAffichage = SEPARATOR + item.nomAffichage;
-      }
-      retour.push(item);
-      if(projet.child_project != undefined && projet.child_project.length != undefined) {
-        for(var sprojet of this.generateParentOption(projet.child_project, level+1))
-          retour.push(sprojet);
-      }
-    }
-    return retour;
   }
 
 
