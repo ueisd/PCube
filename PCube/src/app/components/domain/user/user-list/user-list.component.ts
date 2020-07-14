@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/models/user';
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { DeleteUserComponent } from 'src/app/components/domain/user/delete-user/delete-user.component';
 import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/modify-user.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -48,7 +48,6 @@ export class UserListComponent implements OnInit {
         roleName: user.role_name 
       }
     });
-    
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
         this.customSnackBar.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');

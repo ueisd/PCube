@@ -76,14 +76,14 @@ def find_all_child(parent_id):
 
 
 @project.route('', methods=['GET'])
-#@auth_required
+@auth_required
 def get_all_project():
     """
     Construit l'abre des projets.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     try:
-        #get_authenticated_user()
+        get_authenticated_user()
         connection = get_db().get_connection()
         request = ProjectRequest(connection)
         parents_dict = request.select_all_parent()

@@ -10,7 +10,7 @@ import { User } from 'src/app/models/user';
 export class DeleteUserComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<DeleteUserComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: User) { }
+    @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
   }
