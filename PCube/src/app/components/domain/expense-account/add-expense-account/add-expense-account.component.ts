@@ -48,9 +48,9 @@ export class AddExpenseAccountComponent implements OnInit {
     }
     this.initForm();
 
-    this.expenseAccountServices.getApparentableExpanseAccounts(this.expenseAccount.id).subscribe(accounts =>{
+    this.expenseAccountServices.getApparentableExpenseAccounts(this.expenseAccount.id).subscribe(accounts =>{
       this.parentOptions = this.generateParentOption(accounts, 0);
-      let selected: ExpenseAccountItem = this.findExpanseAccount(this.parentOptions, this.expenseAccount.parent_id);
+      let selected: ExpenseAccountItem = this.findExpenseAccount(this.parentOptions, this.expenseAccount.parent_id);
       if(this.expenseAccount.id != this.expenseAccount.parent_id) {
         this.ExpenseForm.controls['parent'].setValue(selected);
       }
@@ -109,12 +109,12 @@ export class AddExpenseAccountComponent implements OnInit {
   /* Trouve et retourne le ExpenseAccountItem avec id = @id dans une arborescence de account item 
    *  Si ne trouve pas retourne null
    */
-  private findExpanseAccount(accounts:ExpenseAccountItem[], id: number) {
+  private findExpenseAccount(accounts:ExpenseAccountItem[], id: number) {
     for(let account of accounts){
       if(account.id == id) return account;
       if(account.id != account.parent_id && account.child != null) {
         var trouve : ExpenseAccountItem = null;
-        trouve = this.findExpanseAccount(account.child, id);
+        trouve = this.findExpenseAccount(account.child, id);
         return trouve;
       }
     }
@@ -154,7 +154,7 @@ export class AddExpenseAccountComponent implements OnInit {
           proj.parent_id = this.expenseAccount.parent_id;
         }
         proj.name = this.ExpenseForm.value['name'];
-        this.expenseAccountServices.updateExpanseAccount(proj).subscribe(project => {
+        this.expenseAccountServices.updateExpenseAccount(proj).subscribe(project => {
           this.onSubmitSuccess();
         });
       }
@@ -179,7 +179,7 @@ export class AddExpenseAccountComponent implements OnInit {
     if(!checked) this.ExpenseForm.get('parent').reset();
     // à mettre lors de modification
     else if(!this.isCreateForm && this.expenseAccount.id != this.expenseAccount.parent_id) {
-      let selected: ExpenseAccountItem = this.findExpanseAccount(this.parentOptions, this.expenseAccount.parent_id);
+      let selected: ExpenseAccountItem = this.findExpenseAccount(this.parentOptions, this.expenseAccount.parent_id);
       this.ExpenseForm.controls['parent'].setValue(selected);
     }
   }
