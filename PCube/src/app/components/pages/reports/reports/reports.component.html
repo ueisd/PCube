@@ -1,11 +1,11 @@
-    <mat-card fxflex fxflex-gt-xs="100" fxFlexOffset="10" fxFlex="80">
+    <mat-card fxflex fxFlexOffset="10" fxFlex="80">
         <mat-card-header fxLayoutAlign="center" fxLayout="row">
             <mat-card-title><h2>Rapport d'heures de travail</h2></mat-card-title>
         </mat-card-header>
         <mat-card-content>
 
             <div fxLayout="row" *ngIf="this.reportRequest">
-                <mat-accordion fxflex-gt-xs="100" fxFlexOffset="5" fxFlex="100">
+                <mat-accordion fxFlexOffset="5" fxFlex="90">
                     <mat-expansion-panel expanded="true">
                         <mat-expansion-panel-header>
                           <mat-panel-title>
@@ -18,8 +18,8 @@
                         <div fxLayout="row">
                             <h3>{{ afficherPeriodes() }}</h3>
                         </div>
-                        <div fxLayout="row" fxLayoutAlign="space-evenly stretch">
-                            <div fxFlex="33.3">
+                        <div fxLayout="row" fxLayout.lt-md="column" >
+                            <div fxflex fxFlex="33.3" fxflex.lt-md="100" >
                                 <div *ngIf="!(reportRequest.projects.length > 0)" fxLayout="row" fxLayoutAlign="space-around center">
                                     <h3>Sans limite de projets</h3>
                                 </div>
@@ -34,7 +34,7 @@
                                     </mat-chip-list>
                                 </div>
                             </div>
-                            <div fxFlex="33.3">
+                            <div fxflex fxFlex="33.3" fxflex.lt-md="100">
                                 <div *ngIf="!(reportRequest.activitys.length > 0)" fxLayout="row" fxLayoutAlign="space-around center">
                                     <h3>Sans limite d'activités</h3>
                                 </div>
@@ -50,7 +50,7 @@
                                 </div>
                             </div>
             
-                            <div fxFlex="33.3">
+                            <div fxflex fxFlex="33.3" fxflex.lt-md="100">
                                 <div *ngIf="!(reportRequest.users.length > 0)" fxLayout="row" fxLayoutAlign="space-around center">
                                     <h3>Sans limite d'utilisateurs</h3>
                                 </div>
@@ -68,20 +68,26 @@
                 </mat-accordion>
             </div>
 
-            <div fxLayout="row" *ngIf="this.reportRequest" class="panel">
-                <div fxflex-gt-xs="100" fxFlexOffset="20" fxFlex="60">
-                    <div class="container width100">
-                        <h3 fxflex fxFlex="70%">
+            <div fxLayout="row">
+                <div fxflex
+                    class="panel width100"
+                    *ngIf="this.reportRequest" 
+                    fxLayout="column" fxLayoutAlign="start center"
+                    fxFlexOffset.gt-md="20" fxFlex.gt-md="60"
+                    fxFlexOffset.lt-md="20" fxflex.lt-md="80">
+                    <div class="width100">
+                        <h3 fxFlex="70">
                             Compte de dépense
                         </h3>
-                        <h3 fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+                        <h3 fxflex fxFlex="30" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
                             Somme des heures
                         </h3>  
                     </div>
                     
-                    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+                    
+                    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="width100">
                         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
-                            <div class="container width100">
+                            <div class="width100">
                                 <div fxflex fxFlex="70%">
                                     {{node.name}}
                                 </div>
@@ -91,7 +97,7 @@
                             </div>
                         </mat-tree-node>
                         <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
-                            <div class="container width100">
+                            <div class="width100">
                                 <div fxflex fxFlex="70%">
                                     <button mat-icon-button matTreeNodeToggle
                                     [attr.aria-label]="'toggle ' + node.name">
@@ -108,7 +114,7 @@
                         </mat-tree-node>
                     </mat-tree>  
                 </div>
-            </div>    
+            </div>
         </mat-card-content>
     </mat-card>
 
