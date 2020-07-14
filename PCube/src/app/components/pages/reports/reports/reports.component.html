@@ -4,64 +4,77 @@
         </mat-card-header>
         <mat-card-content>
 
-            <mat-list *ngIf="this.reportRequest">
-                <mat-list-item>
-                    {{ afficherPeriodes() }}
-                </mat-list-item>
-                <mat-divider></mat-divider>
-                <mat-list-item>
-                    <div *ngIf="!(reportRequest.projects.length > 0)">
-                        Sans limite de projets
-                    </div>
-                    <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px" *ngIf="reportRequest.projects.length > 0">
-                        <div>
-                            Limité aux projets suivants:
-                        </div>
-                        <mat-chip-list>
-                            <mat-chip color="primary" *ngFor="let projet of reportRequest.projects">
-                                {{ projet.name }}
-                            </mat-chip>
-                        </mat-chip-list>
-                    </div>
-                </mat-list-item>
-                <mat-divider></mat-divider>
+            <mat-accordion *ngIf="this.reportRequest">
+                <mat-expansion-panel expanded="true">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                          Paramètres de la requete
+                        </mat-panel-title>
+                        <mat-panel-description>
+                            les paramètres ayant servi à générer le rapport
+                        </mat-panel-description>
+                    </mat-expansion-panel-header>
 
-                <mat-list-item>
-                    <div *ngIf="!(reportRequest.activitys.length > 0)">
-                        Sans limite d'activités
-                    </div>
-                    <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px" *ngIf="reportRequest.activitys.length > 0">
-                        <div>
-                            Limité aux activités suivantes:
-                        </div>
-                        <mat-chip-list>
-                            <mat-chip color="primary" *ngFor="let activity of reportRequest.activitys">
-                                {{ activity.name }}
-                            </mat-chip>
-                        </mat-chip-list>
-                    </div>
-                </mat-list-item>
-                <mat-divider></mat-divider>
+                    <mat-list *ngIf="this.reportRequest">
+                        <mat-list-item>
+                            {{ afficherPeriodes() }}
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+                        <mat-list-item>
+                            <div *ngIf="!(reportRequest.projects.length > 0)">
+                                Sans limite de projets
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px" *ngIf="reportRequest.projects.length > 0">
+                                <div>
+                                    Limité aux projets suivants:
+                                </div>
+                                <mat-chip-list>
+                                    <mat-chip color="primary" *ngFor="let projet of reportRequest.projects">
+                                        {{ projet.name }}
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+        
+                        <mat-list-item>
+                            <div *ngIf="!(reportRequest.activitys.length > 0)">
+                                Sans limite d'activités
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px" *ngIf="reportRequest.activitys.length > 0">
+                                <div>
+                                    Limité aux activités suivantes:
+                                </div>
+                                <mat-chip-list>
+                                    <mat-chip color="primary" *ngFor="let activity of reportRequest.activitys">
+                                        {{ activity.name }}
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                        </mat-list-item>
+                        <mat-divider></mat-divider>
+        
+                        <mat-list-item>
+                            <div *ngIf="!(reportRequest.users.length > 0)">
+                                Sans limite d'utilisateurs
+                            </div>
+                            <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px" *ngIf="reportRequest.users.length > 0">
+                                <div>
+                                    Limité aux utilisateurs suivants:
+                                </div>
+                                <mat-chip-list>
+                                    <mat-chip color="primary" *ngFor="let user of reportRequest.users">
+                                        {{ user.display_string }}
+                                    </mat-chip>
+                                </mat-chip-list>
+                            </div>
+                        </mat-list-item>
+                        <mat-divider>fin</mat-divider>
+                    </mat-list>
+                </mat-expansion-panel>
+            </mat-accordion>
 
-                <mat-list-item>
-                    <div *ngIf="!(reportRequest.users.length > 0)">
-                        Sans limite d'utilisateurs
-                    </div>
-                    <div fxLayout="row" fxLayoutAlign="begin center" fxLayoutGap="5px" *ngIf="reportRequest.users.length > 0">
-                        <div>
-                            Limité aux utilisateurs suivants:
-                        </div>
-                        <mat-chip-list>
-                            <mat-chip color="primary" *ngFor="let user of reportRequest.users">
-                                {{ user.display_string }}
-                            </mat-chip>
-                        </mat-chip-list>
-                    </div>
-                </mat-list-item>
-                <mat-divider>fin</mat-divider>
-            </mat-list>
-
-            <div fxLayout="row">
+            <div fxLayout="row" *ngIf="this.reportRequest">
                 <div fxflex-gt-xs="100" fxFlexOffset="10" fxFlex="60">
                     <div class="container width100">
                         <h3 fxflex fxFlex="70%">
