@@ -1,6 +1,5 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { DeleteUserComponent } from '../../user/delete-user/delete-user.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 
@@ -12,7 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class DeleteTimelineComponent implements OnInit {
 
   constructor(
-    public dialogRef: MatDialogRef<DeleteUserComponent>,
+    public dialogRef: MatDialogRef<DeleteTimelineComponent>,
     @Inject(MAT_DIALOG_DATA) public data:any,
     private snackBar : MatSnackBar
     ) { }

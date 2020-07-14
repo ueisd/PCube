@@ -4,6 +4,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from "@angular/material/dialog";
 import { ActivityItem } from 'src/app/models/activity';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 
 @Component({
@@ -18,13 +19,14 @@ export class AddActivityComponent implements OnInit{
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private activityService: ActivityService, 
     private dialogRef: MatDialogRef<AddActivityComponent>,
-    private snackBar : MatSnackBar
+    private snackBar: MatSnackBar,
     ) { }
 
   newActivityForm: FormGroup;
   activityItem:ActivityItem;
 
   isUnmodifiedValue:boolean = false;
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   ngOnInit(): void {
   
@@ -61,21 +63,12 @@ export class AddActivityComponent implements OnInit{
     });
   }
 
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 10000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
-    });
-  }
-
   updateAnActivity(newName:string){
 
       this.activityService.updateActivity(this.activityItem.id, this.activityItem.name, newName).subscribe(activity=>{
         this.dialogRef.close(true);
       },(error)=>{
-        this.openSnackBar("Une erreur s'est produit, veuillez", 'notif-error');
+        this.customSnackBar.openSnackBar("Une erreur s'est produit, veuillez", 'notif-error');
         this.isAdded = false;
       });
   }

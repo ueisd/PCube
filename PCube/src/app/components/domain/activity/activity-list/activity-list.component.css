@@ -46,3 +46,8 @@
 .width100 {
     width: 100%;
 }
+
+ button {
+    margin-right: 5px;
+    margin-left: 5px;
+}

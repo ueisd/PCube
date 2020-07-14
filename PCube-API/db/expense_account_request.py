@@ -111,7 +111,6 @@ class ExpenseAccountRequest:
         return True if data else False
 
 
-
     def create_expense_account(self, expense_account):
         cursor = self.connection.cursor()
         isSelfReference = expense_account.name == expense_account.parent_name

@@ -1,11 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/models/user';
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
 import { DeleteUserComponent } from 'src/app/components/domain/user/delete-user/delete-user.component';
 import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/modify-user.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-user-list',
@@ -21,6 +22,8 @@ export class UserListComponent implements OnInit {
   lastNameFilter = new FormControl('');
   emailFilter = new FormControl('');
   roleFilter = new FormControl('');
+
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   constructor(private userService: UserService,
     private dialog: MatDialog,
@@ -45,10 +48,9 @@ export class UserListComponent implements OnInit {
         roleName: user.role_name 
       }
     });
-    
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
-        this.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
+        this.customSnackBar.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
         this.refreshList();
       }
     });
@@ -63,28 +65,20 @@ export class UserListComponent implements OnInit {
         email: user.email, 
         roleId: user.role_id,
         roleName: user.role_name
-      }
+      },
+      panelClass: 'warning-dialog'
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
         this.userService.deleteUser(result.id, result.email).subscribe((data) => {
-          this.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
+          this.customSnackBar.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
           this.refreshList();
         },
         (error) => {
-          this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+          this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
         });
       }
-    });
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
     });
   }
 

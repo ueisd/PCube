@@ -111,7 +111,7 @@ export class AddTimelineStep3Component implements OnInit {
       return;
     }
 
-    if(activities.length > 1 && this.isItemAlreadyFound){
+    if(activities.length >= 1 && this.isItemAlreadyFound){
       this.activity = activities.find(a => a.id == activity.id || a.name == activity.name)
       this.activities = [activity];
       this.onProjectFound();
