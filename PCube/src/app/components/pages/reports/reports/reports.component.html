@@ -7,17 +7,22 @@
             <div>
                 {{ afficherPeriodes() }}
             </div>
-            <div>
-                <div *ngFor="let project of reportRequest.projects">
-                    {{ project.name }}
-                </div>
-
+            <div *ngIf="reportRequest.activitys.length > 0">
+                activités:
                 <div *ngFor="let activity of reportRequest.activitys">
                     {{ activity.name }}
                 </div>
-
+            </div>
+            <div *ngIf="reportRequest.users.length > 0">
+                utilisateurs:
                 <div *ngFor="let user of reportRequest.users">
                     {{ user.display_string }}
+                </div>
+            </div>
+            <div *ngIf="reportRequest.projects.length > 0">
+                projets:
+                <div *ngFor="let project of reportRequest.projects">
+                    {{ project.name }}
                 </div>
             </div>
 
@@ -53,8 +58,4 @@
         </mat-card-content>
     </mat-card>
 </div>
-
-<pre>
-    {{ reportRequest | json }}
-</pre>
 
