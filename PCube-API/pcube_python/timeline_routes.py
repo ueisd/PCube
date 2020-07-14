@@ -186,6 +186,8 @@ def sommationAscendante(listeNoeuds, parent):
     parent['sumTotal'] = parent['summline']
     for enfant in parent['child']:
         enfant = sommationAscendante(listeNoeuds, enfant)
+        if not parent['sumTotal']:
+            parent['sumTotal'] = 0     
         if enfant['sumTotal']:
             parent['sumTotal'] = parent['sumTotal'] + enfant['sumTotal']
     return parent
