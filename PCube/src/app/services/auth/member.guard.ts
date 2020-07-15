@@ -17,7 +17,7 @@ import { AuthService } from './auth.service';
       if (this.auth.isMember() || this.auth.isAdmin() || this.auth.isProjectManager()) {
         return true;
       } else {
-        this.router.navigate(['/denied']);
+        this.router.navigate(['/']);
       }
     }
   
@@ -28,7 +28,7 @@ import { AuthService } from './auth.service';
       if (this.auth.isMember() || this.auth.isAdmin() || this.auth.isProjectManager()) {
         return true;
       } else {
-        this.router.navigate(['/denied']);
+        this.router.navigate(['/']);
       }
     }
   }

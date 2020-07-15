@@ -9,11 +9,9 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
 import { MatNativeDateModule, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 
-import { AuthInterceptor } from 'src/app/services/auth/auth.interceptor';
 import { LoginComponent } from './components/pages/login/login.component';
 import { LogoutComponent } from './components/layouts/logout/logout.component';
 import { HomeComponent } from './components/pages/home/home.component';
-import { AccessDeniedComponent } from './components/pages/access-denied/access-denied.component';
 import { AddUserComponent } from './components/domain/user/add-user/add-user.component';
 import { UserListComponent } from './components/domain/user/user-list/user-list.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -56,6 +54,9 @@ import { TimelineComponent } from './components/pages/timeline/timeline.componen
 import { DeleteProjectComponent } from './components/domain/project/delete-project/delete-project.component';
 import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 import { DeleteExpenseAccountComponent } from './components/domain/expense-account/delete-expense-account/delete-expense-account.component';
+import { NotFoundComponent } from './components/pages/not-found/not-found.component';
+import { GlobalHttpInterceptorService } from './services/Interceptor/GlobalHttpInterceptor.service';
+import { ServerDownComponent } from './components/pages/server-down/server-down.component';
 import { RequestFormComponent } from './components/domain/reports/request-form/request-form/request-form.component';
 import { ReportsComponent } from './components/pages/reports/reports/reports.component';
 
@@ -67,7 +68,6 @@ import { ReportsComponent } from './components/pages/reports/reports/reports.com
     LoginComponent,
     LogoutComponent,
     HomeComponent,
-    AccessDeniedComponent,
     AddUserComponent,
     UserListComponent,
     AddActivityComponent,
@@ -100,6 +100,8 @@ import { ReportsComponent } from './components/pages/reports/reports/reports.com
     DeleteProjectComponent,
     AddExpenseAccountComponent,
     DeleteExpenseAccountComponent,
+    NotFoundComponent,
+    ServerDownComponent,
     RequestFormComponent,
     ReportsComponent,
   ],
@@ -122,7 +124,10 @@ import { ReportsComponent } from './components/pages/reports/reports/reports.com
   bootstrap: [AppComponent],
   providers: [
     
-    { provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: { appearance: 'fill' } },
+    { 
+      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, 
+      useValue: { appearance: 'fill' } 
+    },
     {
       provide: MatDialogRef,
       useValue: {}
@@ -130,6 +135,11 @@ import { ReportsComponent } from './components/pages/reports/reports/reports.com
     {
       provide: MAT_DIALOG_DATA,
       useValue: {} // Add any data you wish to test if it is passed/used correctly
+    },
+    {
+      provide: HTTP_INTERCEPTORS, 
+      useClass: GlobalHttpInterceptorService,
+       multi: true
     }
   ],
 })
