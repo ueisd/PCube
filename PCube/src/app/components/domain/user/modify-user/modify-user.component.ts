@@ -14,7 +14,7 @@ import { Role } from 'src/app/models/role';
 export class ModifyUserComponent implements OnInit {
 
   constructor(public dialogRef: MatDialogRef<ModifyUserComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: User,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private userService: UserService,
     private roleService: RoleService) { }
 
@@ -37,6 +37,16 @@ export class ModifyUserComponent implements OnInit {
     this.initForm();
     this.isAdded = false;
     this.isUnique = true;
+    this.setDefaultValues();
+  }
+
+  setDefaultValues() {
+    this.modifyUserForm.controls['id'].setValue(this.data.id);
+    this.modifyUserForm.controls['email'].setValue(this.data.email);
+    this.modifyUserForm.controls['firstName'].setValue(this.data.firstName);
+    this.modifyUserForm.controls['lastName'].setValue(this.data.lastName);
+    this.modifyUserForm.controls['newEmail'].setValue(this.data.email);
+    this.modifyUserForm.controls['roles'].setValue(new Role(this.data.roleId, this.data.roleName, this.data.roleId));
   }
 
   private onSubmitSuccess(){
@@ -53,8 +63,8 @@ export class ModifyUserComponent implements OnInit {
       const firstName = this.modifyUserForm.controls['firstName'].value;
       const lastName = this.modifyUserForm.controls['lastName'].value;
       const newEmail = this.modifyUserForm.controls['newEmail'].value;
-      const roleId : number = this.modifyUserForm.controls['roleId'].value;
-
+      const roleId : number = this.modifyUserForm.get("roles").value["id"];
+      
       this.userService.modifyUser(id, email, firstName, lastName, newEmail, roleId).subscribe(user => {
           if(user.id != -1){
             this.onSubmitSuccess();
@@ -66,6 +76,11 @@ export class ModifyUserComponent implements OnInit {
   }
 
   checkUniqueEmail(newValue){
+    if(newValue != null && newValue.toUpperCase() === this.data.email.toUpperCase()) {
+      this.isUnique = true;
+      return;
+    }
+
     if(newValue != null && newValue.trim().length != 0){
       this.isUnique = true;
       this.userService.isEmailUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
@@ -79,7 +94,7 @@ export class ModifyUserComponent implements OnInit {
       'firstName': new FormControl('', [Validators.required]),
       'lastName': new FormControl('', [Validators.required]),
       'newEmail': new FormControl('', [Validators.required]),
-      'roleId': new FormControl('', [Validators.required])
+      'roles': new FormControl('', [Validators.required])
     });
   }
 }

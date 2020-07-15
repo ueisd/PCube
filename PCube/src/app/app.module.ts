@@ -57,6 +57,8 @@ import { DeleteExpenseAccountComponent } from './components/domain/expense-accou
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
 import { GlobalHttpInterceptorService } from './services/Interceptor/GlobalHttpInterceptor.service';
 import { ServerDownComponent } from './components/pages/server-down/server-down.component';
+import { RequestFormComponent } from './components/domain/reports/request-form/request-form/request-form.component';
+import { ReportsComponent } from './components/pages/reports/reports/reports.component';
 
 
 @NgModule({
@@ -100,6 +102,8 @@ import { ServerDownComponent } from './components/pages/server-down/server-down.
     DeleteExpenseAccountComponent,
     NotFoundComponent,
     ServerDownComponent,
+    RequestFormComponent,
+    ReportsComponent,
   ],
   imports: [
     MatDialogModule,

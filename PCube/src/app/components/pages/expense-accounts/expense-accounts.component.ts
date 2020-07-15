@@ -19,7 +19,7 @@ export class ExpenseAccountsComponent implements OnInit {
   ngOnInit(): void {
   }
   fileNameDialogRef: MatDialogRef<AddExpenseAccountComponent>;
-  @ViewChild(ExpenseAccountListComponent) expanseAccountListChild;
+  @ViewChild(ExpenseAccountListComponent) expenseAccountListChild;
 
   openAddDialog() {
     const dialogConfig = new MatDialogConfig();
@@ -31,7 +31,7 @@ export class ExpenseAccountsComponent implements OnInit {
 
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
       if(result == true) {
-        this.expanseAccountListChild.refreshList({expanded: true});
+        this.expenseAccountListChild.refreshList({expanded: true});
         this.openSnackBar('Le compte de dépense a été créée', 'notif-success');
       }
     });

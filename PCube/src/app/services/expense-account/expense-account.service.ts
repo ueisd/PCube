@@ -29,7 +29,7 @@ export class ExpenseAccountService {
     return this.http.get<ExpenseAccountItem[]>(API_EXPENSE_ACCOUNT, opts);
   }
 
-  getApparentableExpanseAccounts(id : number): Observable<ExpenseAccountItem[]>{
+  getApparentableExpenseAccounts(id : number): Observable<ExpenseAccountItem[]>{
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
@@ -121,7 +121,7 @@ export class ExpenseAccountService {
     return this.http.get<boolean>(url, opts);
   }
 
-  updateExpanseAccount(compte: ExpenseAccountItem): Observable<ExpenseAccountItem>{
+  updateExpenseAccount(compte: ExpenseAccountItem): Observable<ExpenseAccountItem>{
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes

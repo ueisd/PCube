@@ -20,6 +20,7 @@ export class AddUserComponent implements OnInit {
   userForm : FormGroup;
   hasToRefresh: boolean = true;
   isAdded: boolean;
+  isUnique: boolean;
   
   @Input() isChecked = false;
   @Output() createUser : EventEmitter<any> = new EventEmitter;
@@ -40,6 +41,7 @@ export class AddUserComponent implements OnInit {
       this.roles= res;
     });
     this.isAdded = false;
+    this.isUnique = true;
     this.initForm();
   }
 
@@ -110,5 +112,12 @@ export class AddUserComponent implements OnInit {
         passwordConfirmation: ['', Validators.required],
         roles: ['', Validators.required]
       },{validators: this.passwordMatchValidator});
+    }
+
+    checkUniqueEmail(newValue){  
+      if(newValue != null && newValue.trim().length != 0){
+        this.isUnique = true;
+        this.userService.isEmailUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
+      }
     }
 }
