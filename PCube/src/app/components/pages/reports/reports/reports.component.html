@@ -1,0 +1,121 @@
+    <mat-card fxflex fxFlexOffset="10" fxFlex="80">
+        <mat-card-header fxLayoutAlign="center" fxLayout="row">
+            <mat-card-title><h2>Rapport d'heures de travail</h2></mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+
+            <div fxLayout="row" *ngIf="this.reportRequest">
+                <mat-accordion fxFlexOffset="5" fxFlex="90">
+                    <mat-expansion-panel expanded="true">
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                              Paramètres de la requete
+                            </mat-panel-title>
+                            <mat-panel-description>
+                                les paramètres ayant servi à générer le rapport
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div fxLayout="row">
+                            <h3>{{ afficherPeriodes() }}</h3>
+                        </div>
+                        <div fxLayout="row" fxLayout.lt-md="column" >
+                            <div fxflex fxFlex="33.3" fxflex.lt-md="100" >
+                                <div *ngIf="!(reportRequest.projects.length > 0)" fxLayout="row" fxLayoutAlign="space-around center">
+                                    <h3>Sans limite de projets</h3>
+                                </div>
+                                <div fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="5px" *ngIf="reportRequest.projects.length > 0">
+                                    <div>
+                                        <h3>Limité aux projets suivants:</h3>
+                                    </div>
+                                    <mat-chip-list class="mat-chip-list-stacked">
+                                        <mat-chip color="primary" *ngFor="let projet of reportRequest.projects">
+                                            {{ projet.name }}
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </div>
+                            </div>
+                            <div fxflex fxFlex="33.3" fxflex.lt-md="100">
+                                <div *ngIf="!(reportRequest.activitys.length > 0)" fxLayout="row" fxLayoutAlign="space-around center">
+                                    <h3>Sans limite d'activités</h3>
+                                </div>
+                                <div fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="5px" *ngIf="reportRequest.activitys.length > 0">
+                                    <div>
+                                        <h3>Limité aux activités suivantes:</h3>
+                                    </div>
+                                    <mat-chip-list class="mat-chip-list-stacked">
+                                        <mat-chip color="primary" *ngFor="let activity of reportRequest.activitys">
+                                            {{ activity.name }}
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </div>
+                            </div>
+            
+                            <div fxflex fxFlex="33.3" fxflex.lt-md="100">
+                                <div *ngIf="!(reportRequest.users.length > 0)" fxLayout="row" fxLayoutAlign="space-around center">
+                                    <h3>Sans limite d'utilisateurs</h3>
+                                </div>
+                                <div fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="5px" *ngIf="reportRequest.users.length > 0">
+                                    <div>
+                                        <h3>Limité aux utilisateurs suivants:</h3>
+                                    </div>
+                                    <mat-chip-list class="mat-chip-list-stacked">
+                                        <mat-chip color="primary" *ngFor="let user of reportRequest.users">
+                                            {{ user.display_string }}
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </div>
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                </mat-accordion>
+            </div>
+
+            <div fxLayout="row" *ngIf="this.reportRequest" >
+                <mat-card
+                    class="panel width100"
+                    fxLayout="column" fxLayoutAlign="start center"
+                    fxFlexOffset.gt-md="20" fxFlex.gt-md="60"
+                    fxFlexOffset.lt-md="5" fxflex.lt-md="90">
+                    <mat-card-header class="width100">
+                        <h3 fxFlex="70">
+                            Compte de dépense
+                        </h3>
+                        <h3 fxflex fxFlex="30" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+                            Somme des heures
+                        </h3>  
+                    </mat-card-header>
+                    
+                    
+                    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl" class="width100">
+                        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+                            <div class="width100">
+                                <div fxflex fxFlex="70%">
+                                    {{node.name}}
+                                </div>
+                                <div fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+                                    {{ (node.sommeHeure) ? heureSommeToStr(node.sommeHeure) : '0h00' }}
+                                </div>  
+                            </div>
+                        </mat-tree-node>
+                        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+                            <div class="width100">
+                                <div fxflex fxFlex="70%">
+                                    <button mat-icon-button matTreeNodeToggle
+                                    [attr.aria-label]="'toggle ' + node.name">
+                                        <mat-icon class="mat-icon-rtl-mirror">
+                                            {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                                        </mat-icon>
+                                    </button>
+                                    {{node.name}}
+                                </div>
+                                <div fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+                                    {{ (node.sommeHeure) ? heureSommeToStr(node.sommeHeure) : '0h00' }}
+                                </div>
+                            </div>
+                        </mat-tree-node>
+                    </mat-tree>  
+                </mat-card>
+            </div>
+        </mat-card-content>
+    </mat-card>
+

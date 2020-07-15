@@ -10,7 +10,7 @@ import { DatePipe } from '@angular/common';
 import { DeleteTimelineComponent } from 'src/app/components/domain/timeline/delete-timeline/delete-timeline.component';
 import { Router } from '@angular/router';
 import { TimelineFilterItem } from 'src/app/models/timelineFilter';
-import { CustomDiaglogConfig } from 'src/app/utils/custom-dialog-config';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 
 @Component({
@@ -38,6 +38,8 @@ export class TimelineListComponent implements OnInit {
   expenseFilter:FormControl =  new FormControl('');
   projectFilter:FormControl =  new FormControl('');
   activityFilter:FormControl =  new FormControl('');
+
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   ngOnInit(): void {
     this.refreshList();
@@ -79,11 +81,11 @@ export class TimelineListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if(result !== undefined) {
         this.timelineService.deleteTimeline(timeline.id, timeline.day_of_week, timeline.punch_in, timeline.punch_out).subscribe((data) => {
-          this.openSnackBar("La ligne de temps a été supprimé", 'notif-success');
+          this.customSnackBar.openSnackBar("La ligne de temps a été supprimé", 'notif-success');
           this.refreshList();
         },
         (error) => {
-          this.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+          this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
         });
       }
     });
@@ -99,15 +101,6 @@ export class TimelineListComponent implements OnInit {
     iso = iso.substr(0, index);
 
     return iso;
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 10000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
-    });
   }
 
   onModifyTimeline(timeline){

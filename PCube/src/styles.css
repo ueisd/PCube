@@ -168,10 +168,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 /******************************************/
 
-.custom-default-config{
-    
-}
-
 .delete-confirm-button{
     border: 2px solid #721c24!important;
     color: #721c24 !important;

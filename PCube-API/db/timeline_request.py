@@ -3,7 +3,7 @@ from .database import Database
 from .dict_factory import dict_factory
 from ..domain.timeline import Timeline
 from ..domain.timelineFilter import TimelineFilter
-
+from ..domain.accountRequestParams import AccountRequestParams
 class TimelineRequest:
 
     def __init__(self, connection):
@@ -62,6 +62,58 @@ class TimelineRequest:
         data = cursor.fetchone()
         cursor.close()
         return data
+
+
+    def get_accountTimeWithSum(self, params):
+        
+        req = []
+
+        if params.dateDebut != '' :
+            req.append(" t.day_of_week >= '" + params.dateDebut + "'")
+        if params.dateFin != '':
+            req.append(" t.day_of_week <= '" + params.dateFin + "'")
+        if params.projects:
+            req.append(" t.project_id IN (" + ','.join(map(str, params.projects)) + ") ")
+        if params.activitys:
+            req.append(" t.activity_id IN (" + ','.join(map(str, params.activitys)) + ") ")
+        if params.users:
+            req.append(" t.user_id IN (" + ','.join(map(str, params.users)) + ") ")
+        
+        clauseLignes = ' AND '.join(map(str, req))
+
+        if(clauseLignes == '') :
+            clauseLignes = '1'
+
+
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select a.*, "
+            + "SUM(" ## partie permetant la différence d'heures en sql lite (language limité...))
+            + " CASE WHEN  (" + clauseLignes + ")" 
+            + " THEN ("  
+            + "     CASE WHEN  ("  
+            + "         (CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT))"
+            + "         - (CAST(SUBSTR(t.punch_in, 1, 2) AS INT)*60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT))"
+            + "     ) > 0 " 
+            + "     THEN ("
+            + "         (CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT))"
+            + "         - (CAST(SUBSTR(t.punch_in, 1, 2) AS INT)*60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT))"
+            + "     )"
+            + "     ELSE ("
+            + "         (24-CAST(SUBSTR(t.punch_in, 1, 2) AS INT))*60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT)"
+            + "         + CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT)"
+            + "     )"
+            + "     END"
+            + " ) END"
+            + ") as summline "
+            + "from accounting_time_category a LEFT JOIN timeline t ON a.id = t.accounting_time_category_id  group by a.id"
+        )
+       ## "DATEDIFF(year, '2017/08/25', '2011/08/25')"
+       ## "STR_TO_DATE(field_name, '%H:%i:%s %b %d, %Y PDT') AS new_time"
+        data = cursor.fetchall()
+        cursor.close()
+        return data
+
 
     def update(self, timeline):
         cursor = self.connection.cursor()
