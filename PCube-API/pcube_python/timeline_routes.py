@@ -14,6 +14,9 @@ from ..schemas.timeline_schema import (timeline_insert_schema, timeline_delete_s
 from ..db.timeline_request import TimelineRequest
 from ..domain.timeline import Timeline
 from ..domain.timelineFilter import TimelineFilter
+from ..domain.treeGenerationParam import ChampsArbreParam
+from ..domain.accountRequestParams import AccountRequestParams
+from ..schemas.report_request_schema import report_request_schema
 from ..utility.auth import (get_authenticated_user,
                     auth_required, auth_refresh_required, AuthenticationError,
                     admin_required, project_manager_required, member_required
@@ -163,6 +166,69 @@ def get_timeline_by_id(id):
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
+
+## NE PAS SUPPRIMER CAR PERMET UN GAIN DE PERFORMANCE ET PERMET DE LIMITER L'ÉCRITURE DE REQUÊTE
+##  FAVORISE L'EFFICACITÉ DE LA MAINTENANCE EN PERMETANT UNE PLUS GRANDE FACTORISATION DU CODE DE REQUETES COMPLEXES
+def construireArbre(listeNoeuds, parent, champsParams):
+    c =  champsParams
+    if (parent == None or parent[c.id] == id): 
+        return []
+        
+    parent[c.childs] = [node for node in listeNoeuds 
+        if node[c.parentId] == parent[c.id]  
+        and node[c.parentId] != node[c.id]
+    ]
+    for enfant in parent[c.childs]:
+        enfant = construireArbre(listeNoeuds, enfant, c)
+    return parent
+
+def sommationAscendante(listeNoeuds, parent):
+    parent['sumTotal'] = parent['summline']
+    for enfant in parent['child']:
+        enfant = sommationAscendante(listeNoeuds, enfant)
+        if not parent['sumTotal']:
+            parent['sumTotal'] = 0     
+        if enfant['sumTotal']:
+            parent['sumTotal'] = parent['sumTotal'] + enfant['sumTotal']
+    return parent
+
+
+@timeline.route('/testsum', methods=['POST'])
+@auth_required
+@schema.validate(report_request_schema)
+def testsum():
+    """
+    Permet de tester la sommation de lignes de temps
+    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    """
+    try:
+        data = request.json
+        params = AccountRequestParams()
+        params.projects = data.get('projects')
+        params.activitys = data.get('activitys')
+        params.users = data.get('users')
+        params.dateDebut = str(escape(data.get('dateDebut')).strip())
+        params.dateFin = str(escape(data.get('dateFin')).strip())
+
+        connection = get_db().get_connection()
+        query = TimelineRequest(connection)
+        timeline = query.get_accountTimeWithSum(params)
+
+        if timeline:
+            parents = [x for x in timeline if x['id'] == x['parent_id']]
+            for parent in parents:
+                parent = construireArbre(timeline, parent, ChampsArbreParam());
+            for parent in parents:
+                parent = sommationAscendante(parents, parent)
+            return jsonify(parents), 200
+        else:
+            log.error("La ressource n'existe pas.")
+            abort(404)
+
+    except AuthenticationError as error:
+        log.error('authentication error: %s', error)
+        abort(403)
+
 
 @timeline.errorhandler(JsonValidationError)
 def validation_error(e):
