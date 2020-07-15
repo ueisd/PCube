@@ -94,7 +94,7 @@ export class AddTimelineComponent implements OnInit {
   }
 
   onCancel(){
-    this.router.navigate(['/ligne-de-temps']);
+    this.router.navigate(['gestion-des-lignes-de-temps']);
   }
 
   setUser(user:User){

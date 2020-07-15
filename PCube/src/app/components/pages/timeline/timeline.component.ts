@@ -16,7 +16,7 @@ export class TimelineComponent implements OnInit {
   }
 
   goToAddNewTimeline(){
-    this.router.navigate(['/ajouter-ligne-de-temps']);
+    this.router.navigate(['/gestion-des-lignes-de-temps/ajouter-ligne-de-temps']);
   }
 
 }

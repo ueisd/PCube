@@ -16,7 +16,7 @@ export class GlobalHttpInterceptorService implements HttpInterceptor {
       catchError((error) => {
         
         if(error.status >= 500 && error.status <= 599){
-            this.router.navigate(["server-down"]);
+            this.router.navigate(["serveur-indisponible"]);
             return throwError("The server is not responding");
         }
 
