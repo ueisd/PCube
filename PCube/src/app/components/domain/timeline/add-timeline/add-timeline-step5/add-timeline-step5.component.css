@@ -4,6 +4,20 @@
 
 .time-picker-row{
     margin-left: 40px;
+    position: relative;
+}
+
+.timeline-container{
+   position: relative;
+}
+
+.time-picker-hover-div{
+   position: absolute;
+   width: 100%;
+   height: 100%;
+   background: rgba(0, 0, 0, 0);
+   z-index: 20;
+   pointer-events: none
 }
 
 .button-display-demi {
@@ -22,13 +36,37 @@
      background-color: #04af20;
  }
 
+.button-remove-hours:hover > .time-picker-row{
+   background-color: red;
+}
+
+.supression-effect{
+   background-color: white;
+   animation-name: supression-effect-color;
+   animation-duration: 1.5s;
+   animation-iteration-count: infinite;
+}
+
+@keyframes supression-effect-color {
+   0% {
+     background-color: rgba(0, 0, 0, 0);
+   }
+   50% {
+     background-color: rgba(255,255,255,1);
+   }
+   100%{
+      background-color: rgba(0, 0, 0, 0);
+   }
+ }
+
 .button-remove-hours:hover{
-    background-color: #F44336;
+   background-color: red;
 }
 
  .button-remove-hours{
-    transition: background-color 0.5s ease;
-    margin-left: 70px;
+   background-color: #F44336;
+   transition: background-color 0.5s ease;
+   margin-left: 70px;
  }
 
  .icon-display {
@@ -46,7 +84,7 @@
     position: relative;
     bottom: -15px;
     z-index: 10;
-    left: -16px;
+    left: -12px;
  }
 
  .under-line{
