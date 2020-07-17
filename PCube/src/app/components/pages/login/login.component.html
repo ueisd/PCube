@@ -8,7 +8,7 @@
             <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form" *ngIf="isShowingForm">
                 <mat-form-field appearance="fill" class="form-element" >
                     <mat-label>Courriel</mat-label>
-                    <input matInput formControlName="email">
+                    <input id="emailInput" matInput formControlName="email">
                 </mat-form-field>
                 <mat-form-field appearance="fill" class="form-element">
                     <mat-label>Mot de passe</mat-label>
