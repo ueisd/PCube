@@ -218,7 +218,15 @@ def update_user():
             log.error("L'utilisateur n'existe pas")
             abort(404)
 
-        user = query.update_user(user, data['new_email'])
+        new_email = data['new_email']
+
+        if(user.email is not new_email):
+            data = query.email_in_use(user.id, new_email)
+            if data and int(user.id) is not data['id']:
+                log.error("L'adresse courriel est utilisée par un autre utilisateur")
+                abort(400)
+
+        user = query.update_user(user, new_email)
 
         return jsonify(user.asDictionary()), 200
 

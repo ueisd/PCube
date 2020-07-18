@@ -61,7 +61,7 @@ def login_info_api():
         }))
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
-        abort(403)
+        abort(401)
 
 @auth.route('/logout', methods=['DELETE'])
 @auth_refresh_required
