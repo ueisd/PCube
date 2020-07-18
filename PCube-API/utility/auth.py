@@ -108,7 +108,9 @@ def get_authenticated_user():
     return {
         'email' : user['email'],
         'role' : role['role_name'],
-        'level' : str(role['access_level'])
+        'level' : str(role['access_level']),
+        'first_name' : user['first_name'],
+        'last_name' : user['last_name']
     }
 
 def deauthenticate_user():
