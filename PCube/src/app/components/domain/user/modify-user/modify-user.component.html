@@ -8,17 +8,22 @@
         
         <mat-form-field class="full-width">
             <mat-label>Prénom</mat-label>
-            <input matInput placeholder="Prénom" formControlName="firstName">
+            <input matInput placeholder="Prénom" formControlName="firstName" autocomplete="off">
         </mat-form-field>
 
         <mat-form-field class="full-width">
             <mat-label>Nom de famille</mat-label>
-            <input matInput placeholder="Nom de famille" formControlName="lastName">
+            <input matInput placeholder="Nom de famille" formControlName="lastName" autocomplete="off">
         </mat-form-field>
 
         <mat-form-field class="full-width">
             <mat-label>Adresse courriel</mat-label>
-            <input matInput placeholder="Adresse courriel" formControlName="email" (ngModelChange)="checkUniqueEmail($event)">
+            <input matInput 
+                placeholder="Adresse courriel" 
+                formControlName="newEmail" 
+                (ngModelChange)="checkUniqueEmail($event)" 
+                autocomplete="off" 
+                [readonly]="!isEmailModifiable">
         </mat-form-field>
 
         <div *ngIf="!isUnique" class="alert alert-danger" role="alert">

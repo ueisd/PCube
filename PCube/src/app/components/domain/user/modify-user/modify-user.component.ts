@@ -23,6 +23,7 @@ export class ModifyUserComponent implements OnInit {
   isUnique: boolean;
   isAdded: boolean;
   roles: Role[];
+  isEmailModifiable: boolean = true;
 
   @Output() refreshDataEvent = new EventEmitter<boolean>();
 
@@ -47,6 +48,8 @@ export class ModifyUserComponent implements OnInit {
     this.modifyUserForm.controls['lastName'].setValue(this.data.lastName);
     this.modifyUserForm.controls['newEmail'].setValue(this.data.email);
     this.modifyUserForm.controls['roles'].setValue(new Role(this.data.roleId, this.data.roleName, this.data.roleId));
+    if(localStorage.getItem('email') === this.data.email)
+      this.isEmailModifiable = false;
   }
 
   private onSubmitSuccess(){

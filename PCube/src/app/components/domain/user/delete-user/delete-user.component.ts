@@ -9,10 +9,14 @@ import { User } from 'src/app/models/user';
 })
 export class DeleteUserComponent implements OnInit {
 
+  isDeletable: boolean = true;
+
   constructor(public dialogRef: MatDialogRef<DeleteUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 
   ngOnInit(): void {
+    if(localStorage.getItem('email') === this.data.email)
+      this.isDeletable = false;
   }
 
   onNoClick() : void {
