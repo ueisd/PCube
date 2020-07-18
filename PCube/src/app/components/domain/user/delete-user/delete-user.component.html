@@ -1,9 +1,14 @@
-<h2 mat-dialog-title>Supprimer un utilisateur</h2>
-<div mat-dialog-content>
+<h2 mat-dialog-title *ngIf="!isCurrentUser">Supprimer un utilisateur</h2>
+<h2 mat-dialog-title *ngIf="isCurrentUser">Supprimer de votre compte</h2>
+<div mat-dialog-content *ngIf="!isCurrentUser">
   <p>Vous êtes sur le point de supprimer {{ data.lastName }}, {{ data.firstName }}.</p>
   <p>Voulez-vous vraiment supprimer cet utilisateur?</p>
 </div>
+<div mat-dialog-content *ngIf="isCurrentUser">
+  <p>Vous êtes sur le point de supprimer votre compte.</p>
+  <p>Si vous acceptez la suppression, vous ne serez plus en mesure d'accéder au portail.</p>
+</div>
 <div mat-dialog-actions>
-  <button mat-button class="delete-confirm-button" [mat-dialog-close]="data" cdkFocusInitial [disabled]="!isDeletable">Confirmer</button>
+  <button mat-button class="delete-confirm-button" [mat-dialog-close]="data" cdkFocusInitial>Confirmer</button>
   <button mat-button class="delete-cancel-button" (click)="onNoClick()">Annuler</button>
 </div>
