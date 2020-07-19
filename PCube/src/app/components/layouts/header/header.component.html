@@ -2,6 +2,23 @@
     <mat-toolbar-row>
       <p>PCube</p>
       <span class="example-spacer"></span>
-      <app-logout></app-logout>
+      <mat-menu #appMenu="matMenu">
+        <mat-list>
+          <mat-list-item>
+            <div class="header-name" matLine>{{ user.last_name | titlecase }}, {{ user.first_name | titlecase }}</div>
+            <div matLine>{{ user.email | lowercase}}</div>
+          </mat-list-item>
+          <mat-divider></mat-divider>
+          <mat-list-item class="logout-button-container" (click)="logout()">
+              <span class="logout-button"><mat-icon>logout</mat-icon><span class="logout-button">Déconnexion</span></span>
+          </mat-list-item>
+          </mat-list>
+      </mat-menu>
+      
+      <button id="header-profile" mat-button [matMenuTriggerFor]="appMenu">
+        <mat-icon>account_circle</mat-icon>
+        <mat-icon>keyboard_arrow_down</mat-icon>
+      </button>
+      
     </mat-toolbar-row>
 </mat-toolbar>

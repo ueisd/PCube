@@ -1,5 +1,6 @@
 <form [formGroup]="modifyUserForm" (ngSubmit)="onSubmit()">
-    <h2 mat-dialog-title>Modifier un utilisateur</h2>
+    <h2 mat-dialog-title *ngIf="!isCurrentUser">Modifier un utilisateur</h2>
+    <h2 mat-dialog-title *ngIf="isCurrentUser">Modifier votre compte</h2>
     
     <mat-dialog-content class="mat-typography">
 
@@ -8,17 +9,22 @@
         
         <mat-form-field class="full-width">
             <mat-label>Prénom</mat-label>
-            <input matInput placeholder="Prénom" formControlName="firstName">
+            <input matInput placeholder="Prénom" formControlName="firstName" autocomplete="off">
         </mat-form-field>
 
         <mat-form-field class="full-width">
             <mat-label>Nom de famille</mat-label>
-            <input matInput placeholder="Nom de famille" formControlName="lastName">
+            <input matInput placeholder="Nom de famille" formControlName="lastName" autocomplete="off">
         </mat-form-field>
 
+        <div class="alert alert-warning" *ngIf="isCurrentUser">Si vous modifier votre adresse courriel, il faudra vous re-authentifier.</div>
         <mat-form-field class="full-width">
             <mat-label>Adresse courriel</mat-label>
-            <input matInput placeholder="Adresse courriel" formControlName="email" (ngModelChange)="checkUniqueEmail($event)">
+            <input matInput 
+                placeholder="Adresse courriel" 
+                formControlName="newEmail" 
+                (ngModelChange)="checkUniqueEmail($event)" 
+                autocomplete="off">
         </mat-form-field>
 
         <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
@@ -36,7 +42,7 @@
     </mat-dialog-content>
     <br/>
     <mat-dialog-actions align="end">
-        <button mat-raised-button color="warn" mat-dialog-close>Annuler</button>
+        <button mat-raised-button color="warn" mat-dialog-close [mat-dialog-close]="canceledMessage">Annuler</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="!modifyUserForm.valid || !isUnique">Sauvegarder</button>
     </mat-dialog-actions>
 </form>

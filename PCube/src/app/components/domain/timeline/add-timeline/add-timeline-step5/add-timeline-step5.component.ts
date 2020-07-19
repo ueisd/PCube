@@ -42,6 +42,9 @@ export class AddTimelineStep5Component implements OnInit {
 
   canAddMoreHours:boolean = true;
 
+  buttonId:number = -1;
+  removeLastTimelineHover:number = -1;
+
   ngOnInit(): void {
     this.placeDefaultWorkingTimeline();
   }
@@ -67,6 +70,10 @@ export class AddTimelineStep5Component implements OnInit {
     let lastIndex = this.workingTimelines.length - 1;
     this.workingTimelines.splice(lastIndex, 1);
     this.onAddOrRemoveRow();
+
+    if(lastIndex == 1)
+      this.removeLastTimelineHover = -1;
+
   }
 
   addShift(workingShiftIndex){
@@ -76,9 +83,13 @@ export class AddTimelineStep5Component implements OnInit {
   }
 
   removeShift(workingShiftIndex){
+
     let lastIndex = this.workingTimelines[workingShiftIndex].shift.length-1;
     this.workingTimelines[workingShiftIndex].shift.splice(lastIndex, 1);
     this.onAddOrRemoveRow();
+
+    if(workingShiftIndex == 0)
+      this.buttonId = -1;
   }
 
   showPannelMessage(message:string, cssClass:string){

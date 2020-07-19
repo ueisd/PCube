@@ -9,4 +9,52 @@ a:hover, a:active{
 
 .example-spacer {
     flex: 1 1 auto;
-  }
+}
+
+#header-profile img{
+    border-radius: 50%; 
+}
+
+#header-profile mat-icon{
+    color: white;
+}
+
+#mat-items-container p {
+    margin: 5px;
+}
+
+.logout-button-container{
+    -webkit-transition: background-color 500ms linear;
+    -moz-transition: background-color 500ms linear;
+    -o-transition: background-color 500ms linear;
+    transition: background-color 500ms linear;
+
+
+
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+
+.logout-button-container:hover{
+    background-color: #3E63A7;
+    color: white;
+}
+
+.logout-button{
+    display: inline-block;
+    font-size: 16px;
+}
+
+.header-name{
+    font-weight: 500 !important;
+}
+
+::ng-deep .logout-button mat-icon{
+    margin: auto auto 4px auto;
+    vertical-align: middle;
+}
+
+::ng-deep .mat-menu-content:not(:empty){
+    padding-top: 0px !important;
+    padding-bottom: 0px !important;
+}
