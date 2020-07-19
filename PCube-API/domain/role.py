@@ -9,5 +9,5 @@ class Role:
         return {
             "id": self.id,
             "role_name": self.role_name,
-            "access_level": self.access_name
+            "access_level": self.access_level
         }

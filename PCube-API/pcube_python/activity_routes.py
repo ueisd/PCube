@@ -9,14 +9,15 @@ from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
 from ..domain.activity import Activity
-from ..schemas.activity_schema import (activity_insert_schema, activity_update_schema, activity_delete_schema)
+from ..schemas.activity_schema import (
+    activity_insert_schema, activity_update_schema, activity_delete_schema)
 from .db_controller import get_db
 from ..db.activity_request import ActivityRequest
 from ..domain.activity import Activity
 from ..utility.auth import (
-                    auth_required, auth_refresh_required, AuthenticationError,
-                    admin_required, project_manager_required, member_required
-                    )
+    auth_required, auth_refresh_required, AuthenticationError,
+    admin_required, project_manager_required, member_required
+)
 
 activity = Blueprint('activity', __name__)
 app = Flask(__name__)
@@ -49,7 +50,7 @@ def get_activity_by_filter():
     activity.id = escape(request.args.get('id', "")).upper().strip()
     connection = get_db().get_connection()
     query = ActivityRequest(connection)
-    activities = query.select_activity_by_filter(activity) 
+    activities = query.select_activity_by_filter(activity)
     return jsonify(activities)
 
 
@@ -64,7 +65,7 @@ def is_unique_activity(name):
     else:
         return jsonify(False)
 
-    
+
 @activity.route('', methods=['POST'])
 @project_manager_required
 @schema.validate(activity_insert_schema)
@@ -111,7 +112,8 @@ def modify_activity():
         log.error("Le nom de l'activité doit être unique")
         abort(409)
 
-    itExist = True if query.is_id_name_combo_exist(activity.id, activity.name) else False
+    itExist = True if query.is_id_name_combo_exist(
+        activity.id, activity.name) else False
 
     if not itExist:
         log.error("L'activité n'existe pas")
@@ -127,10 +129,7 @@ def modify_activity():
 def delete_activity(id):
     """
     Permet de supprimer une activité.
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
-    data = request.json
-
     connection = get_db().get_connection()
     query = ActivityRequest(connection)
 
@@ -139,13 +138,13 @@ def delete_activity(id):
     number = query.countTimeline(id)
     number = number['nbLignesDeTemps']
     if number > 0:
-        return jsonify({'error': 'attention l\'activité a des lignes de temps associées'}), 412
-    
+        return jsonify({'error': 'attention l\'activité a des'
+                        ' lignes de temps associées'}), 412
 
     query.delete_activity(id)
-    return jsonify(""),200
-   
-   
+    return jsonify(""), 200
+
+
 @activity.errorhandler(JsonValidationError)
 def validation_error(e):
     errors = [validation_error.message for validation_error in e.errors]

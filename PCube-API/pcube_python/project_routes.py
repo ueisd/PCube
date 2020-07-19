@@ -8,20 +8,22 @@ from flask import escape
 from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
-from ..schemas.project_schema import (project_insert_schema, project_update_schema, project_delete_schema)
+from ..schemas.project_schema import (
+    project_insert_schema, project_update_schema, project_delete_schema)
 from .db_controller import get_db
 from ..db.project_request import ProjectRequest
 from ..domain.project import Project
 from ..utility.auth import (
-                    get_authenticated_user,
-                    auth_required, auth_refresh_required, AuthenticationError,
-                    admin_required, project_manager_required, member_required
-                    )
+    get_authenticated_user,
+    auth_required, auth_refresh_required, AuthenticationError,
+    admin_required, project_manager_required, member_required
+)
 
 project = Blueprint('project', __name__)
 app = Flask(__name__)
 log = create_logger(app)
 schema = JsonSchema(app)
+
 
 @project.route('/get-parents', methods=['GET'])
 @auth_required
@@ -35,6 +37,7 @@ def get_all_parent_project():
     projects = request.select_all_parent()
     return jsonify(projects)
 
+
 @project.route('/get-sub-parents/<parent_id>', methods=['GET'])
 @auth_required
 def get_all_sub_parent_project(parent_id):
@@ -46,6 +49,7 @@ def get_all_sub_parent_project(parent_id):
     request = ProjectRequest(connection)
     projects = request.select_all_project_from_parent(parent_id)
     return jsonify(projects)
+
 
 def find_all_child(parent_id):
     """
@@ -81,6 +85,7 @@ def get_all_project():
 
     return jsonify(parents_dict)
 
+
 @project.route('/filter', methods=['GET'])
 @auth_required
 def get_project_by_filter():
@@ -98,6 +103,7 @@ def get_project_by_filter():
 
     return jsonify(parents_dict)
 
+
 @project.route('/filter/one-level', methods=['GET'])
 @auth_required
 def get_one_level_project_by_filter():
@@ -113,6 +119,7 @@ def get_one_level_project_by_filter():
     projects = query.select_project_one_level_filter(project)
 
     return jsonify(projects)
+
 
 @project.route('', methods=['POST'])
 @project_manager_required
@@ -140,7 +147,8 @@ def create_project():
 
     project = query.insert_project(project)
 
-    return jsonify(project.asDictionary()),201
+    return jsonify(project.asDictionary()), 201
+
 
 @project.route('', methods=['PUT'])
 @project_manager_required
@@ -151,7 +159,7 @@ def update_project():
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     data = request.json
-    project = Project();
+    project = Project()
     project.id = escape(data['id']).strip()
     project.parent_id = escape(data['parent_id']).strip()
     project.name = escape(data['projectName']).strip()
@@ -162,6 +170,7 @@ def update_project():
     project = query.update_project_std(project)
 
     return jsonify(project.asDictionary()), 200
+
 
 @project.route('/is-unique/<name>', methods=['GET'])
 @auth_required
@@ -178,14 +187,17 @@ def is_project_unique(name):
     else:
         return jsonify(False)
 
+
 def obtenirLesDesendants(projects, parent):
-    if parent == None: 
+    if parent is None:
         return []
-    enfants = [number for number in projects if number['parent_id'] == parent['id']]
-    retour = enfants;
+    enfants = [
+        number for number in projects if number['parent_id'] == parent['id']]
+    retour = enfants
     for enfant in enfants:
         retour = retour + obtenirLesDesendants(projects, enfant)
     return retour
+
 
 @project.route('/ifAIsDescendantOfB/<_idA>/<_idB>', methods=['GET'])
 @auth_required
@@ -202,33 +214,38 @@ def getDescendants(_idA, _idB):
     request = ProjectRequest(connection)
     projects = request.select_all()
     parent = next((projet for projet in projects if projet['id'] == idB), None)
-    
+
     listeDescedantsDeB = obtenirLesDesendants(projects, parent)
     descendantIdA = next((
         projet for projet in listeDescedantsDeB if projet['id'] == idA
-        ), None)
-    return jsonify(descendantIdA != None)
+    ), None)
+    return jsonify(descendantIdA is not None)
 
-### @param id: l'identifiant du noeud de la racine du sous-arbre à ne pas inclure
+# @param id: l'identifiant du noeud de la racine du sous-arbre à ne pas inclure
+
+
 def construireArbreSansSousArbre(projects, parent, id):
-    if (parent == None or parent['id'] == id): 
+    if (parent is None or parent['id'] == id):
         return []
-        
-    parent['child_project'] = [number for number in projects 
-        if number['parent_id'] == parent['id']  
-        and number['parent_id'] != number['id'] and number['id'] != id
-    ]
+
+    parent['child_project'] = [number for number in projects
+                               if number['parent_id'] == parent['id']
+                               and number['parent_id'] != number['id']
+                               and number['id'] != id
+                               ]
     for enfant in parent['child_project']:
         enfant = construireArbreSansSousArbre(projects, enfant, id)
     return parent
+
 
 @project.route('/getApparentableProjects/<_id>', methods=['GET'])
 @auth_required
 def getApparentable(_id):
     """
-    Permet d'obtenir la liste des projets auquels le projet peut s'aparenter sans circularité
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    Permet d'obtenir la liste des projets auquels le projet peut s'aparenter
+    sans circularité
     """
+
     id = escape(_id).strip()
     id = int(id)
     connection = get_db().get_connection()
@@ -237,8 +254,9 @@ def getApparentable(_id):
 
     parents = [x for x in projects if x['id'] == x['parent_id']]
     for parent in parents:
-        parent = construireArbreSansSousArbre(projects, parent, id);
+        parent = construireArbreSansSousArbre(projects, parent, id)
     return jsonify(parents)
+
 
 @project.route('/autocomplete/<name>', methods=['GET'])
 @auth_required
@@ -280,7 +298,7 @@ def delete_project():
         abort(412)
 
     query.delete_project(id, name)
-    return jsonify(""),200
+    return jsonify(""), 200
 
 
 @project.route('/is-deletable/<id>/<name>', methods=['GET'])
@@ -306,7 +324,7 @@ def is_project_deletable(id, name):
     if query.is_in_timeline_table(id):
         isDeletable = False
 
-    return jsonify(isDeletable),200
+    return jsonify(isDeletable), 200
 
 
 @project.errorhandler(JsonValidationError)

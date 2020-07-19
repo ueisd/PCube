@@ -4,6 +4,7 @@ from ..db.database import Database
 
 app = Flask(__name__)
 
+
 def get_db():
     """
     Cherche la base de données.

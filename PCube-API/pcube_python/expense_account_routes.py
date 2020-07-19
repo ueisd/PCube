@@ -8,43 +8,49 @@ from flask import escape
 from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from flask.logging import create_logger
-from ..schemas.expense_account_schema import (expense_account_insert_schema, expense_account_update_schema, expense_account_delete_schema)
+from ..schemas.expense_account_schema import (
+    expense_account_insert_schema, expense_account_update_schema,
+    expense_account_delete_schema)
 from .db_controller import get_db
 from ..db.expense_account_request import ExpenseAccountRequest
 from ..domain.expense_account import ExpenseAccount
 from ..utility.auth import (
-                    auth_required, auth_refresh_required, AuthenticationError,
-                    admin_required, project_manager_required, member_required
-                    )
+    auth_required, auth_refresh_required, AuthenticationError,
+    admin_required, project_manager_required, member_required
+)
 
 expense_account = Blueprint('expense_account', __name__)
 app = Flask(__name__)
 log = create_logger(app)
 schema = JsonSchema(app)
 
+
 @expense_account.route('/get-parents', methods=['GET'])
 @auth_required
 def get_all_parent_expense_account():
     """
     Permet d'obtenir tout les comptes de dépense parents.
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+
     """
     connection = get_db().get_connection()
     request = ExpenseAccountRequest(connection)
     expense_accounts = request.select_all_parent()
     return jsonify(expense_accounts)
 
+
 @expense_account.route('/get-sub-parents/<parent_id>', methods=['GET'])
 @auth_required
 def get_all_sub_parent_expense_account(parent_id):
     """
     Permet d'obtenir tout les sous-comptes de dépenses d'un parent.
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+
     """
     connection = get_db().get_connection()
     request = ExpenseAccountRequest(connection)
-    expense_accounts = request.select_all_expense_account_from_parent(parent_id)
+    expense_accounts = request.select_all_expense_account_from_parent(
+        parent_id)
     return jsonify(expense_accounts)
+
 
 def find_all_child(parent_id):
 
@@ -67,7 +73,7 @@ def find_all_child(parent_id):
 def get_all_expense_account():
     """
     Construit l'arbre des comptes de dépense.
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+
     """
     connection = get_db().get_connection()
     request = ExpenseAccountRequest(connection)
@@ -79,15 +85,16 @@ def get_all_expense_account():
     return jsonify(parents_dict)
 
 
-### @param id: l'identifiant du noeud de la racine du sous-arbre à ne pas inclure
+# @param id: l'identifiant du noeud de la racine du sous-arbre à ne pas inclure
 def construireArbreSansSousArbre(comptes, parent, id):
-    if (parent == None or parent['id'] == id): 
+    if (parent is None or parent['id'] == id):
         return []
-        
-    parent['child'] = [child for child in comptes 
-        if child['parent_id'] == parent['id']  
-        and child['parent_id'] != child['id'] and child['id'] != id
-    ]
+
+    parent['child'] = [child for child in comptes
+                       if child['parent_id'] == parent['id']
+                       and child['parent_id'] != child['id']
+                       and child['id'] != id
+                       ]
     for child in parent['child']:
         child = construireArbreSansSousArbre(comptes, child, id)
     return parent
@@ -97,8 +104,8 @@ def construireArbreSansSousArbre(comptes, parent, id):
 @auth_required
 def getApparentable(_id):
     """
-    Permet d'obtenir la liste des comptes de dépense auquels le compte peut s'aparenter sans circularité
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
+    Permet d'obtenir la liste des comptes de dépense auquels le compte peut
+    s'aparenter sans circularité
     """
     id = escape(_id).strip()
     id = int(id)
@@ -117,7 +124,6 @@ def getApparentable(_id):
 def get_expense_account_by_filter():
     """
     Construit l'arbre des comptes de dépense.
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     expense_account = ExpenseAccount()
     expense_account.name = escape(request.args.get('name', "")).upper().strip()
@@ -135,7 +141,6 @@ def get_expense_account_by_filter():
 def is_expense_account_unique(name):
     """
     Sert à modifier l'information d'un compte de dépense
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     connection = get_db().get_connection()
     request = ExpenseAccountRequest(connection)
@@ -151,7 +156,6 @@ def is_expense_account_unique(name):
 def get_one_level_expense_account_by_filter():
     """
     Permet de trouver des comptes de dépense selon leur nom et/ou identifiant
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     account = ExpenseAccount()
     account.name = escape(request.args.get('name', "")).upper().strip()
@@ -168,7 +172,6 @@ def get_one_level_expense_account_by_filter():
 def expense_account_autocomplete(name):
     """
     Permet d'obtenir une liste de compte de dépense pour l'autocomplete.
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     connection = get_db().get_connection()
     request = ExpenseAccountRequest(connection)
@@ -182,7 +185,6 @@ def expense_account_autocomplete(name):
 def delete_expense_account():
     """
     Permet de supprimer un compte de dépense.
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     data = request.json
 
@@ -203,7 +205,7 @@ def delete_expense_account():
         abort(412)
 
     query.delete_expense_account(id, name)
-    return jsonify(""),200
+    return jsonify(""), 200
 
 
 @expense_account.route('/is-deletable/<id>/<name>', methods=['GET'])
@@ -211,10 +213,7 @@ def delete_expense_account():
 def is_expense_account_deletable(id, name):
     """
     Permet de vérifier si un compte de dépense est supprimable.
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
-
-    data = request.json
 
     connection = get_db().get_connection()
     query = ExpenseAccountRequest(connection)
@@ -230,7 +229,7 @@ def is_expense_account_deletable(id, name):
     if query.is_in_timeline_table(id):
         isDeletable = False
 
-    return jsonify(isDeletable),200
+    return jsonify(isDeletable), 200
 
 
 @expense_account.route('', methods=['PUT'])
@@ -239,7 +238,6 @@ def is_expense_account_deletable(id, name):
 def update_expense_account():
     """
     Permet de modifier un compte de dépense dans le système.
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     data = request.json
     expenseAcount = ExpenseAccount()
@@ -261,7 +259,6 @@ def update_expense_account():
 def create_expense_account():
     """
     Création d'un nouveau compte de dépense
-    AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
     data = request.json
     expense_account = ExpenseAccount()

@@ -11,7 +11,8 @@ class TimelineFilter:
         return {
             "day_of_week": self.day_of_week,
             "project_name": self.project_name,
-            "accounting_time_category_name": self.accounting_time_category_name,
+            "accounting_time_category_name":
+                self.accounting_time_category_name,
             "activity_name": self.activity_name,
             "member_name": self.member_name
         }

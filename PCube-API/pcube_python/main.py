@@ -10,12 +10,13 @@ from .db_controller import get_db
 
 main = Blueprint('main', __name__)
 
+
 @main.route('/')
 def start_page():
     """
     Route pour la page d'accueil.
     """
-    return '<h1>Accueil</h1>' 
+    return '<h1>Accueil</h1>'
 
 
 @main.route('/api/role/<id>', methods=['GET'])
