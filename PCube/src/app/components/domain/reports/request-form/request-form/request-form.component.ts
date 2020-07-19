@@ -32,6 +32,8 @@ export class RequestFormComponent implements OnInit {
 
   params = new ReportRequest();
 
+  isMember : boolean = false;
+
   isProjets(checked: boolean) {
     if(!checked) this.requestForm.get('projects').reset();
   }
@@ -52,6 +54,9 @@ export class RequestFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
+
+    if(localStorage.getItem('role') === "member") 
+      this.setMemberParameters();
 
     this.params = this.reportReqService.paramForForm;
 
@@ -78,6 +83,7 @@ export class RequestFormComponent implements OnInit {
       if(this.params.users.length && this.params.users.length > 0)
         this.requestForm.controls['isUsers'].setValue(true);
     });
+
     if(this.params.dateDebut != "")
       this.requestForm.controls['dateDebut'].setValue(DateManip.chaineToDate(this.params.dateDebut));
     if(this.params.dateFin != "")
@@ -146,7 +152,11 @@ export class RequestFormComponent implements OnInit {
     return null;
   };
 
-  
+  setMemberParameters() {
+    //this.isMember = true;
+    console.log(this.params.users);
+    console.log(this.isMember);
+  }
  
   onSubmit() {
     let dateDeb = this.requestForm.controls['dateDebut'].value;

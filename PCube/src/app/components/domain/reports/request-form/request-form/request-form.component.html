@@ -41,12 +41,15 @@
 
         <div class="container"  fxLayout="row" fxLayoutAlign="start center">
             <div fxflex class="container" fxLayout="row" fxLayoutAlign="start center">
-                <mat-slide-toggle (ngModelChange)="isUsers($event)" formControlName="isUsers">
+                <mat-slide-toggle *ngIf="!isMember" (ngModelChange)="isUsers($event)" formControlName="isUsers">
                     {{ (requestForm.get('isUsers').value) ? " limité aux utilisateurs: " : "Toutes les utilisateurs" }} &nbsp;&nbsp;
+                </mat-slide-toggle>
+                <mat-slide-toggle *ngIf="isMember" [(ngModel)]= "isMember" [disabled]="isMember" (ngModelChange)="isUsers($event)" formControlName="isUsers">
+                    limité à l'utilisateur: &nbsp;&nbsp;
                 </mat-slide-toggle>
             </div>
             <div fxflex fxFlex="70%" *ngIf="requestForm.value.isUsers">
-                <ng-select 
+                <ng-select *ngIf="!isMember" 
                     [items]="usersOptions"
                     [multiple]="true"
                     bindLabel="display_string"
@@ -54,6 +57,10 @@
                     appendTo="body"
                     formControlName="users">         
                 </ng-select>
+                <mat-form-field *ngIf="isMember" class="full-width">
+                    <mat-label>Utilisateur</mat-label>
+                    <input matInput placeholder="Utilisateur" formControlName="users" autocomplete="off">
+                </mat-form-field>
             </div>
         </div>
 

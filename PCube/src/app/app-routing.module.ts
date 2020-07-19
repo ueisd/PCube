@@ -42,8 +42,7 @@ const routes: Routes = [
       },
       {
         path: 'reports',
-        component: ReportsComponent,
-        canActivate: [ProjectManagerGuard]
+        component: ReportsComponent
       },
       {
         path: 'project-managing',
