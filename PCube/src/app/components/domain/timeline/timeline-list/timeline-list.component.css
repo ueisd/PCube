@@ -12,9 +12,9 @@
  }
 
  .mat-column-membre, .mat-column-projet, .mat-column-activiter, .mat-column-compteDepense{
-    white-space: nowrap;
+    /*white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: ellipsis;*/
     padding-left: 10px;
  }
 

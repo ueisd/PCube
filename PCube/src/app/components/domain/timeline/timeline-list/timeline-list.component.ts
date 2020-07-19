@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TimelineService } from 'src/app/services/timeline/timeline.service';
 import { TimelineItem } from 'src/app/models/timeline';
@@ -10,6 +10,8 @@ import { DeleteTimelineComponent } from 'src/app/components/domain/timeline/dele
 import { Router } from '@angular/router';
 import { TimelineFilterItem } from 'src/app/models/timelineFilter';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
@@ -42,13 +44,17 @@ export class TimelineListComponent implements OnInit {
 
   customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
+  dataSource = new MatTableDataSource<TimelineItem>();
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
   ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.refreshList();
   }
 
-  dataSource:TimelineItem[] = [];
 
-  displayedColumns:string[] = ['jour', 'heures', 'membre', 'projet', 'activiter', 'compteDepense', 'operations'];;
+
+  displayedColumns:string[] = ['jour', 'heures', 'membre', 'projet', 'activiter', 'compteDepense', 'operations'];
 
   refreshList(){
     let timelineFilter:TimelineFilterItem = new TimelineFilterItem();
@@ -59,7 +65,8 @@ export class TimelineListComponent implements OnInit {
     timelineFilter.accounting_time_category_name = this.expenseFilter.value;
 
     this.timelineService.getTimelineByFilter(timelineFilter).subscribe(timelines => {
-      this.dataSource = timelines;
+      this.dataSource = new MatTableDataSource<TimelineItem>(timelines);
+      this.dataSource.paginator = this.paginator;
     });
   }
 

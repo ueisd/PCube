@@ -1,45 +1,48 @@
-<mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-  <!-- Colonne Prénom -->
-  <ng-container matColumnDef="firstName">
-    <mat-header-cell *matHeaderCellDef>
-      <input class="filter" matInput placeholder="Prénom" (ngModelChange)="onFilterChanged()" [formControl]="nameFilter" autocomplete="off">
-    </mat-header-cell>
-    <mat-cell *matCellDef="let user"> {{user.first_name}} </mat-cell>
-  </ng-container>
+<div class="mat-elevation-z8">
+  <mat-table [dataSource]="dataSource">
+    <!-- Colonne Prénom -->
+    <ng-container matColumnDef="firstName">
+      <mat-header-cell *matHeaderCellDef>
+        <input class="filter" matInput placeholder="Prénom" (ngModelChange)="onFilterChanged()" [formControl]="nameFilter" autocomplete="off">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.first_name}} </mat-cell>
+    </ng-container>
 
-  <!-- Colonne Nom de famille -->
-  <ng-container matColumnDef="lastName">
-    <mat-header-cell *matHeaderCellDef>
-      <input class="filter" matInput placeholder="Nom" (ngModelChange)="onFilterChanged()" [formControl]="lastNameFilter" autocomplete="off">
-    </mat-header-cell>
-    <mat-cell *matCellDef="let user"> {{user.last_name}} </mat-cell>
-  </ng-container>
+    <!-- Colonne Nom de famille -->
+    <ng-container matColumnDef="lastName">
+      <mat-header-cell *matHeaderCellDef>
+        <input class="filter" matInput placeholder="Nom" (ngModelChange)="onFilterChanged()" [formControl]="lastNameFilter" autocomplete="off">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.last_name}} </mat-cell>
+    </ng-container>
 
-  <!-- Colonne courriel -->
-  <ng-container matColumnDef="email">
-    <mat-header-cell *matHeaderCellDef>
-      <input class="filter" matInput placeholder="Courriel" (ngModelChange)="onFilterChanged()" [formControl]="emailFilter" autocomplete="off">
-    </mat-header-cell>
-    <mat-cell *matCellDef="let user"> {{user.email}} </mat-cell>
-  </ng-container>
+    <!-- Colonne courriel -->
+    <ng-container matColumnDef="email">
+      <mat-header-cell *matHeaderCellDef>
+        <input class="filter" matInput placeholder="Courriel" (ngModelChange)="onFilterChanged()" [formControl]="emailFilter" autocomplete="off">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.email}} </mat-cell>
+    </ng-container>
 
-  <!-- Colonne rôle -->
-  <ng-container matColumnDef="role">
-    <mat-header-cell *matHeaderCellDef>
-      <input class="filter" matInput placeholder="Role" (ngModelChange)="onFilterChanged()" [formControl]="roleFilter" autocomplete="off">
-    </mat-header-cell>
-    <mat-cell *matCellDef="let user"> {{user.role_name}} </mat-cell>
-  </ng-container>
+    <!-- Colonne rôle -->
+    <ng-container matColumnDef="role">
+      <mat-header-cell *matHeaderCellDef>
+        <input class="filter" matInput placeholder="Role" (ngModelChange)="onFilterChanged()" [formControl]="roleFilter" autocomplete="off">
+      </mat-header-cell>
+      <mat-cell *matCellDef="let user"> {{user.role_name}} </mat-cell>
+    </ng-container>
 
-  <!-- Colonne opérations -->
-  <ng-container matColumnDef="operations">
-    <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
-    <mat-cell *matCellDef="let user">
-        <button mat-raised-button color="primary" (click)="openEditDialog(user)"><mat-icon>edit</mat-icon></button>
-        <button mat-raised-button color="warn" (click)="openDeleteDialog(user)"><mat-icon>delete</mat-icon></button>
-    </mat-cell>
-  </ng-container>
+    <!-- Colonne opérations -->
+    <ng-container matColumnDef="operations">
+      <mat-header-cell *matHeaderCellDef> Opérations </mat-header-cell>
+      <mat-cell *matCellDef="let user">
+          <button mat-raised-button color="primary" (click)="openEditDialog(user)"><mat-icon>edit</mat-icon></button>
+          <button mat-raised-button color="warn" (click)="openDeleteDialog(user)"><mat-icon>delete</mat-icon></button>
+      </mat-cell>
+    </ng-container>
 
-  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
-</mat-table>
+    <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+    <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+  </mat-table>
+  <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
+</div>
