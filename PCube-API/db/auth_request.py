@@ -2,6 +2,7 @@ import sqlite3
 from .database import Database
 from .dict_factory import dict_factory
 
+
 class AuthRequest:
 
     def __init__(self, connection):
@@ -18,8 +19,8 @@ class AuthRequest:
         """
         cursor = self.connection.cursor()
         cursor.execute(("SELECT role_name FROM role "
-                        "WHERE id = ?"), 
-                        (id))
+                        "WHERE id = ?"),
+                       (id))
         role = cursor.fetchall()
         return role[0]
 
@@ -39,7 +40,7 @@ class AuthRequest:
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from role where id = ?",
-                        (role_id,))
+                       (role_id,))
         data = cursor.fetchone()
         cursor.close()
         return data
@@ -51,7 +52,7 @@ class AuthRequest:
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from role",
-                        )
+                       )
         data = cursor.fetchall()
         cursor.close()
         return data

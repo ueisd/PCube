@@ -14,6 +14,7 @@ class Database:
     disconnect(self)
         Déconnecte la connection à la base de données
     """
+
     def __init__(self):
         self.connection = None
 
