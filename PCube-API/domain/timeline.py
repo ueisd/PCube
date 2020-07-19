@@ -6,7 +6,7 @@ class Timeline:
         self.punch_in = ""
         self.punch_out = ""
         self.project_id = ""
-        self.accounting_time_category_id = ""
+        self.expense_account_id = ""
         self.activity_id = ""
         self.user_id = ""
 
@@ -17,7 +17,7 @@ class Timeline:
             "punch_in": self.punch_in,
             "punch_out": self.punch_out,
             "project_id": self.project_id,
-            "accounting_time_category_id": self.accounting_time_category_id,
+            "expense_account_id": self.expense_account_id,
             "activity_id": self.activity_id,
             "user_id": self.user_id
         }

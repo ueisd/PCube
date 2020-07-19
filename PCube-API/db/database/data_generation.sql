@@ -56,12 +56,12 @@ INSERT INTO activity VALUES(5,"ORGANISATION ÉVÉNEMENTIELLE");
 /*************************************/
 /*      TABLE EXPENSE ACCOUNT        */
 /*************************************/
-INSERT INTO accounting_time_category VALUES(1,"ADMINISTRATION", 1);
-INSERT INTO accounting_time_category VALUES(2,"ADMINISTRATION - 2018", 1);
-INSERT INTO accounting_time_category VALUES(3,"MARKETING", 3);
-INSERT INTO accounting_time_category VALUES(4,"MARKETING - 2018", 3);
-INSERT INTO accounting_time_category VALUES(5,"VENTES", 5);
-INSERT INTO accounting_time_category VALUES(6,"VENTES - 2018", 5);
+INSERT INTO expense_account VALUES(1,"ADMINISTRATION", 1);
+INSERT INTO expense_account VALUES(2,"ADMINISTRATION - 2018", 1);
+INSERT INTO expense_account VALUES(3,"MARKETING", 3);
+INSERT INTO expense_account VALUES(4,"MARKETING - 2018", 3);
+INSERT INTO expense_account VALUES(5,"VENTES", 5);
+INSERT INTO expense_account VALUES(6,"VENTES - 2018", 5);
 
 
 

@@ -28,11 +28,11 @@ CREATE TABLE user (
     FOREIGN KEY(role_id) REFERENCES role(id)
 );
 
-CREATE TABLE accounting_time_category (
+CREATE TABLE expense_account (
     id INTEGER PRIMARY KEY,
     name VARCHAR(120),
     parent_id INTEGER,
-    FOREIGN KEY(parent_id) REFERENCES accounting_time_category(id)
+    FOREIGN KEY(parent_id) REFERENCES expense_account(id)
 );
 
 CREATE TABLE timeline (
@@ -41,11 +41,11 @@ CREATE TABLE timeline (
     punch_in VARCHAR(20),
     punch_out VARCHAR(20),
     project_id INTEGER,
-    accounting_time_category_id INTEGER,
+    expense_account_id INTEGER,
     activity_id INTEGER,
     user_id INTEGER,
     FOREIGN KEY(project_id) REFERENCES project(id),
-    FOREIGN KEY(accounting_time_category_id) REFERENCES accounting_time_category(id),
+    FOREIGN KEY(expense_account_id) REFERENCES expense_account(id),
     FOREIGN KEY(activity_id) REFERENCES activity(id),
     FOREIGN KEY(user_id) REFERENCES user(id)
 );

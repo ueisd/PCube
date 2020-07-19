@@ -4,13 +4,13 @@ timeline_insert_schema = {
     "properties": {
         "timelines": {
             "type": "array",
-            "required": ["day_of_week", "punch_in", "punch_out", "project_id", "accounting_time_category_id", "activity_id", "user_id"],
+            "required": ["day_of_week", "punch_in", "punch_out", "project_id", "expense_account_id", "activity_id", "user_id"],
             "id": {"type": "integer"},
             "day_of_week": {"type": "string", "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}"},
             "punch_in": {"type": "string", "pattern": "([1-2][0-9]|[0-9]):[0-9]{2}"},
             "punch_out": {"type": "string", "pattern": "([1-2][0-9]|[0-9]):[0-9]{2}"},
             "project_id": {"type": "integer"},
-            "accounting_time_category_id": {"type": "integer"},
+            "expense_account_id": {"type": "integer"},
             "activity_id": {"type": "integer"},
             "user_id": {"type": "integer"}
         }
@@ -20,14 +20,14 @@ timeline_insert_schema = {
 
 timeline_update_schema = {
     "type": "object",
-    "required": ["id", "day_of_week", "punch_in", "punch_out", "project_id", "accounting_time_category_id", "activity_id", "user_id"],
+    "required": ["id", "day_of_week", "punch_in", "punch_out", "project_id", "expense_account_id", "activity_id", "user_id"],
     "properties": {
         "id": {"type": "integer"},
         "day_of_week": {"type": "string", "pattern": "[0-9]{4}-[0-9]{2}-[0-9]{2}"},
         "punch_in": {"type": "string", "pattern": "([1-2][0-9]|[0-9]):[0-9]{2}"},
         "punch_out": {"type": "string", "pattern": "([1-2][0-9]|[0-9]):[0-9]{2}"},
         "project_id": {"type": "integer"},
-        "accounting_time_category_id": {"type": "integer"},
+        "expense_account_id": {"type": "integer"},
         "activity_id": {"type": "integer"},
         "user_id": {"type": "integer"}
     },
