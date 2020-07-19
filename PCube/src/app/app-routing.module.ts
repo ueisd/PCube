@@ -32,65 +32,51 @@ const routes: Routes = [
     component: HomeComponent,
     children: [
       {
-        path: 'login',
-        component: LoginComponent
-      },
-      {
-        path: 'activity-managing',
+        path: 'gestion-des-activités',
         component: ActivityComponent,
         canActivate: [ProjectManagerGuard]
       },
       {
-        path: 'reports',
+        path: 'rapport',
         component: ReportsComponent,
         canActivate: [ProjectManagerGuard]
       },
       {
-        path: 'project-managing',
+        path: 'gestion-des-projets',
         component: ProjectComponent,
         canActivate: [ProjectManagerGuard]
       },
       {
-        path: 'users-managing',
+        path: 'gestion-des-utilisateurs',
         component: UsersComponent,
         canActivate: [AdminGuard]
       },
       {
-        path: 'expense-account-managing',
+        path: 'gestion-des-comptes-de-depenses',
         component: ExpenseAccountsComponent,
         canActivate: [AdminGuard]
       },
       {
-        path: 'ligne-de-temps',
+        path: 'gestion-des-lignes-de-temps',
         component: TimelineComponent,
         canActivate: [ProjectManagerGuard]
       },
       {
-        path: 'ajouter-ligne-de-temps',
+        path: 'gestion-des-lignes-de-temps/ajouter-ligne-de-temps',
         component: AddingTimelineComponent,
         canActivate: [ProjectManagerGuard]
       },
       {
-        path: 'modifier-ligne-de-temps/:id',
+        path: 'gestion-des-lignes-de-temps/modifier-ligne-de-temps/:id',
         component: ModifyingTimelineComponent,
         canActivate: [ProjectManagerGuard]
-      },
-      {
-        path: 'addUser',
-        component: AddUserComponent,
-        canActivate: [AdminGuard]
-      },
-      {
-        path: 'add-account-expense',
-        component: AddExpenseAccountComponent,
-        canActivate: [AdminGuard]
       },
       {
         path: '404', 
         component: NotFoundComponent
       },
       {
-        path: 'server-down', 
+        path: 'serveur-indisponible', 
         component: ServerDownComponent
       },
     ]

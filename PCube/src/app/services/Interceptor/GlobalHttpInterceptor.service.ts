@@ -31,10 +31,10 @@ export class GlobalHttpInterceptorService implements HttpInterceptor {
 
     return next.handle(req).pipe(
       catchError((error) => {
-
-        if (error.status >= 500 && error.status <= 599) {
-          this.router.navigate(["server-down"]);
-          return throwError("The server is not responding");
+     
+        if(error.status >= 500 && error.status <= 599){
+            this.router.navigate(["serveur-indisponible"]);
+            return throwError("The server is not responding");
         } else if (error.status >= 401) {
           this.onExpiredCredentiel();
         }
