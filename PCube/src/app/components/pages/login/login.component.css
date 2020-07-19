@@ -52,6 +52,20 @@ input{
   transition: color 500ms linear;
 }
 
+
+input:-webkit-autofill, 
+input:-webkit-autofill:active  {
+  transition: background-color 5000s;
+  -webkit-text-fill-color: white !important;
+}
+
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus{
+  transition: background-color 5000s;
+  -webkit-text-fill-color: #3665AF !important;
+}
+
+
 ::ng-deep .login-container .mat-form-field-flex:focus-within,
 ::ng-deep .login-container .mat-form-field-flex:hover{
   background-color: rgba(255, 255, 255, 1) !important; 

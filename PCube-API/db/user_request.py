@@ -60,6 +60,16 @@ class UserRequest:
         cursor.close()
         return True if data else False
 
+
+    def email_in_use(self, id, email):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from user where email = ?", (email,))
+        data = cursor.fetchone()
+        cursor.close()
+        return data
+
+
     def update_user(self, user, new_email):
         cursor = self.connection.cursor()
         cursor.execute("update user set first_name = ?, last_name = ?, "

@@ -6,18 +6,21 @@
             <mat-panel-description>{{ message }}</mat-panel-description>
         </mat-expansion-panel-header>
         <div class="accordion-container">
-            <div *ngFor="let workingTimeline of workingTimelines; let timeLineIndex=index">
+            <div *ngFor="let workingTimeline of workingTimelines; let timeLineIndex=index" class="timeline-container">
+                <div class="time-picker-hover-div" [ngClass]="{'supression-effect' : workingTimelines.length - 1 == timeLineIndex && removeLastTimelineHover == 1}"></div>
                 <mat-form-field>
                     <mat-label>Choisir une date </mat-label>
-                    <input matInput [matDatepicker]="picker" [(ngModel)]="workingTimeline.date" readonly>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="workingTimeline.date" placeholder="mm/jj/aaaa">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle >
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
-                <button *ngIf="workingTimeline.shift.length > 1 && canAddMoreHours" class="button-display-3Q button-remove-hours" mat-fab color="primary"(click)="removeShift(timeLineIndex)">
+                <button (mouseover)="buttonId=timeLineIndex" (mouseleave)="buttonId=-1" *ngIf="workingTimeline.shift.length > 1 && canAddMoreHours" class="button-display-3Q button-remove-hours" mat-fab color="primary"(click)="removeShift(timeLineIndex)">
                     <mat-icon class="icon-display">alarm_off</mat-icon>
                 </button>
                 <div>
                     <div class="time-picker-row" *ngFor="let shift of workingTimeline.shift; let shiftIndex=index" id="{{(workingTimeline.shift.length - 1) == shiftIndex ? 'row-add-effect': ''}}">
+                        <div class="time-picker-hover-div" [ngClass]="{'supression-effect' : workingTimeline.shift.length - 1 == shiftIndex && buttonId==timeLineIndex}" *ngIf="workingTimeline.shift.length - 1 == shiftIndex">
+                        </div>
                         <div class="time-picker">
                             <p>Heure début :</p>
                             <ngx-timepicker-field [format]="24" [(ngModel)]="shift.begin"></ngx-timepicker-field>
@@ -41,7 +44,7 @@
                 <button class="" color="primary" mat-raised-button color="primary" (click)="addTimeline()">
                     Ajouter une plage horaire
                 </button>
-                <button *ngIf="workingTimelines.length > 1" mat-raised-button color="warn" (click)="removeTimeline()" style="margin-left:50px">
+                <button *ngIf="workingTimelines.length > 1" (mouseover)="removeLastTimelineHover=1" (mouseleave)="removeLastTimelineHover=-1" mat-raised-button color="warn" (click)="removeTimeline()" style="margin-left:50px">
                     Retirer la dernière plage horaire
                 </button>
             </div>

@@ -5,26 +5,26 @@
         
         <mat-form-field class="full-width">
             <mat-label>Prénom</mat-label>
-            <input matInput placeholder="Prénom" formControlName="name">
+            <input matInput placeholder="Prénom" formControlName="name" autocomplete="off">
         </mat-form-field>
         <mat-form-field class="full-width">
             <mat-label>Nom de famille</mat-label>
-            <input matInput placeholder="Nom de famille" formControlName="lname">
+            <input matInput placeholder="Nom de famille" formControlName="lname" autocomplete="off">
         </mat-form-field>
         <mat-form-field class="full-width">
             <mat-label>Adresse courriel</mat-label>
-            <input matInput placeholder="Adresse courriel" formControlName="email" (ngModelChange)="checkUniqueEmail($event)">
+            <input matInput placeholder="Adresse courriel" formControlName="email" (ngModelChange)="checkUniqueEmail($event)" autocomplete="off">
         </mat-form-field>
         <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
             L'adresse courriel doit être unique!
         </div>
         <mat-form-field class="full-width">
             <mat-label>Saisir un mot de passe</mat-label>
-            <input matInput type="password" placeholder="Mot de passe" formControlName="password">
+            <input matInput type="password" placeholder="Mot de passe" formControlName="password" autocomplete="off">
         </mat-form-field>
         <mat-form-field class="full-width">
             <mat-label>Confirmez le mot de passe</mat-label>
-            <input matInput type="password" placeholder="Mot de passe" formControlName="passwordConfirmation">
+            <input matInput type="password" placeholder="Mot de passe" formControlName="passwordConfirmation" autocomplete="off">
         </mat-form-field>
         <div class="error" *ngIf="userForm.get('passwordConfirmation').errors && userForm.get('passwordConfirmation').errors.notMatching">
             Les mots de passes ne sont pas identiques!

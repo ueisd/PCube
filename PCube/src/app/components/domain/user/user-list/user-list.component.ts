@@ -54,9 +54,14 @@ export class UserListComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(result !== undefined) {
+
+      if(result == "Canceled") {
+        this.customSnackBar.openSnackBar('Action annulé', 'notif-success');
+      }else if(result !== undefined) {
         this.customSnackBar.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
         this.refreshList();
+      }else{
+        this.customSnackBar.openSnackBar('L\'utilisateur a été modifié!', 'notif-error');
       }
     });
   }

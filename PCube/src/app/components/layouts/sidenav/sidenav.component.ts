@@ -34,7 +34,7 @@ export class SidenavComponent implements OnInit {
         if(result) {
           let navigationExtras: NavigationExtras = { state: { params: result } };
           this.openSnackBar('La requête a été envoyé', 'notif-success');
-          this.router.navigate(['/reports'], navigationExtras);
+          this.router.navigate(['/rapport'], navigationExtras);
         }
       }
     );

@@ -22,8 +22,6 @@ const TIME_PATTERN = "([1-2][0-9]|[0-9]):[0-5][0-9]";
   templateUrl: './add-timeline-step5.component.html',
   styleUrls: ['../add-timeline.component.css', './add-timeline-step5.component.css'],
   providers: [
-    {provide: DateAdapter, useClass: AppDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS},
     {provide: DatePipe},
     {provide: MAT_DATE_LOCALE, useValue: 'en-CA'}
   ]
@@ -35,12 +33,17 @@ export class AddTimelineStep5Component implements OnInit {
   @Output() isFormValidEvent = new EventEmitter<boolean>();
   @Output() ouputWorkingShift = new EventEmitter<WorkingShift[]>();
 
-  constructor () {}
+  constructor (
+    private datePipe: DatePipe
+    ) {}
 
   message:string = NORMAL_MESSAGE;
   messageClasse:string = NORMAL_CLASS;
 
   canAddMoreHours:boolean = true;
+
+  buttonId:number = -1;
+  removeLastTimelineHover:number = -1;
 
   ngOnInit(): void {
     this.placeDefaultWorkingTimeline();
@@ -67,6 +70,10 @@ export class AddTimelineStep5Component implements OnInit {
     let lastIndex = this.workingTimelines.length - 1;
     this.workingTimelines.splice(lastIndex, 1);
     this.onAddOrRemoveRow();
+
+    if(lastIndex == 1)
+      this.removeLastTimelineHover = -1;
+
   }
 
   addShift(workingShiftIndex){
@@ -76,9 +83,13 @@ export class AddTimelineStep5Component implements OnInit {
   }
 
   removeShift(workingShiftIndex){
+
     let lastIndex = this.workingTimelines[workingShiftIndex].shift.length-1;
     this.workingTimelines[workingShiftIndex].shift.splice(lastIndex, 1);
     this.onAddOrRemoveRow();
+
+    if(workingShiftIndex == 0)
+      this.buttonId = -1;
   }
 
   showPannelMessage(message:string, cssClass:string){
