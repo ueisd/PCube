@@ -1,12 +1,12 @@
-<div>
-    <mat-table [dataSource]="dataSource" class="mat-elevation-z8" id="table-of-timeline">
+<div class="mat-elevation-z8">
+    <mat-table [dataSource]="dataSource" id="table-of-timeline">
 
         <!-- Colonne Jour de la semaine -->
         <ng-container matColumnDef="jour">
             <mat-header-cell *matHeaderCellDef>
                 <mat-form-field class="date-filter-field" (dblclick)="resetDateFilter()">
-                    <mat-label>Date </mat-label>
-                    <input matInput [matDatepicker]="picker" [(ngModel)]="dateFilter" (ngModelChange)="onFilterChanged()" readonly>
+                    <mat-label>Date</mat-label>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="dateFilter" (ngModelChange)="onFilterChanged()" placeholder="mm/jj/aaaa">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle >
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
@@ -64,4 +64,5 @@
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
         <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
     </mat-table>
+    <mat-paginator [pageSizeOptions]="[10, 20, 30]" showFirstLastButtons></mat-paginator>
 </div>

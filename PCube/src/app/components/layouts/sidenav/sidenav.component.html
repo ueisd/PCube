@@ -1,19 +1,19 @@
 <mat-nav-list class="custom-sidenav">
 
-    <a *ngIf="accessLevel == 1" mat-list-item routerLink="/users-managing">
+    <a *ngIf="accessLevel == 1" mat-list-item routerLink="/gestion-des-utilisateurs">
         <mat-icon>account_box</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Utilisateurs</span>
     </a>
-    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/activity-managing">
+    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/gestion-des-activités">
         <mat-icon>local_activity</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Activités</span>
     </a>
-    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/project-managing">
+    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/gestion-des-projets">
         <mat-icon>source</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Projets</span>
     </a>
-    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/expense-account-managing">
+    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/gestion-des-comptes-de-depenses">
         <mat-icon>monetization_on</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Comptes de Dépense</span>
     </a>
 
-    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/ligne-de-temps">
+    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/gestion-des-lignes-de-temps">
         <mat-icon>timelapse</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Ligne de temps</span>
     </a>
 

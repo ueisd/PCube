@@ -66,14 +66,14 @@
 
         <mat-form-field color="accent">
             <mat-label>Date de début</mat-label>
-            <input matInput [matDatepicker]="picker1" formControlName="dateDebut">
+            <input matInput [matDatepicker]="picker1" formControlName="dateDebut" placeholder="mm/jj/aaaa">
             <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
             <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>
 
         <mat-form-field color="accent">
             <mat-label>Date de fin</mat-label>
-            <input matInput [matDatepicker]="picker2" formControlName="dateFin" [errorStateMatcher]="matcher">
+            <input matInput [matDatepicker]="picker2" formControlName="dateFin" [errorStateMatcher]="matcher" placeholder="mm/jj/aaaa">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
             <mat-datepicker #picker2></mat-datepicker>
             <mat-error class="error-message" *ngIf="requestForm.hasError('dateFinAvantDebut')">

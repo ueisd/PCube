@@ -13,15 +13,17 @@ from ..schemas.auth_schema import (auth_login_schema)
 from ..db.auth_request import AuthRequest
 from ..domain.user import User
 from ..utility.auth import (authenticate_user, deauthenticate_user,
-                    refresh_authentication, get_authenticated_user,
-                    auth_required, auth_refresh_required, AuthenticationError,
-                    admin_required, project_manager_required, member_required
-                    )
+                            refresh_authentication, get_authenticated_user,
+                            auth_required, auth_refresh_required,
+                            AuthenticationError, admin_required,
+                            project_manager_required, member_required
+                            )
 
 auth = Blueprint('auth', __name__)
 app = Flask(__name__)
 log = create_logger(app)
 schema = JsonSchema(app)
+
 
 @auth.route('/login', methods=['POST'])
 @schema.validate(auth_login_schema)
@@ -55,13 +57,14 @@ def login_info_api():
         return make_response(jsonify({
             'email': user['email'],
             'role': user['role'],
-            'level': user['level'],
+            'level': user['access_level'],
             'first_name': user['first_name'],
             'last_name': user['last_name']
         }))
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(401)
+
 
 @auth.route('/logout', methods=['DELETE'])
 @auth_refresh_required
@@ -94,15 +97,18 @@ def refresh_api():
 def admin_check():
     return {}
 
+
 @auth.route('project-manager-check', methods=['GET'])
 @project_manager_required
 def project_manager_check():
     return {}
 
+
 @auth.route('member-check', methods=['GET'])
 @member_required
 def member_check():
     return {}
+
 
 @auth.errorhandler(JsonValidationError)
 def validation_error(e):

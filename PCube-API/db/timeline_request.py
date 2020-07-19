@@ -4,6 +4,8 @@ from .dict_factory import dict_factory
 from ..domain.timeline import Timeline
 from ..domain.timelineFilter import TimelineFilter
 from ..domain.accountRequestParams import AccountRequestParams
+
+
 class TimelineRequest:
 
     def __init__(self, connection):
@@ -14,32 +16,49 @@ class TimelineRequest:
         Permet d'insère une nouvelle ligne de temps dans la base de données.
         La fonctionne retourne une ligne de temps avec son nouvel identifiant.
         """
-        
+
         cursor = self.connection.cursor()
-        cursor.execute("insert into timeline(day_of_week, punch_in, punch_out, project_id, accounting_time_category_id, activity_id, user_id)"
+        cursor.execute("insert into timeline(day_of_week, punch_in, punch_out,"
+                       " project_id, accounting_time_category_id,"
+                       " activity_id, user_id)"
                        " values(?, ?, ?, ?, ?, ?, ?)",
-                       (timeline_dict["day_of_week"], timeline_dict["punch_in"], timeline_dict["punch_out"], timeline_dict["project_id"], timeline_dict["accounting_time_category_id"], timeline_dict["activity_id"], timeline_dict["user_id"]))
+                       (timeline_dict["day_of_week"],
+                        timeline_dict["punch_in"], timeline_dict["punch_out"],
+                        timeline_dict["project_id"],
+                        timeline_dict["accounting_time_category_id"],
+                        timeline_dict["activity_id"],
+                        timeline_dict["user_id"]))
         self.connection.commit()
         id = cursor.lastrowid
         cursor.close()
         timeline_dict["id"] = id
         return timeline_dict
-    
+
     def select_by_filter(self, timeline):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute(
-        "select timeline.id, day_of_week, punch_in, punch_out, project.name as project_name," 
-        " activity.name as activity_name, accounting_time_category.name as expense_name, " 
-        " user.first_name as first_name, user.last_name as last_name from timeline" 
-        " inner join project on timeline.project_id = project.id"
-        " inner join activity on timeline.activity_id = activity.id"
-        " inner join accounting_time_category on timeline.accounting_time_category_id = accounting_time_category.id "
-        " inner join user on timeline.user_id = user.id"
-        " where day_of_week LIKE ? and project.name LIKE ? and activity.name LIKE ? and "
-        " (user.first_name LIKE ? or user.last_name LIKE ?) and accounting_time_category.name LIKE ? ORDER BY day_of_week DESC LIMIT 25",
-        ('%'+timeline.day_of_week+'%', '%'+timeline.project_name+'%', '%'+timeline.activity_name+'%', 
-        '%'+timeline.member_name+'%', '%'+timeline.member_name+'%', '%'+timeline.accounting_time_category_name+'%'))
+            "select timeline.id, day_of_week, punch_in, punch_out,"
+            " project.name as project_name,"
+            " activity.name as activity_name, accounting_time_category.name"
+            " as expense_name, "
+            " user.first_name as first_name, user.last_name as last_name"
+            " from timeline"
+            " inner join project on timeline.project_id = project.id"
+            " inner join activity on timeline.activity_id = activity.id"
+            " inner join accounting_time_category on"
+            " timeline.accounting_time_category_id ="
+            " accounting_time_category.id "
+            " inner join user on timeline.user_id = user.id"
+            " where day_of_week LIKE ? and project.name LIKE ?"
+            " and activity.name LIKE ? and "
+            " (user.first_name LIKE ? or user.last_name LIKE ?)"
+            " and accounting_time_category.name LIKE ?"
+            " ORDER BY day_of_week DESC",
+            ('%'+timeline.day_of_week+'%', '%'+timeline.project_name+'%',
+             '%'+timeline.activity_name+'%', '%'+timeline.member_name+'%',
+             '%'+timeline.member_name+'%',
+             '%'+timeline.accounting_time_category_name+'%'))
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -49,8 +68,10 @@ class TimelineRequest:
         Permet de supprimer une timeline
         """
         cursor = self.connection.cursor()
-        cursor.execute("delete from timeline where id = ? and day_of_week = ? and punch_in = ? and punch_out = ?", 
-        (timeline.id, timeline.day_of_week, timeline.punch_in, timeline.punch_out))
+        cursor.execute("delete from timeline where id = ? and day_of_week = ?"
+                       " and punch_in = ? and punch_out = ?",
+                       (timeline.id, timeline.day_of_week, timeline.punch_in,
+                        timeline.punch_out))
         self.connection.commit()
         cursor.close()
 
@@ -58,68 +79,83 @@ class TimelineRequest:
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute(
-        "select * from timeline where id = ?",(id,))
+            "select * from timeline where id = ?", (id,))
         data = cursor.fetchone()
         cursor.close()
         return data
 
-
     def get_accountTimeWithSum(self, params):
-        
+
         req = []
 
-        if params.dateDebut != '' :
+        if params.dateDebut != '':
             req.append(" t.day_of_week >= '" + params.dateDebut + "'")
         if params.dateFin != '':
             req.append(" t.day_of_week <= '" + params.dateFin + "'")
         if params.projects:
-            req.append(" t.project_id IN (" + ','.join(map(str, params.projects)) + ") ")
+            req.append(
+                " t.project_id IN (" + ','.join(map(str, params.projects))
+                + ") ")
         if params.activitys:
-            req.append(" t.activity_id IN (" + ','.join(map(str, params.activitys)) + ") ")
+            req.append(" t.activity_id IN (" +
+                       ','.join(map(str, params.activitys)) + ") ")
         if params.users:
-            req.append(" t.user_id IN (" + ','.join(map(str, params.users)) + ") ")
-        
+            req.append(
+                " t.user_id IN (" + ','.join(map(str, params.users)) + ") ")
+
         clauseLignes = ' AND '.join(map(str, req))
 
-        if(clauseLignes == '') :
+        if(clauseLignes == ''):
             clauseLignes = '1'
-
 
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select a.*, "
-            + "SUM(" ## partie permetant la différence d'heures en sql lite (language limité...))
-            + " CASE WHEN  (" + clauseLignes + ")" 
-            + " THEN ("  
-            + "     CASE WHEN  ("  
-            + "         (CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT))"
-            + "         - (CAST(SUBSTR(t.punch_in, 1, 2) AS INT)*60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT))"
-            + "     ) > 0 " 
-            + "     THEN ("
-            + "         (CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT))"
-            + "         - (CAST(SUBSTR(t.punch_in, 1, 2) AS INT)*60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT))"
-            + "     )"
-            + "     ELSE ("
-            + "         (24-CAST(SUBSTR(t.punch_in, 1, 2) AS INT))*60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT)"
-            + "         + CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT)"
-            + "     )"
-            + "     END"
-            + " ) END"
-            + ") as summline "
-            + "from accounting_time_category a LEFT JOIN timeline t ON a.id = t.accounting_time_category_id  group by a.id"
-        )
-       ## "DATEDIFF(year, '2017/08/25', '2011/08/25')"
-       ## "STR_TO_DATE(field_name, '%H:%i:%s %b %d, %Y PDT') AS new_time"
+                       # partie permetant la différence d'heures en sql lite
+                       # (language limité...))
+                       + "SUM("
+                       + " CASE WHEN  (" + clauseLignes + ")"
+                       + " THEN ("
+                       + "     CASE WHEN  ("
+                       + "         (CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*"
+                       + "60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT))"
+                       + "         - (CAST(SUBSTR(t.punch_in, 1, 2) AS INT)*"
+                       + "60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT))"
+                       + "     ) > 0 "
+                       + "     THEN ("
+                       + "         (CAST(SUBSTR(t.punch_out, 1, 2) AS INT)"
+                       + "*60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT))"
+                       + "         - (CAST(SUBSTR(t.punch_in, 1, 2) AS INT)*"
+                       + "60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT))"
+                       + "     )"
+                       + "     ELSE ("
+                       + "         (24-CAST(SUBSTR(t.punch_in, 1, 2) AS INT))*"
+                       + "60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT)"
+                       + "         + CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*"
+                       + "60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT)"
+                       + "     )"
+                       + "     END"
+                       + " ) END"
+                       + ") as summline "
+                       + "from accounting_time_category a LEFT JOIN timeline t"
+                       + " ON a.id = t.accounting_time_category_id"
+                       + " group by a.id"
+                       )
+        # "DATEDIFF(year, '2017/08/25', '2011/08/25')"
+        # "STR_TO_DATE(field_name, '%H:%i:%s %b %d, %Y PDT') AS new_time"
         data = cursor.fetchall()
         cursor.close()
         return data
 
-
     def update(self, timeline):
         cursor = self.connection.cursor()
-        cursor.execute("update timeline set day_of_week = ?, punch_in = ?, punch_out = ?, project_id = ?," 
-        " accounting_time_category_id = ?, activity_id = ?, user_id = ? where id = ?", 
-                        (timeline.day_of_week, timeline.punch_in, timeline.punch_out, timeline.project_id,
-                        timeline.accounting_time_category_id, timeline.activity_id, timeline.user_id, timeline.id))
+        cursor.execute("update timeline set day_of_week = ?, punch_in = ?,"
+                       " punch_out = ?, project_id = ?,"
+                       " accounting_time_category_id = ?, activity_id = ?,"
+                       " user_id = ? where id = ?",
+                       (timeline.day_of_week, timeline.punch_in,
+                        timeline.punch_out, timeline.project_id,
+                        timeline.accounting_time_category_id,
+                        timeline.activity_id, timeline.user_id, timeline.id))
         self.connection.commit()
         cursor.close()

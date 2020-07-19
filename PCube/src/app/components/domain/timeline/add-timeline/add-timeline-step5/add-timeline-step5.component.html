@@ -10,7 +10,7 @@
                 <div class="time-picker-hover-div" [ngClass]="{'supression-effect' : workingTimelines.length - 1 == timeLineIndex && removeLastTimelineHover == 1}"></div>
                 <mat-form-field>
                     <mat-label>Choisir une date </mat-label>
-                    <input matInput [matDatepicker]="picker" [(ngModel)]="workingTimeline.date" readonly>
+                    <input matInput [matDatepicker]="picker" [(ngModel)]="workingTimeline.date" placeholder="mm/jj/aaaa">
                     <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle >
                     <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
@@ -48,7 +48,7 @@
                     Retirer la dernière plage horaire
                 </button>
             </div>
-            <mat-divider *mgIf="canAddMoreHours"></mat-divider>
+            <mat-divider *ngIf="canAddMoreHours"></mat-divider>
             <div style="margin-top:30px;">
                 <button mat-raised-button color="primary" (click)="validateAllTimeLine()">Je confirme les heures</button>
             </div>

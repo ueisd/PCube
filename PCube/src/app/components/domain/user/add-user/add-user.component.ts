@@ -67,7 +67,6 @@ export class AddUserComponent implements OnInit {
     
     if (this.passwordsMatch(password, passwordConfirmation)){
       this.userService.createUser(user, password, passwordConfirmation).subscribe((data) => {
-        this.customSnackBar.openSnackBar('L\'utilisateur a été ajouté!','notif-success');
         this.onSubmitSuccess();
       },
       (error) => {

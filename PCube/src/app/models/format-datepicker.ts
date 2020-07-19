@@ -10,7 +10,7 @@ export class AppDateAdapter extends NativeDateAdapter {
       let year = date.getFullYear();
       return `${year}-${month}-${day}`;
     }
-    return date.toDateString();
+    return date.toLocaleDateString();
   }
 }
 

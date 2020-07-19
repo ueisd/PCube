@@ -1,4 +1,7 @@
 {
     "python.jediEnabled": true,
-    "python.languageServer": "Jedi"
+    "python.languageServer": "Jedi",
+    "python.formatting.blackArgs": [
+        "--line-length=79 "
+    ]
 }

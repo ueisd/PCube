@@ -13,7 +13,7 @@ export class GlobalHttpInterceptorService implements HttpInterceptor {
     private auth: AuthService
   ) { }
 
-  onExpiredCredentiel(){
+  onAccessDenied(){
 
     if(localStorage.getItem('email') && localStorage.getItem('accessToken')){
       localStorage.clear();
@@ -31,12 +31,12 @@ export class GlobalHttpInterceptorService implements HttpInterceptor {
 
     return next.handle(req).pipe(
       catchError((error) => {
-
-        if (error.status >= 500 && error.status <= 599) {
-          this.router.navigate(["server-down"]);
-          return throwError("The server is not responding");
-        } else if (error.status >= 401) {
-          this.onExpiredCredentiel();
+     
+        if(error.status >= 500 && error.status <= 599){
+            this.router.navigate(["serveur-indisponible"]);
+            return throwError("The server is not responding");
+        } else if (error.status == 401 || error.status == 403) {
+          this.onAccessDenied();
         }
 
         return throwError(error.message);

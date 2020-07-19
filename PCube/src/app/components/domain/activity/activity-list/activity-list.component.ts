@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivityItem } from 'src/app/models/activity';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { ActivityService } from 'src/app/services/activity/activity.service';
@@ -10,6 +10,8 @@ import { DeleteActivityComponent } from '../delete-activity/delete-activity.comp
 import { AddActivityComponent } from '../add-activity/add-activity.component';
 import { CustomDiaglogConfig } from 'src/app/utils/custom-dialog-config';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource } from '@angular/material/table';
 
 const HIDDEN_CLASS = 'hidden';
 
@@ -30,12 +32,15 @@ export class ActivityListComponent implements OnInit {
     ) { }
 
   displayedColumns : string[];
-  dataSource: ActivityItem[];
+  dataSource = new MatTableDataSource<ActivityItem>();
 
   customDiagConfig:CustomDiaglogConfig = new CustomDiaglogConfig();
   customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
   ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.refreshList();
   }
 
@@ -76,7 +81,8 @@ export class ActivityListComponent implements OnInit {
     activity.name = this.nameFilter.value.trim();
     this.displayedColumns = ['name', 'operations'];
     this.activityService.filterActivity(activity).subscribe(activities => {
-      this.dataSource = activities;
+      this.dataSource = new MatTableDataSource<ActivityItem>(activities);
+      this.dataSource.paginator = this.paginator;
     });
   }
 
