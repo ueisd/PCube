@@ -14,7 +14,6 @@ from .db_controller import get_db
 from ..db.activity_request import ActivityRequest
 from ..domain.activity import Activity
 from ..utility.auth import (
-                    get_authenticated_user,
                     auth_required, auth_refresh_required, AuthenticationError,
                     admin_required, project_manager_required, member_required
                     )
@@ -32,16 +31,11 @@ def get_all_activity():
     Permet d'obtenir toutes les activités du système
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
-    try:
-        #get_authenticated_user()
-        connection = get_db().get_connection()
-        query = ActivityRequest(connection)
-        activities = query.select_all_activity()
-        return jsonify(activities)
+    connection = get_db().get_connection()
+    query = ActivityRequest(connection)
+    activities = query.select_all_activity()
+    return jsonify(activities)
 
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
 
 @activity.route('/filter', methods=['GET'])
 @auth_required
@@ -50,123 +44,107 @@ def get_activity_by_filter():
     Permet d'obtenir une liste d'activité filtré par le nom
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
-    try:
-        activity = Activity()
-        activity.name = escape(request.args.get('name', "")).upper().strip()
-        activity.id = escape(request.args.get('id', "")).upper().strip()
-        connection = get_db().get_connection()
-        query = ActivityRequest(connection)
-        activities = query.select_activity_by_filter(activity) 
-        return jsonify(activities)
+    activity = Activity()
+    activity.name = escape(request.args.get('name', "")).upper().strip()
+    activity.id = escape(request.args.get('id', "")).upper().strip()
+    connection = get_db().get_connection()
+    query = ActivityRequest(connection)
+    activities = query.select_activity_by_filter(activity) 
+    return jsonify(activities)
 
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
 
 @activity.route('/is-unique-activity/<name>', methods=['GET'])
+@auth_required
 def is_unique_activity(name):
-        connection = get_db().get_connection()
-        query = ActivityRequest(connection)
-        isUnique = query.select_one_activity(name.upper())
-        if isUnique is None:
-            return jsonify(True)
-        else:
-            return jsonify(False)
+    connection = get_db().get_connection()
+    query = ActivityRequest(connection)
+    isUnique = query.select_one_activity(name.upper())
+    if isUnique is None:
+        return jsonify(True)
+    else:
+        return jsonify(False)
+
     
 @activity.route('', methods=['POST'])
-@auth_required
+@project_manager_required
 @schema.validate(activity_insert_schema)
 def add_new_activity():
     """
     Permet d'ajouter une nouvelle activité dans le système.
     """
-    try:
-        data = request.json
-        activity = Activity()
-        activity.name = escape(data['name'].upper().strip())
+    data = request.json
+    activity = Activity()
+    activity.name = escape(data['name'].upper().strip())
 
-        connection = get_db().get_connection()
-        query = ActivityRequest(connection)
-        isUnique = query.select_one_activity(activity.name)
+    connection = get_db().get_connection()
+    query = ActivityRequest(connection)
+    isUnique = query.select_one_activity(activity.name)
 
-        if isUnique is not None:
-            log.error("Le nom de l'activité doit être unique")
-            abort(409)
+    if isUnique is not None:
+        log.error("Le nom de l'activité doit être unique")
+        abort(409)
 
-        activity = query.insert_activity(activity)
-        return jsonify(activity.asDictionnary()), 201
+    activity = query.insert_activity(activity)
+    return jsonify(activity.asDictionnary()), 201
 
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
 
 @activity.route('', methods=['PUT'])
-@auth_required
+@project_manager_required
 @schema.validate(activity_update_schema)
 def modify_activity():
     """
     Permet de modifier une activité dans le système.
     """
-    try:
-        data = request.json
+    data = request.json
 
-        activity = Activity()
-        activity.name = escape(data['name'].upper().strip())
-        activity.id = escape(data['id']).strip()
-        new_name = escape(data['new_name'].upper().strip())
+    activity = Activity()
+    activity.name = escape(data['name'].upper().strip())
+    activity.id = escape(data['id']).strip()
+    new_name = escape(data['new_name'].upper().strip())
 
-        connection = get_db().get_connection()
-        query = ActivityRequest(connection)
+    connection = get_db().get_connection()
+    query = ActivityRequest(connection)
 
-        isUnique = True if not query.select_one_activity(new_name) else False
+    isUnique = True if not query.select_one_activity(new_name) else False
 
-        if not isUnique:
-            log.error("Le nom de l'activité doit être unique")
-            abort(409)
+    if not isUnique:
+        log.error("Le nom de l'activité doit être unique")
+        abort(409)
 
-        itExist = True if query.is_id_name_combo_exist(activity.id, activity.name) else False
+    itExist = True if query.is_id_name_combo_exist(activity.id, activity.name) else False
 
-        if not itExist:
-            log.error("L'activité n'existe pas")
-            abort(404)
+    if not itExist:
+        log.error("L'activité n'existe pas")
+        abort(404)
 
-        new_activity = query.update_activity(activity, new_name)
-        return jsonify(new_activity.asDictionnary())
+    new_activity = query.update_activity(activity, new_name)
+    return jsonify(new_activity.asDictionnary())
 
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
 
 @activity.route('<id>', methods=['DELETE'])
-@auth_required
+@project_manager_required
 @schema.validate(activity_delete_schema)
 def delete_activity(id):
     """
     Permet de supprimer une activité.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
-    try:
-        data = request.json
+    data = request.json
 
-        print(data)
+    connection = get_db().get_connection()
+    query = ActivityRequest(connection)
 
-        connection = get_db().get_connection()
-        query = ActivityRequest(connection)
+    id = escape(id).strip()
 
-        id = escape(id).strip()
+    number = query.countTimeline(id)
+    number = number['nbLignesDeTemps']
+    if number > 0:
+        return jsonify({'error': 'attention l\'activité a des lignes de temps associées'}), 412
+    
 
-        number = query.countTimeline(id)
-        number = number['nbLignesDeTemps']
-        if number > 0:
-            return jsonify({'error': 'attention l\'activité a des lignes de temps associées'}), 412
-        
-
-        query.delete_activity(id)
-        return jsonify(""),200
-
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
+    query.delete_activity(id)
+    return jsonify(""),200
+   
    
 @activity.errorhandler(JsonValidationError)
 def validation_error(e):

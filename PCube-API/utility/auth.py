@@ -108,7 +108,7 @@ def get_authenticated_user():
     return {
         'email' : user['email'],
         'role' : role['role_name'],
-        'level' : str(role['access_level']),
+        'access_level' : str(role['access_level']),
         'first_name' : user['first_name'],
         'last_name' : user['last_name']
     }
@@ -172,9 +172,11 @@ def admin_required(func):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
-            if user['access_level'] == 1:
+
+            if int(user['access_level']) == 1:
                 return func(*args, **kwargs)
             else:
+                log.error('Access Denied')
                 abort(403)
         except (UserNotFound, AccountInactive) as error:
             log.error('authorization failed: %s', error)
@@ -190,9 +192,10 @@ def project_manager_required(func):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
-            if user['access_level'] <= 2:
+            if int(user['access_level']) <= 2:
                 return func(*args, **kwargs)
             else:
+                log.error('Access Denied')
                 abort(403)
         except (UserNotFound, AccountInactive) as error:
             log.error('authorization failed: %s', error)
@@ -201,16 +204,17 @@ def project_manager_required(func):
 
 def member_required(func):
     """
-    View decorator - required valid access token and project manager access
+    View decorator - required valid access token and member access
     """
     @wraps(func)
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
-            if user['access_level'] <= 3:
+            if int(user['access_level']) <= 3:
                 return func(*args, **kwargs)
             else:
+                log.error('Access Denied')
                 abort(403)
         except (UserNotFound, AccountInactive) as error:
             log.error('authorization failed: %s', error)

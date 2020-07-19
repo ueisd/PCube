@@ -15,7 +15,7 @@ export class LoginComponent implements OnInit {
   message = '';
   formGroup: FormGroup;
 
-  pageTitle = "Authentification";
+  pageTitle = "Plateforme Petit Peuple";
   userName = "";
 
   isShowingForm:boolean = true;

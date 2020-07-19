@@ -55,7 +55,7 @@ def login_info_api():
         return make_response(jsonify({
             'email': user['email'],
             'role': user['role'],
-            'level': user['level'],
+            'level': user['access_level'],
             'first_name': user['first_name'],
             'last_name': user['last_name']
         }))

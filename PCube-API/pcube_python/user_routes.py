@@ -31,16 +31,10 @@ def get_all_user():
     Permet d'obtenir la liste de tout les utilisateurs.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
-    try:
-        get_authenticated_user()
-        connection = get_db().get_connection()
-        query = UserRequest(connection)
-        users = query.select_all_user()
-        return jsonify(users)
-
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
+    connection = get_db().get_connection()
+    query = UserRequest(connection)
+    users = query.select_all_user()
+    return jsonify(users)
 
 @user.route('/auth-info', methods=['GET'])
 @auth_required
@@ -86,7 +80,7 @@ def get_user_by_filter():
 
 
 @user.route('', methods=['DELETE'])
-@auth_required
+@admin_required
 @schema.validate(user_delete_schema)
 def delete_user():
     """
@@ -95,8 +89,6 @@ def delete_user():
     """
     try:
         data = request.json
-
-        print(data)
 
         connection = get_db().get_connection()
         query = UserRequest(connection)
@@ -116,6 +108,7 @@ def delete_user():
         abort(403)
 
 @user.route('/is-unique-user/<email>', methods=['GET'])
+@auth_required
 def is_unique_user(email):
         connection = get_db().get_connection()
         request = UserRequest(connection)
@@ -129,7 +122,7 @@ def is_unique_user(email):
 
 
 @user.route('', methods=['POST'])
-@auth_required
+@admin_required
 @schema.validate(user_insert_schema)
 def add_new_user():
     """
@@ -196,7 +189,7 @@ def get_user_profil():
         abort(403)
 
 @user.route('', methods=['PUT'])
-@auth_required
+@admin_required
 @schema.validate(user_update_schema)
 def update_user():
     """
