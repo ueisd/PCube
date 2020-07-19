@@ -1,16 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { TimelineService } from 'src/app/services/timeline/timeline.service';
 import { TimelineItem } from 'src/app/models/timeline';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-import { AppDateAdapter, APP_DATE_FORMATS } from 'src/app/models/format-datepicker';
 import { DatePipe } from '@angular/common';
 import { DeleteTimelineComponent } from 'src/app/components/domain/timeline/delete-timeline/delete-timeline.component';
 import { Router } from '@angular/router';
 import { TimelineFilterItem } from 'src/app/models/timelineFilter';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
+import { MatTableDataSource } from '@angular/material/table';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 @Component({
@@ -18,22 +19,24 @@ import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
   templateUrl: './timeline-list.component.html',
   styleUrls: ['./timeline-list.component.css'],
   providers:[
-    {provide: DateAdapter, useClass: AppDateAdapter},
-    {provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS},
     {provide: DatePipe},
     {provide: MAT_DATE_LOCALE, useValue: 'en-CA'}
   ]
 })
 export class TimelineListComponent implements OnInit {
 
+  dateFilter;
+
   constructor(
     private timelineService: TimelineService,
     private dialog: MatDialog,
     private snackBar : MatSnackBar,
     private router: Router,
-  ) { }
+    private datePipe: DatePipe
+  ) { 
+    this.dateFilter = this.datePipe.transform(this.dateFilter, 'yyyy-MM-dd');
+  }
 
-  dateFilter:Date;
   memberFilter:FormControl =  new FormControl('');
   expenseFilter:FormControl =  new FormControl('');
   projectFilter:FormControl =  new FormControl('');
@@ -41,13 +44,17 @@ export class TimelineListComponent implements OnInit {
 
   customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
+  dataSource = new MatTableDataSource<TimelineItem>();
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+
   ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.refreshList();
   }
 
-  dataSource:TimelineItem[] = [];
 
-  displayedColumns:string[] = ['jour', 'heures', 'membre', 'projet', 'activiter', 'compteDepense', 'operations'];;
+
+  displayedColumns:string[] = ['jour', 'heures', 'membre', 'projet', 'activiter', 'compteDepense', 'operations'];
 
   refreshList(){
     let timelineFilter:TimelineFilterItem = new TimelineFilterItem();
@@ -58,7 +65,8 @@ export class TimelineListComponent implements OnInit {
     timelineFilter.accounting_time_category_name = this.expenseFilter.value;
 
     this.timelineService.getTimelineByFilter(timelineFilter).subscribe(timelines => {
-      this.dataSource = timelines;
+      this.dataSource = new MatTableDataSource<TimelineItem>(timelines);
+      this.dataSource.paginator = this.paginator;
     });
   }
 
@@ -104,7 +112,7 @@ export class TimelineListComponent implements OnInit {
   }
 
   onModifyTimeline(timeline){
-    this.router.navigate(['/modifier-ligne-de-temps/' + timeline.id]);
+    this.router.navigate(['/gestion-des-lignes-de-temps/modifier-ligne-de-temps/' + timeline.id]);
   }
 
   onFilterChanged(){

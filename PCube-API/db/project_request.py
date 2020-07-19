@@ -38,7 +38,7 @@ class ProjectRequest:
     def select_project_name_like(self, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from project where name like ? limit 20", ('%' + name + '%',))
+        cursor.execute("select * from project where name like ", ('%' + name + '%',))
         data = cursor.fetchall()
         cursor.close()
         return data

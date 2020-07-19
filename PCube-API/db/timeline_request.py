@@ -37,7 +37,7 @@ class TimelineRequest:
         " inner join accounting_time_category on timeline.accounting_time_category_id = accounting_time_category.id "
         " inner join user on timeline.user_id = user.id"
         " where day_of_week LIKE ? and project.name LIKE ? and activity.name LIKE ? and "
-        " (user.first_name LIKE ? or user.last_name LIKE ?) and accounting_time_category.name LIKE ? ORDER BY day_of_week DESC LIMIT 25",
+        " (user.first_name LIKE ? or user.last_name LIKE ?) and accounting_time_category.name LIKE ? ORDER BY day_of_week DESC",
         ('%'+timeline.day_of_week+'%', '%'+timeline.project_name+'%', '%'+timeline.activity_name+'%', 
         '%'+timeline.member_name+'%', '%'+timeline.member_name+'%', '%'+timeline.accounting_time_category_name+'%'))
         data = cursor.fetchall()

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/models/user';
 import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
@@ -7,6 +7,8 @@ import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
+import { MatPaginator } from '@angular/material/paginator';
+import {MatTableDataSource} from '@angular/material/table';
 
 @Component({
   selector: 'app-user-list',
@@ -16,7 +18,7 @@ import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 export class UserListComponent implements OnInit {
 
   displayedColumns : string[];
-  dataSource : User[] = [];
+  dataSource = new MatTableDataSource<User>();
 
   nameFilter = new FormControl('');
   lastNameFilter = new FormControl('');
@@ -29,7 +31,10 @@ export class UserListComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar : MatSnackBar) { }
 
+  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  
   ngOnInit(): void {
+    this.dataSource.paginator = this.paginator;
     this.refreshList();
   }
 
@@ -49,9 +54,14 @@ export class UserListComponent implements OnInit {
       }
     });
     dialogRef.afterClosed().subscribe(result => {
-      if(result !== undefined) {
+
+      if(result == "Canceled") {
+        this.customSnackBar.openSnackBar('Action annulé', 'notif-success');
+      }else if(result !== undefined) {
         this.customSnackBar.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
         this.refreshList();
+      }else{
+        this.customSnackBar.openSnackBar('L\'utilisateur a été modifié!', 'notif-error');
       }
     });
   }
@@ -92,7 +102,8 @@ export class UserListComponent implements OnInit {
 
     this.displayedColumns = ['firstName', 'lastName', 'email', 'role', 'operations'];
     this.userService.getUserByFilter(user).subscribe(users => {
-      this.dataSource = users;
+      this.dataSource = new MatTableDataSource<User>(users);
+      this.dataSource.paginator = this.paginator;
     });
   }
 
