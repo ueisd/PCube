@@ -67,7 +67,7 @@ export class AddTimelineComponent implements OnInit {
         timeline.user_id = this.user.id;
         timeline.project_id = this.project.id;
         timeline.activity_id = this.activity.id;
-        timeline.accounting_time_category_id = this.account.id;
+        timeline.expense_account_id = this.account.id;
         timeline.day_of_week = this.dateFormatISO8601(workingShift.date);
         timeline.punch_in = shift.begin;
         timeline.punch_out = shift.end;

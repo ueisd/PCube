@@ -16,7 +16,6 @@ class TimelineRequest:
         Permet d'insère une nouvelle ligne de temps dans la base de données.
         La fonctionne retourne une ligne de temps avec son nouvel identifiant.
         """
-
         cursor = self.connection.cursor()
         cursor.execute("insert into timeline(day_of_week, punch_in, punch_out,"
                        " project_id, expense_account_id,"

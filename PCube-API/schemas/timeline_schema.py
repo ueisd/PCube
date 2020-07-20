@@ -12,7 +12,8 @@ timeline_insert_schema = {
             "project_id": {"type": "integer"},
             "expense_account_id": {"type": "integer"},
             "activity_id": {"type": "integer"},
-            "user_id": {"type": "integer"}
+            "user_id": {"type": "integer"},
+            "additionalProperties": False
         }
     },
     "additionalProperties": False
