@@ -44,7 +44,7 @@
                 <mat-slide-toggle *ngIf="!isMember" (ngModelChange)="isUsers($event)" formControlName="isUsers">
                     {{ (requestForm.get('isUsers').value) ? " limité aux utilisateurs: " : "Toutes les utilisateurs" }} &nbsp;&nbsp;
                 </mat-slide-toggle>
-                <mat-slide-toggle *ngIf="isMember" [(ngModel)]="isMember" [disabled]="isMember" (ngModelChange)="isUsers($event)" formControlName="isUsers">
+                <mat-slide-toggle *ngIf="isMember" formControlName="isUsers" disabled>
                     limité à l'utilisateur: &nbsp;&nbsp;
                 </mat-slide-toggle>
             </div>

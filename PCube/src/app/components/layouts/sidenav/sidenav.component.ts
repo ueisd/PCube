@@ -3,6 +3,7 @@ import { MatDialogConfig, MatDialogRef, MatDialog } from '@angular/material/dial
 import { RequestFormComponent } from '../../domain/reports/request-form/request-form/request-form.component';
 import { NavigationExtras, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-sidenav',
@@ -13,7 +14,7 @@ export class SidenavComponent implements OnInit {
 
   accessLevel: number = -1;
   fileNameDialogRef: MatDialogRef<RequestFormComponent>;
-
+  user: User = new User();
 
   constructor(private dialog: MatDialog, private router: Router, private snackBar : MatSnackBar) { }
 
@@ -24,9 +25,9 @@ export class SidenavComponent implements OnInit {
 
   openReportReqDialog() {
     const dialogConfig = new MatDialogConfig();
-    /*dialogConfig.data = { 
-      projet : new ProjectItem(),
-    }*/
+    dialogConfig.data = { 
+      user : this.user,
+    }
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(RequestFormComponent, dialogConfig);
     
