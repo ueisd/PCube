@@ -33,6 +33,7 @@ export class RequestFormComponent implements OnInit {
   params = new ReportRequest();
 
   isMember : boolean = false;
+  member : User;
 
   isProjets(checked: boolean) {
     if(!checked) this.requestForm.get('projects').reset();
@@ -74,15 +75,17 @@ export class RequestFormComponent implements OnInit {
         this.requestForm.controls['isActivitys'].setValue(true);
     });
 
-    this.userService.getAllUser().subscribe(users =>{
-      this.usersOptions = users;
-      for(let user of this.usersOptions) {
-        user.display_string = user.first_name + " " + user.last_name;
-      }
-      this.requestForm.controls['users'].setValue(this.params.users);
-      if(this.params.users.length && this.params.users.length > 0)
-        this.requestForm.controls['isUsers'].setValue(true);
-    });
+    if(!this.isMember) {
+      this.userService.getAllUser().subscribe(users =>{
+        this.usersOptions = users;
+        for(let user of this.usersOptions) {
+          user.display_string = user.first_name + " " + user.last_name;
+        }
+        this.requestForm.controls['users'].setValue(this.params.users);
+        if(this.params.users.length && this.params.users.length > 0)
+          this.requestForm.controls['isUsers'].setValue(true);
+      });
+    }
 
     if(this.params.dateDebut != "")
       this.requestForm.controls['dateDebut'].setValue(DateManip.chaineToDate(this.params.dateDebut));
@@ -153,9 +156,12 @@ export class RequestFormComponent implements OnInit {
   };
 
   setMemberParameters() {
-    //this.isMember = true;
-    console.log(this.params.users);
-    console.log(this.isMember);
+    this.isMember = true;
+    this.userService.getUser(new User({"email":localStorage.getItem('email')})).subscribe((data) => {
+      this.member = data;
+      this.member.display_string = this.member.first_name + " " + this.member.last_name;
+      this.requestForm.controls['users'].setValue(this.member.display_string);
+    });
   }
  
   onSubmit() {
@@ -173,15 +179,19 @@ export class RequestFormComponent implements OnInit {
     if(this.requestForm.controls['activitys'].value)
       this.params.activitys = this.requestForm.controls['activitys'].value;
 
-    if(this.requestForm.controls['users'].value)
-      this.params.users = this.requestForm.controls['users'].value;
+    if(!this.isMember) {
+      if(this.requestForm.controls['users'].value)
+        this.params.users = this.requestForm.controls['users'].value;
+    } else {
+      this.params.users.pop();
+      this.params.users.push(this.member);
+    }
 
     this.reportReqService.emitParams(this.params);
     this.dialogRef.close(this.params);
   }
 
 }
-
 
 
 export class MyErrorStateMatcher implements ErrorStateMatcher {

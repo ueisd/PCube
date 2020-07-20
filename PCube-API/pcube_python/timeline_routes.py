@@ -181,7 +181,7 @@ def sommationAscendante(listeNoeuds, parent):
 
 
 @timeline.route('/testsum', methods=['POST'])
-@project_manager_required
+@member_required
 @schema.validate(report_request_schema)
 def testsum():
     """
