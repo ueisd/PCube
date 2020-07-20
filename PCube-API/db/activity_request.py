@@ -3,6 +3,7 @@ from .database import Database
 from .dict_factory import dict_factory
 from ..domain.activity import Activity
 
+
 class ActivityRequest:
 
     def __init__(self, connection):
@@ -11,7 +12,10 @@ class ActivityRequest:
     def select_all_activity(self):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select activity.*, count(timeline.id) as nbLignesDeTemps from activity LEFT JOIN timeline ON activity.id = timeline.activity_id GROUP BY activity.id")
+        cursor.execute(
+            "select activity.*, count(timeline.id) as nbLignesDeTemps"
+            " from activity LEFT JOIN timeline ON activity.id ="
+            " timeline.activity_id GROUP BY activity.id")
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -19,11 +23,16 @@ class ActivityRequest:
     def select_activity_by_filter(self, activity):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select activity.*, count(timeline.id) as nbLignesDeTemps from activity  LEFT JOIN timeline ON activity.id = timeline.activity_id  WHERE activity.name LIKE ? and activity.id LIKE ? GROUP BY activity.id", ('%'+activity.name+'%','%'+activity.id+'%'))
+        cursor.execute("select activity.*, count(timeline.id) as"
+                       " nbLignesDeTemps from activity  LEFT JOIN"
+                       " timeline ON activity.id = timeline.activity_id"
+                       " WHERE activity.name LIKE ? and activity.id"
+                       " LIKE ? GROUP BY activity.id",
+                       ('%'+activity.name+'%', '%'+activity.id+'%'))
         data = cursor.fetchall()
         cursor.close()
         return data
-    
+
     def select_one_activity(self, name):
         """
         Permet de sélectionner une activité selon son nom.
@@ -43,7 +52,9 @@ class ActivityRequest:
         """
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select count(timeline.id) as nbLignesDeTemps from timeline where timeline.activity_id = ?", (id))
+        cursor.execute(
+            "select count(timeline.id) as nbLignesDeTemps from timeline"
+            " where timeline.activity_id = ?", (id))
         data = cursor.fetchone()
         cursor.close()
         return data
@@ -54,7 +65,8 @@ class ActivityRequest:
         La fonctionne retourne une activité avec son nouvel identifiant.
         """
         cursor = self.connection.cursor()
-        cursor.execute("insert into activity(name) values(?)",(activity.name,))
+        cursor.execute("insert into activity(name) values(?)",
+                       (activity.name,))
         self.connection.commit()
         activity.id = cursor.lastrowid
         cursor.close()
@@ -66,8 +78,9 @@ class ActivityRequest:
         avec l'identifiant de l'activité modifié.
         """
         cursor = self.connection.cursor()
-        cursor.execute("update activity set name = ? where name = ? and id = ?", 
-            (new_name, activity.name, activity.id))
+        cursor.execute("update activity set name = ?"
+                       " where name = ? and id = ?",
+                       (new_name, activity.name, activity.id))
         self.connection.commit()
         cursor.close()
         activity.name = new_name
@@ -84,8 +97,7 @@ class ActivityRequest:
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from activity where id = ? and name = ?",
-            (id, name))
+                       (id, name))
         data = cursor.fetchone()
         cursor.close()
         return True if data else False
-

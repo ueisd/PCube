@@ -42,7 +42,6 @@ class ExpenseAccountRequest:
         data = cursor.fetchall()
         cursor.close()
         return data
-    
 
     def select_expense_account_name_like(self, name):
         self.connection.row_factory = dict_factory
@@ -51,7 +50,6 @@ class ExpenseAccountRequest:
         data = cursor.fetchall()
         cursor.close()
         return data
-    
 
     def select_all_expense_account_from_parent(self, parent_id):
         self.connection.row_factory = dict_factory
@@ -63,7 +61,7 @@ class ExpenseAccountRequest:
         data = cursor.fetchall()
         cursor.close()
         return data
-    
+
     def select_one_expense_account(self, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
@@ -110,7 +108,6 @@ class ExpenseAccountRequest:
         cursor.close()
         return True if data else False
 
-
     def create_expense_account(self, expense_account):
         cursor = self.connection.cursor()
         isSelfReference = expense_account.name == expense_account.parent_name
@@ -130,7 +127,8 @@ class ExpenseAccountRequest:
             new_expense_account.parent_id = expense_account.id
             new_expense_account.name = expense_account.name
             new_expense_account.parent_name = expense_account.parent_name
-            expense_account = self.update_expense_account(expense_account, new_expense_account)
+            expense_account = self.update_expense_account(
+                expense_account, new_expense_account)
 
         return expense_account
 

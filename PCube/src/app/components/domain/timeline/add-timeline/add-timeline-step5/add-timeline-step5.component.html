@@ -48,7 +48,7 @@
                     Retirer la dernière plage horaire
                 </button>
             </div>
-            <mat-divider *mgIf="canAddMoreHours"></mat-divider>
+            <mat-divider *ngIf="canAddMoreHours"></mat-divider>
             <div style="margin-top:30px;">
                 <button mat-raised-button color="primary" (click)="validateAllTimeLine()">Je confirme les heures</button>
             </div>

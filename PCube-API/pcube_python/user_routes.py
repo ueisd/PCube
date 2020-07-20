@@ -10,19 +10,21 @@ from flask_json_schema import JsonSchema
 from flask_json_schema import JsonValidationError
 from .db_controller import get_db
 from flask.logging import create_logger
-from ..schemas.user_schema import (user_update_schema, user_insert_schema, user_delete_schema)
+from ..schemas.user_schema import (
+    user_update_schema, user_insert_schema, user_delete_schema)
 from ..db.user_request import UserRequest
 from ..domain.user import User
 from ..utility.security import (generate_salt, encrypt_password)
-from ..utility.auth import (get_authenticated_user,
-                    auth_required, auth_refresh_required, AuthenticationError,
-                    admin_required, project_manager_required, member_required
-                    )
+from ..utility.auth import (get_authenticated_user, auth_required,
+                            auth_refresh_required, AuthenticationError,
+                            admin_required, project_manager_required,
+                            member_required)
 
 user = Blueprint('user', __name__)
 app = Flask(__name__)
 log = create_logger(app)
 schema = JsonSchema(app)
+
 
 @user.route('', methods=['GET'])
 @auth_required
@@ -31,16 +33,11 @@ def get_all_user():
     Permet d'obtenir la liste de tout les utilisateurs.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
-    try:
-        get_authenticated_user()
-        connection = get_db().get_connection()
-        query = UserRequest(connection)
-        users = query.select_all_user()
-        return jsonify(users)
+    connection = get_db().get_connection()
+    query = UserRequest(connection)
+    users = query.select_all_user()
+    return jsonify(users)
 
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
 
 @user.route('/auth-info', methods=['GET'])
 @auth_required
@@ -54,11 +51,12 @@ def get_auth_user():
         connection = get_db().get_connection()
         query = UserRequest(connection)
         data = query.get_public_user_info(user['email'])
-        return jsonify(data),200
+        return jsonify(data), 200
 
     except AuthenticationError as error:
         log.error('authentication error: %s', error)
         abort(403)
+
 
 @user.route('/filter', methods=['GET'])
 @auth_required
@@ -67,103 +65,89 @@ def get_user_by_filter():
     Permet d'obtenir la liste de tout les utilisateurs.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
-    try:
-        user = User()
-        user.id = escape(request.args.get('id', "")).upper().strip()
-        user.first_name = escape(request.args.get('name', "")).upper().strip()
-        user.last_name = escape(request.args.get('lastName', "")).upper().strip()
-        user.email = escape(request.args.get('email', "")).upper().strip()
-        role_name = escape(request.args.get('role', "")).upper().strip()
+    user = User()
+    user.id = escape(request.args.get('id', "")).upper().strip()
+    user.first_name = escape(request.args.get('name', "")).upper().strip()
+    user.last_name = escape(request.args.get(
+        'lastName', "")).upper().strip()
+    user.email = escape(request.args.get('email', "")).upper().strip()
+    role_name = escape(request.args.get('role', "")).upper().strip()
 
-        connection = get_db().get_connection()
-        query = UserRequest(connection)
-        users = query.select_user_by_filter(user,role_name)
-        return jsonify(users)
-
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
+    connection = get_db().get_connection()
+    query = UserRequest(connection)
+    users = query.select_user_by_filter(user, role_name)
+    return jsonify(users)
 
 
 @user.route('', methods=['DELETE'])
-@auth_required
+@admin_required
 @schema.validate(user_delete_schema)
 def delete_user():
     """
     Permet de supprimer un utilisateur.
     AuthenticationError : Si l'authentification de l'utilisateur échoue.
     """
-    try:
-        data = request.json
+    data = request.json
 
-        print(data)
+    connection = get_db().get_connection()
+    query = UserRequest(connection)
 
-        connection = get_db().get_connection()
-        query = UserRequest(connection)
+    id = escape(data['id']).strip()
+    email = escape(data['email']).strip()
 
-        id = escape(data['id']).strip()
-        email = escape(data['email']).strip()
+    if not query.is_id_email_combo_exist(id, email):
+        log.error("L'utilisateur n'existe pas")
+        abort(404)
 
-        if not query.is_id_email_combo_exist(id, email):
-            log.error("L'utilisateur n'existe pas")
-            abort(404)
+    query.delete_user(id, email)
+    return jsonify(""), 200
 
-        query.delete_user(id, email)
-        return jsonify(""),200
-
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
 
 @user.route('/is-unique-user/<email>', methods=['GET'])
+@auth_required
 def is_unique_user(email):
-        connection = get_db().get_connection()
-        request = UserRequest(connection)
-        user = User()
-        user.email = escape(email).upper().strip()
-        isUnique = request.select_one_user(user)
-        if isUnique is None:
-            return jsonify(True)
-        else:
-            return jsonify(False)
+    connection = get_db().get_connection()
+    request = UserRequest(connection)
+    user = User()
+    user.email = escape(email).upper().strip()
+    isUnique = request.select_one_user(user)
+    if isUnique is None:
+        return jsonify(True)
+    else:
+        return jsonify(False)
 
 
 @user.route('', methods=['POST'])
-@auth_required
+@admin_required
 @schema.validate(user_insert_schema)
 def add_new_user():
     """
     Permet d'ajouter un utilisateur dans le système.
     """
-    try:
-        data = request.json
-        user = User()
-        user.first_name = escape(data['first_name']).upper().strip()
-        user.last_name = escape(data['last_name']).upper().strip()
-        user.email = escape(data['email']).upper().strip()
-        user.role_id = escape(data['role_id']).strip()
+    data = request.json
+    user = User()
+    user.first_name = escape(data['first_name']).upper().strip()
+    user.last_name = escape(data['last_name']).upper().strip()
+    user.email = escape(data['email']).upper().strip()
+    user.role_id = escape(data['role_id']).strip()
 
-        connection = get_db().get_connection()
-        query = UserRequest(connection)
-        isUnique = query.select_one_user(user)
+    connection = get_db().get_connection()
+    query = UserRequest(connection)
+    isUnique = query.select_one_user(user)
 
-        if isUnique is not None:
-            log.error('The email is not unique')
-            abort(409)
+    if isUnique is not None:
+        log.error('The email is not unique')
+        abort(409)
 
-        if data['password_confirmed'] != data['password']:
-            log.error('Échec de la validation du mot de passe!')
-            abort(400)
+    if data['password_confirmed'] != data['password']:
+        log.error('Échec de la validation du mot de passe!')
+        abort(400)
 
-        salt = generate_salt()
-        hashed_password = encrypt_password(data['password'], salt)
+    salt = generate_salt()
+    hashed_password = encrypt_password(data['password'], salt)
 
-        user = query.insert_user(user,hashed_password, salt)
-        return jsonify(user.asDictionary()), 201
-
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
+    user = query.insert_user(user, hashed_password, salt)
+    return jsonify(user.asDictionary()), 201
 
 
 @user.route('/profil', methods=['GET'])
@@ -175,64 +159,56 @@ def get_user_profil():
     - Recherche par identifiant
     - Recherche par courriel
     """
-    try:
-        user = User()
-        user.id = escape(request.args.get('id', "")).upper().strip()
-        user.email = escape(request.args.get('email', "")).upper().strip()
+    user = User()
+    user.id = escape(request.args.get('id', "")).upper().strip()
+    user.email = escape(request.args.get('email', "")).upper().strip()
 
-        connection = get_db().get_connection()
-        query = UserRequest(connection)
-        data = query.select_one_user(user)
+    connection = get_db().get_connection()
+    query = UserRequest(connection)
+    data = query.select_one_user(user)
 
-        if data:
-            return jsonify(data), 200
-        else:
-            log.error('Le profil de l\'utilisateur n\'existe pas')
-            abort(404)
-        
+    if data:
+        return jsonify(data), 200
+    else:
+        log.error('Le profil de l\'utilisateur n\'existe pas')
+        abort(404)
 
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
 
 @user.route('', methods=['PUT'])
-@auth_required
+@admin_required
 @schema.validate(user_update_schema)
 def update_user():
     """
     Permet de modifier un utilisateur dans le système.
     """
-    try:
-        data = request.json
-        user = User()
-        user.first_name = escape(data['first_name']).strip()
-        user.last_name = escape(data['last_name']).strip()
-        user.id = escape(data['id']).strip()
-        user.email = escape(data['email']).strip()
-        user.role_id = escape(data['role_id']).strip()
+    data = request.json
+    user = User()
+    user.first_name = escape(data['first_name']).strip()
+    user.last_name = escape(data['last_name']).strip()
+    user.id = escape(data['id']).strip()
+    user.email = escape(data['email']).strip()
+    user.role_id = escape(data['role_id']).strip()
 
-        connection = get_db().get_connection()
-        query = UserRequest(connection)
+    connection = get_db().get_connection()
+    query = UserRequest(connection)
 
-        if not query.is_id_email_combo_exist(user.id, user.email):
-            log.error("L'utilisateur n'existe pas")
-            abort(404)
+    if not query.is_id_email_combo_exist(user.id, user.email):
+        log.error("L'utilisateur n'existe pas")
+        abort(404)
 
-        new_email = data['new_email']
+    new_email = data['new_email']
 
-        if(user.email is not new_email):
-            data = query.email_in_use(user.id, new_email)
-            if data and int(user.id) is not data['id']:
-                log.error("L'adresse courriel est utilisée par un autre utilisateur")
-                abort(400)
+    if(user.email is not new_email):
+        data = query.email_in_use(user.id, new_email)
+        if data and int(user.id) is not data['id']:
+            log.error(
+                "L'adresse courriel est utilisée par un autre utilisateur")
+            abort(400)
 
-        user = query.update_user(user, new_email)
+    user = query.update_user(user, new_email)
 
-        return jsonify(user.asDictionary()), 200
+    return jsonify(user.asDictionary()), 200
 
-    except AuthenticationError as error:
-        log.error('authentication error: %s', error)
-        abort(403)
 
 @user.errorhandler(JsonValidationError)
 def validation_error(e):
