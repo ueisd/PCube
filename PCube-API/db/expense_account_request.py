@@ -28,8 +28,12 @@ class ExpenseAccountRequest:
     def select_all_parent_by_filter(self, expense_account):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select a.*, count(t.id) as nbLignesDeTemps from expense_account a  LEFT JOIN timeline t ON a.id = t.expense_account_id  where a.parent_id = a.id and a.name LIKE ? GROUP BY a.id",
-        ('%'+expense_account.name+'%',))
+        cursor.execute("select a.*, count(t.id) as nbLignesDeTemps"
+                       " from expense_account a  LEFT JOIN timeline t"
+                       " ON a.id = t.expense_account_id"
+                       " where a.parent_id = a.id and a.name LIKE ?"
+                       " GROUP BY a.id",
+                       ('%'+expense_account.name+'%',))
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -37,8 +41,10 @@ class ExpenseAccountRequest:
     def select_expense_account_one_level_filter(self, expense_account):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from expense_account where name LIKE ? and id LIKE ?",
-        ('%'+expense_account.name+'%', '%'+expense_account.id+'%'))
+        cursor.execute("select * from expense_account where name"
+                       " LIKE ? and id LIKE ?",
+                       ('%'+expense_account.name+'%',
+                        '%'+expense_account.id+'%'))
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -46,7 +52,9 @@ class ExpenseAccountRequest:
     def select_expense_account_name_like(self, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from expense_account where name like ?", ('%' + name + '%',))
+        cursor.execute(
+            "select * from expense_account where name like ?",
+            ('%' + name + '%',))
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -54,10 +62,13 @@ class ExpenseAccountRequest:
     def select_all_expense_account_from_parent(self, parent_id):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select a.*, count(t.id) as nbLignesDeTemps from expense_account a  LEFT JOIN timeline t ON a.id = t.expense_account_id  where a.parent_id = ? and a.parent_id != a.id GROUP BY a.id",
-        (parent_id,))
+        cursor.execute("select a.*, count(t.id) as nbLignesDeTemps"
+                       " from expense_account a  LEFT JOIN timeline t"
+                       " ON a.id = t.expense_account_id"
+                       " where a.parent_id = ? and a.parent_id != a.id"
+                       " GROUP BY a.id",
+                       (parent_id,))
 
-        ##cursor.execute("select a.*, count(t.id) as nbLignesDeTemps from expense_account a  LEFT JOIN timeline t ON a.id = t.expense_account_id  where a.parent_id = a.id and a.name LIKE ? GROUP BY a.id",
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -66,7 +77,7 @@ class ExpenseAccountRequest:
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from expense_account where name = ?",
-        (name,))
+                       (name,))
         data = cursor.fetchone()
         cursor.close()
         return data
@@ -77,15 +88,15 @@ class ExpenseAccountRequest:
         """
         cursor = self.connection.cursor()
         cursor.execute("delete from expense_account where id = ? and name = ?",
-        (id, name,))
+                       (id, name,))
         self.connection.commit()
         cursor.close()
 
     def is_id_name_combo_exist(self, id, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from expense_account where name = ? and id = ?",
-        (name, id,))
+        cursor.execute("select * from expense_account where name = ?"
+                       " and id = ?", (name, id,))
         data = cursor.fetchone()
         cursor.close()
         return True if data else False
@@ -93,8 +104,9 @@ class ExpenseAccountRequest:
     def has_child(self, id, name):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select * from expense_account where parent_id = ? and name != ?",
-        (id, name,))
+        cursor.execute("select * from expense_account where parent_id = ?"
+                       " and name != ?",
+                       (id, name,))
         data = cursor.fetchone()
         cursor.close()
         return True if data else False
@@ -103,7 +115,7 @@ class ExpenseAccountRequest:
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select * from timeline where expense_account_id = ?",
-        (id,))
+                       (id,))
         data = cursor.fetchone()
         cursor.close()
         return True if data else False
@@ -117,7 +129,8 @@ class ExpenseAccountRequest:
                            "Values(?, ?) ", (expense_account.name, None))
         else:
             cursor.execute("Insert into expense_account(name, parent_id) "
-                           "Values(?, ?) ", (expense_account.name, expense_account.parent_id))
+                           "Values(?, ?) ",
+                           (expense_account.name, expense_account.parent_id))
         self.connection.commit()
         expense_account.id = cursor.lastrowid
         cursor.close
@@ -138,8 +151,11 @@ class ExpenseAccountRequest:
         avec l'identifiant de l'activité modifié.
         """
         cursor = self.connection.cursor()
-        cursor.execute("update expense_account set name = ?, parent_id = ? where name = ? and id = ?",
-                       (new_expense_account.name, new_expense_account.parent_id, expense_account.name, expense_account.id))
+        cursor.execute("update expense_account set name = ?, parent_id = ?"
+                       " where name = ? and id = ?",
+                       (new_expense_account.name,
+                        new_expense_account.parent_id, expense_account.name,
+                        expense_account.id))
         self.connection.commit()
         cursor.close()
         new_expense_account.id = expense_account.id
@@ -151,8 +167,10 @@ class ExpenseAccountRequest:
         avec l'identifiant de l'activité modifié.
         """
         cursor = self.connection.cursor()
-        cursor.execute("update expense_account set name = ?, parent_id = ? where id = ?",
-            (accountTime.name, accountTime.parent_id, accountTime.id))
+        cursor.execute("update expense_account set name = ?, parent_id = ?"
+                       " where id = ?",
+                       (accountTime.name, accountTime.parent_id,
+                        accountTime.id))
         self.connection.commit()
         cursor.close()
         return accountTime
