@@ -98,7 +98,7 @@ export class AddTimelineStep5Component implements OnInit {
   }
 
   onErrorFoundFromConfirmation(){
-    this.showPannelMessage("Veuillez corriger les erreurs.", WARNING_CLASS);
+    this.showPannelMessage("Une date est invalide.", DANGER_CLASS);
   }
 
   onConfirmationSuccess(){

@@ -15,6 +15,8 @@ import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 export class AddActivityComponent implements OnInit{
 
+  canceledMessage = "Canceled";
+
   constructor(
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private activityService: ActivityService, 

@@ -10,6 +10,8 @@ import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 })
 export class DeleteProjectComponent implements OnInit {
 
+  canceledMessage = "Canceled";
+
   constructor(
     public dialogRef: MatDialogRef<DeleteProjectComponent>,
     @Inject(MAT_DIALOG_DATA) public data:any,

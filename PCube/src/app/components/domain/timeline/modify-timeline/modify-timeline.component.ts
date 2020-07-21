@@ -15,6 +15,7 @@ import { AddTimelineStep3Component } from '../add-timeline/add-timeline-step3/ad
 import { AddTimelineStep4Component } from '../add-timeline/add-timeline-step4/add-timeline-step4.component';
 import { AddTimelineStep5Component } from '../add-timeline/add-timeline-step5/add-timeline-step5.component';
 import { Shift } from 'src/app/models/shift';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-modify-timeline',
@@ -29,6 +30,8 @@ export class ModifyTimelineComponent implements OnInit {
   @ViewChild('activityChild') activityComponent:AddTimelineStep3Component;
   @ViewChild('expenseChild') expenseComponent:AddTimelineStep4Component;
   @ViewChild('timelineChild') timelineComponent:AddTimelineStep5Component;
+
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   constructor(
     private timelineService: TimelineService,
@@ -79,7 +82,7 @@ export class ModifyTimelineComponent implements OnInit {
   }
 
   onCancel(){
-    this.openSnackBar('Modification annulée','notif-success');
+    this.customSnackBar.openSnackBar('Modification annulée','notif-warning');
     this.router.navigate(['gestion-des-lignes-de-temps']);
   }
 
@@ -88,11 +91,11 @@ export class ModifyTimelineComponent implements OnInit {
     let timesLine = this.generateTimelineFromSubmit();
     this.timelineService.updateTimeline(timesLine).subscribe( timelines => {
 
-      this.openSnackBar('Les lignes de temps ont été ajouté','notif-success');
+      this.customSnackBar.openSnackBar('La ligne de temps a été modifiée','notif-success');
       this.router.navigate(['gestion-des-lignes-de-temps']);
 
     }, error =>{
-      this.openSnackBar("Une erreur s'est produit. Veuillez réessayer.",'notif-error');
+      this.customSnackBar.openSnackBar("Une erreur s'est produit. Veuillez réessayer.",'notif-error');
     });
 
   }
@@ -126,15 +129,6 @@ export class ModifyTimelineComponent implements OnInit {
       case 5:this.step5 = isValid;break;
     }
     this.isReadyToSubmit = this.step1 && this.step2 && this.step3 && this.step4 && this.step5;
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 10000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
-    });
   }
 
   generateDateFromISO6801(date:string):Date{

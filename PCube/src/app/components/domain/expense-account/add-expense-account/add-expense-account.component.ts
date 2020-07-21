@@ -33,6 +33,8 @@ export class AddExpenseAccountComponent implements OnInit {
     'parent': [],
   };
 
+  canceledMessage = "Canceled";
+
   constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data, private fb: FormBuilder,
   private expenseAccountServices: ExpenseAccountService, private dialogRef: MatDialogRef<ExpenseAccountItem>) { }
   ExpenseForm: FormGroup;
