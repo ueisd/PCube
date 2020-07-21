@@ -33,7 +33,10 @@ export class UsersComponent implements OnInit {
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
         console.log(result);
         this.child.refreshList();
-        if(result == true) {
+
+        if(result == "Canceled" || result == undefined){
+          this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+        }else if(result) {
           this.customSnackBar.openSnackBar('L\'utilisateur a été créé!', 'notif-success');
         }
       }

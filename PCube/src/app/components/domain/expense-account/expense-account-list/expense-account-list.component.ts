@@ -7,7 +7,7 @@ import { FormControl } from '@angular/forms';
 import { MatDialogConfig, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddExpenseAccountComponent } from '../add-expense-account/add-expense-account.component';
-import { DeleteExpenseAccountComponent} from 'src/app/components/domain/expense-account/delete-expense-account/delete-expense-account.component';
+import { DeleteExpenseAccountComponent } from 'src/app/components/domain/expense-account/delete-expense-account/delete-expense-account.component';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
@@ -19,19 +19,19 @@ export class ExpenseAccountListComponent implements OnInit {
 
   nameFilter = new FormControl('');
   fileNameDialogRef: MatDialogRef<AddExpenseAccountComponent>;
-  deleteProjectDialogRef: MatDialogRef<DeleteExpenseAccountComponent>;  
-  isDeletable : Boolean = true;
+  deleteProjectDialogRef: MatDialogRef<DeleteExpenseAccountComponent>;
+  isDeletable: Boolean = true;
 
   constructor(private expenseAccountService: ExpenseAccountService,
-    private dialog: MatDialog, private snackBar : MatSnackBar) { }
+    private dialog: MatDialog, private snackBar: MatSnackBar) { }
 
-  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
+  customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   ngOnInit(): void {
-    this.refreshList({expanded: true});
+    this.refreshList({ expanded: true });
   }
 
-  private _transformer = (node : ExpenseAccountItem, level: number) => {
+  private _transformer = (node: ExpenseAccountItem, level: number) => {
     let expensenoChild: ExpenseAccountItem = new ExpenseAccountItem(node);
     expensenoChild.child = [];
     return {
@@ -40,70 +40,72 @@ export class ExpenseAccountListComponent implements OnInit {
       name: node.name,
       level: level,
       parent_id: node.parent_id,
-      expenseAcount: expensenoChild, 
+      expenseAcount: expensenoChild,
       nbLignesDeTemps: node.nbLignesDeTemps,
       nbChild: node.child.length,
     };
   }
 
-  openEditDialog(compte : ExpenseAccountItem) {
+  openEditDialog(compte: ExpenseAccountItem) {
 
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = { 
-      expenseAccount : compte,
+    dialogConfig.data = {
+      expenseAccount: compte,
     }
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddExpenseAccountComponent, dialogConfig);
-    
-    this.fileNameDialogRef.afterClosed().subscribe(result => { 
-        if(result == true) {
-          this.refreshList({expanded: true});
-          this.customSnackBar.openSnackBar('Le compte de dépense a été modifié', 'notif-success');
-        }
+
+    this.fileNameDialogRef.afterClosed().subscribe(result => {
+      if (result == "Canceled" || result == undefined) {
+        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+      } else if (result) {
+        this.refreshList({ expanded: true });
+        this.customSnackBar.openSnackBar('Le compte de dépense a été modifié', 'notif-success');
       }
+    }
     );
   }
 
-  openDeleteDialog(expenseAccount : ExpenseAccountItem) {
-    
+  openDeleteDialog(expenseAccount: ExpenseAccountItem) {
+
     this.expenseAccountService.isExpenseAccountDeletable(expenseAccount.id, expenseAccount.name).subscribe((data) => {
       this.isDeletable = data;
       const dialogConfig = this.dialog.open(DeleteExpenseAccountComponent, {
         data: {
           id: expenseAccount.id,
           name: expenseAccount.name,
-          isDeletable : this.isDeletable
+          isDeletable: this.isDeletable
         },
         panelClass: 'warning-dialog'
       });
-      
-      dialogConfig.afterClosed().subscribe(result => { 
-          if(result !== undefined) {
-            this.expenseAccountService.deleteExpenseAccount(expenseAccount.id, expenseAccount.name).subscribe((data) => {
-              this.customSnackBar.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
-              this.refreshList({expanded: true});
-            },
+
+      dialogConfig.afterClosed().subscribe(result => {
+        if (result !== undefined) {
+          this.expenseAccountService.deleteExpenseAccount(expenseAccount.id, expenseAccount.name).subscribe((data) => {
+            this.customSnackBar.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
+            this.refreshList({ expanded: true });
+          },
             (error) => {
               this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
             });
-          }
         }
+      }
       );
     });
   }
-  
+
   treeControl = new FlatTreeControl<FlatNode>(
     node => node.level, node => node.expandable);
-  
+
   treeFlattener = new MatTreeFlattener(
     this._transformer, node => node.level, node => node.expandable, node => node.child);
-  
+
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-  
+
   hasChild = (_: number, node: FlatNode) => node.expandable;
-  
+
   onFilterChanged() {
-    this.refreshList({expanded: true});
+    this.refreshList({ expanded: true });
   }
 
   refreshList(opts?: refreshOption) {
@@ -111,7 +113,7 @@ export class ExpenseAccountListComponent implements OnInit {
     expenseAccount.name = this.nameFilter.value.trim();
     this.expenseAccountService.filterExpenseAccount(expenseAccount).subscribe(expenseAccounts => {
       this.dataSource.data = expenseAccounts;
-      if(opts.expanded) this.treeControl.expandAll();
+      if (opts.expanded) this.treeControl.expandAll();
     });
   }
 }

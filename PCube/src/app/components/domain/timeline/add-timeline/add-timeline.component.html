@@ -1,18 +1,22 @@
 <div>
-    <div>
-        <h1>Ajouter une ligne de temps</h1>
-    </div>
-
-    <app-add-timeline-step1 (isFormValidEvent)="onChildStateChange(1, $event)" (ouputUser)="setUser($event)"></app-add-timeline-step1>
-    <app-add-timeline-step2 (isFormValidEvent)="onChildStateChange(2, $event)" (ouputProject)="setProject($event)"></app-add-timeline-step2>
-    <app-add-timeline-step3 (isFormValidEvent)="onChildStateChange(3, $event)" (ouputActivity)="setActivity($event)"></app-add-timeline-step3>
-    <app-add-timeline-step4 (isFormValidEvent)="onChildStateChange(4, $event)" (ouputExpenseAccount)="setExpenseAccount($event)"></app-add-timeline-step4>
-    <app-add-timeline-step5 (isFormValidEvent)="onChildStateChange(5, $event)" (ouputWorkingShift)="setWorkingShift($event)" #step5></app-add-timeline-step5>
-    
-    <div class="div-spacer-60"></div>
-
-    <div class="">
-        <button mat-raised-button color="primary"  (click)="submit()" [disabled]='!isReadyToSubmit'>Soumettre les lignes de temps</button>
+    <mat-card-title>Ajouter une ligne de temps</mat-card-title>
+    <mat-card-actions>
         <button mat-raised-button color="primary" class="cancel-timeline-button" (click)="onCancel()" >Revenir à la liste</button>
-    </div>
+    </mat-card-actions>
+    <mat-card-content>
+        <app-add-timeline-step1 (isFormValidEvent)="onChildStateChange(1, $event)" (ouputUser)="setUser($event)"></app-add-timeline-step1>
+        <app-add-timeline-step2 (isFormValidEvent)="onChildStateChange(2, $event)" (ouputProject)="setProject($event)"></app-add-timeline-step2>
+        <app-add-timeline-step3 (isFormValidEvent)="onChildStateChange(3, $event)" (ouputActivity)="setActivity($event)"></app-add-timeline-step3>
+        <app-add-timeline-step4 (isFormValidEvent)="onChildStateChange(4, $event)" (ouputExpenseAccount)="setExpenseAccount($event)"></app-add-timeline-step4>
+        <app-add-timeline-step5 (isFormValidEvent)="onChildStateChange(5, $event)" (ouputWorkingShift)="setWorkingShift($event)" #step5></app-add-timeline-step5>
+        
+        <div class="div-spacer-60"></div>
+
+        <div class="pulse-submit-container">
+            <div [ngClass]="(isReadyToSubmit) ? 'pulse' : 'pulse-off'">
+                <button mat-raised-button color="primary" (click)="submit()" [disabled]='!isReadyToSubmit'>Soumettre les lignes de temps</button>
+            </div>
+        </div>
+
+    </mat-card-content>
 </div>

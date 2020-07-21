@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AddExpenseAccountComponent } from '../../domain/expense-account/add-expense-account/add-expense-account.component';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-expense-accounts',
@@ -13,8 +14,13 @@ import { ExpenseAccountItem } from 'src/app/models/expense-account';
 })
 export class ExpenseAccountsComponent implements OnInit {
 
-  constructor(private dialog: MatDialog,
-    private snackBar : MatSnackBar, private router: Router) { }
+  constructor(
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar,
+    private router: Router
+  ) { }
+
+  customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   ngOnInit(): void {
   }
@@ -25,24 +31,17 @@ export class ExpenseAccountsComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.minWidth = 600;
     dialogConfig.data = {
-      expenseAccount : new ExpenseAccountItem(),
+      expenseAccount: new ExpenseAccountItem(),
     }
     this.fileNameDialogRef = this.dialog.open(AddExpenseAccountComponent, dialogConfig);
 
-    this.fileNameDialogRef.afterClosed().subscribe(result => { 
-      if(result == true) {
-        this.expenseAccountListChild.refreshList({expanded: true});
-        this.openSnackBar('Le compte de dépense a été créée', 'notif-success');
+    this.fileNameDialogRef.afterClosed().subscribe(result => {
+      if (result == "Canceled" || result == undefined) {
+        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+      } else if (result) {
+        this.expenseAccountListChild.refreshList({ expanded: true });
+        this.customSnackBar.openSnackBar('Le compte de dépense a été créée', 'notif-success');
       }
-    });
-  }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
     });
   }
 }
