@@ -36,15 +36,24 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
   member : User;
 
   isProjets(checked: boolean) {
-    if(!checked) this.requestForm.get('projects').reset();
+    if(!checked) {
+      this.requestForm.get('projects').reset();
+      this.params.projects = [];
+    }
   }
 
   isActivitys(checked: boolean) {
-    if(!checked) this.requestForm.get('activitys').reset();
+    if(!checked) {
+      this.requestForm.get('activitys').reset();
+      this.params.activitys = [];
+    }
   }
 
   isUsers(checked: boolean) {
-    if(!checked) this.requestForm.get('users').reset();
+    if(!checked){
+      this.requestForm.get('users').reset();
+      this.params.users = [];
+    } 
   }
 
   constructor(private fb: FormBuilder, private projectService: ProjectService,
