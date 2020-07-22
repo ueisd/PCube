@@ -48,6 +48,10 @@ export class AddTimelineStep1Component implements OnInit {
 
   callOuputEvent(isSuccess){
     this.isFormValidEvent.emit(isSuccess);
+
+    if(!isSuccess)
+      this.user = undefined;
+
     this.ouputUser.emit(this.user);
   }
 

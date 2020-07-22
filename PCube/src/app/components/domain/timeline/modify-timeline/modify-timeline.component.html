@@ -9,7 +9,7 @@
         <app-add-timeline-step2 (isFormValidEvent)="onChildStateChange(2, $event)" (ouputProject)="setProject($event)" #projectChild></app-add-timeline-step2>
         <app-add-timeline-step3 (isFormValidEvent)="onChildStateChange(3, $event)" (ouputActivity)="setActivity($event)" #activityChild></app-add-timeline-step3>
         <app-add-timeline-step4 (isFormValidEvent)="onChildStateChange(4, $event)" (ouputExpenseAccount)="setExpenseAccount($event)" #expenseChild></app-add-timeline-step4>
-        <app-add-timeline-step5 (isFormValidEvent)="onChildStateChange(5, $event)" (ouputWorkingShift)="setWorkingShift($event)" #timelineChild></app-add-timeline-step5>
+        <app-add-timeline-step5 (isFormValidEvent)="onChildStateChange(5, $event)" (ouputWorkingShift)="setWorkingShift($event)" (askingForWorkingShiftValidation)="answeringForWorkingShiftValidation($event)" #timelineChild></app-add-timeline-step5>
 
         <div class="div-spacer-60"></div>
 

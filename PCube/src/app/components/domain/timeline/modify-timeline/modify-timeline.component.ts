@@ -65,18 +65,22 @@ export class ModifyTimelineComponent implements OnInit {
     return iso;
   }
 
-  generateTimelineFromSubmit() : TimelineItem{
+  generateTimelineFromSubmit(isForValidationOnly:boolean) : TimelineItem{
 
     let timeline:TimelineItem = new TimelineItem();
 
     timeline.id = this.timeline.id;
     timeline.user_id = this.user.id;
-    timeline.project_id = this.project.id;
-    timeline.activity_id = this.activity.id;
-    timeline.accounting_time_category_id = this.account.id;
+
     timeline.day_of_week = this.dateFormatISO8601(this.workingShifts[0].date);
     timeline.punch_in = this.workingShifts[0].shift[0].begin;
     timeline.punch_out = this.workingShifts[0].shift[0].end;
+
+    if(!isForValidationOnly){
+      timeline.project_id = this.project.id;
+      timeline.activity_id = this.activity.id;
+      timeline.accounting_time_category_id = this.account.id;
+    }
 
     return timeline;
   }
@@ -88,7 +92,7 @@ export class ModifyTimelineComponent implements OnInit {
 
   onSubmit(){
 
-    let timesLine = this.generateTimelineFromSubmit();
+    let timesLine = this.generateTimelineFromSubmit(false);
     this.timelineService.updateTimeline(timesLine).subscribe( timelines => {
 
       this.customSnackBar.openSnackBar('La ligne de temps a été modifiée','notif-success');
@@ -101,6 +105,9 @@ export class ModifyTimelineComponent implements OnInit {
   }
 
   setUser(user:User){
+    if(user == undefined && this.step5)
+      this.timelineComponent.awaitingWorkingShiftValidation(false, "Sélectionner un utilisateur.");
+
     this.user = user;
   }
 
@@ -136,6 +143,8 @@ export class ModifyTimelineComponent implements OnInit {
     return new Date(parseInt(splitDate[0]), parseInt(splitDate[1]) - 1, parseInt(splitDate[2]));
   }
 
+  originWorkingShift:WorkingShift;
+
   initChildren(timeline:TimelineItem){
     this.memberComponent.setAlreadyFoundItem(false, timeline.user_id.toString());
     this.projectComponent.setAlreadyFoundItem(false, timeline.project_id.toString());
@@ -145,6 +154,7 @@ export class ModifyTimelineComponent implements OnInit {
     let workingShift = new WorkingShift(this.generateDateFromISO6801(timeline.day_of_week));
     let shift = new Shift(timeline.punch_in, timeline.punch_out);
     workingShift.addShift(shift);
+    this.originWorkingShift = workingShift;
     this.timelineComponent.setGeneratedValue(workingShift, false);
   }
 
@@ -161,6 +171,40 @@ export class ModifyTimelineComponent implements OnInit {
 
   setTimelineId(id:number){
     this.fetchTimeline(id);
+  }
+
+  isWorkingShiftHasChanged(timesline:TimelineItem):boolean{
+
+    if(timesline.day_of_week != this.dateFormatISO8601(this.originWorkingShift.date)
+    || timesline.punch_in != this.originWorkingShift.shift[0].begin
+    || timesline.punch_out != this.originWorkingShift.shift[0].end)
+      return true;
+    else
+      return false;
+  }
+
+  answeringForWorkingShiftValidation($event) {
+
+    if(this.user == undefined || this.user.id == undefined){
+      this.timelineComponent.awaitingWorkingShiftValidation(false, "Sélectionner un utilisateur.");
+      return;
+    }
+
+    let timesLine = (this.generateTimelineFromSubmit(true))
+
+    if(!this.isWorkingShiftHasChanged(timesLine)){
+      this.timelineComponent.awaitingWorkingShiftValidation(true);
+      return;
+    }
+
+    let timesLines:TimelineItem[] = [];
+    timesLines.push(timesLine);
+
+    this.timelineService.validateAllTimeline(timesLines).subscribe(isValid => {
+      this.timelineComponent.awaitingWorkingShiftValidation(true);
+    }, error => {
+      this.timelineComponent.awaitingWorkingShiftValidation(false, "Ligne de temps déjà existante.");
+    });
   }
 
 }
