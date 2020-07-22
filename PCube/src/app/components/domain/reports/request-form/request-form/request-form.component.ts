@@ -36,24 +36,18 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
   member : User;
 
   isProjets(checked: boolean) {
-    if(!checked) {
+    if(!checked)
       this.requestForm.get('projects').reset();
-      this.params.projects = [];
-    }
   }
 
   isActivitys(checked: boolean) {
-    if(!checked) {
+    if(!checked)
       this.requestForm.get('activitys').reset();
-      this.params.activitys = [];
-    }
   }
 
   isUsers(checked: boolean) {
-    if(!checked){
+    if(!checked)
       this.requestForm.get('users').reset();
-      this.params.users = [];
-    } 
   }
 
   constructor(private fb: FormBuilder, private projectService: ProjectService,
@@ -192,15 +186,21 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
     if(dateFin) this.params.dateFin = formatDate(dateFin, format, locale);
     else this.params.dateFin = "";
 
-    if(this.requestForm.controls['projects'].value)
+    if(this.requestForm.controls['projects'].value) 
       this.params.projects = this.requestForm.controls['projects'].value;
+    else
+      this.params.projects = [];
 
     if(this.requestForm.controls['activitys'].value)
       this.params.activitys = this.requestForm.controls['activitys'].value;
+    else
+      this.params.activitys = [];
 
     if(!this.isMember) {
       if(this.requestForm.controls['users'].value)
         this.params.users = this.requestForm.controls['users'].value;
+      else
+        this.params.users = [];
     } else {
       this.params.users.pop();
       this.params.users.push(this.member);
