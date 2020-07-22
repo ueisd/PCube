@@ -9,6 +9,8 @@ import { ActivityItem } from 'src/app/models/activity';
 })
 export class DeleteActivityComponent implements OnInit {
 
+  canceledMessage = "Canceled";
+
   constructor(
     public dialogRef: MatDialogRef<DeleteActivityComponent>,
     @Inject(MAT_DIALOG_DATA) public data: ActivityItem

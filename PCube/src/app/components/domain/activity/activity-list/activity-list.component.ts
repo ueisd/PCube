@@ -26,31 +26,31 @@ export class ActivityListComponent implements OnInit {
   nameFilter = new FormControl('');
 
   constructor(
-    private activityService: ActivityService, 
+    private activityService: ActivityService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    ) { }
+  ) { }
 
-  displayedColumns : string[];
+  displayedColumns: string[];
   dataSource = new MatTableDataSource<ActivityItem>();
 
-  customDiagConfig:CustomDiaglogConfig = new CustomDiaglogConfig();
-  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
+  customDiagConfig: CustomDiaglogConfig = new CustomDiaglogConfig();
+  customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar);
 
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
     this.refreshList();
   }
 
-  isViewInitDone:boolean = false;
+  isViewInitDone: boolean = false;
 
-  ngAfterViewInit(){
+  ngAfterViewInit() {
     this.isViewInitDone = true;
   }
 
-  onNameFilterChanged(){
+  onNameFilterChanged() {
     this.refreshList();
   }
 
@@ -64,19 +64,22 @@ export class ActivityListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result !== undefined) {
+
+      if (result == undefined || result == "Canceled") {
+        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+      } else if (result !== undefined) {
         this.activityService.deleteActivity(result.id).subscribe((data) => {
           this.customSnackBar.openSnackBar('L\'activité a été supprimé!', 'notif-success');
           this.refreshList();
         },
-        (error) => {
-          this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
-        });
+          (error) => {
+            this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+          });
       }
     });
   }
 
-  refreshList(){
+  refreshList() {
     let activity = new ActivityItem();
     activity.name = this.nameFilter.value.trim();
     this.displayedColumns = ['name', 'operations'];
@@ -86,8 +89,8 @@ export class ActivityListComponent implements OnInit {
     });
   }
 
-  isNewValueValid(newValue): boolean{
-    if(newValue == null || newValue.trim().length == 0)
+  isNewValueValid(newValue): boolean {
+    if (newValue == null || newValue.trim().length == 0)
       return false;
     else
       return true;
@@ -95,21 +98,23 @@ export class ActivityListComponent implements OnInit {
 
   fileNameDialogRef: MatDialogRef<AddActivityComponent>;
 
-  openEditDialog(activity:ActivityItem) {
+  openEditDialog(activity: ActivityItem) {
 
-    this.customDiagConfig.config.data = { 
-      activity : activity,
+    this.customDiagConfig.config.data = {
+      activity: activity,
     }
 
     this.fileNameDialogRef = this.dialog.open(AddActivityComponent, this.customDiagConfig.getDefaultConfig());
-    
-    this.fileNameDialogRef.afterClosed().subscribe(result => { 
-        if(result == true) {
-          this.refreshList();
-          this.customSnackBar.openSnackBar("L'activité a été modifiée", 'notif-success');
-        }
+
+    this.fileNameDialogRef.afterClosed().subscribe(result => {
+
+      if (result == undefined || result == "Canceled") {
+        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+      } else if (result) {
+        this.refreshList();
+        this.customSnackBar.openSnackBar("L'activité a été modifiée", 'notif-success');
       }
-    );
+    });
   }
 
 }

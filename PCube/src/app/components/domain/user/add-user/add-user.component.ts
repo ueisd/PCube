@@ -28,6 +28,8 @@ export class AddUserComponent implements OnInit {
 
   customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
+  canceledMessage = "Canceled";
+
   constructor(private userService:UserService, 
     private roleService: RoleService, 
     private fb: FormBuilder,

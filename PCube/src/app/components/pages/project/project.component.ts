@@ -4,6 +4,7 @@ import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dial
 import { AddProjectComponent } from 'src/app/components/domain/project/add-project/add-project.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ProjectItem } from 'src/app/models/project';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-project',
@@ -14,39 +15,35 @@ export class ProjectComponent implements OnInit {
 
   constructor(
     private dialog: MatDialog,
-    private snackBar : MatSnackBar
-    ){}
+    private snackBar: MatSnackBar
+  ) { }
 
-  ngOnInit(): void {}
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
+
+  ngOnInit(): void { }
 
   fileNameDialogRef: MatDialogRef<AddProjectComponent>;
   @ViewChild(ProjectListComponent) projectListChild;
 
   openDialog() {
-    
+
     const dialogConfig = new MatDialogConfig();
-    dialogConfig.data = { 
-      projet : new ProjectItem(),
+    dialogConfig.data = {
+      projet: new ProjectItem(),
     }
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddProjectComponent, dialogConfig);
-    
-    this.fileNameDialogRef.afterClosed().subscribe(result => { 
-        if(result == true) {
-          this.projectListChild.refreshList({expanded: true});
-          this.openSnackBar('Le projet a été créée', 'notif-success');
-        }
-      }
-    );
-  }
 
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 2000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
-    });
+    this.fileNameDialogRef.afterClosed().subscribe(result => {
+      
+      if (result == "Canceled" || result == undefined) {
+        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+      } else if (result) {
+        this.customSnackBar.openSnackBar('Le projet a été créée', 'notif-success');
+        this.projectListChild.refreshList({ expanded: true });
+      }
+    }
+    );
   }
 
 }

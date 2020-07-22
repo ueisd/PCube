@@ -6,6 +6,7 @@ import { TimelineFilterItem } from 'src/app/models/timelineFilter';
 
 const API_TIMELINE = "/api/timeline";
 const API_GET_FILTER = "/api/timeline/filter";
+const API_UNIQUE_VALIDATION = "/api/timeline/timelines-validation"
 
 @Injectable({
   providedIn: 'root'
@@ -15,21 +16,21 @@ export class TimelineService {
 
   constructor(private http: HttpClient) { }
 
-  addNewTimeline(timelines:TimelineItem[]): Observable<TimelineItem[]>{
+  addNewTimeline(timelines: TimelineItem[]): Observable<TimelineItem[]> {
     const opts = {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
         'Content-Type': 'application/json'
       })
     };
     let body = {
-        timelines: timelines
+      timelines: timelines
     }
     return this.http.post<TimelineItem[]>(API_TIMELINE, body, opts);
   }
 
-  updateTimeline(timeline:TimelineItem):Observable<TimelineItem>{
-    
+  updateTimeline(timeline: TimelineItem): Observable<TimelineItem> {
+
     console.log(timeline);
     const opts = {
       headers: new HttpHeaders({
@@ -50,7 +51,7 @@ export class TimelineService {
     return this.http.put<TimelineItem>(API_TIMELINE, body, opts);
   }
 
-  getTimelineByFilter(timelineFilter:TimelineFilterItem): Observable<any[]>{
+  getTimelineByFilter(timelineFilter: TimelineFilterItem): Observable<any[]> {
 
     let url = API_GET_FILTER + '?day_of_week=' + timelineFilter.day_of_week;
     url += "&expense_name=" + timelineFilter.accounting_time_category_name;
@@ -61,31 +62,31 @@ export class TimelineService {
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-        'Content-Type' : 'application/json'
+        'Content-Type': 'application/json'
       })
     };
 
     return this.http.get<TimelineItem[]>(url, opts);
   }
 
-  getTimelineById(id:number): Observable<TimelineItem>{
+  getTimelineById(id: number): Observable<TimelineItem> {
     let url = API_TIMELINE + '/' + id;
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-        'Content-Type' : 'application/json'
+        'Content-Type': 'application/json'
       })
     };
 
     return this.http.get<TimelineItem>(url, opts);
   }
 
-  deleteTimeline(id, day_of_week:string, punch_in:string, punch_out:string){
+  deleteTimeline(id, day_of_week: string, punch_in: string, punch_out: string) {
     const opts = {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
       }),
-      body :{
+      body: {
         id: id,
         day_of_week: day_of_week,
         punch_in: punch_in,
@@ -94,5 +95,18 @@ export class TimelineService {
     };
 
     return this.http.delete(API_TIMELINE, opts);
+  }
+
+  validateAllTimeline(timelines: TimelineItem[]): Observable<boolean> {
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+        'Content-Type': 'application/json'
+      })
+    };
+    let body = {
+      timelines: timelines
+    }
+    return this.http.post<boolean>(API_UNIQUE_VALIDATION, body, opts);
   }
 }

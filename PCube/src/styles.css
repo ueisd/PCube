@@ -3,6 +3,10 @@
 html, body { height: 100%;}
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+.mat-raised-button.mat-primary{
+    background-color: #3E63A7;
+}
+
 /******************************************/
 /*             SNACK BAR NOTIF           */
 
@@ -23,6 +27,25 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .notif-success button:hover{
     color: #d4edda;
     background-color: #155724;
+}
+
+.notif-warning {
+    color: #856404;
+    background-color: #fff3cd;
+    border-color: #ffeeba;
+}
+
+.notif-warning button{
+    -webkit-transition: all 500ms linear;
+    -ms-transition: all 500ms linear;
+    transition: all 500ms linear;
+    border: 1px solid #856404;
+    color: #856404;
+}
+
+.notif-warning button:hover{
+    color: #fff3cd;
+    background-color: #856404;
 }
 
 .notif-error button:hover{
@@ -168,6 +191,91 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out,box-shadow .15s ease-in-out;
 }
 /******************************************/
+
+
+
+.pulse-submit-container{
+    position: relative;
+    display: block;
+    width: 350px;
+    height: 36px;
+    margin: auto;
+}
+
+.pulse-submit-container button{
+    width: 350px;
+    height: 36px;
+    pointer-events: all;
+}
+
+.pulse-off{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0);
+    color: #fff;
+    border-radius: 4px;
+    text-align: center;
+    pointer-events: none;
+}
+
+.pulse {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 350px;
+    height: 36px;
+    background: rgba(0, 0, 0, 0);
+    color: #fff;
+    border-radius: 4px;
+    text-align: center;
+    pointer-events: none;
+ }
+ 
+ .pulse::after, .pulse::before {
+    content: '';
+    display: block;
+    position: absolute;
+    border: 1px solid #3E63A7;
+    width: 350px;
+    height: 36px;
+    border-radius: 4px;
+    animation: pulseAnimation 2s linear infinite;
+    opacity: 0;
+    backface-visibility: hidden;
+    pointer-events: none;
+ }
+ 
+ .pulse::after {
+    left: 0;
+    right: 0px;
+    top: 0px;
+    bottom: 0px;
+    animation-delay: .3s;
+ }
+ 
+ @keyframes pulseAnimation {
+    0% {
+        transform: scale(0.98, 0.99);
+       opacity: 0;
+    }
+    25%{
+        opacity: 1;
+    }
+    50%{
+        transform: scale(1.1, 1.6);
+        opacity: 0;
+    }
+    100% {
+       transform: scale(0, 0);
+       opacity: 0;
+    }
+ }
+
 
 .delete-confirm-button{
     border: 2px solid #721c24!important;

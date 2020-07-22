@@ -5,7 +5,7 @@
             <mat-panel-title class="custom-mat-title">Heures travaillés</mat-panel-title>
             <mat-panel-description>{{ message }}</mat-panel-description>
         </mat-expansion-panel-header>
-        <div class="accordion-container">
+        <div id="step-5" class="accordion-container">
             <div *ngFor="let workingTimeline of workingTimelines; let timeLineIndex=index" class="timeline-container">
                 <div class="time-picker-hover-div" [ngClass]="{'supression-effect' : workingTimelines.length - 1 == timeLineIndex && removeLastTimelineHover == 1}"></div>
                 <mat-form-field>

@@ -33,6 +33,16 @@ class TimelineRequest:
         timeline_dict["id"] = id
         return timeline_dict
 
+    def checkUniqueConstraint(self, timeline_dict):
+        cursor = self.connection.cursor()
+        cursor.execute("select * from timeline where user_id = ?"
+                       " and day_of_week = ? and punch_in = ? and punch_out = ?",
+                       (timeline_dict["user_id"], timeline_dict["day_of_week"],
+                        timeline_dict["punch_in"], timeline_dict["punch_out"]))
+        data = cursor.fetchall()
+        cursor.close()
+        return False if data else True
+
     def select_by_filter(self, timeline):
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
