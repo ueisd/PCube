@@ -15,6 +15,7 @@ import { AddTimelineStep3Component } from '../add-timeline/add-timeline-step3/ad
 import { AddTimelineStep4Component } from '../add-timeline/add-timeline-step4/add-timeline-step4.component';
 import { AddTimelineStep5Component } from '../add-timeline/add-timeline-step5/add-timeline-step5.component';
 import { Shift } from 'src/app/models/shift';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-modify-timeline',
@@ -29,6 +30,8 @@ export class ModifyTimelineComponent implements OnInit {
   @ViewChild('activityChild') activityComponent:AddTimelineStep3Component;
   @ViewChild('expenseChild') expenseComponent:AddTimelineStep4Component;
   @ViewChild('timelineChild') timelineComponent:AddTimelineStep5Component;
+
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   constructor(
     private timelineService: TimelineService,
@@ -62,42 +65,49 @@ export class ModifyTimelineComponent implements OnInit {
     return iso;
   }
 
-  generateTimelineFromSubmit() : TimelineItem{
+  generateTimelineFromSubmit(isForValidationOnly:boolean) : TimelineItem{
 
     let timeline:TimelineItem = new TimelineItem();
 
     timeline.id = this.timeline.id;
     timeline.user_id = this.user.id;
-    timeline.project_id = this.project.id;
-    timeline.activity_id = this.activity.id;
-    timeline.accounting_time_category_id = this.account.id;
+
     timeline.day_of_week = this.dateFormatISO8601(this.workingShifts[0].date);
     timeline.punch_in = this.workingShifts[0].shift[0].begin;
     timeline.punch_out = this.workingShifts[0].shift[0].end;
+
+    if(!isForValidationOnly){
+      timeline.project_id = this.project.id;
+      timeline.activity_id = this.activity.id;
+      timeline.accounting_time_category_id = this.account.id;
+    }
 
     return timeline;
   }
 
   onCancel(){
-    this.openSnackBar('Modification annulée','notif-success');
+    this.customSnackBar.openSnackBar('Modification annulée','notif-warning');
     this.router.navigate(['gestion-des-lignes-de-temps']);
   }
 
   onSubmit(){
 
-    let timesLine = this.generateTimelineFromSubmit();
+    let timesLine = this.generateTimelineFromSubmit(false);
     this.timelineService.updateTimeline(timesLine).subscribe( timelines => {
 
-      this.openSnackBar('Les lignes de temps ont été ajouté','notif-success');
+      this.customSnackBar.openSnackBar('La ligne de temps a été modifiée','notif-success');
       this.router.navigate(['gestion-des-lignes-de-temps']);
 
     }, error =>{
-      this.openSnackBar("Une erreur s'est produit. Veuillez réessayer.",'notif-error');
+      this.customSnackBar.openSnackBar("Une erreur s'est produit. Veuillez réessayer.",'notif-error');
     });
 
   }
 
   setUser(user:User){
+    if(user == undefined && this.step5)
+      this.timelineComponent.awaitingWorkingShiftValidation(false, "Sélectionner un utilisateur.");
+
     this.user = user;
   }
 
@@ -128,19 +138,12 @@ export class ModifyTimelineComponent implements OnInit {
     this.isReadyToSubmit = this.step1 && this.step2 && this.step3 && this.step4 && this.step5;
   }
 
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 10000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
-    });
-  }
-
   generateDateFromISO6801(date:string):Date{
     let splitDate = date.split('-');
     return new Date(parseInt(splitDate[0]), parseInt(splitDate[1]) - 1, parseInt(splitDate[2]));
   }
+
+  originWorkingShift:WorkingShift;
 
   initChildren(timeline:TimelineItem){
     this.memberComponent.setAlreadyFoundItem(false, timeline.user_id.toString());
@@ -151,6 +154,7 @@ export class ModifyTimelineComponent implements OnInit {
     let workingShift = new WorkingShift(this.generateDateFromISO6801(timeline.day_of_week));
     let shift = new Shift(timeline.punch_in, timeline.punch_out);
     workingShift.addShift(shift);
+    this.originWorkingShift = workingShift;
     this.timelineComponent.setGeneratedValue(workingShift, false);
   }
 
@@ -167,6 +171,40 @@ export class ModifyTimelineComponent implements OnInit {
 
   setTimelineId(id:number){
     this.fetchTimeline(id);
+  }
+
+  isWorkingShiftHasChanged(timesline:TimelineItem):boolean{
+
+    if(timesline.day_of_week != this.dateFormatISO8601(this.originWorkingShift.date)
+    || timesline.punch_in != this.originWorkingShift.shift[0].begin
+    || timesline.punch_out != this.originWorkingShift.shift[0].end)
+      return true;
+    else
+      return false;
+  }
+
+  answeringForWorkingShiftValidation($event) {
+
+    if(this.user == undefined || this.user.id == undefined){
+      this.timelineComponent.awaitingWorkingShiftValidation(false, "Sélectionner un utilisateur.");
+      return;
+    }
+
+    let timesLine = (this.generateTimelineFromSubmit(true))
+
+    if(!this.isWorkingShiftHasChanged(timesLine)){
+      this.timelineComponent.awaitingWorkingShiftValidation(true);
+      return;
+    }
+
+    let timesLines:TimelineItem[] = [];
+    timesLines.push(timesLine);
+
+    this.timelineService.validateAllTimeline(timesLines).subscribe(isValid => {
+      this.timelineComponent.awaitingWorkingShiftValidation(true);
+    }, error => {
+      this.timelineComponent.awaitingWorkingShiftValidation(false, "Ligne de temps déjà existante.");
+    });
   }
 
 }

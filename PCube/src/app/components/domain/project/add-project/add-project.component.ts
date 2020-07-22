@@ -35,6 +35,7 @@ export class AddProjectComponent implements OnInit {
     'parent': [],
   };
 
+  canceledMessage = "Canceled";
 
   constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any,
   private fb: FormBuilder, private projectService: ProjectService, 

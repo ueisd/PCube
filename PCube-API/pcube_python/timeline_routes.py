@@ -211,6 +211,29 @@ def testsum():
         abort(404)
 
 
+@timeline.route('/timelines-validation', methods=['POST'])
+@project_manager_required
+@schema.validate(timeline_insert_schema)
+def validate_timeline_from_json_dict():
+    """
+    Cette route reçois une liste JSON de ligne de temps et l'ajoute à la
+    base de données
+    """
+    data = request.json
+    timelines = data['timelines']
+
+    connection = get_db().get_connection()
+    query = TimelineRequest(connection)
+
+    for timeline in timelines:
+        isUnique = query.checkUniqueConstraint(timeline)
+        if not isUnique:
+            log.error("Une ligne de temps existe déjà.")
+            abort(409)
+
+    return jsonify(""), 204
+
+
 @timeline.errorhandler(JsonValidationError)
 def validation_error(e):
     errors = [validation_error.message for validation_error in e.errors]

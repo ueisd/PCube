@@ -11,7 +11,7 @@
     </mat-form-field>
 
     <mat-dialog-actions align="end">
-        <button mat-raised-button color="warn" mat-dialog-close>Annuler</button>
+        <button mat-raised-button color="warn" [mat-dialog-close]="canceledMessage">Annuler</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="!newActivityForm.valid || !isUnique || isUnmodifiedValue">{{ (isCreateForm) ? "Ajouter" : "Modifier" }}</button>
     </mat-dialog-actions>
 </form>

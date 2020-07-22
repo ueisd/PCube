@@ -47,7 +47,7 @@
     </div>
 
     <mat-dialog-actions align="end">
-        <button mat-raised-button color="warn" mat-dialog-close>Annuler</button>
+        <button mat-raised-button color="warn" [mat-dialog-close]="canceledMessage">Annuler</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="newProjectForm.invalid">
             {{(isCreateForm) ? "Ajouter" : "Enregistrer"}}
         </button>

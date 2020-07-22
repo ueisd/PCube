@@ -1,9 +1,10 @@
 import { Component, OnInit, NgModule, ViewChild, Output, EventEmitter } from '@angular/core';
-import {DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE} from '@angular/material/core';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { AppDateAdapter, APP_DATE_FORMATS } from 'src/app/models/format-datepicker';
 import { DatePipe } from '@angular/common';
 import { WorkingShift } from 'src/app/models/working-shift';
 import { Shift } from 'src/app/models/shift';
+import { TimelineService } from 'src/app/services/timeline/timeline.service';
 
 const NORMAL_CLASS = "alert-primary";
 const SUCCESS_CLASS = "alert-success";
@@ -22,8 +23,8 @@ const TIME_PATTERN = "([1-2][0-9]|[0-9]):[0-5][0-9]";
   templateUrl: './add-timeline-step5.component.html',
   styleUrls: ['../add-timeline.component.css', './add-timeline-step5.component.css'],
   providers: [
-    {provide: DatePipe},
-    {provide: MAT_DATE_LOCALE, useValue: 'en-CA'}
+    { provide: DatePipe },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-CA' }
   ]
 })
 
@@ -32,98 +33,100 @@ export class AddTimelineStep5Component implements OnInit {
 
   @Output() isFormValidEvent = new EventEmitter<boolean>();
   @Output() ouputWorkingShift = new EventEmitter<WorkingShift[]>();
+  @Output() askingForWorkingShiftValidation = new EventEmitter<boolean>();
 
-  constructor (
-    private datePipe: DatePipe
-    ) {}
+  constructor(
+    private datePipe: DatePipe,
+    private timelineService: TimelineService
+  ) { }
 
-  message:string = NORMAL_MESSAGE;
-  messageClasse:string = NORMAL_CLASS;
+  message: string = NORMAL_MESSAGE;
+  messageClasse: string = NORMAL_CLASS;
 
-  canAddMoreHours:boolean = true;
+  canAddMoreHours: boolean = true;
 
-  buttonId:number = -1;
-  removeLastTimelineHover:number = -1;
+  buttonId: number = -1;
+  removeLastTimelineHover: number = -1;
 
   ngOnInit(): void {
     this.placeDefaultWorkingTimeline();
   }
 
-  workingTimelines:WorkingShift[] = [];
+  workingTimelines: WorkingShift[] = [];
 
-  placeDefaultWorkingTimeline(){
-    let workgingShift:WorkingShift = new WorkingShift(null);
-    let shift:Shift = new Shift("8:00", "12:00");
+  placeDefaultWorkingTimeline() {
+    let workgingShift: WorkingShift = new WorkingShift(null);
+    let shift: Shift = new Shift("8:00", "12:00");
     workgingShift.addShift(shift);
     this.workingTimelines.push(workgingShift);
   }
 
-  addTimeline(){
-    let shift:Shift = new Shift("8:00", "12:00");
-    let workgingShift:WorkingShift = new WorkingShift(null);
+  addTimeline() {
+    let shift: Shift = new Shift("8:00", "12:00");
+    let workgingShift: WorkingShift = new WorkingShift(null);
     workgingShift.shift.push(shift);
     this.workingTimelines.push(workgingShift);
     this.onAddOrRemoveRow();
   }
 
-  removeTimeline(){
+  removeTimeline() {
     let lastIndex = this.workingTimelines.length - 1;
     this.workingTimelines.splice(lastIndex, 1);
     this.onAddOrRemoveRow();
 
-    if(lastIndex == 1)
+    if (lastIndex == 1)
       this.removeLastTimelineHover = -1;
 
   }
 
-  addShift(workingShiftIndex){
-    let shift:Shift = new Shift("8:00", "12:00");
+  addShift(workingShiftIndex) {
+    let shift: Shift = new Shift("8:00", "12:00");
     this.workingTimelines[workingShiftIndex].addShift(shift);
     this.onAddOrRemoveRow();
   }
 
-  removeShift(workingShiftIndex){
+  removeShift(workingShiftIndex) {
 
-    let lastIndex = this.workingTimelines[workingShiftIndex].shift.length-1;
+    let lastIndex = this.workingTimelines[workingShiftIndex].shift.length - 1;
     this.workingTimelines[workingShiftIndex].shift.splice(lastIndex, 1);
     this.onAddOrRemoveRow();
 
-    if(workingShiftIndex == 0)
+    if (workingShiftIndex == 0)
       this.buttonId = -1;
   }
 
-  showPannelMessage(message:string, cssClass:string){
+  showPannelMessage(message: string, cssClass: string) {
     this.message = message;
     this.messageClasse = cssClass;
   }
 
-  onErrorFoundFromConfirmation(){
-    this.showPannelMessage("Veuillez corriger les erreurs.", WARNING_CLASS);
+  onErrorFoundFromConfirmation(msg: string) {
+    this.showPannelMessage(msg, DANGER_CLASS);
   }
 
-  onConfirmationSuccess(){
+  onConfirmationSuccess() {
     this.showPannelMessage("Les heures sont valides.", SUCCESS_CLASS);
   }
 
-  onAddOrRemoveRow(){
+  onAddOrRemoveRow() {
     this.showPannelMessage("Veuillez saisir les heures travaillées", WARNING_CLASS);
     this.callOuputEvent(false)
   }
 
-  onFormSubmitSuccess(){
+  onFormSubmitSuccess() {
     this.showPannelMessage("Vous pouvez réutiliser les heures saisies.", WARNING_CLASS);
     this.callOuputEvent(false)
   }
 
-  isDateValid(date:Date):boolean{
+  isDateValid(date: Date): boolean {
     return date instanceof Date && !isNaN(date.getTime());
   }
 
-  areShiftsValid(shift:Shift[]):boolean{
+  areShiftsValid(shift: Shift[]): boolean {
 
-    let isValid:boolean = true;
+    let isValid: boolean = true;
 
-    for(let i = 0; i < shift.length && isValid; ++i){
+    for (let i = 0; i < shift.length && isValid; ++i) {
 
       let begin = shift[i].begin;
       let end = shift[i].end;
@@ -134,35 +137,47 @@ export class AddTimelineStep5Component implements OnInit {
     return isValid;
   }
 
-  callOuputEvent(isSuccess){
+  callOuputEvent(isSuccess) {
     this.isFormValidEvent.emit(isSuccess);
     this.ouputWorkingShift.emit(this.workingTimelines);
   }
 
-  validateAllTimeLine(){
-    
-    let isValid:boolean = true;
+  validateAllTimeLine() {
 
-    for(let i = 0; i < this.workingTimelines.length && isValid; ++i){
+    let isValid: boolean = true;
+
+    for (let i = 0; i < this.workingTimelines.length && isValid; ++i) {
       let date = this.workingTimelines[i].date;
       let shift = this.workingTimelines[i].shift;
       isValid = this.isDateValid(date) && this.areShiftsValid(shift);
     }
 
+    if (!isValid) {
+      this.onErrorFoundFromConfirmation("Une date est invalide.");
+      this.callOuputEvent(isValid)
+      return;
+    }
+
+    this.ouputWorkingShift.emit(this.workingTimelines);
+    this.askingForWorkingShiftValidation.emit(true);
+  }
+
+
+  awaitingWorkingShiftValidation(isValid:boolean, msg?:string){
     if(isValid)
       this.onConfirmationSuccess();
     else
-      this.onErrorFoundFromConfirmation();
-
+      this.onErrorFoundFromConfirmation(msg);
+    
     this.callOuputEvent(isValid)
   }
 
-  setGeneratedValue(workgingShift:WorkingShift, canAddMoreHours:boolean){
+  setGeneratedValue(workgingShift: WorkingShift, canAddMoreHours: boolean) {
     this.canAddMoreHours = canAddMoreHours;
     this.workingTimelines[0].shift[0].begin = workgingShift.shift[0].begin;
     this.workingTimelines[0].shift[0].end = workgingShift.shift[0].end;
 
-    let date:Date = new Date(workgingShift.date.getDate());
+    let date: Date = new Date(workgingShift.date.getDate());
     this.workingTimelines[0].date = workgingShift.date;
   }
 }

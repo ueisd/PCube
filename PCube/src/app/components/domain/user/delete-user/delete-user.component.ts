@@ -11,6 +11,8 @@ export class DeleteUserComponent implements OnInit {
 
   isCurrentUser: boolean = false;
 
+  canceledMessage="Canceled"
+
   constructor(public dialogRef: MatDialogRef<DeleteUserComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any) { }
 

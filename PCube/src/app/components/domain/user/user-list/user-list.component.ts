@@ -53,16 +53,16 @@ export class UserListComponent implements OnInit {
         roleName: user.role_name 
       }
     });
+
     dialogRef.afterClosed().subscribe(result => {
 
-      if(result == "Canceled") {
-        this.customSnackBar.openSnackBar('Action annulé', 'notif-success');
+      if(result == "Canceled" || result === undefined) {
+        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
       }else if(result !== undefined) {
         this.customSnackBar.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
         this.refreshList();
-      }else{
-        this.customSnackBar.openSnackBar('L\'utilisateur a été modifié!', 'notif-error');
       }
+
     });
   }
 
@@ -80,7 +80,10 @@ export class UserListComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result !== undefined) {
+
+      if(result == "Canceled" || result == undefined){
+        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+      } else if(result !== undefined) {
         this.userService.deleteUser(result.id, result.email).subscribe((data) => {
           this.customSnackBar.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
           this.refreshList();
@@ -89,6 +92,8 @@ export class UserListComponent implements OnInit {
           this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
         });
       }
+
+
     });
   }
 

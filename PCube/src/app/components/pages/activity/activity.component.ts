@@ -4,6 +4,7 @@ import { ActivityListComponent } from 'src/app/components/domain/activity/activi
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { AddActivityComponent } from 'src/app/components/domain/activity/add-activity/add-activity.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-activity',
@@ -15,9 +16,11 @@ export class ActivityComponent implements OnInit {
   fileNameDialogRef: MatDialogRef<AddActivityComponent>;
   @ViewChild(ActivityListComponent) child;
 
-  constructor(private activityService: ActivityService, 
+  customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar)
+
+  constructor(private activityService: ActivityService,
     private dialog: MatDialog,
-    private snackBar : MatSnackBar) { }
+    private snackBar: MatSnackBar) { }
 
   ngOnInit(): void {
   }
@@ -26,23 +29,16 @@ export class ActivityComponent implements OnInit {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddActivityComponent, dialogConfig);
-    
-    this.fileNameDialogRef.afterClosed().subscribe(result => { 
-        if(result == true) {
-          this.child.refreshList();
-          this.openSnackBar('L\'activité a été créée', 'notif-success');
-        }
+
+    this.fileNameDialogRef.afterClosed().subscribe(result => {
+
+      if (result == "Canceled" || result == undefined) {
+        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+      } else if (result) {
+        this.customSnackBar.openSnackBar('L\'activité a été créée', 'notif-success');
+        this.child.refreshList();   
       }
+    }
     );
   }
-
-  openSnackBar(message, panelClass) {
-    this.snackBar.open(message, 'Fermer', {
-      duration: 10000,
-      horizontalPosition: "right",
-      verticalPosition: "bottom",
-      panelClass: [panelClass]
-    });
-  }
-
 }

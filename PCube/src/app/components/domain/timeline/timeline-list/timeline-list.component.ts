@@ -18,9 +18,9 @@ import { MatPaginator } from '@angular/material/paginator';
   selector: 'app-timeline-list',
   templateUrl: './timeline-list.component.html',
   styleUrls: ['./timeline-list.component.css'],
-  providers:[
-    {provide: DatePipe},
-    {provide: MAT_DATE_LOCALE, useValue: 'en-CA'}
+  providers: [
+    { provide: DatePipe },
+    { provide: MAT_DATE_LOCALE, useValue: 'en-CA' }
   ]
 })
 export class TimelineListComponent implements OnInit {
@@ -30,22 +30,22 @@ export class TimelineListComponent implements OnInit {
   constructor(
     private timelineService: TimelineService,
     private dialog: MatDialog,
-    private snackBar : MatSnackBar,
+    private snackBar: MatSnackBar,
     private router: Router,
     private datePipe: DatePipe
-  ) { 
+  ) {
     this.dateFilter = this.datePipe.transform(this.dateFilter, 'yyyy-MM-dd');
   }
 
-  memberFilter:FormControl =  new FormControl('');
-  expenseFilter:FormControl =  new FormControl('');
-  projectFilter:FormControl =  new FormControl('');
-  activityFilter:FormControl =  new FormControl('');
+  memberFilter: FormControl = new FormControl('');
+  expenseFilter: FormControl = new FormControl('');
+  projectFilter: FormControl = new FormControl('');
+  activityFilter: FormControl = new FormControl('');
 
-  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
+  customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar)
 
   dataSource = new MatTableDataSource<TimelineItem>();
-  @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
@@ -54,10 +54,10 @@ export class TimelineListComponent implements OnInit {
 
 
 
-  displayedColumns:string[] = ['jour', 'heures', 'membre', 'projet', 'activiter', 'compteDepense', 'operations'];
+  displayedColumns: string[] = ['jour', 'heures', 'membre', 'projet', 'activiter', 'compteDepense', 'operations'];
 
-  refreshList(){
-    let timelineFilter:TimelineFilterItem = new TimelineFilterItem();
+  refreshList() {
+    let timelineFilter: TimelineFilterItem = new TimelineFilterItem();
     timelineFilter.day_of_week = this.dateFormatISO8601(this.dateFilter);
     timelineFilter.activity_name = this.activityFilter.value;
     timelineFilter.project_name = this.projectFilter.value;
@@ -70,12 +70,12 @@ export class TimelineListComponent implements OnInit {
     });
   }
 
-  onDeleteTimeline(timeline:any){
+  onDeleteTimeline(timeline: any) {
     const dialogRef = this.dialog.open(DeleteTimelineComponent, {
-      data: { 
+      data: {
         activity_name: timeline.activity_name,
         day_of_week: timeline.day_of_week,
-        expense_name: timeline.expense_name, 
+        expense_name: timeline.expense_name,
         first_name: timeline.first_name,
         last_name: timeline.last_name,
         project_name: timeline.project_name,
@@ -84,24 +84,26 @@ export class TimelineListComponent implements OnInit {
       },
       panelClass: 'warning-dialog'
     });
-    
+
 
     dialogRef.afterClosed().subscribe(result => {
-      if(result !== undefined) {
+      if (result == "Canceled" || result == undefined) {
+        this.customSnackBar.openSnackBar('Action annulée','notif-warning');
+      } else if (result !== undefined) {
         this.timelineService.deleteTimeline(timeline.id, timeline.day_of_week, timeline.punch_in, timeline.punch_out).subscribe((data) => {
           this.customSnackBar.openSnackBar("La ligne de temps a été supprimé", 'notif-success');
           this.refreshList();
         },
-        (error) => {
-          this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
-        });
+          (error) => {
+            this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+          });
       }
     });
   }
 
-  dateFormatISO8601(date:Date): string{
+  dateFormatISO8601(date: Date): string {
 
-    if(!date)
+    if (!date)
       return "";
 
     let iso = date.toISOString();
@@ -111,16 +113,16 @@ export class TimelineListComponent implements OnInit {
     return iso;
   }
 
-  onModifyTimeline(timeline){
+  onModifyTimeline(timeline) {
     this.router.navigate(['/gestion-des-lignes-de-temps/modifier-ligne-de-temps/' + timeline.id]);
   }
 
-  onFilterChanged(){
+  onFilterChanged() {
     this.refreshList();
   }
 
-  resetDateFilter(){
-    let emptyDate:Date;
+  resetDateFilter() {
+    let emptyDate: Date;
     this.dateFilter = emptyDate;
     this.refreshList();
   }
