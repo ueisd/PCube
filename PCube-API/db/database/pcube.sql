@@ -48,4 +48,5 @@ CREATE TABLE timeline (
     FOREIGN KEY(accounting_time_category_id) REFERENCES accounting_time_category(id),
     FOREIGN KEY(activity_id) REFERENCES activity(id),
     FOREIGN KEY(user_id) REFERENCES user(id)
+    CONSTRAINT timelineUnique UNIQUE (user_id, day_of_week, punch_in, punch_out)
 );
