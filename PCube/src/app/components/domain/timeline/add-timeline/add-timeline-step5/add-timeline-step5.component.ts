@@ -104,6 +104,10 @@ export class AddTimelineStep5Component implements OnInit {
     this.showPannelMessage(msg, DANGER_CLASS);
   }
 
+  onErrorWarning(msg: string) {
+    this.showPannelMessage(msg, WARNING_CLASS);
+  }
+
   onConfirmationSuccess() {
     this.showPannelMessage("Les heures sont valides.", SUCCESS_CLASS);
   }
@@ -122,6 +126,12 @@ export class AddTimelineStep5Component implements OnInit {
     return date instanceof Date && !isNaN(date.getTime());
   }
 
+  convertHoursStringToInt(hours: string): number {
+    let temps: string = hours;
+    temps = temps.replace(':', '');
+    return parseInt(temps);
+  }
+
   areShiftsValid(shift: Shift[]): boolean {
 
     let isValid: boolean = true;
@@ -132,6 +142,27 @@ export class AddTimelineStep5Component implements OnInit {
       let end = shift[i].end;
 
       isValid = begin.match(TIME_PATTERN) != null && end.match(TIME_PATTERN) != null;
+
+      let intBegin1 = this.convertHoursStringToInt(begin);
+      let intEnd1 = this.convertHoursStringToInt(end);
+
+      isValid = (intBegin1 == intEnd1) ? false: true;
+
+      for (let j = i + 1; j < shift.length && isValid; ++j) {
+
+        let intBegin2 = this.convertHoursStringToInt(shift[j].begin);
+        let intEnd2 = this.convertHoursStringToInt(shift[j].end);
+
+        if (
+          (intBegin2 >= intBegin1 && intBegin2 <= intEnd1) ||
+          (intEnd2 >= intBegin1 && intEnd2 <= intEnd1) ||
+          (intBegin1 >= intBegin2 && intBegin1 <= intEnd2) ||
+          (intEnd1 >= intBegin2 && intEnd1 <= intEnd2)
+        ){
+          isValid = false;
+        }
+        
+      }
     }
 
     return isValid;
@@ -142,18 +173,48 @@ export class AddTimelineStep5Component implements OnInit {
     this.ouputWorkingShift.emit(this.workingTimelines);
   }
 
+  formatDateForErrorMessage(date: Date): string {
+    return (date.getMonth() + 1).toString() + "/" + date.getDate() + "/" + date.getFullYear();
+  }
+
+  datePickerValueChanged() {
+    this.callOuputEvent(false)
+    this.onErrorWarning("Veuillez valider les modifications");
+  }
+
   validateAllTimeLine() {
 
     let isValid: boolean = true;
 
     for (let i = 0; i < this.workingTimelines.length && isValid; ++i) {
+
       let date = this.workingTimelines[i].date;
-      let shift = this.workingTimelines[i].shift;
-      isValid = this.isDateValid(date) && this.areShiftsValid(shift);
+
+      if (!this.isDateValid(date)) {
+        isValid = false;
+        this.onErrorFoundFromConfirmation("Une date est manquante");
+      }
+
+      for (let j = i + 1; j < this.workingTimelines.length && isValid; ++j) {
+
+        if (!this.isDateValid(this.workingTimelines[j].date)) {
+          isValid = false;
+          this.onErrorFoundFromConfirmation("Une date est manquante");
+        }
+
+        if (isValid && date.getTime() == this.workingTimelines[j].date.getTime()) {
+          isValid = false;
+          this.onErrorFoundFromConfirmation("Duplication de plage horaire : " + this.formatDateForErrorMessage(date));
+        }
+      }
+
+      if (isValid && !this.areShiftsValid(this.workingTimelines[i].shift)) {
+        isValid = false;
+        this.onErrorFoundFromConfirmation("Conflit d'heure pour : " + this.formatDateForErrorMessage(date));
+      }
     }
 
     if (!isValid) {
-      this.onErrorFoundFromConfirmation("Une date est invalide.");
       this.callOuputEvent(isValid)
       return;
     }
@@ -163,12 +224,12 @@ export class AddTimelineStep5Component implements OnInit {
   }
 
 
-  awaitingWorkingShiftValidation(isValid:boolean, msg?:string){
-    if(isValid)
+  awaitingWorkingShiftValidation(isValid: boolean, msg?: string) {
+    if (isValid)
       this.onConfirmationSuccess();
     else
       this.onErrorFoundFromConfirmation(msg);
-    
+
     this.callOuputEvent(isValid)
   }
 

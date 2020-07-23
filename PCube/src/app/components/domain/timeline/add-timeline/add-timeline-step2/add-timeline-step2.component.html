@@ -3,7 +3,7 @@
         <mat-expansion-panel>
           <mat-expansion-panel-header class="alert-no-padding {{ messageClasse }}">
             <mat-panel-title class="custom-mat-title">Projet</mat-panel-title>
-            <mat-panel-description>{{ message }}</mat-panel-description>
+            <mat-panel-description>{{ message | titlecase }}</mat-panel-description>
         </mat-expansion-panel-header>
         <div class="accordion-container">
           <div>
@@ -36,7 +36,7 @@
                   <!-- Colonne Nom -->
                   <ng-container matColumnDef="name">
                     <mat-header-cell *matHeaderCellDef>Nom</mat-header-cell>
-                    <mat-cell *matCellDef="let project"> {{ project.name }} </mat-cell>
+                    <mat-cell *matCellDef="let project"> {{ project.name | titlecase }} </mat-cell>
                   </ng-container>
                 
                   <!-- Colonne Parent -->

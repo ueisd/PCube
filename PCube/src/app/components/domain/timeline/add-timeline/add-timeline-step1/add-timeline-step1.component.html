@@ -3,7 +3,7 @@
     <mat-expansion-panel>
       <mat-expansion-panel-header class="alert-no-padding {{ messageClasse }}">
         <mat-panel-title class="custom-mat-title">Membre</mat-panel-title>
-        <mat-panel-description>{{ message }}</mat-panel-description>
+        <mat-panel-description>{{ message | titlecase }}</mat-panel-description>
       </mat-expansion-panel-header>
       <div class="accordion-container">
         <div>
@@ -36,25 +36,25 @@
                 <!-- Colonne Prénom -->
                 <ng-container matColumnDef="firstName">
                   <mat-header-cell *matHeaderCellDef>Prénom</mat-header-cell>
-                  <mat-cell *matCellDef="let user"> {{ user.first_name }} </mat-cell>
+                  <mat-cell *matCellDef="let user"> {{ user.first_name | titlecase }} </mat-cell>
                 </ng-container>
               
                 <!-- Colonne Nom de famille -->
                 <ng-container matColumnDef="lastName">
                   <mat-header-cell *matHeaderCellDef>Nom</mat-header-cell>
-                  <mat-cell *matCellDef="let user"> {{ user.last_name }} </mat-cell>
+                  <mat-cell *matCellDef="let user"> {{ user.last_name | titlecase}} </mat-cell>
                 </ng-container>
               
                 <!-- Colonne courriel -->
                 <ng-container matColumnDef="email">
                   <mat-header-cell *matHeaderCellDef>Courriel</mat-header-cell>
-                  <mat-cell *matCellDef="let user"> {{ user.email }} </mat-cell>
+                  <mat-cell *matCellDef="let user"> {{ user.email | titlecase }} </mat-cell>
                 </ng-container>
               
                 <!-- Colonne rôle -->
                 <ng-container matColumnDef="role">
                   <mat-header-cell *matHeaderCellDef>Rôle</mat-header-cell>
-                  <mat-cell *matCellDef="let user"> {{ user.role_name }} </mat-cell>
+                  <mat-cell *matCellDef="let user"> {{ user.role_name | titlecase }} </mat-cell>
                 </ng-container>
               
                 <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
