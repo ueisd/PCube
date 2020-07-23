@@ -24,7 +24,10 @@
                                     <h3>Sans limite de projets</h3>
                                 </div>
                                 <div fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="5px" *ngIf="reportRequest.projects.length > 0">
-                                    <div>
+                                    <div *ngIf="reportRequest.projects.length == 1">
+                                        <h3>Limité au projet suivant:</h3>
+                                    </div>
+                                    <div *ngIf="reportRequest.projects.length > 1">
                                         <h3>Limité aux projets suivants:</h3>
                                     </div>
                                     <mat-chip-list class="mat-chip-list-stacked">
@@ -39,7 +42,10 @@
                                     <h3>Sans limite d'activités</h3>
                                 </div>
                                 <div fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="5px" *ngIf="reportRequest.activitys.length > 0">
-                                    <div>
+                                    <div *ngIf="reportRequest.activitys.length == 1">
+                                        <h3>Limité à l'activité suivante:</h3>
+                                    </div>                                    
+                                    <div *ngIf="reportRequest.activitys.length > 1">
                                         <h3>Limité aux activités suivantes:</h3>
                                     </div>
                                     <mat-chip-list class="mat-chip-list-stacked">
@@ -55,7 +61,10 @@
                                     <h3>Sans limite d'utilisateurs</h3>
                                 </div>
                                 <div fxLayout="column" fxLayoutAlign="space-around start" fxLayoutGap="5px" *ngIf="reportRequest.users.length > 0">
-                                    <div>
+                                    <div *ngIf="reportRequest.users.length == 1">
+                                        <h3>Limité à l'utilisateur suivant:</h3>
+                                    </div>
+                                    <div *ngIf="reportRequest.users.length > 1">
                                         <h3>Limité aux utilisateurs suivants:</h3>
                                     </div>
                                     <mat-chip-list class="mat-chip-list-stacked">

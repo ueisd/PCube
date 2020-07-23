@@ -49,6 +49,13 @@ export class HomeComponent implements OnInit {
     this.headerComponent.user.last_name = user.last_name;
   }
 
+  setSideNavUserInfo(user){
+    this.sideNavReference.user.email = user.email;
+    this.sideNavReference.user.first_name = user.first_name;
+    this.sideNavReference.user.last_name = user.last_name;
+    this.sideNavReference.user.access_level = parseInt(user.level);
+  }
+
   onAuthValid(){
 
     this.isDrawerHidden = false;
@@ -56,6 +63,9 @@ export class HomeComponent implements OnInit {
       
       if(this.headerComponent)
         this.setHeaderUserInfo(userInfo);
+
+      if(this.sideNavReference)
+        this.setSideNavUserInfo(userInfo);
 
       this.accessLevel = parseInt(userInfo.level)
       this.sideNavReference.accessLevel = this.accessLevel;
