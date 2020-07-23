@@ -4,7 +4,7 @@ export class TimelineItem{
     punch_in: string;
     punch_out: string;
     project_id: number;
-    accounting_time_category_id: number;
+    expense_account_id: number;
     activity_id: number;
     user_id: number;
 
@@ -14,7 +14,7 @@ export class TimelineItem{
         this.punch_in = timelineResponse && timelineResponse.punch_in || "";;
         this.punch_out = timelineResponse && timelineResponse.punch_out || "";;
         this.project_id = timelineResponse && timelineResponse.project_id || "";;
-        this.accounting_time_category_id = timelineResponse && timelineResponse.accounting_time_category_id || "";;
+        this.expense_account_id = timelineResponse && timelineResponse.expense_account_id || "";;
         this.activity_id = timelineResponse && timelineResponse.activity_id || "";;
         this.user_id = timelineResponse && timelineResponse.user_id || "";;
     }

@@ -25,7 +25,7 @@
             <mat-header-cell *matHeaderCellDef>
                 <input class="custom-filter" matInput placeholder="Membre" (ngModelChange)="onFilterChanged()" [formControl]="memberFilter">
             </mat-header-cell>
-            <mat-cell *matCellDef="let timeline">{{ timeline.first_name }} {{ timeline.last_name }}</mat-cell>
+            <mat-cell *matCellDef="let timeline">{{ timeline.first_name | titlecase }} {{ timeline.last_name | titlecase }}</mat-cell>
         </ng-container>
 
         <!-- Colonne nom du projet -->
@@ -33,7 +33,7 @@
             <mat-header-cell *matHeaderCellDef class="on-small-screen-hide">
                 <input class="custom-filter" matInput placeholder="Project" (ngModelChange)="onFilterChanged()" [formControl]="projectFilter">
             </mat-header-cell>
-            <mat-cell *matCellDef="let timeline" class="on-small-screen-hide">{{ timeline.project_name }}</mat-cell>
+            <mat-cell *matCellDef="let timeline" class="on-small-screen-hide">{{ timeline.project_name | titlecase }}</mat-cell>
         </ng-container>
 
         <!-- Colonne nom de l'activité -->
@@ -41,7 +41,7 @@
             <mat-header-cell *matHeaderCellDef>
                 <input class="custom-filter" matInput placeholder="Activité" (ngModelChange)="onFilterChanged()" [formControl]="activityFilter">
             </mat-header-cell>
-            <mat-cell *matCellDef="let timeline">{{ timeline.activity_name }}</mat-cell>
+            <mat-cell *matCellDef="let timeline">{{ timeline.activity_name | titlecase }}</mat-cell>
         </ng-container>
 
         <!-- Colonne nom du compte de dépense -->
@@ -49,7 +49,7 @@
             <mat-header-cell *matHeaderCellDef class="on-small-screen-hide">
                 <input class="custom-filter" matInput placeholder="Dépense" (ngModelChange)="onFilterChanged()" [formControl]="expenseFilter">
             </mat-header-cell>
-            <mat-cell *matCellDef="let timeline" class="on-small-screen-hide">{{ timeline.expense_name }}</mat-cell>
+            <mat-cell *matCellDef="let timeline" class="on-small-screen-hide">{{ timeline.expense_name | titlecase }}</mat-cell>
         </ng-container>
     
         <!-- Colonne action -->

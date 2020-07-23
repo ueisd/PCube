@@ -16,28 +16,32 @@ class TimelineRequest:
         Permet d'insère une nouvelle ligne de temps dans la base de données.
         La fonctionne retourne une ligne de temps avec son nouvel identifiant.
         """
-
-        cursor = self.connection.cursor()
-        cursor.execute("insert into timeline(day_of_week, punch_in, punch_out,"
-                       " project_id, accounting_time_category_id,"
-                       " activity_id, user_id)"
-                       " values(?, ?, ?, ?, ?, ?, ?)",
-                       (timeline_dict["day_of_week"],
-                        timeline_dict["punch_in"], timeline_dict["punch_out"],
-                        timeline_dict["project_id"],
-                        timeline_dict["accounting_time_category_id"],
-                        timeline_dict["activity_id"],
-                        timeline_dict["user_id"]))
-        self.connection.commit()
-        id = cursor.lastrowid
-        cursor.close()
-        timeline_dict["id"] = id
-        return timeline_dict
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute("insert into timeline(day_of_week, punch_in, punch_out,"
+                        " project_id, expense_account_id,"
+                        " activity_id, user_id)"
+                        " values(?, ?, ?, ?, ?, ?, ?)",
+                        (timeline_dict["day_of_week"],
+                            timeline_dict["punch_in"], timeline_dict["punch_out"],
+                            timeline_dict["project_id"],
+                            timeline_dict["expense_account_id"],
+                            timeline_dict["activity_id"],
+                            timeline_dict["user_id"]))
+            self.connection.commit()
+            id = cursor.lastrowid
+            cursor.close()
+            timeline_dict["id"] = id
+        except sqlite3.Error:
+            timeline_dict["id"] = -999
+        finally:
+            return timeline_dict
 
     def checkUniqueConstraint(self, timeline_dict):
         cursor = self.connection.cursor()
         cursor.execute("select * from timeline where user_id = ?"
-                       " and day_of_week = ? and punch_in = ? and punch_out = ?",
+                       " and day_of_week = ? and"
+                       " punch_in = ? and punch_out = ?",
                        (timeline_dict["user_id"], timeline_dict["day_of_week"],
                         timeline_dict["punch_in"], timeline_dict["punch_out"]))
         data = cursor.fetchall()
@@ -50,25 +54,25 @@ class TimelineRequest:
         cursor.execute(
             "select timeline.id, day_of_week, punch_in, punch_out,"
             " project.name as project_name,"
-            " activity.name as activity_name, accounting_time_category.name"
+            " activity.name as activity_name, expense_account.name"
             " as expense_name, "
             " user.first_name as first_name, user.last_name as last_name"
             " from timeline"
             " inner join project on timeline.project_id = project.id"
             " inner join activity on timeline.activity_id = activity.id"
-            " inner join accounting_time_category on"
-            " timeline.accounting_time_category_id ="
-            " accounting_time_category.id "
+            " inner join expense_account on"
+            " timeline.expense_account_id ="
+            " expense_account.id "
             " inner join user on timeline.user_id = user.id"
             " where day_of_week LIKE ? and project.name LIKE ?"
             " and activity.name LIKE ? and "
             " (user.first_name LIKE ? or user.last_name LIKE ?)"
-            " and accounting_time_category.name LIKE ?"
+            " and expense_account.name LIKE ?"
             " ORDER BY day_of_week DESC",
             ('%'+timeline.day_of_week+'%', '%'+timeline.project_name+'%',
              '%'+timeline.activity_name+'%', '%'+timeline.member_name+'%',
              '%'+timeline.member_name+'%',
-             '%'+timeline.accounting_time_category_name+'%'))
+             '%'+timeline.expense_account_name+'%'))
         data = cursor.fetchall()
         cursor.close()
         return data
@@ -147,8 +151,8 @@ class TimelineRequest:
                        + "     END"
                        + " ) END"
                        + ") as summline "
-                       + "from accounting_time_category a LEFT JOIN timeline t"
-                       + " ON a.id = t.accounting_time_category_id"
+                       + "from expense_account a LEFT JOIN timeline t"
+                       + " ON a.id = t.expense_account_id"
                        + " group by a.id"
                        )
         # "DATEDIFF(year, '2017/08/25', '2011/08/25')"
@@ -161,11 +165,11 @@ class TimelineRequest:
         cursor = self.connection.cursor()
         cursor.execute("update timeline set day_of_week = ?, punch_in = ?,"
                        " punch_out = ?, project_id = ?,"
-                       " accounting_time_category_id = ?, activity_id = ?,"
-                       " user_id = ? where id = ?",
+                       " expense_account_id = ?, activity_id = ?, user_id = ?"
+                       " where id = ?",
                        (timeline.day_of_week, timeline.punch_in,
                         timeline.punch_out, timeline.project_id,
-                        timeline.accounting_time_category_id,
-                        timeline.activity_id, timeline.user_id, timeline.id))
+                        timeline.expense_account_id, timeline.activity_id,
+                        timeline.user_id, timeline.id))
         self.connection.commit()
         cursor.close()
