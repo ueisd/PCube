@@ -45,6 +45,9 @@ def create_timeline_from_json_dict():
 
     for timeline in timelines:
         timeline = query.insert(timeline)
+        if timeline["id"] < 0:
+            log.error("Contrainte unique pour ligne de temps non respecté")
+
 
     return jsonify({"timelines": timelines}), 201
 
