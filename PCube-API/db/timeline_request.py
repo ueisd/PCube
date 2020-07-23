@@ -16,23 +16,26 @@ class TimelineRequest:
         Permet d'insère une nouvelle ligne de temps dans la base de données.
         La fonctionne retourne une ligne de temps avec son nouvel identifiant.
         """
-
-        cursor = self.connection.cursor()
-        cursor.execute("insert into timeline(day_of_week, punch_in, punch_out,"
-                       " project_id, accounting_time_category_id,"
-                       " activity_id, user_id)"
-                       " values(?, ?, ?, ?, ?, ?, ?)",
-                       (timeline_dict["day_of_week"],
-                        timeline_dict["punch_in"], timeline_dict["punch_out"],
-                        timeline_dict["project_id"],
-                        timeline_dict["accounting_time_category_id"],
-                        timeline_dict["activity_id"],
-                        timeline_dict["user_id"]))
-        self.connection.commit()
-        id = cursor.lastrowid
-        cursor.close()
-        timeline_dict["id"] = id
-        return timeline_dict
+        try:
+            cursor = self.connection.cursor()
+            cursor.execute("insert into timeline(day_of_week, punch_in, punch_out,"
+                        " project_id, accounting_time_category_id,"
+                        " activity_id, user_id)"
+                        " values(?, ?, ?, ?, ?, ?, ?)",
+                        (timeline_dict["day_of_week"],
+                            timeline_dict["punch_in"], timeline_dict["punch_out"],
+                            timeline_dict["project_id"],
+                            timeline_dict["accounting_time_category_id"],
+                            timeline_dict["activity_id"],
+                            timeline_dict["user_id"]))
+            self.connection.commit()
+            id = cursor.lastrowid
+            cursor.close()
+            timeline_dict["id"] = id
+        except sqlite3.Error:
+            timeline_dict["id"] = -999
+        finally:
+            return timeline_dict
 
     def checkUniqueConstraint(self, timeline_dict):
         cursor = self.connection.cursor()

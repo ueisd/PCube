@@ -30,8 +30,6 @@ export class TimelineService {
   }
 
   updateTimeline(timeline: TimelineItem): Observable<TimelineItem> {
-
-    console.log(timeline);
     const opts = {
       headers: new HttpHeaders({
         'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
