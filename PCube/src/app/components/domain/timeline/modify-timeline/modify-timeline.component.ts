@@ -71,10 +71,6 @@ export class ModifyTimelineComponent implements OnInit {
 
     timeline.id = this.timeline.id;
     timeline.user_id = this.user.id;
-    timeline.project_id = this.project.id;
-    timeline.activity_id = this.activity.id;
-    timeline.expense_account_id = this.account.id;
-
     timeline.day_of_week = this.dateFormatISO8601(this.workingShifts[0].date);
     timeline.punch_in = this.workingShifts[0].shift[0].begin;
     timeline.punch_out = this.workingShifts[0].shift[0].end;

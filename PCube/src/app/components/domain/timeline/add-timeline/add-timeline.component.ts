@@ -65,9 +65,6 @@ export class AddTimelineComponent implements OnInit {
       workingShift.shift.forEach(shift => {
         let timeline = new TimelineItem();
         timeline.user_id = this.user.id;
-        timeline.project_id = this.project.id;
-        timeline.activity_id = this.activity.id;
-        timeline.expense_account_id = this.account.id;
         timeline.day_of_week = this.dateFormatISO8601(workingShift.date);
         timeline.punch_in = shift.begin;
         timeline.punch_out = shift.end;
