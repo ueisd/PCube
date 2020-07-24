@@ -1,4 +1,5 @@
 # coding=utf-8
+import json
 from flask import Flask
 from flask import request
 from flask import abort
@@ -95,19 +96,19 @@ def refresh_api():
 @auth.route('admin-check', methods=['GET'])
 @admin_required
 def admin_check():
-    return {}
+    return json.dumps(True)
 
 
 @auth.route('project-manager-check', methods=['GET'])
 @project_manager_required
 def project_manager_check():
-    return {}
+    return json.dumps(True)
 
 
 @auth.route('member-check', methods=['GET'])
 @member_required
 def member_check():
-    return {}
+    return json.dumps(True)
 
 
 @auth.errorhandler(JsonValidationError)

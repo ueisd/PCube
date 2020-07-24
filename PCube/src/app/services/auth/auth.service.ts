@@ -3,7 +3,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { throwError, BehaviorSubject, Observable } from 'rxjs';
-import { catchError, map, mergeMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { UserAuth } from 'src/app/models/user-auth';
@@ -13,6 +13,9 @@ const LOGIN_API = environment.api_url + '/api/auth/login';
 const LOGOUT_API = environment.api_url + '/api/auth/logout';
 const INFO_API = environment.api_url + '/api/auth/info';
 const REFRESH_API = environment.api_url + '/api/auth/refresh';
+const ADMIN_CHECK = environment.api_url + '/api/auth/admin-check';
+const PM_CHECK = environment.api_url + '/api/auth/project-manager-check';
+const MEMBER_CHECK = environment.api_url + '/api/auth/member-check';
 const ACCESS_LEVEL_API = environment.api_url + '/api/auth/access-level';
 
 class LoginResponse {
@@ -133,17 +136,35 @@ export class AuthService {
   }
 
   // User is an administrator
-  isAdmin(): boolean {
-    return localStorage.getItem('role') === 'admin';
+  isAdmin(): Observable<boolean>{
+    // now get user info
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<boolean>(ADMIN_CHECK, opts);
   }
 
   // User is a project manager
-  isProjectManager(): boolean {
-    return localStorage.getItem('role') === 'project_manager'
+  isProjectManager(): Observable<boolean> {
+    // now get user info
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<boolean>(PM_CHECK, opts);
   }
 
-  isMember(): boolean {
-    return localStorage.getItem('role') === 'member'
+  isMember(): Observable<boolean> {
+    // now get user info
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    };
+    return this.http.get<boolean>(MEMBER_CHECK, opts);
   }
 
   // get email
