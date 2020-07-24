@@ -43,7 +43,7 @@ export class AuthService {
     } else {
       console.error(`bad auth response: ${error.status}: ${error.statusText} ${JSON.stringify(error.error)}`);
     }
-    return throwError('Login attempt failed');
+    return throwError("Identifiant invalid");
   }
 
   // subscribe to get authentication status updates
