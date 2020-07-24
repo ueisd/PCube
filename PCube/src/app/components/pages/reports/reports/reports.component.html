@@ -32,7 +32,7 @@
                                     </div>
                                     <mat-chip-list class="mat-chip-list-stacked">
                                         <mat-chip color="primary" *ngFor="let projet of reportRequest.projects">
-                                            {{ projet.name }}
+                                            {{ projet.name | titlecase }}
                                         </mat-chip>
                                     </mat-chip-list>
                                 </div>
@@ -50,7 +50,7 @@
                                     </div>
                                     <mat-chip-list class="mat-chip-list-stacked">
                                         <mat-chip color="primary" *ngFor="let activity of reportRequest.activitys">
-                                            {{ activity.name }}
+                                            {{ activity.name | titlecase }}
                                         </mat-chip>
                                     </mat-chip-list>
                                 </div>
@@ -69,7 +69,7 @@
                                     </div>
                                     <mat-chip-list class="mat-chip-list-stacked">
                                         <mat-chip color="primary" *ngFor="let user of reportRequest.users">
-                                            {{ user.display_string }}
+                                            {{ user.display_string | titlecase }}
                                         </mat-chip>
                                     </mat-chip-list>
                                 </div>
@@ -99,7 +99,7 @@
                         <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
                             <div class="width100">
                                 <div fxflex fxFlex="70%">
-                                    {{node.name}}
+                                    {{node.name | titlecase}}
                                 </div>
                                 <div fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
                                     {{ (node.sommeHeure) ? heureSommeToStr(node.sommeHeure) : '0h00' }}
@@ -115,7 +115,7 @@
                                             {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                                         </mat-icon>
                                     </button>
-                                    {{node.name}}
+                                    {{node.name | titlecase}}
                                 </div>
                                 <div fxflex fxFlex="30%" fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
                                     {{ (node.sommeHeure) ? heureSommeToStr(node.sommeHeure) : '0h00' }}

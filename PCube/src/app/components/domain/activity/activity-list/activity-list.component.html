@@ -6,7 +6,7 @@
             </mat-header-cell>
             <mat-cell *matCellDef="let activity">
                 <div id="showName-{{activity.id}}" style="text-align: left;">
-                    {{activity.name}}
+                    {{activity.name | titlecase }}
                 </div>
                 
             </mat-cell>
