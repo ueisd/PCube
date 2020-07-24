@@ -68,8 +68,8 @@ def update_timeline_from_json_dict():
     timeline.punch_out = escape(data["punch_out"]).strip()
     timeline.project_id = escape(data["project_id"]).strip()
     timeline.activity_id = escape(data["activity_id"]).strip()
-    timeline.accounting_time_category_id = escape(
-        data["accounting_time_category_id"]).strip()
+    timeline.expense_account_id = escape(
+        data["expense_account_id"]).strip()
     timeline.user_id = escape(data["user_id"]).strip()
     timeline.day_of_week = escape(data["day_of_week"]).strip()
 
@@ -114,7 +114,7 @@ def get_all_user():
     timeline = TimelineFilter()
     timeline.day_of_week = escape(
         request.args.get('day_of_week', "")).upper().strip()
-    timeline.accounting_time_category_name = escape(
+    timeline.expense_account_name = escape(
         request.args.get('expense_name', "")).upper().strip()
     timeline.activity_name = escape(
         request.args.get('activity_name', "")).upper().strip()
@@ -184,7 +184,7 @@ def sommationAscendante(listeNoeuds, parent):
 
 
 @timeline.route('/testsum', methods=['POST'])
-@project_manager_required
+@member_required
 @schema.validate(report_request_schema)
 def testsum():
     """

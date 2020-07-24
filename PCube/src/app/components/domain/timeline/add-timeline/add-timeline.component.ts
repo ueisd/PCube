@@ -72,7 +72,7 @@ export class AddTimelineComponent implements OnInit {
         if(!isForValidationOnly){
           timeline.project_id = this.project.id;
           timeline.activity_id = this.activity.id;
-          timeline.accounting_time_category_id = this.account.id;
+          timeline.expense_account_id = this.account.id;
         }
 
         timelines.push(timeline);

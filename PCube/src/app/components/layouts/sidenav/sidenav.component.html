@@ -17,7 +17,7 @@
         <mat-icon>timelapse</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Ligne de temps</span>
     </a>
 
-    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item (click)="openReportReqDialog()">
+    <a *ngIf="accessLevel == 1 || accessLevel == 2 || accessLevel == 3" mat-list-item (click)="openReportReqDialog()">
         <mat-icon>add</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Générer rapport</span>
     </a>
 

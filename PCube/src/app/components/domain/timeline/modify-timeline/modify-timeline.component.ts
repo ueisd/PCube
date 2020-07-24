@@ -71,7 +71,6 @@ export class ModifyTimelineComponent implements OnInit {
 
     timeline.id = this.timeline.id;
     timeline.user_id = this.user.id;
-
     timeline.day_of_week = this.dateFormatISO8601(this.workingShifts[0].date);
     timeline.punch_in = this.workingShifts[0].shift[0].begin;
     timeline.punch_out = this.workingShifts[0].shift[0].end;
@@ -79,7 +78,7 @@ export class ModifyTimelineComponent implements OnInit {
     if(!isForValidationOnly){
       timeline.project_id = this.project.id;
       timeline.activity_id = this.activity.id;
-      timeline.accounting_time_category_id = this.account.id;
+      timeline.expense_account_id = this.account.id;
     }
 
     return timeline;
@@ -149,7 +148,7 @@ export class ModifyTimelineComponent implements OnInit {
     this.memberComponent.setAlreadyFoundItem(false, timeline.user_id.toString());
     this.projectComponent.setAlreadyFoundItem(false, timeline.project_id.toString());
     this.activityComponent.setAlreadyFoundItem(false, timeline.activity_id.toString());
-    this.expenseComponent.setAlreadyFoundItem(false, timeline.accounting_time_category_id.toString());
+    this.expenseComponent.setAlreadyFoundItem(false, timeline.expense_account_id.toString());
 
     let workingShift = new WorkingShift(this.generateDateFromISO6801(timeline.day_of_week));
     let shift = new Shift(timeline.punch_in, timeline.punch_out);
