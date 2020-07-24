@@ -3,6 +3,7 @@ import { LogoutComponent } from '../logout/logout.component';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth/auth.service';
 import { User } from 'src/app/models/user';
+import { ContactUsComponent } from '../../pages/contact-us/contact-us.component';
 
 @Component({
   selector: 'app-header',
@@ -12,6 +13,7 @@ import { User } from 'src/app/models/user';
 export class HeaderComponent implements OnInit {
 
   @ViewChild(LogoutComponent) logOutComponent;
+  @ViewChild(ContactUsComponent) contactUsComponent;
 
   user:User = new User();
 
@@ -23,6 +25,8 @@ export class HeaderComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    //console.log(this.user);
+    //this.contactUsComponent.user = this.user;
   }
 
   logout() {

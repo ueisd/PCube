@@ -1,7 +1,13 @@
 <mat-toolbar class="header">
     <mat-toolbar-row>
-      <p>PCube</p>
+      <a style="text-decoration:none;" [routerLink]="'/'"><h1 style="color:white;">PCube</h1></a>
       <span class="example-spacer"></span>
+      <div>
+        <a mat-button class="white" [routerLink]="'/'">Accueil</a>
+        <a mat-button class="white" [routerLink]="'/contactez-nous'">Contactez Nous</a>
+        <a mat-button class="white" href="http://www.lepetitpeuple.org/">Le Petit Peuple</a>
+        <a mat-button class="white" href="https://www.facebook.com/Lepetitpeuple">Facebook</a>
+      </div>
       <mat-menu #appMenu="matMenu">
         <mat-list>
           <mat-list-item>
