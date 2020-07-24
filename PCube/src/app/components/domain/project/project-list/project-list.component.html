@@ -1,6 +1,6 @@
 <div>
     <div class="mat-tree-input">
-      <input class="filter" matInput placeholder="Nom du projet parent" (ngModelChange)="onFilterChanged()" [formControl]="nameFilter">
+      <input class="filter" matInput placeholder="Nom du projet parent" (ngModelChange)="onFilterChanged()" [formControl]="nameFilter" autocomplete="off">
     </div>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
         <!-- This is the tree node template for leaf nodes -->

@@ -8,7 +8,7 @@
         </div>
         <mat-form-field class="full-width">
             <mat-label>Nom du projet</mat-label>
-            <input matInput placeholder="Nom du projet" formControlName="projectName">
+            <input matInput placeholder="Nom du projet" formControlName="projectName" autocomplete="off">
             <mat-error *ngFor="let validation of validationMessages.projectName">
                 <mat-error class="error-message" 
                 *ngIf="newProjectForm.get('projectName').hasError(validation.type) &&

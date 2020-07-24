@@ -7,7 +7,7 @@
         </div>
         <mat-form-field class="full-width">
             <mat-label>Nom du compte de depense</mat-label>
-            <input matInput placeholder="Nom du compte" formControlName="name">
+            <input matInput placeholder="Nom du compte" formControlName="name" autocomplete="off">
             <mat-error *ngFor="let validation of validationMessages.name">
                 <mat-error class="error-message" 
                 *ngIf="ExpenseForm.get('name').hasError(validation.type) &&
