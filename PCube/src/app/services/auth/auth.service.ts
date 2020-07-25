@@ -7,7 +7,7 @@ import { catchError, map, mergeMap, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { environment } from 'src/environments/environment';
 import { UserAuth } from 'src/app/models/user-auth';
-
+import { User } from 'src/app/models/user';
 
 const LOGIN_API = environment.api_url + '/api/auth/login';
 const LOGOUT_API = environment.api_url + '/api/auth/logout';
@@ -17,6 +17,7 @@ const ADMIN_CHECK = environment.api_url + '/api/auth/admin-check';
 const PM_CHECK = environment.api_url + '/api/auth/project-manager-check';
 const MEMBER_CHECK = environment.api_url + '/api/auth/member-check';
 const ACCESS_LEVEL_API = environment.api_url + '/api/auth/access-level';
+const AUTH_USER = environment.api_url + '/api/auth/authenticated-user';
 
 class LoginResponse {
   accessToken: string;
@@ -133,6 +134,15 @@ export class AuthService {
       })
     };
     return this.http.get<UserAuth>(INFO_API, opts);
+  }
+
+  getAuthenticatedUser(): Observable<User> {
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
+      })
+    }
+    return this.http.get<User>(AUTH_USER, opts);
   }
 
   // User is an administrator

@@ -20,6 +20,7 @@ import { AddExpenseAccountComponent } from './components/domain/expense-account/
 
 import { ReportsComponent } from './components/pages/reports/reports/reports.component';
 
+import { ContactUsComponent } from './components/pages/contact-us/contact-us.component';
 
 import { TimelineComponent } from './components/pages/timeline/timeline.component';
 import { NotFoundComponent } from './components/pages/not-found/not-found.component';
@@ -40,6 +41,10 @@ const routes: Routes = [
         path: 'rapport',
         component: ReportsComponent,
         canActivate: [MemberGuard]
+      },
+      {
+        path: 'contactez-nous',
+        component: ContactUsComponent
       },
       {
         path: 'gestion-des-projets',

@@ -59,6 +59,7 @@ import { GlobalHttpInterceptorService } from './services/Interceptor/GlobalHttpI
 import { ServerDownComponent } from './components/pages/server-down/server-down.component';
 import { RequestFormComponent } from './components/domain/reports/request-form/request-form/request-form.component';
 import { ReportsComponent } from './components/pages/reports/reports/reports.component';
+import { ContactUsComponent } from './components/pages/contact-us/contact-us.component';
 
 
 @NgModule({
@@ -104,6 +105,7 @@ import { ReportsComponent } from './components/pages/reports/reports/reports.com
     ServerDownComponent,
     RequestFormComponent,
     ReportsComponent,
+    ContactUsComponent,
   ],
   imports: [
     MatDialogModule,

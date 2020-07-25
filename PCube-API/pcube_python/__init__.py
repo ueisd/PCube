@@ -8,6 +8,7 @@ from .user_routes import user
 from flask_jwt_extended import JWTManager
 from .expense_account_routes import expense_account
 from .timeline_routes import timeline
+from .utils_routes import utils
 
 
 def create_app():
@@ -23,6 +24,7 @@ def create_app():
     app.register_blueprint(user, url_prefix='/api/user')
     app.register_blueprint(expense_account, url_prefix='/api/expense-account')
     app.register_blueprint(timeline, url_prefix='/api/timeline')
+    app.register_blueprint(utils, url_prefix='/api/utils')
 
     JWTManager(app)
 

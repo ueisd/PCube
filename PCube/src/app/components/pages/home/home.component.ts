@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit {
   @ViewChild("drawer") drawerComponent;
   @ViewChild("header") headerComponent:HeaderComponent;
 
-
   authenticated: boolean;
   accessLevel: number;
 
@@ -60,7 +59,6 @@ export class HomeComponent implements OnInit {
 
     this.isDrawerHidden = false;
     this.authSubscription = this.auth.getAccessLevel().subscribe(userInfo => {
-      
       if(this.headerComponent)
         this.setHeaderUserInfo(userInfo);
 
