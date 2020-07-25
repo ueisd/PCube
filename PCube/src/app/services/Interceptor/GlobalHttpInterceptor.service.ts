@@ -13,16 +13,20 @@ export class GlobalHttpInterceptorService implements HttpInterceptor {
     private auth: AuthService
   ) { }
 
-  onAccessDenied(){
+  onAccessDenied() {
+    this.router.navigate(['/']);
+  }
 
-    if(localStorage.getItem('email') && localStorage.getItem('accessToken')){
+  onMaliciousAction() {
+
+    if (localStorage.getItem('email') && localStorage.getItem('accessToken')) {
       localStorage.clear();
       this.router.navigate(['/']).then(() => {
         window.location.reload();
         return throwError("Expired credential");
       });
-      
-    }else{
+
+    } else {
       return throwError("Invalid credential");
     }
   }
@@ -31,11 +35,15 @@ export class GlobalHttpInterceptorService implements HttpInterceptor {
 
     return next.handle(req).pipe(
       catchError((error) => {
-     
-        if(error.status >= 500 && error.status <= 599){
-            this.router.navigate(["serveur-indisponible"]);
-            return throwError("The server is not responding");
-        } else if (error.status == 401 || error.status == 403) {
+
+        if (error.status >= 500 && error.status <= 599) {
+          this.router.navigate(["serveur-indisponible"]);
+          return throwError("The server is not responding");
+        } else if (error.status == 403) {
+          this.onAccessDenied();
+        } else if (error.status == 401) {
+          this.onMaliciousAction();
+        } else if (error.status == 422) {
           this.onAccessDenied();
         }
 

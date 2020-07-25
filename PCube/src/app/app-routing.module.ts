@@ -39,7 +39,8 @@ const routes: Routes = [
       },
       {
         path: 'rapport',
-        component: ReportsComponent
+        component: ReportsComponent,
+        canActivate: [MemberGuard]
       },
       {
         path: 'contactez-nous',

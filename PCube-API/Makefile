@@ -1,6 +1,5 @@
 default: run
 
-
 run: 
 	flask run
 
@@ -11,3 +10,9 @@ regenerate-db:
 
 pycodestyle:
 	pycodestyle ../PCube-API
+
+update-pip:
+	pip install --upgrade pip
+
+install-requirements:
+	pip install -r requirements.txt

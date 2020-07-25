@@ -9,27 +9,19 @@ import { AuthService } from './auth.service';
 })
 export class AdminGuard implements CanActivate, CanActivateChild {
   constructor(private auth: AuthService,
-              private router: Router) { }
+    private router: Router) { }
 
   canActivate(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    if (this.auth.isAdmin()) {
-      return true;
-    } else {
-      this.router.navigate(['/']);
-    }
+    return this.auth.isAdmin();
   }
 
   canActivateChild(
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    if (this.auth.isAdmin()) {
-      return true;
-    } else {
-      this.router.navigate(['/']);
-    }
+    return this.auth.isAdmin();
   }
 }

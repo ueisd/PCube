@@ -1,9 +1,9 @@
 /*************************************/
 /*            TABLE ROLE             */
 /*************************************/
-INSERT INTO role(id, role_name, access_level) VALUES(1, 'admin', 1);
-INSERT INTO role(id, role_name, access_level) VALUES(2, 'project_manager', 2);
-INSERT INTO role(id, role_name, access_level) VALUES(3, 'member', 3);
+INSERT INTO role(id, role_name, access_level) VALUES(1, 'ADMIN', 1);
+INSERT INTO role(id, role_name, access_level) VALUES(2, 'GESTIONNAIRE', 2);
+INSERT INTO role(id, role_name, access_level) VALUES(3, 'MEMBRE', 3);
 
 /*************************************/
 /*              TABLE USER           */

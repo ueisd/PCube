@@ -2,11 +2,11 @@
     <mat-table [dataSource]="dataSource" class="mat-elevation-z8">
         <ng-container matColumnDef="name">
             <mat-header-cell *matHeaderCellDef>
-                <input class="name-filter" matInput placeholder="Nom" (ngModelChange)="onNameFilterChanged()" [formControl]="nameFilter">
+                <input class="name-filter" matInput placeholder="Nom" (ngModelChange)="onNameFilterChanged()" [formControl]="nameFilter" autocomplete="off">
             </mat-header-cell>
             <mat-cell *matCellDef="let activity">
                 <div id="showName-{{activity.id}}" style="text-align: left;">
-                    {{activity.name}}
+                    {{activity.name | titlecase }}
                 </div>
                 
             </mat-cell>

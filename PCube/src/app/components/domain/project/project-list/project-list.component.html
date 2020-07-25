@@ -1,6 +1,6 @@
 <div>
     <div class="mat-tree-input">
-      <input class="filter" matInput placeholder="Nom du projet parent" (ngModelChange)="onFilterChanged()" [formControl]="nameFilter">
+      <input class="filter" matInput placeholder="Nom du projet parent" (ngModelChange)="onFilterChanged()" [formControl]="nameFilter" autocomplete="off">
     </div>
     <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
         <!-- This is the tree node template for leaf nodes -->
@@ -9,7 +9,7 @@
           <div class="container width100">
             <div fxflex fxFlex="80%">
               <button mat-icon-button disabled></button>
-              {{node.name}}
+              {{node.name | titlecase}}
             </div>
             <div fxflex fxFlex="20%"
             fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
@@ -45,7 +45,7 @@
                   {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
                 </mat-icon>
               </button>
-              {{node.name}}
+              {{node.name | titlecase}}
             </div>
             <div fxflex fxFlex="50%"
             fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
