@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { SidenavComponent } from 'src/app/components/layouts/sidenav/sidenav.component';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../layouts/header/header.component';
+import { ContactUsComponent } from '../contact-us/contact-us.component';
 
 @Component({
   selector: 'app-home',
@@ -15,7 +16,7 @@ export class HomeComponent implements OnInit {
   @ViewChild(SidenavComponent) sideNavReference;
   @ViewChild("drawer") drawerComponent;
   @ViewChild("header") headerComponent:HeaderComponent;
-
+  @ViewChild(ContactUsComponent) contactUsComponent:ContactUsComponent;
 
   authenticated: boolean;
   accessLevel: number;
@@ -49,6 +50,12 @@ export class HomeComponent implements OnInit {
     this.headerComponent.user.last_name = user.last_name;
   }
 
+  setContactUsUserInfo(user){
+    this.contactUsComponent.user.email = user.email;
+    this.contactUsComponent.user.first_name = user.first_name;
+    this.contactUsComponent.user.last_name = user.last_name;
+  }
+
   setSideNavUserInfo(user){
     this.sideNavReference.user.email = user.email;
     this.sideNavReference.user.first_name = user.first_name;
@@ -60,9 +67,13 @@ export class HomeComponent implements OnInit {
 
     this.isDrawerHidden = false;
     this.authSubscription = this.auth.getAccessLevel().subscribe(userInfo => {
-      
+      console.log(this.headerComponent);
+      console.log(this.contactUsComponent);
       if(this.headerComponent)
         this.setHeaderUserInfo(userInfo);
+
+      if(this.contactUsComponent)
+        this.setContactUsUserInfo(userInfo);
 
       if(this.sideNavReference)
         this.setSideNavUserInfo(userInfo);
