@@ -10,6 +10,7 @@ from ..utility.auth import (
     auth_required, auth_refresh_required, AuthenticationError,
     admin_required, project_manager_required, member_required
 )
+import base64
 import yaml
 import smtplib
 from email.mime.text import MIMEText
@@ -27,7 +28,7 @@ except IOError as e:
 content = yaml.load(stream, Loader=yaml.FullLoader)
 
 @utils.route('/contact-us', methods=['POST'])
-#@member_required
+@auth_required
 def email_comment():
     """
     Permet d'envoyer un courriel avec un commentaire.
@@ -36,7 +37,7 @@ def email_comment():
     last_name = escape(data['last_name'].strip())
     first_name = escape(data['first_name'].strip())
     email = escape(data['email'].strip())
-    comment = escape(data['comment'].strip())
+    comment = data['comment'].strip()
 
     if last_name is None:
         log.error("Le nom de famille est manquant!")
@@ -50,11 +51,6 @@ def email_comment():
     if comment is None:
         log.error("Le commentaire est manquant!")
         abort(404)
-    
-    print(last_name)
-    print(first_name)
-    print(email)
-    print(comment)
 
     send_email(last_name, first_name, email, comment)
     return jsonify(last_name, first_name, email, comment)
@@ -62,8 +58,6 @@ def email_comment():
 def send_email(last_name, first_name, email, comment):
     username = content['accounts']['gmail']['username']
     password = content['accounts']['gmail']['password']
-    print(username)
-    print(password)
 
     source = username
     destination = username
@@ -77,7 +71,7 @@ def send_email(last_name, first_name, email, comment):
     body += ")"
     body += "\n\nCommentaire : \n"
     body += comment
-    
+
     msg = MIMEMultipart()
     msg['Subject'] = subject
     msg['From'] = source
@@ -89,5 +83,6 @@ def send_email(last_name, first_name, email, comment):
     server.starttls()
     server.login(username, password)
     text = msg.as_string()
+
     server.sendmail(source, destination, text)
     server.quit()

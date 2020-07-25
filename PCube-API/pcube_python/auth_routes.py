@@ -92,6 +92,15 @@ def refresh_api():
         abort(403)
 
 
+@auth.route('authenticated-user', methods=['GET'])
+@auth_required
+def get_authenticated_user_info():
+    try:
+        return(jsonify(get_authenticated_user()))
+    except AuthenticationError as error:
+        log.error('authentication error %s', error)
+        abort(403)
+
 @auth.route('admin-check', methods=['GET'])
 @admin_required
 def admin_check():
