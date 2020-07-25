@@ -76,7 +76,6 @@ export class AddUserComponent implements OnInit {
       });
     }else{
       this.isAdded = false;
-      console.log(passwordConfirmation, password, password === passwordConfirmation)
     }
   }
 

@@ -31,7 +31,6 @@ export class UsersComponent implements OnInit {
     this.fileNameDialogRef = this.dialog.open(AddUserComponent, dialogConfig);
 
     this.fileNameDialogRef.afterClosed().subscribe(result => { 
-        console.log(result);
         this.child.refreshList();
 
         if(result == "Canceled" || result == undefined){

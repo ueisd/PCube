@@ -19,7 +19,6 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     private auth: AuthService
     ) { 
-    this.user.email = localStorage.getItem('email');
   }
 
   ngOnInit(): void {
