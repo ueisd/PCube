@@ -57,7 +57,6 @@ export class ContactUsComponent implements OnInit {
   }
 
   onSubmit() {
-    console.log(this.user);
     if(this.contactUsForm.valid){
       const email = this.contactUsForm.controls['email'].value;
       const firstName = this.contactUsForm.controls['firstName'].value;
