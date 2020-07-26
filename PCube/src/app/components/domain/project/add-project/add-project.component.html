@@ -3,7 +3,7 @@
 
     <div class="container">
         <div *ngIf="isAddedFailled" class="alert alert-danger" role="alert">
-            Une erreur s'est produit lors de la soumission du formulaire.<br />
+            Une erreur s'est produite lors de la soumission du formulaire.<br />
             Veuillez vérifier les champs et essayer de nouveau.
         </div>
         <mat-form-field class="full-width">
@@ -23,15 +23,16 @@
         <div fxflex class="container" fxLayout="row" fxLayoutAlign="start center">
             <mat-label> Le projet {{ newProjectForm.get('projectName').value }} &nbsp;&nbsp;</mat-label>
             <mat-slide-toggle (ngModelChange)="isChildChecked($event)" formControlName="isChild">
-                {{ (newProjectForm.get('isChild').value) ? "sera enfant de:" : "sera à la racine" }}
+                {{ (newProjectForm.get('isChild').value) ? "sera enfant de: " : "sera à la racine." }}
                 </mat-slide-toggle>
         </div>
         <div fxflex fxFlex="50%" *ngIf="newProjectForm.value.isChild">
 
                 <ng-select 
+                    class="margin-left"
                     [items]="parentOptions"
                     bindLabel="nomAffichage"
-                    placeholder="projet parent choisi"
+                    placeholder="Projet parent choisi"
                     appendTo="body"
                     formControlName="parent">         
                 </ng-select>

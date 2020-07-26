@@ -28,7 +28,7 @@ export class AddProjectComponent implements OnInit {
   isAddedFailled: boolean = false;
   validationMessages = {
     'projectName': [
-        { type: 'required', message: 'Une Nom est requis' },
+        { type: 'required', message: 'Un nom est requis' },
         { type: 'minlength', message: 'Minimum 5 caractères' },
         { type: 'ereureNonUnique', message: 'Le nom du projet doit être unique' }
     ],

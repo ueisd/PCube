@@ -39,7 +39,7 @@ export class ProjectComponent implements OnInit {
       if (result == "Canceled" || result == undefined) {
         this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
       } else if (result) {
-        this.customSnackBar.openSnackBar('Le projet a été créée', 'notif-success');
+        this.customSnackBar.openSnackBar('Le projet a été créé', 'notif-success');
         this.projectListChild.refreshList({ expanded: true });
       }
     }

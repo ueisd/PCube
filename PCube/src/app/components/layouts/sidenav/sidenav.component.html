@@ -1,24 +1,24 @@
 <mat-nav-list class="custom-sidenav">
 
     <a *ngIf="accessLevel == 1" mat-list-item routerLink="/gestion-des-utilisateurs">
-        <mat-icon>account_box</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Utilisateurs</span>
+        <mat-icon>account_box</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Utilisateurs</span>
     </a>
     <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/gestion-des-activités">
-        <mat-icon>local_activity</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Activités</span>
+        <mat-icon>local_activity</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Activités</span>
     </a>
     <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/gestion-des-projets">
-        <mat-icon>source</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Projets</span>
+        <mat-icon>source</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Projets</span>
     </a>
     <a *ngIf="accessLevel == 1" mat-list-item routerLink="/gestion-des-comptes-de-depenses">
-        <mat-icon>monetization_on</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Comptes de Dépense</span>
+        <mat-icon>monetization_on</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Comptes de Dépense</span>
     </a>
 
     <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/gestion-des-lignes-de-temps">
-        <mat-icon>timelapse</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Ligne de temps</span>
+        <mat-icon>timelapse</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Ligne de temps</span>
     </a>
 
     <a *ngIf="accessLevel == 1 || accessLevel == 2 || accessLevel == 3" mat-list-item (click)="openReportReqDialog()">
-        <mat-icon>add</mat-icon><span class="nav-caption" *ngIf="isShowTitle">Générer rapport</span>
+        <mat-icon>add</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Générer rapport</span>
     </a>
 
 </mat-nav-list>

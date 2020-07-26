@@ -80,7 +80,7 @@ export class ReportsComponent implements OnInit {
     if(dateDebut == '' && dateFin == ''){
       chaineAff += 'Sans limite de période';
     }else{
-      chaineAff += 'Pour la prériode';
+      chaineAff += 'Pour la période';
       if (dateDebut != ''){
         chaineAff += ' commencant le ' + " " + this.afficherDate(DateManip.chaineToDate(dateDebut));
       }
@@ -89,6 +89,7 @@ export class ReportsComponent implements OnInit {
         chaineAff += ' se terminant le ' + this.afficherDate(DateManip.chaineToDate(dateFin));
       }
     }
+    chaineAff += '.';
     return chaineAff;
   }
 

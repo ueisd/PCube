@@ -31,7 +31,7 @@
         <!-- Colonne nom du projet -->
         <ng-container matColumnDef="projet">
             <mat-header-cell *matHeaderCellDef class="on-small-screen-hide">
-                <input class="custom-filter" matInput placeholder="Project" (ngModelChange)="onFilterChanged()" [formControl]="projectFilter" autocomplete="off">
+                <input class="custom-filter" matInput placeholder="Projet" (ngModelChange)="onFilterChanged()" [formControl]="projectFilter" autocomplete="off">
             </mat-header-cell>
             <mat-cell *matCellDef="let timeline" class="on-small-screen-hide">{{ timeline.project_name | titlecase }}</mat-cell>
         </ng-container>

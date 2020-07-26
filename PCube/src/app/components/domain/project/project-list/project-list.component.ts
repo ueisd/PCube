@@ -63,7 +63,7 @@ export class ProjectListComponent implements OnInit {
         this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
       } else if (result) {
         this.refreshList({ expanded: true });
-        this.customSnackBar.openSnackBar('Le projet a été modifiée', 'notif-success');
+        this.customSnackBar.openSnackBar('Le projet a été modifié', 'notif-success');
       }
     }
     );

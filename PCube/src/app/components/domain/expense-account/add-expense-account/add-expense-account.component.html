@@ -6,7 +6,7 @@
             Veuillez vérifier les champs et essayer de nouveau.
         </div>
         <mat-form-field class="full-width">
-            <mat-label>Nom du compte de depense</mat-label>
+            <mat-label>Nom du compte de dépense</mat-label>
             <input matInput placeholder="Nom du compte" formControlName="name" autocomplete="off">
             <mat-error *ngFor="let validation of validationMessages.name">
                 <mat-error class="error-message" 
@@ -22,15 +22,16 @@
         <div fxflex class="container" fxLayout="row" fxLayoutAlign="start center">
             <mat-label> Le compte {{ ExpenseForm.get('name').value }} &nbsp;&nbsp;</mat-label>
             <mat-slide-toggle (ngModelChange)="isChildChecked($event)" formControlName="isChild">
-                {{ (ExpenseForm.get('isChild').value) ? "sera enfant de:" : "sera à la racine" }}
+                {{ (ExpenseForm.get('isChild').value) ? "sera enfant de:" : "sera à la racine." }}
                 </mat-slide-toggle>
         </div>
 
         <div fxflex fxFlex="50%" *ngIf="ExpenseForm.value.isChild">
             <ng-select 
+                class="margin-left"
                 [items]="parentOptions"
                 bindLabel="nomAffichage"
-                placeholder="compte parent choisi"
+                placeholder="Compte parent choisi"
                 appendTo="body"
                 formControlName="parent">         
             </ng-select>
