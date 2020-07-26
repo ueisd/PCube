@@ -27,7 +27,7 @@
     <!-- Colonne rôle -->
     <ng-container matColumnDef="role">
       <mat-header-cell *matHeaderCellDef>
-        <input class="filter" matInput placeholder="Role" (ngModelChange)="onFilterChanged()" [formControl]="roleFilter" autocomplete="off">
+        <input class="filter" matInput placeholder="Rôle" (ngModelChange)="onFilterChanged()" [formControl]="roleFilter" autocomplete="off">
       </mat-header-cell>
       <mat-cell *matCellDef="let user"> {{user.role_name | titlecase}} </mat-cell>
     </ng-container>

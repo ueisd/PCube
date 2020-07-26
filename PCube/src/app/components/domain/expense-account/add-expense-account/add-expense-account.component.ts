@@ -26,7 +26,7 @@ export class AddExpenseAccountComponent implements OnInit {
   parentOptions: ExpenseAccountItem[];
   validationMessages = {
     'name': [
-        { type: 'required', message: 'Une Nom est requis' },
+        { type: 'required', message: 'Un nom est requis' },
         { type: 'minlength', message: 'Minimum 5 caractères' },
         { type: 'ereureNonUnique', message: 'Le nom du compte de dépense doit être unique' }
     ],

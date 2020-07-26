@@ -2,7 +2,7 @@
 <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
     <h2 mat-dialog-title>Génération d'un rapport</h2>
     <mat-dialog-content class="mat-typography">
-        <p>Ceci est le formulaire de requête  </p>
+        <p>Ceci est le formulaire de requête.</p>
         <div class="container"  fxLayout="row" fxLayoutAlign="start center">
             <div fxflex class="container" fxLayout="row" fxLayoutAlign="start center">
                 <mat-slide-toggle (ngModelChange)="isProjets($event)" formControlName="isProjets">
@@ -39,7 +39,7 @@
             </div>
         </div>
 
-        <div class="container"  fxLayout="row" fxLayoutAlign="start center">
+        <div class="container margin-bottom"  fxLayout="row" fxLayoutAlign="start center">
             <div fxflex class="container" fxLayout="row" fxLayoutAlign="start center">
                 <mat-slide-toggle *ngIf="!isMember" (ngModelChange)="isUsers($event)" formControlName="isUsers">
                     {{ (requestForm.get('isUsers').value) ? " limité aux utilisateurs: " : "Toutes les utilisateurs" }} &nbsp;&nbsp;
@@ -71,7 +71,7 @@
             <mat-datepicker #picker1></mat-datepicker>
         </mat-form-field>
 
-        <mat-form-field color="accent">
+        <mat-form-field color="accent" class="margin-left">
             <mat-label>Date de fin</mat-label>
             <input matInput [matDatepicker]="picker2" formControlName="dateFin" [errorStateMatcher]="matcher" placeholder="mm/jj/aaaa">
             <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
@@ -83,7 +83,7 @@
     </mat-dialog-content>
 
     <mat-dialog-actions align="end">
-        <button mat-button mat-dialog-close>Annuler</button>
-        <button mat-button type="submit" [disabled]="requestForm.invalid">Générer</button>
+        <button mat-raised-button color="warn" mat-dialog-close>Annuler</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="requestForm.invalid">Générer</button>
     </mat-dialog-actions>
 </form>

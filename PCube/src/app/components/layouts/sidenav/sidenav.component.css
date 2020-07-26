@@ -1,3 +1,7 @@
 .custom-sidenav .mat-expansion-panel-header{
     padding: 0 16px !important;
 }
+
+.margin-left {
+    margin-left: 10px;
+}
