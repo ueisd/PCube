@@ -27,6 +27,7 @@ except IOError as e:
     print("Erreur avec le fichier en lecture : ", e.strerror)
 content = yaml.load(stream, Loader=yaml.FullLoader)
 
+
 @utils.route('/contact-us', methods=['POST'])
 @auth_required
 def email_comment():
@@ -54,6 +55,7 @@ def email_comment():
 
     send_email(last_name, first_name, email, comment)
     return jsonify(last_name, first_name, email, comment)
+
 
 def send_email(last_name, first_name, email, comment):
     username = content['accounts']['gmail']['username']

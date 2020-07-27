@@ -18,12 +18,14 @@ class TimelineRequest:
         """
         try:
             cursor = self.connection.cursor()
-            cursor.execute("insert into timeline(day_of_week, punch_in, punch_out,"
-                        " project_id, expense_account_id,"
-                        " activity_id, user_id)"
-                        " values(?, ?, ?, ?, ?, ?, ?)",
-                        (timeline_dict["day_of_week"],
-                            timeline_dict["punch_in"], timeline_dict["punch_out"],
+            cursor.execute("insert into timeline(day_of_week,"
+                           " punch_in, punch_out,"
+                           " project_id, expense_account_id,"
+                           " activity_id, user_id)"
+                           " values(?, ?, ?, ?, ?, ?, ?)",
+                           (timeline_dict["day_of_week"],
+                            timeline_dict["punch_in"],
+                            timeline_dict["punch_out"],
                             timeline_dict["project_id"],
                             timeline_dict["expense_account_id"],
                             timeline_dict["activity_id"],

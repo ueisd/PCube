@@ -102,6 +102,7 @@ def get_authenticated_user_info():
         log.error('authentication error %s', error)
         abort(403)
 
+
 @auth.route('admin-check', methods=['GET'])
 @admin_required
 def admin_check():

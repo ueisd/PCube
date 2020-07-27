@@ -131,9 +131,10 @@ class ExpenseAccountRequest:
 
     def create_expense_account_by_parent_id(self, expense_account):
         cursor = self.connection.cursor()
-        if(expense_account.parent_id >0):
+        if(expense_account.parent_id > 0):
             cursor.execute("Insert into expense_account(name, parent_id) "
-                           "Values(?, ?) ", (expense_account.name, expense_account.parent_id))
+                           "Values(?, ?) ",
+                           (expense_account.name, expense_account.parent_id))
             self.connection.commit()
             expense_account.id = cursor.lastrowid
         else:
@@ -142,8 +143,9 @@ class ExpenseAccountRequest:
             self.connection.commit()
             expense_account.id = cursor.lastrowid
             expense_account.parent_id = expense_account.id
-            cursor.execute("update expense_account set parent_id = ? where id = ?",
-                       (expense_account.parent_id, expense_account.id))
+            cursor.execute("update expense_account set parent_id = ?"
+                           " where id = ?",
+                           (expense_account.parent_id, expense_account.id))
             self.connection.commit()
         cursor.close
 
