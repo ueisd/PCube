@@ -82,6 +82,15 @@ class ExpenseAccountRequest:
         cursor.close()
         return data
 
+    def select_one_expense_account_by_id(self, id):
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select * from expense_account where id = ?",
+                       (id,))
+        data = cursor.fetchone()
+        cursor.close()
+        return data
+
     def delete_expense_account(self, id, name):
         """
         Permet de supprimer un compte de dépense
@@ -120,28 +129,23 @@ class ExpenseAccountRequest:
         cursor.close()
         return True if data else False
 
-    def create_expense_account(self, expense_account):
+    def create_expense_account_by_parent_id(self, expense_account):
         cursor = self.connection.cursor()
-        isSelfReference = expense_account.name == expense_account.parent_name
-
-        if (isSelfReference):
+        if(expense_account.parent_id >0):
             cursor.execute("Insert into expense_account(name, parent_id) "
-                           "Values(?, ?) ", (expense_account.name, None))
+                           "Values(?, ?) ", (expense_account.name, expense_account.parent_id))
+            self.connection.commit()
+            expense_account.id = cursor.lastrowid
         else:
             cursor.execute("Insert into expense_account(name, parent_id) "
-                           "Values(?, ?) ",
-                           (expense_account.name, expense_account.parent_id))
-        self.connection.commit()
-        expense_account.id = cursor.lastrowid
+                           "Values(?, ?) ", (expense_account.name, None))
+            self.connection.commit()
+            expense_account.id = cursor.lastrowid
+            expense_account.parent_id = expense_account.id
+            cursor.execute("update expense_account set parent_id = ? where id = ?",
+                       (expense_account.parent_id, expense_account.id))
+            self.connection.commit()
         cursor.close
-
-        if (isSelfReference):
-            new_expense_account = ExpenseAccount()
-            new_expense_account.parent_id = expense_account.id
-            new_expense_account.name = expense_account.name
-            new_expense_account.parent_name = expense_account.parent_name
-            expense_account = self.update_expense_account(
-                expense_account, new_expense_account)
 
         return expense_account
 

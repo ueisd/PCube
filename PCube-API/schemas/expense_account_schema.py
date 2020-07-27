@@ -1,9 +1,9 @@
 expense_account_insert_schema = {
     "type": "object",
-    "required": ["name", "parent_name"],
+    "required": ["name", "parent_id"],
     "properties": {
         "name": {"type": "string", "minLength": 1, "maxLength": 250},
-        "parent_name": {"type": "string", "minLength": 1, "maxLength": 250},
+        "parent_id": {"type": "integer"},
     },
     "additionalProperties": False
 }

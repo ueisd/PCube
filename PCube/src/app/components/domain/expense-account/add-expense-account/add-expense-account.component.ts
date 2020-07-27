@@ -137,7 +137,17 @@ export class AddExpenseAccountComponent implements OnInit {
       let parentName: string = (parentAccout != null) ? parentAccout.name : name;
 
       if(this.isCreateForm) {
-        this.expenseAccountServices.addExpenseAccount(name, parentName).subscribe(project => {
+        let proj :ExpenseAccountItem = new ExpenseAccountItem();
+        if(this.ExpenseForm.value['isChild'] == false) {
+          proj.parent_id = this.expenseAccount.id;
+        }else if(this.ExpenseForm.value['parent']) {
+          proj.parent_id = this.ExpenseForm.value['parent']['id'];
+        }else {
+          proj.parent_id = this.expenseAccount.parent_id;
+        }
+        proj.name = this.ExpenseForm.value['name'];
+
+        this.expenseAccountServices.addExpenseAccount(proj).subscribe(project => {
           if(project.id != -1){
             this.onSubmitSuccess();
           }else{
