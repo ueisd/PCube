@@ -263,19 +263,19 @@ def create_expense_account():
     data = request.json
     expense_account = ExpenseAccount()
     expense_account.name = escape(data['name'].upper().strip())
-    expense_account.parent_name = escape(data['parent_name'].upper().strip())
+    expense_account.parent_id = data['parent_id']
     connection = get_db().get_connection()
     query = ExpenseAccountRequest(connection)
 
-    if (expense_account.parent_name != expense_account.name):
-        parent = query.select_one_expense_account(expense_account.parent_name)
+    if expense_account.parent_id != -1:
+        parent = query.select_one_expense_account_by_id(expense_account.parent_id)
         if parent:
-            expense_account.parent_id = parent['id']
+            expense_account.parent_name = parent['name']
         else:
             log.error("Le parent n'existe pas")
-            abort(404)
+            abort(404)   
 
-    expense_account = query.create_expense_account(expense_account)
+    expense_account = query.create_expense_account_by_parent_id(expense_account)
     return jsonify(expense_account.asDictionary()), 201
 
 

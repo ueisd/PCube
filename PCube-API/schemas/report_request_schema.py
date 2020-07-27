@@ -8,7 +8,7 @@ report_request_schema = {
         },
         "activitys": {
             "type": "array",
-            "items": {"type": "integer"}
+"items": {"type": "integer"}
         },
         "users": {
             "type": "array",

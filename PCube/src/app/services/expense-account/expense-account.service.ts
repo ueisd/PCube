@@ -69,7 +69,7 @@ export class ExpenseAccountService {
     return this.http.get<ExpenseAccountItem[]>(url, opts);
   }
 
-  addExpenseAccount(name, parent_name): Observable<ExpenseAccountItem>{
+  addExpenseAccount(compte: ExpenseAccountItem): Observable<ExpenseAccountItem>{
     let url = API_EXPENSE_ACCOUNT;
     const opts = {
       headers: new HttpHeaders({
@@ -77,9 +77,10 @@ export class ExpenseAccountService {
         'Content-Type': 'application/json'
       })
     };
+   
     let body = {
-      name: name,
-      parent_name: parent_name
+      name: compte.name,
+      parent_id: compte.parent_id,
     }
     return this.http.post<ExpenseAccountItem>(API_EXPENSE_ACCOUNT, body, opts)
   }
@@ -134,7 +135,6 @@ export class ExpenseAccountService {
       name: compte.name,
       parent_id: compte.parent_id,
     }
-    
     return this.http.put<ExpenseAccountItem>(API_EXPENSE_ACCOUNT, body, opts);
   }
 
