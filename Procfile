@@ -1,1 +1,1 @@
-ls - a
+web: cd PCube-API && python -m flask run && cd ../
