@@ -4,7 +4,7 @@ appFolder=PCube
 default: create-env
 	
 create-env:
-	python3.8 -m venv env
+	python -m venv env
 
 api-init-env:
 	$(MAKE) -C $(apiFolder) update-pip
@@ -13,9 +13,3 @@ api-init-env:
 
 api-run:
 	$(MAKE) -C $(apiFolder) run
-
-app-init-env:
-	$(MAKE) -C $(appFolder) install-requirements
-
-app-run:
-	$(MAKE) -C $(appFolder) run

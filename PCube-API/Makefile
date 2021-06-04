@@ -1,7 +1,7 @@
 default: run
 
 run: 
-	flask run
+	python -m flask run
 
 regenerate-db:
 	rm -f db/database/pcube.db 2> /dev/null
