@@ -23,3 +23,6 @@ app-install:
 
 app-run-dev:
 	$(MAKE) -C $(appFolder) run	
+
+app-run-heroku:
+	$(MAKE) -C $(appFolder) run-heroku
