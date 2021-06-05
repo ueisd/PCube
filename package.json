@@ -6,7 +6,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd PCube && npm start",
     "install": "cd PCube && npm install",
-    "heroku-postbuild": "cd PCube && ng build --prod"
+    "heroku-postbuild": "cd PCube && npm heroku-postbuild"
   },
   "repository": {
     "type": "git",

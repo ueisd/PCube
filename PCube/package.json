@@ -4,7 +4,8 @@
   "scripts": {
     "ng": "ng",
     "start": "node server.js",
-    "test": "ng test",
+    "test": "ng test", 
+    "heroku-postbuild": "cd PCube && ng build --prod",
     "lint": "ng lint",
     "e2e": "ng e2e"
   },
