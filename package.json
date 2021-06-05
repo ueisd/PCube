@@ -4,7 +4,7 @@
   "description": "app",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "cd PCube && ng serve --open --proxy-config proxy.config.json",
+    "start": "cd PCube && npm start",
     "install": "cd PCube && npm install"
   },
   "repository": {
