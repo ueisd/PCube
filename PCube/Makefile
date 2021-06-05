@@ -1,10 +1,8 @@
 default: run
 
 run: 
-	npm start
-
-run-heroku:
-	ng serve --open --proxy-config proxy.config.heroku.json
+	ng serve --open --proxy-config proxy.config.json
+	
 
 install-requirements:
 	npm install
