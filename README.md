@@ -90,3 +90,6 @@ Une fois l'installer complété, regarder votre terminal pour visualiser les cod
 
 ### Demo
 [Application déployée sur heroku](https://pcube-frontend.herokuapp.com/)
+
+[Buildpack utilisé pour le backend heroku](https://github.com/pierrelucueisd/PCube-buildpack)
+
