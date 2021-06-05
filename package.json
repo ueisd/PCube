@@ -4,7 +4,7 @@
   "description": "app",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "make app-run-heroku",
+    "start": "cd PCube && npm start",
     "install": "cd PCube && npm install",
     "build": "cd PCube && npm build"
   },
