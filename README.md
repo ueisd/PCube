@@ -89,7 +89,9 @@ Vous pouvez ensuite faire les commandes suivantes dans ce répertoire
 Une fois l'installer complété, regarder votre terminal pour visualiser les codes d'erreurs. Il ce pourrait que la commande doit être lancer avec **sudo**. Regarder aussi pour un message du genre *found 1 low severity vulnerability*. Pas de panique, lancer la commande `npm audit fix`. Si rien ne se règle, on ne touche à rien. C'est "normal" la communauté travail pour régler ces problèmes.
 
 ### Demo
-[Application déployée sur heroku](https://pcube-frontend.herokuapp.com/)
+[Frontend déployée sur heroku](https://pcube-frontend.herokuapp.com/)
+
+[Backend déployée sur heroku](https://pcube-backend.herokuapp.com/)
 
 [Buildpack utilisé pour le backend heroku](https://github.com/pierrelucueisd/PCube-buildpack)
 
