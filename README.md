@@ -45,7 +45,9 @@ Tapez la commande `make` pour installer l'application.
 ## Démmarage
 
 Vous devez ensuite démarrer l'application.
+
 Démarer le backend: `make app-run-dev`
+
 Démarer la frontend: `make api-run-dev`
 
 ## Utilisation
