@@ -1,5 +1,6 @@
 import os
 from flask import Flask
+from flask_cors import CORS
 from .main import main
 from .auth_routes import auth
 from .project_routes import project
@@ -14,6 +15,7 @@ from .utils_routes import utils
 def create_app():
 
     app = Flask(__name__)
+    CORS(app)
 
     app.config.from_json(os.path.join('../resources', 'config.json'))
 
