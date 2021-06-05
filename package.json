@@ -1,0 +1,20 @@
+{
+  "name": "pcube",
+  "version": "1.0.0",
+  "description": "app",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd PCube && ng serve --open --proxy-config proxy.config.json",
+    "install": "cd PCube && npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pierrelucueisd/PCube.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pierrelucueisd/PCube/issues"
+  },
+  "homepage": "https://github.com/pierrelucueisd/PCube#readme"
+}
