@@ -3,10 +3,11 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TimelineItem } from 'src/app/models/timeline';
 import { TimelineFilterItem } from 'src/app/models/timelineFilter';
+import { environment } from 'src/environments/environment';
 
-const API_TIMELINE = "/api/timeline";
-const API_GET_FILTER = "/api/timeline/filter";
-const API_UNIQUE_VALIDATION = "/api/timeline/timelines-validation"
+const API_TIMELINE = environment.api_url + "/api/timeline";
+const API_GET_FILTER = environment.api_url + "/api/timeline/filter";
+const API_UNIQUE_VALIDATION = environment.api_url + "/api/timeline/timelines-validation"
 
 @Injectable({
   providedIn: 'root'

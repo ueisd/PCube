@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProjectItem } from 'src/app/models/project';
+import { environment } from 'src/environments/environment';
 
-const API_PROJECT = "/api/project";
-const API_IS_UNIQUE = "api/project/is-unique";
-const API_AUTOCOMPLTE = "api/project/autocomplete";
-const API_FILTER = "/api/project/filter";
-const API_APPARENTABLE = "/api/project/getApparentableProjects";
-const API_ONE_LEVEL_FILTER = "/api/project/filter/one-level";
-const API_IS_DELETABLE = "/api/project/is-deletable";
+const API_PROJECT = environment.api_url + "/api/project";
+const API_IS_UNIQUE = environment.api_url + "/api/project/is-unique";
+const API_AUTOCOMPLTE = environment.api_url + "/api/project/autocomplete";
+const API_FILTER = environment.api_url + "/api/project/filter";
+const API_APPARENTABLE = environment.api_url + "/api/project/getApparentableProjects";
+const API_ONE_LEVEL_FILTER = environment.api_url + "/api/project/filter/one-level";
+const API_IS_DELETABLE = environment.api_url + "/api/project/is-deletable";
 
 const SEPARATOR: string = " * ";
 

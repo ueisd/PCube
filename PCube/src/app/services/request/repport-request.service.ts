@@ -5,8 +5,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { ReportItem } from 'src/app/models/report-item';
 import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
+import { environment } from 'src/environments/environment';
 
-const API_REPORT = '/api/timeline/testsum';
+const API_REPORT = environment.api_url + '/api/timeline/testsum';
 
 @Injectable({
   providedIn: 'root'

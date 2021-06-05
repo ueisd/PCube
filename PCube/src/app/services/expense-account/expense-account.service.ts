@@ -2,14 +2,15 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
+import { environment } from 'src/environments/environment';
 
-const API_EXPENSE_ACCOUNT = "/api/expense-account";
-const API_APPARENTABLE = API_EXPENSE_ACCOUNT + "/getApparentable";
-const API_IS_UNIQUE = "api/expense-account/is-unique";
-const API_AUTOCOMPLTE = "api/expense-account/autocomplete";
-const API_FILTER = "/api/expense-account/filter";
-const API_ONE_LEVEL_FILTER = "/api/expense-account/filter/one-level";
-const API_IS_DELETABLE = "/api/expense-account/is-deletable";
+const API_EXPENSE_ACCOUNT = environment.api_url + "/api/expense-account";
+const API_APPARENTABLE = API_EXPENSE_ACCOUNT + environment.api_url + "/getApparentable";
+const API_IS_UNIQUE = environment.api_url + "/api/expense-account/is-unique";
+const API_AUTOCOMPLTE = environment.api_url + "api/expense-account/autocomplete";
+const API_FILTER = environment.api_url + "/api/expense-account/filter";
+const API_ONE_LEVEL_FILTER = environment.api_url + "/api/expense-account/filter/one-level";
+const API_IS_DELETABLE = environment.api_url + "/api/expense-account/is-deletable";
 
 
 @Injectable({
