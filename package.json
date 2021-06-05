@@ -6,7 +6,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "cd PCube && npm start",
     "install": "cd PCube && npm install",
-    "heroku-postbuild": "cd PCube && npm heroku-postbuild"
+    "heroku-postbuild": "cd PCube && ng build --prod"
+  },
+  "dependencies": {
+    "@angular/cli": "^9.1.15",
+    "@angular/compiler-cli": "^9.1.13",
+    "typescript": "~3.8.3",
+    "@angular-devkit/build-angular": "^0.901.15"
   },
   "repository": {
     "type": "git",
