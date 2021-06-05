@@ -4,15 +4,9 @@
 
 UQAM
 
-  
-
 Cours : INF6150
 
-  
-
 Groupe : 10
-
-  
 
 Un organisme communautaire Le Petit Peuple souhaiterait que soit réalisé un système de suivi des heures bénévoles. Le projet permettrait au client de comptabiliser les heures bénévoles effectuées dans l’organisme pour contrôler la performance de ses membres ou de ses projets et informer ses partenaires/donateurs sur les performances de l’organisme.
 
@@ -85,12 +79,12 @@ La base de données **pcube.db** est dans l répertoire **PCube-API/db/database/
 Vous pouvez ensuite faire les commandes suivantes dans ce répertoire 
 
 1) Sur le terminal : `sqlite3 pcube.db`
-
 2) Sur Sqlite3 : `.read pcube.sql`
-
 3) Sur Sqlite3 : `.read data_generation.sql`
-
 4) Sur Sqlite3 : `select * from user;` (Pour tester que le tout fonctionne)
 
 
 Une fois l'installer complété, regarder votre terminal pour visualiser les codes d'erreurs. Il ce pourrait que la commande doit être lancer avec **sudo**. Regarder aussi pour un message du genre *found 1 low severity vulnerability*. Pas de panique, lancer la commande `npm audit fix`. Si rien ne se règle, on ne touche à rien. C'est "normal" la communauté travail pour régler ces problèmes.
+
+### Demo
+[Application déployée sur heroku](https://pcube-frontend.herokuapp.com/)
