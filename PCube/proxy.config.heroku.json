@@ -2,7 +2,8 @@
     "/api/*": 
     {
         "target":"https://pcube-backend.herokuapp.com/",
-        "secure":false,
-        "logLevel":"debug"
+        "secure":true,
+        "logLevel":"debug",
+        "changeOrigin": "true"
     }
 }
