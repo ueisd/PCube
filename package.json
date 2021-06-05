@@ -5,7 +5,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "make app-run-heroku",
-    "install": "cd PCube && npm install"
+    "install": "cd PCube && npm install",
+    "build": "cd PCube && npm build"
   },
   "repository": {
     "type": "git",
