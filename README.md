@@ -24,7 +24,7 @@ Un organisme communautaire Le Petit Peuple souhaiterait que soit réalisé un sy
 
 - Richer Stébenne, Sébastien
 
-  
+- Arcole, Alexandre-Thibault
  
 
 ## Prérequis
@@ -95,3 +95,9 @@ Une fois l'installer complété, regarder votre terminal pour visualiser les cod
 
 [Buildpack utilisé pour le backend heroku](https://github.com/pierrelucueisd/PCube-buildpack)
 
+
+## License 
+
+Le projet est sous licence MIT X11.
+
+Consulter le fichier [LICENSE.md](LICENSE.md) pour les détails de la licence.
