@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2019 UQAM-INF2050
+Copyright (c) 2020 UQAM-INF6150
 
 BOUTAOUS, Oussema - LIMANE, Mouad - MAÎTRE, Pierre-Luc - PATEL, Miteshbai - RICHER STÉBENNE, Sébastien - ARCOLE, Alexandre-Thibault
 
