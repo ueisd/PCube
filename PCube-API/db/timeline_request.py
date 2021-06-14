@@ -100,8 +100,7 @@ class TimelineRequest:
         cursor.close()
         return data
 
-    def get_accountTimeWithSum(self, params):
-
+    def fetchClauseFromReqParams(self, params):
         req = []
 
         if params.dateDebut != '':
@@ -123,40 +122,61 @@ class TimelineRequest:
 
         if(clauseLignes == ''):
             clauseLignes = '1'
+        return clauseLignes
+
+
+    def get_timelines(self, params):
+        clauseLignes = self.fetchClauseFromReqParams(params)
+        self.connection.row_factory = dict_factory
+        cursor = self.connection.cursor()
+        cursor.execute("select t.* from timeline t"
+            # partie permetant la différence d'heures en sql lite
+            # (language limité...))
+            + " where " + clauseLignes
+            )
+        data = cursor.fetchall()
+        cursor.close()
+
+        return data
+
+    def get_accountTimeWithSum(self, params):
+
+        clauseLignes = self.fetchClauseFromReqParams(params)
+        
 
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select a.*, "
-                       # partie permetant la différence d'heures en sql lite
-                       # (language limité...))
-                       + "SUM("
-                       + " CASE WHEN  (" + clauseLignes + ")"
-                       + " THEN ("
-                       + "     CASE WHEN  ("
-                       + "         (CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*"
-                       + "60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT))"
-                       + "         - (CAST(SUBSTR(t.punch_in, 1, 2) AS INT)*"
-                       + "60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT))"
-                       + "     ) > 0 "
-                       + "     THEN ("
-                       + "         (CAST(SUBSTR(t.punch_out, 1, 2) AS INT)"
-                       + "*60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT))"
-                       + "         - (CAST(SUBSTR(t.punch_in, 1, 2) AS INT)*"
-                       + "60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT))"
-                       + "     )"
-                       + "     ELSE ("
-                       + "         (24-CAST(SUBSTR(t.punch_in, 1, 2) AS INT))*"
-                       + "60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT)"
-                       + "         + CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*"
-                       + "60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT)"
-                       + "     )"
-                       + "     END"
-                       + " ) END"
-                       + ") as summline "
-                       + "from expense_account a LEFT JOIN timeline t"
-                       + " ON a.id = t.expense_account_id"
-                       + " group by a.id"
-                       )
+            # partie permetant la différence d'heures en sql lite
+            # (language limité...))
+            + "SUM("
+            + " CASE WHEN  (" + clauseLignes + ")"
+            + " THEN ("
+            + "     CASE WHEN  ("
+            + "         (CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*"
+            + "60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT))"
+            + "         - (CAST(SUBSTR(t.punch_in, 1, 2) AS INT)*"
+            + "60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT))"
+            + "     ) > 0 "
+            + "     THEN ("
+            + "         (CAST(SUBSTR(t.punch_out, 1, 2) AS INT)"
+            + "*60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT))"
+            + "         - (CAST(SUBSTR(t.punch_in, 1, 2) AS INT)*"
+            + "60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT))"
+            + "     )"
+            + "     ELSE ("
+            + "         (24-CAST(SUBSTR(t.punch_in, 1, 2) AS INT))*"
+            + "60 + CAST(SUBSTR(t.punch_in, 4, 2) AS INT)"
+            + "         + CAST(SUBSTR(t.punch_out, 1, 2) AS INT)*"
+            + "60 + CAST(SUBSTR(t.punch_out, 4, 2) AS INT)"
+            + "     )"
+            + "     END"
+            + " ) END"
+            + ") as summline "
+            + "from expense_account a LEFT JOIN timeline t"
+            + " ON a.id = t.expense_account_id"
+            + " group by a.id"
+            )
         # "DATEDIFF(year, '2017/08/25', '2011/08/25')"
         # "STR_TO_DATE(field_name, '%H:%i:%s %b %d, %Y PDT') AS new_time"
         data = cursor.fetchall()

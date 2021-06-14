@@ -182,12 +182,37 @@ def sommationAscendante(listeNoeuds, parent):
     return parent
 
 
+@timeline.route('/getLines', methods=['POST'])
+@member_required
+@schema.validate(report_request_schema)
+def getLines():
+    """
+    Permet d'obtenir une liste de lignes de temps'
+    """
+    data = request.json
+    params = AccountRequestParams()
+    params.projects = data.get('projects')
+    params.activitys = data.get('activitys')
+    params.users = data.get('users')
+    params.dateDebut = str(escape(data.get('dateDebut')).strip())
+    params.dateFin = str(escape(data.get('dateFin')).strip())
+
+    connection = get_db().get_connection()
+    query = TimelineRequest(connection)
+    timelines = query.get_timelines(params)
+
+    if timeline: return jsonify(timelines), 200
+    else:
+        log.error("La ressource n'existe pas.")
+        abort(404)
+
+
 @timeline.route('/testsum', methods=['POST'])
 @member_required
 @schema.validate(report_request_schema)
 def testsum():
     """
-    Permet de tester la sommation de lignes de temps
+    Permet d'obtenir un rapport
     """
     data = request.json
     params = AccountRequestParams()
