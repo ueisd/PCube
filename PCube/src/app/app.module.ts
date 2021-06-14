@@ -60,6 +60,7 @@ import { ServerDownComponent } from './components/pages/server-down/server-down.
 import { RequestFormComponent } from './components/domain/reports/request-form/request-form/request-form.component';
 import { ReportsComponent } from './components/pages/reports/reports/reports.component';
 import { ContactUsComponent } from './components/pages/contact-us/contact-us.component';
+import { RequestComponent } from './components/layouts/request/request.component';
 
 
 @NgModule({
@@ -106,6 +107,7 @@ import { ContactUsComponent } from './components/pages/contact-us/contact-us.com
     RequestFormComponent,
     ReportsComponent,
     ContactUsComponent,
+    RequestComponent,
   ],
   imports: [
     MatDialogModule,

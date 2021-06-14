@@ -1,6 +1,6 @@
 
 <form [formGroup]="requestForm" (ngSubmit)="onSubmit()">
-    <h2 mat-dialog-title>Génération d'un rapport</h2>
+    <h2 mat-dialog-title>{{ title }}</h2>
     <mat-dialog-content class="mat-typography">
         <p>Ceci est le formulaire de requête.</p>
         <div class="container"  fxLayout="row" fxLayoutAlign="start center">

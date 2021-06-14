@@ -5,7 +5,11 @@
             <button mat-raised-button color="primary" (click)="goToAddNewTimeline()">Ajouter une ligne de temps</button>
         </mat-card-actions>
         <mat-card-content>
-            <app-timeline-list></app-timeline-list>
+            <ul>
+                <li *ngFor="let timeline of timelines">{{ timeline | json }}</li>
+            </ul>
+            <app-request [(reportRequest)]="this.reportRequest"></app-request>
+            
         </mat-card-content>    
     </mat-card>
 </div>

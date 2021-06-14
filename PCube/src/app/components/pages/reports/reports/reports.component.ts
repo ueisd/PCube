@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { RepportRequestService } from 'src/app/services/request/repport-request.service';
-import { ReportRequest } from 'src/app/models/report-request';
 import { ReportItem } from 'src/app/models/report-item';
-import { Router } from '@angular/router';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
+import { ReportRequest } from 'src/app/models/report-request';
 import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
-import { DateManip } from 'src/app/utils/date-manip';
 
 @Component({
   selector: 'app-reports',
@@ -63,35 +61,7 @@ export class ReportsComponent implements OnInit {
     this.reportRequestBackend.buildFromReportRequest(req);
   }
 
-  afficherDate(d: Date) {
-    const montFormater = new Intl.DateTimeFormat('fr', { month: 'long' });
-        const weekDayFormater = new Intl.DateTimeFormat('fr', { weekday: 'long' });
-        const month1 = montFormater.format(d);
-        const weekday = weekDayFormater.format(d);
-        let jour = d.getDate() + "";
-        if(d.getDate() == 1) jour += 'er';
-        return weekday + ' le ' + jour + " " + month1 + " " + d.getFullYear();
-  }
-
-  afficherPeriodes() {
-    let chaineAff = '';
-    let dateDebut = this.reportRequest.dateDebut;
-    let dateFin = this.reportRequest.dateFin;
-    if(dateDebut == '' && dateFin == ''){
-      chaineAff += 'Sans limite de période';
-    }else{
-      chaineAff += 'Pour la période';
-      if (dateDebut != ''){
-        chaineAff += ' commencant le ' + " " + this.afficherDate(DateManip.chaineToDate(dateDebut));
-      }
-      if(dateFin != ''){
-        if(dateDebut != '') chaineAff += ' et';
-        chaineAff += ' se terminant le ' + this.afficherDate(DateManip.chaineToDate(dateFin));
-      }
-    }
-    chaineAff += '.';
-    return chaineAff;
-  }
+  
 
   ngOnInit(): void {
     if(history.state.params) {

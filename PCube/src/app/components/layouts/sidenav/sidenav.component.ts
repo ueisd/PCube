@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialogConfig, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { RequestFormComponent } from '../../domain/reports/request-form/request-form/request-form.component';
 import { NavigationExtras, Router } from '@angular/router';
@@ -20,13 +20,13 @@ export class SidenavComponent implements OnInit {
 
   isShowTitle:boolean = true;
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 
-  openReportReqDialog() {
+  openReportReqDialog(type) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = { 
       user : this.user,
+      type : type
     }
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(RequestFormComponent, dialogConfig);
@@ -35,7 +35,11 @@ export class SidenavComponent implements OnInit {
         if(result) {
           let navigationExtras: NavigationExtras = { state: { params: result } };
           this.openSnackBar('La requête a été envoyé', 'notif-success');
-          this.router.navigate(['/rapport'], navigationExtras);
+
+          if(type == 'rapport')
+            this.router.navigate(['/rapport'], navigationExtras);
+          else if(type == 'temps')
+            this.router.navigate(['/gestion-des-lignes-de-temps'], navigationExtras);
         }
       }
     );

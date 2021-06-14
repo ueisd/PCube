@@ -28,12 +28,14 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
   projetsOptions: ProjectItem[];
   activityOptions: ActivityItem[];
   usersOptions: User[];
+  title = '';
   matcher = new MyErrorStateMatcher();
 
   params = new ReportRequest();
 
   isMember : boolean;
   member : User;
+
 
   isProjets(checked: boolean) {
     if(!checked)
@@ -59,6 +61,10 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
       if(data.user.access_level == 3) {
         this.isMember = true;
       }
+      if(data.type == "temps")
+        this.title = 'Gérer les lignes de temps';
+      if(data.type == "rapport")
+        this.title = 'Génération d\'un rapport';
     }
 
   ngOnInit(): void {
