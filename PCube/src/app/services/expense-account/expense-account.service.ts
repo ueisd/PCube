@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
 import { environment } from 'src/environments/environment';
+const SEPARATOR: string = " * ";
 
 const API_EXPENSE_ACCOUNT = environment.api_url + "/api/expense-account";
 const API_APPARENTABLE = API_EXPENSE_ACCOUNT + environment.api_url + "/getApparentable";
@@ -20,6 +21,29 @@ const API_IS_DELETABLE = environment.api_url + "/api/expense-account/is-deletabl
 export class ExpenseAccountService {
 
   constructor(private http: HttpClient) { }
+
+  /* Crée une liste des noeuds de l'arborescence 
+   * avec un affichage identé selon le niveua de profondeur @level
+   */
+  generateParentOption(acounts: ExpenseAccountItem[], level:number) : ExpenseAccountItem[] {
+    if(acounts === null) return [];
+    let retour: ExpenseAccountItem[] = [];
+
+    for (var account of acounts) {
+      let item : ExpenseAccountItem = new ExpenseAccountItem(account);
+      item.child = null;
+      item.nomAffichage = item.name;
+      for(let i = 0; i<level; i++) {
+        item.nomAffichage = SEPARATOR + item.nomAffichage;
+      }
+      retour.push(item);
+      if(account.child && account.child.length) {
+        for(var subAccount of this.generateParentOption(account.child, level+1))
+          retour.push(subAccount);
+      }
+    }
+    return retour;
+  }
 
   getAllExpenseAccount(): Observable<ExpenseAccountItem[]>{
     const opts = {

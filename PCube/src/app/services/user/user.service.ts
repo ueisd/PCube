@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular
 import { environment } from 'src/environments/environment';
 import { User } from 'src/app/models/user';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const API_ALL_USER = environment.api_url + "/api/user";
 const API_IS_UNIQUE = environment.api_url + "/api/user/is-unique-user";
@@ -51,7 +52,12 @@ export class UserService {
       })
     };
     
-    return this.http.get<User[]>(API_ALL_USER, opts);
+    return this.http.get<User[]>(API_ALL_USER, opts).pipe(
+      map(users => users.map(user => {
+        user.display_string = user.first_name + " " + user.last_name;
+        return user;
+      }))
+    );
   }
 
   deleteUser(id, email): Observable<{}> {

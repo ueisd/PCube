@@ -8,7 +8,6 @@ import { Observable } from 'rxjs/internal/Observable';
 import { timer } from 'rxjs/internal/observable/timer';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
 import { map, first } from 'rxjs/operators';
-const SEPARATOR: string = " * ";
 
 @Component({
   selector: 'app-add-expense-account',
@@ -51,7 +50,7 @@ export class AddExpenseAccountComponent implements OnInit {
     this.initForm();
 
     this.expenseAccountServices.getApparentableExpenseAccounts(this.expenseAccount.id).subscribe(accounts =>{
-      this.parentOptions = this.generateParentOption(accounts, 0);
+      this.parentOptions = this.expenseAccountServices.generateParentOption(accounts, 0);
       let selected: ExpenseAccountItem = this.findExpenseAccount(this.parentOptions, this.expenseAccount.parent_id);
       if(this.expenseAccount.id != this.expenseAccount.parent_id) {
         this.ExpenseForm.controls['parent'].setValue(selected);
@@ -82,29 +81,6 @@ export class AddExpenseAccountComponent implements OnInit {
       },
       {validators: this.validateForm}
     );
-  }
-
-  /* Crée une liste des noeuds de l'arborescence 
-   * avec un affichage identé selon le niveua de profondeur @level
-   */
-  private generateParentOption(acounts: ExpenseAccountItem[], level:number) : ExpenseAccountItem[] {
-    if(acounts === null) return [];
-    let retour: ExpenseAccountItem[] = [];
-
-    for (var account of acounts) {
-      let item : ExpenseAccountItem = new ExpenseAccountItem(account);
-      item.child = null;
-      item.nomAffichage = item.name;
-      for(let i = 0; i<level; i++) {
-        item.nomAffichage = SEPARATOR + item.nomAffichage;
-      }
-      retour.push(item);
-      if(account.child && account.child.length) {
-        for(var subAccount of this.generateParentOption(account.child, level+1))
-          retour.push(subAccount);
-      }
-    }
-    return retour;
   }
 
 

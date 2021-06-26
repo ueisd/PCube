@@ -61,6 +61,7 @@ import { RequestFormComponent } from './components/domain/reports/request-form/r
 import { ReportsComponent } from './components/pages/reports/reports/reports.component';
 import { ContactUsComponent } from './components/pages/contact-us/contact-us.component';
 import { RequestComponent } from './components/layouts/request/request.component';
+import { EditComponent } from './components/domain/timelines/edit/edit.component';
 
 
 @NgModule({
@@ -108,6 +109,7 @@ import { RequestComponent } from './components/layouts/request/request.component
     ReportsComponent,
     ContactUsComponent,
     RequestComponent,
+    EditComponent,
   ],
   imports: [
     MatDialogModule,
