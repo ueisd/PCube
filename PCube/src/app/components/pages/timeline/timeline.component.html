@@ -5,18 +5,13 @@
 
 
     <mat-card class="list-activite-card">
-        <mat-card-title>Gestion des lignes de temps</mat-card-title>
-        <mat-card-actions>
-            <button mat-raised-button color="primary" (click)="addLineItem()">Ajouter une ligne de temps :)</button>
-        </mat-card-actions>
-        <mat-card-content>
-
-            <app-request [(reportRequest)]="this.reportRequest"></app-request>
-            
-        </mat-card-content>    
+      <mat-card-title>Gestion des lignes de temps</mat-card-title>
+      <mat-card-content>
+        <app-request [(reportRequest)]="this.reportRequest"></app-request> 
+      </mat-card-content>    
     </mat-card>
 
-
+    <button mat-raised-button color="primary" (click)="addFormTimeline()">Ajouter une ligne de temps :)</button>
 
 
     <form [formGroup]="form" autocomplete="off">
@@ -24,19 +19,20 @@
           <table #table mat-table [dataSource]="timelinesGr.controls" class="mat-elevation-z8">
 
             <!-- day_of_week Column -->
-              <ng-container matColumnDef="day_of_week">
-                <th mat-header-cell *matHeaderCellDef> Jour </th>
-                <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
-                    <mat-form-field class="jour-form-widget">
-                        <input matInput [matDatepicker]="patientDueDate_i" placeholder="Due date" 
-                        formControlName="day_of_week">
-                        <mat-datepicker-toggle matSuffix [for]="patientDueDate_i">
-                            <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
-                        </mat-datepicker-toggle>
-                        <mat-datepicker #patientDueDate_i></mat-datepicker>   
-                    </mat-form-field>
-                </td>
-              </ng-container>
+            <ng-container matColumnDef="day_of_week">
+              <th mat-header-cell *matHeaderCellDef> Jour </th>
+              <td mat-cell *matCellDef="let element; let i = index" [formGroup]="element">
+                <mat-form-field class="jour-form-widget">
+                  <input matInput [matDatepicker]="patientDueDate_i" placeholder="Due date" 
+                    formControlName="day_of_week">
+                  <mat-datepicker-toggle matSuffix [for]="patientDueDate_i">
+                    <mat-icon matDatepickerToggleIcon>keyboard_arrow_down</mat-icon>
+                  </mat-datepicker-toggle>
+                  <mat-datepicker #patientDueDate_i></mat-datepicker>   
+                </mat-form-field>
+              </td>
+            </ng-container>
+
 
             <!-- punch_in Column -->
             <ng-container matColumnDef="punch_in">
@@ -47,6 +43,7 @@
                   </mat-form-field>
                 </td>
             </ng-container>
+
 
             <!-- punch_out Column -->
             <ng-container matColumnDef="punch_out">
@@ -59,59 +56,64 @@
             </ng-container>
 
 
-            <!-- Activités Column -->
-            <ng-container matColumnDef="activity_id">
-                <th mat-header-cell *matHeaderCellDef> Activité </th>
-                <td mat-cell *matCellDef="let element; let i=index" [formGroup]="element">
-                    <ng-select 
-                        class="margin-left"
-                        [items]="activityOptions"
-                        bindLabel="name"
-                        placeholder="Activité reliée"
-                        appendTo="body"
-                        formControlName="activity_id">         
-                    </ng-select>
-                    <ng-select 
-                        class="margin-left"
-                        [items]="projectsOptions"
-                        bindLabel="nomAffichage"
-                        placeholder="Projets reliés"
-                        appendTo="body"
-                        formControlName="project_id">         
-                    </ng-select>
-                    <button type="button" class="btn btn-danger pull-right" (click)="deleteTimeline(i)">
-                      <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Enlever Timeline {{i}}
-                    </button>
-                </td>
-            </ng-container>
-
-
-
-
-
             <!-- Compte Column -->
             <ng-container matColumnDef="expense_account_id">
-                <th mat-header-cell *matHeaderCellDef> Compte </th>
-                <td mat-cell *matCellDef="let element;" [formGroup]="element">
-                    <ng-select 
-                        class="margin-left"
-                        [items]="comptesOptions"
-                        bindLabel="nomAffichage"
-                        placeholder="Compte associé"
-                        appendTo="body"
-                        formControlName="expense_account_id">         
-                    </ng-select>
-                    <ng-select 
-                        class="margin-left"
-                        [items]="usersOptions"
-                        bindLabel="display_string"
-                        placeholder="Utilisateur"
-                        appendTo="body"
-                        formControlName="user_id">         
-                    </ng-select>
-                </td>
+              <th mat-header-cell *matHeaderCellDef> Compte </th>
+              <td mat-cell *matCellDef="let element;" [formGroup]="element">
+                <ng-select 
+                    class="margin-left"
+                    [items]="usersOptions"
+                    bindLabel="display_string"
+                    placeholder="Utilisateur"
+                    appendTo="body"
+                    formControlName="user_id">         
+                </ng-select>
+                <ng-select 
+                    class="margin-left"
+                    [items]="comptesOptions"
+                    bindLabel="nomAffichage"
+                    placeholder="Compte associé"
+                    appendTo="body"
+                    formControlName="expense_account_id">         
+                </ng-select>
+              </td>
             </ng-container>
-            
+
+
+            <!-- Activités Column -->
+            <ng-container matColumnDef="activity_id">
+              <th mat-header-cell *matHeaderCellDef> Affiliation </th>
+              <td mat-cell *matCellDef="let element;" [formGroup]="element">
+                <ng-select 
+                  class="margin-left"
+                  [items]="projectsOptions"
+                  bindLabel="nomAffichage"
+                  placeholder="Projets reliés"
+                  appendTo="body"
+                  formControlName="project_id">         
+                </ng-select>
+                <ng-select 
+                    class="margin-left"
+                    [items]="activityOptions"
+                    bindLabel="name"
+                    placeholder="Activité reliée"
+                    appendTo="body"
+                    formControlName="activity_id">         
+                </ng-select>
+              </td>
+            </ng-container>
+
+
+            <!-- operations Column -->
+            <ng-container matColumnDef="operations">
+              <th mat-header-cell *matHeaderCellDef> operations </th>
+              <td mat-cell *matCellDef="let element; let i=index" [formGroup]="element">
+                <button type="button" class="btn btn-danger pull-right" (click)="deleteFormTimeline(i)">
+                  <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Retirer
+                </button>
+              </td>
+            </ng-container>
+
 
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"

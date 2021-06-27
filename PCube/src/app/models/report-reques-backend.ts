@@ -15,23 +15,23 @@ export class ReportRequestForBackend {
         this.users = reportResponse && reportResponse.users || [];
     }
 
-    buildFromReportRequest(report: ReportRequest) {
-        if(report.dateDebut) this.dateDebut = report.dateDebut;
-        else this.dateDebut = "";
-        if(report.dateFin) this.dateFin = report.dateFin;
-        else this.dateFin = "";
-        this.projects = [];
+    static buildFromReportRequest(report: ReportRequest) : ReportRequestForBackend {
+        let repReq = new ReportRequestForBackend();
+        if(report.dateDebut) repReq.dateDebut = report.dateDebut;
+        else repReq.dateDebut = "";
+        if(report.dateFin) repReq.dateFin = report.dateFin;
+        else repReq.dateFin = "";
+        repReq.projects = [];
         for(let projet of report.projects)
-            this.projects.push(projet.id);
+        repReq.projects.push(projet.id);
         
-        this.users = [];
+        repReq.users = [];
         for(let user of report.users)
-            this.users.push(user.id);
+        repReq.users.push(user.id);
         
-        this.activitys = []
+        repReq.activitys = []
         for(let activity of report.activitys)
-            this.activitys.push(activity.id);
+        repReq.activitys.push(activity.id);
+        return repReq;
     }
-
-    
 }

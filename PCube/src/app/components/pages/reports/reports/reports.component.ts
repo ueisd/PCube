@@ -56,24 +56,19 @@ export class ReportsComponent implements OnInit {
 
   }
 
-  refreshRequestBackend(req: ReportRequest) {
-    this.reportRequestBackend = new ReportRequestForBackend();
-    this.reportRequestBackend.buildFromReportRequest(req);
-  }
-
   
 
   ngOnInit(): void {
     if(history.state.params) {
       this.reportRequest = history.state.params;
-      this.refreshRequestBackend(history.state.params);
+      this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(history.state.params);
       this.refreshReport();
     }
 
     this.reportReqService.paramsAnnounced$.subscribe(
       params => {
         this.reportRequest = params;
-        this.refreshRequestBackend(params);
+        this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(params);
         this.refreshReport();
       }
     ); 

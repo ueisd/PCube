@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProjectItem } from 'src/app/models/project';
 import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
 
 const API_PROJECT = environment.api_url + "/api/project";
 const API_IS_UNIQUE = environment.api_url + "/api/project/is-unique";
@@ -38,6 +39,15 @@ export class ProjectService {
       })
     };
     return this.http.get<ProjectItem[]>(API_APPARENTABLE + "/" + id, opts);
+  }
+
+  getParentOptions(id: number): Observable<ProjectItem[]>{
+    return this.getApparentableProject(id).pipe(
+      map(
+        projets => {
+          return this.generateParentOption(projets, 0);
+        }
+    ));
   }
 
    /* Crée une liste des noeuds de l'arborescence 

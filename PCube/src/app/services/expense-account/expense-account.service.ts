@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
 import { environment } from 'src/environments/environment';
+import { map } from 'rxjs/operators';
 const SEPARATOR: string = " * ";
 
 const API_EXPENSE_ACCOUNT = environment.api_url + "/api/expense-account";
@@ -52,6 +53,16 @@ export class ExpenseAccountService {
       })
     };
     return this.http.get<ExpenseAccountItem[]>(API_EXPENSE_ACCOUNT, opts);
+  }
+
+  getExpensesAccountOptions(): Observable<ExpenseAccountItem[]>{
+    return this.getAllExpenseAccount().pipe(
+      map( accounts =>
+        {
+          return this.generateParentOption(accounts, 0);
+        }
+      )
+    );
   }
 
   getApparentableExpenseAccounts(id : number): Observable<ExpenseAccountItem[]>{
