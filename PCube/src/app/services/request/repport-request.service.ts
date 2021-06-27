@@ -7,6 +7,7 @@ import { ReportItem } from 'src/app/models/report-item';
 import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
 import { environment } from 'src/environments/environment';
 import { TimelineItem } from 'src/app/models/timeline';
+import { map } from 'rxjs/operators';
 
 const API_REPORT = environment.api_url + '/api/timeline/testsum';
 const API_GET_TIMELINES = environment.api_url + '/api/timeline/getLines';
@@ -43,7 +44,13 @@ export class RepportRequestService {
         'Content-Type': 'application/json'
       })
     };
-    return this.http.post<TimelineItem[]>(API_GET_TIMELINES, params, opts);
+    return this.http.post<TimelineItem[]>(API_GET_TIMELINES, params, opts).pipe(map(
+      timelines => timelines.map(
+        timeline => {
+          return new TimelineItem(timeline);
+        }
+      )
+    ));
   }
 
   // Service message commands

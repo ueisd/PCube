@@ -7,7 +7,7 @@ import { AppComponent } from './app.component';
 import { EnvTestComponent } from './components/envtest/envtest.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from './material/material.module';
-import { MatNativeDateModule, DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatNativeDateModule, DateAdapter, MAT_DATE_LOCALE, MAT_DATE_FORMATS } from '@angular/material/core';
 
 import { LoginComponent } from './components/pages/login/login.component';
 import { LogoutComponent } from './components/layouts/logout/logout.component';
@@ -62,6 +62,19 @@ import { ReportsComponent } from './components/pages/reports/reports/reports.com
 import { ContactUsComponent } from './components/pages/contact-us/contact-us.component';
 import { RequestComponent } from './components/layouts/request/request.component';
 import { EditComponent } from './components/domain/timelines/edit/edit.component';
+import { MomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
+
+const MY_FORMATS = {
+  parse: {
+    dateInput: 'input',
+  },
+  display: {
+    dateInput: 'MM/DD/YYYY',
+    monthYearLabel: 'MMMM YYYY',
+    dateA11yLabel: 'MM/DD/YYYY',
+    monthYearA11yLabel: 'MMMM YYYY',
+  }
+};
 
 
 @NgModule({
@@ -124,12 +137,14 @@ import { EditComponent } from './components/domain/timelines/edit/edit.component
     FlexLayoutModule,
     NgSelectModule,
     NgxMaterialTimepickerModule,
+    // MomentDateModule
   ],
   entryComponents: [AddActivityComponent],
   exports:[UserListComponent, AddActivityComponent],
   bootstrap: [AppComponent],
   providers: [
-    
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE] },
+    { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
     { 
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, 
       useValue: { appearance: 'fill' } 

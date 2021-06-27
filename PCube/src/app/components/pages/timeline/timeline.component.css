@@ -1,0 +1,17 @@
+
+
+.jour-form-widget {
+    width:125px !important;
+}
+
+.heure-form-widget {
+    width:85px !important;
+}
+
+.changed-row {
+    background-color: rgb(255, 218, 149);
+}
+
+.new-row {
+    background-color: rgb(160, 248, 109);
+}

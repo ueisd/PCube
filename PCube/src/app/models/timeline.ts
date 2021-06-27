@@ -1,9 +1,12 @@
-import { FormControl, FormGroup, Validators } from "@angular/forms";
-import { connectableObservableDescriptor } from "rxjs/internal/observable/ConnectableObservable";
+import { FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
 import { ActivityItem } from "./activity";
 import { ExpenseAccountItem } from "./expense-account";
 import { ProjectItem } from "./project";
 import { User } from "./user";
+import { formatDate } from "@angular/common";
+
+const format = 'yyyy-MM-dd';
+const locale = 'en-US';
 
 export class TimelineItem{
     id : number;
@@ -14,16 +17,18 @@ export class TimelineItem{
     expense_account_id: number;
     activity_id: number;
     user_id: number;
+    isChanged: boolean = false;
 
     constructor(timelineResponse?: any) {
         this.id = timelineResponse && timelineResponse.id || "";
         this.day_of_week = timelineResponse && timelineResponse.day_of_week || "";
-        this.punch_in = timelineResponse && timelineResponse.punch_in || "";;
-        this.punch_out = timelineResponse && timelineResponse.punch_out || "";;
-        this.project_id = timelineResponse && timelineResponse.project_id || "";;
-        this.expense_account_id = timelineResponse && timelineResponse.expense_account_id || "";;
-        this.activity_id = timelineResponse && timelineResponse.activity_id || "";;
-        this.user_id = timelineResponse && timelineResponse.user_id || "";;
+        this.punch_in = timelineResponse && timelineResponse.punch_in || "";
+        this.punch_out = timelineResponse && timelineResponse.punch_out || "";
+        this.project_id = timelineResponse && timelineResponse.project_id || "";
+        this.expense_account_id = timelineResponse && timelineResponse.expense_account_id || "";
+        this.activity_id = timelineResponse && timelineResponse.activity_id || "";
+        this.user_id = timelineResponse && timelineResponse.user_id || "";
+        if(timelineResponse && timelineResponse.isChanged) this.isChanged = timelineResponse.isChanged;
     }
 
     clone(): TimelineItem {
@@ -35,7 +40,30 @@ export class TimelineItem{
         cloned.project_id = this.project_id;
         cloned.activity_id = this.activity_id;
         cloned.user_id = this.user_id;
+        cloned.isChanged = this.isChanged;
         return cloned;
+    }
+
+    static isUnchanged(data: any) {
+        return (formatDate(data.day_of_week, format, locale) === data.oldValue.day_of_week)
+        && (data.punch_in === data.oldValue.punch_in)
+        && (data.punch_out === data.oldValue.punch_out)    
+        && (
+            (data.activity_id == null && data.oldValue.activity_id == "") 
+            || (data.activity_id && data.activity_id.id === data.oldValue.activity_id)
+           )                                                                        
+        && (
+            (data.expense_account_id == null && data.oldValue.expense_account_id == "") 
+            || (data.expense_account_id && data.expense_account_id.id === data.oldValue.expense_account_id)
+           )                                                  
+        && (
+            (data.user_id == null && data.oldValue.user_id == "") 
+            || (data.user_id && data.user_id.id === data.oldValue.user_id)
+           )
+        && (
+            (data.project_id == null && data.oldValue.project_id == "") 
+            || (data.project_id && data.project_id.id === data.oldValue.project_id)
+           );
     }
 
     static asFormGroup(
@@ -46,20 +74,36 @@ export class TimelineItem{
         users: User[]
     ): FormGroup {
         let activity = activitys.find(elem => elem.id === timeline.activity_id);
-        let project = projets.find(elem => elem.id === timeline.activity_id);
+        let project = projets.find(elem => elem.id === timeline.project_id);
         let compte = comptes.find(elem => elem.id === timeline.expense_account_id);
         let user = users.find(elem => elem.id === timeline.user_id);
 
-        const fg = new FormGroup({
-            id: new FormControl(timeline.id, Validators.required),
-            day_of_week: new FormControl(timeline.day_of_week, Validators.required),
-            punch_in: new FormControl(timeline.punch_in, Validators.required),
-            punch_out: new FormControl(timeline.punch_out, Validators.required),
-            activity_id: new FormControl(activity, Validators.required),
-            project_id: new FormControl(project, Validators.required),
-            expense_account_id: new FormControl(compte, Validators.required),
-            user_id: new FormControl(user, Validators.required),
-        });
+        const fg = new FormGroup(
+            {
+                id: new FormControl(timeline.id, Validators.required),
+                day_of_week: new FormControl(timeline.day_of_week, Validators.required),
+                punch_in: new FormControl(timeline.punch_in, Validators.required),
+                punch_out: new FormControl(timeline.punch_out, Validators.required),
+                activity_id: new FormControl(activity, Validators.required),
+                project_id: new FormControl(project, Validators.required),
+                expense_account_id: new FormControl(compte, Validators.required),
+                user_id: new FormControl(user, Validators.required),
+                oldValue: new FormControl(timeline),
+                isChanged: new FormControl(timeline.isChanged, Validators.required),
+            }, TimelineItem.IsTimelineFormChanged
+        );
         return fg;
-      }
+    }
+
+    static IsTimelineFormChanged: ValidatorFn = (fg: FormGroup) => {
+        let isDifferent = !TimelineItem.isUnchanged(fg.value);
+        let isChangedCtrl = fg.get('isChanged');
+
+        if(!isChangedCtrl.value && isDifferent) {
+            isChangedCtrl.setValue(true,  { emitEvent: false });
+        }else if(isChangedCtrl.value && !isDifferent) {
+            isChangedCtrl.setValue(false,  { emitEvent: false });
+        } 
+        return null;
+    };
 }
