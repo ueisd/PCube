@@ -7,14 +7,15 @@
     </mat-card-content>    
   </mat-card>
 
-  <button mat-raised-button color="accent" (click)="saveTimelines()">Enregistrer les changements</button>
-
-  <button mat-raised-button color="primary" (click)="addFormTimeline()">Ajouter une ligne de temps :)</button>
-
+  
 
   <form [formGroup]="form" autocomplete="off">
+    <button mat-raised-button color="primary" (click)="addFormTimeline()">Ajouter une ligne de temps :)</button>
+    <button mat-raised-button color="accent" (click)="saveTimelines()" *ngIf="timelinesGr.controls.length >0">
+      Enregistrer les changements
+    </button>
     <ng-container formArrayName="timelinesGr">
-      <table #table mat-table [dataSource]="timelinesGr.controls" class="mat-elevation-z8">
+      <table #table mat-table [dataSource]="timelinesGr.controls" class="mat-elevation-z8" >
 
         <!-- day_of_week Column -->
         <ng-container matColumnDef="day_of_week">

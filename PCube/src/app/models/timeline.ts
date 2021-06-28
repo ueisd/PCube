@@ -9,7 +9,7 @@ const format = 'yyyy-MM-dd';
 const locale = 'en-US';
 
 export class TimelineItem{
-    id : number;
+    id : number = 0;
     day_of_week : string;
     punch_in: string;
     punch_out: string;
@@ -46,6 +46,7 @@ export class TimelineItem{
 
     static builFromFormGroup(item: any): TimelineItem {
         let buildedItem = new TimelineItem(item);
+        if(item.id) buildedItem.id = item.id;
         if(item.project_id) buildedItem.project_id = item.project_id.id;
         if(item.activity_id) buildedItem.activity_id = item.activity_id.id;
         if(item.user_id) buildedItem.user_id = item.user_id.id;

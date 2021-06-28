@@ -1,7 +1,9 @@
-
+table {
+    min-width: 90%; 
+}
 
 .jour-form-widget {
-    width:125px !important;
+    width:130px !important;
 }
 
 .heure-form-widget {

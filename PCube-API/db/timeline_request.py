@@ -11,33 +11,6 @@ class TimelineRequest:
     def __init__(self, connection):
         self.connection = connection
 
-    def insert(self, timeline_dict):
-        """
-        Permet d'insère une nouvelle ligne de temps dans la base de données.
-        La fonctionne retourne une ligne de temps avec son nouvel identifiant.
-        """
-        try:
-            cursor = self.connection.cursor()
-            cursor.execute("insert into timeline(day_of_week,"
-                           " punch_in, punch_out,"
-                           " project_id, expense_account_id,"
-                           " activity_id, user_id)"
-                           " values(?, ?, ?, ?, ?, ?, ?)",
-                           (timeline_dict["day_of_week"],
-                            timeline_dict["punch_in"],
-                            timeline_dict["punch_out"],
-                            timeline_dict["project_id"],
-                            timeline_dict["expense_account_id"],
-                            timeline_dict["activity_id"],
-                            timeline_dict["user_id"]))
-            self.connection.commit()
-            id = cursor.lastrowid
-            cursor.close()
-            timeline_dict["id"] = id
-        except sqlite3.Error:
-            timeline_dict["id"] = -999
-        finally:
-            return timeline_dict
     
     def insertMany(self, timeline_dict):
         """
@@ -64,6 +37,31 @@ class TimelineRequest:
         )
         self.connection.commit()
         cursor.close()
+
+    def update(self, timelines):
+        if len(timelines) > 0:
+            insertParams = []
+            for timeline in timelines:
+                insertParams = insertParams + [timeline.id, timeline.day_of_week, timeline.punch_in,
+                    timeline.punch_out, timeline.project_id,
+                    timeline.expense_account_id, timeline.activity_id,
+                    timeline.user_id]
+            insertions = ["(?, ?, ?, ?, ?, ?, ?, ?)"] * len(timelines)
+            insertions = ', '.join(insertions)
+            cursor = self.connection.cursor()
+            cursor.execute( 
+                "INSERT INTO timeline("
+                "   id, day_of_week, punch_in, punch_out, project_id, expense_account_id, activity_id, user_id"
+                ") VALUES"
+                + insertions +
+                " ON CONFLICT(id) DO UPDATE SET day_of_week = EXCLUDED.day_of_week, "
+                " punch_in = EXCLUDED.punch_in, punch_out = EXCLUDED.punch_out, "
+                " project_id = EXCLUDED.project_id, expense_account_id = EXCLUDED.expense_account_id, "
+                " activity_id = EXCLUDED.activity_id, user_id = EXCLUDED.user_id ",
+                (insertParams))
+
+            self.connection.commit()
+            cursor.close()
 
     def checkUniqueConstraint(self, timeline_dict):
         cursor = self.connection.cursor()
@@ -100,20 +98,23 @@ class TimelineRequest:
             ('%'+timeline.day_of_week+'%', '%'+timeline.project_name+'%',
              '%'+timeline.activity_name+'%', '%'+timeline.member_name+'%',
              '%'+timeline.member_name+'%',
-             '%'+timeline.expense_account_name+'%'))
+             '%'+timeline.expense_account_name+'%')
+        )
         data = cursor.fetchall()
         cursor.close()
         return data
 
-    def delete_timeline(self, timeline):
+    def delete_timelines(self, timelinesIds):
         """
         Permet de supprimer une timeline
         """
+        insertions = ["?"] * len(timelinesIds)
+        insertions = "(" + ', '.join(insertions) + ")"
         cursor = self.connection.cursor()
-        cursor.execute("delete from timeline where id = ? and day_of_week = ?"
-                       " and punch_in = ? and punch_out = ?",
-                       (timeline.id, timeline.day_of_week, timeline.punch_in,
-                        timeline.punch_out))
+        cursor.execute(
+            "DELETE FROM timeline WHERE id IN " + insertions,
+            timelinesIds
+        )
         self.connection.commit()
         cursor.close()
 
@@ -155,21 +156,14 @@ class TimelineRequest:
         clauseLignes = self.fetchClauseFromReqParams(params)
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
-        cursor.execute("select t.* from timeline t"
-            # partie permetant la différence d'heures en sql lite
-            # (language limité...))
-            + " where " + clauseLignes
-            )
+        cursor.execute("select t.* from timeline t where " + clauseLignes)
         data = cursor.fetchall()
         cursor.close()
-
         return data
 
     def get_accountTimeWithSum(self, params):
 
-        clauseLignes = self.fetchClauseFromReqParams(params)
-        
-
+        clauseLignes = self.fetchClauseFromReqParams(params)       
         self.connection.row_factory = dict_factory
         cursor = self.connection.cursor()
         cursor.execute("select a.*, "
@@ -211,26 +205,4 @@ class TimelineRequest:
 
 
 
-    def update(self, timelines):
-        if len(timelines) > 0:
-            insertParams = []
-            for timeline in timelines:
-                insertParams = insertParams + [timeline.id, timeline.day_of_week, timeline.punch_in,
-                    timeline.punch_out, timeline.project_id,
-                    timeline.expense_account_id, timeline.activity_id,
-                    timeline.user_id]
-            insertions = ["(?, ?, ?, ?, ?, ?, ?, ?)"] * len(timelines)
-            insertions = ', '.join(insertions)
-            cursor = self.connection.cursor()
-            cursor.execute( "INSERT INTO timeline("
-                " id, day_of_week, punch_in, punch_out, project_id, "
-                " expense_account_id, activity_id, user_id) "
-                " VALUES" + insertions +
-                " ON CONFLICT(id) DO UPDATE SET day_of_week = EXCLUDED.day_of_week, "
-                " punch_in = EXCLUDED.punch_in, punch_out = EXCLUDED.punch_out, "
-                " project_id = EXCLUDED.project_id, expense_account_id = EXCLUDED.expense_account_id, "
-                " activity_id = EXCLUDED.activity_id, user_id = EXCLUDED.user_id ",
-                (insertParams))
-
-            self.connection.commit()
-            cursor.close()
+    

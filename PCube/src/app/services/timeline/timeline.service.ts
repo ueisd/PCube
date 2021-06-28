@@ -101,6 +101,17 @@ export class TimelineService {
     return this.http.get<TimelineItem>(url, opts);
   }
 
+  deleteTimelines(idsToDelete:number[]) {
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+      }),
+      body: idsToDelete
+    };
+    return this.http.delete(API_TIMELINE, opts);
+  }
+
+  //@todo supprimer
   deleteTimeline(id, day_of_week: string, punch_in: string, punch_out: string) {
     const opts = {
       headers: new HttpHeaders({

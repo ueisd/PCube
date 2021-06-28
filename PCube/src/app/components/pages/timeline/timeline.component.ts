@@ -14,6 +14,7 @@ import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user/user.service';
 import { MatTable } from '@angular/material/table';
 import { TimelineService } from 'src/app/services/timeline/timeline.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-timeline',
@@ -27,6 +28,9 @@ export class TimelineComponent implements OnInit {
   reportRequestBackend : ReportRequestForBackend;
   timelines : TimelineItem[] = [];
   @ViewChild('table') table: MatTable<Element>;
+
+
+  timelinesSubscription: Subscription;
 
   // Options
   activityOptions: ActivityItem[] = null;
@@ -70,8 +74,9 @@ export class TimelineComponent implements OnInit {
     ]);
 
     if(history.state.params) this.refreshTimelinesListAndForm(history.state.params);
-
-    this.reportReqService.paramsAnnounced$.subscribe(
+    
+    
+    this.timelinesSubscription = this.reportReqService.paramsAnnounced$.subscribe(
       params => this.refreshTimelinesListAndForm(params)
     );
   }
@@ -80,7 +85,7 @@ export class TimelineComponent implements OnInit {
     this.reportRequest = req;
     this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(req);
     this.timelines = await this.reportReqService.getTimelines(this.reportRequestBackend).toPromise();
-    if(this.timelines.length > 0) this.refreshTimelinesForm(this.timelines);
+    this.refreshTimelinesForm(this.timelines);
   }
 
   refreshTimelinesForm = async (timelines: TimelineItem[]) => {
@@ -94,7 +99,7 @@ export class TimelineComponent implements OnInit {
       )
     );
     this.form.setControl('timelinesGr', new FormArray(fgs));
-    if(fgs.length >0) this.table.renderRows();
+    if(this.table) this.table.renderRows();
   }
 
               // fonctions d'interraction
@@ -106,7 +111,7 @@ export class TimelineComponent implements OnInit {
   }
   addFormTimeline() {
     let timeline = new TimelineItem();
-    timeline.day_of_week = "2029-01-01"; // @todo mettre la date actuelle sous ce format
+    timeline.day_of_week = "2020-01-01"; // @todo mettre la date actuelle sous ce format
 
     let fgTime = TimelineItem.asFormGroup(
       timeline, 
@@ -130,10 +135,16 @@ export class TimelineComponent implements OnInit {
     let newTimelines = timelines.filter(timeline => timeline.id < 1);
     let modifiedTimelines = timelines.filter(timeline => timeline.isChanged && !(timeline.id<1));
     let deletedTimelinesids = loadedTimelinesIds.filter(n => !timelinesids.includes(n));
+    if(deletedTimelinesids.length>0) await this.timelineService.deleteTimelines(deletedTimelinesids).toPromise();
     if(modifiedTimelines.length>0) await this.timelineService.updateTimelines(modifiedTimelines).toPromise();
     if(newTimelines.length>0) await this.timelineService.addNewTimelines(newTimelines).toPromise();
-    
-    
+
+    this.timelines = await this.reportReqService.getTimelines(this.reportRequestBackend).toPromise();
+    this.refreshTimelinesForm(this.timelines);
+  }
+
+  ngOnDestroy() {
+    this.timelinesSubscription.unsubscribe();
   }
 
 }

@@ -45,6 +45,14 @@ timelines_update_schema = {
     "additionalProperties": True
 }
 
+timelines_delete_schema = {
+    "type": "array",
+    "items": {
+        "type": "integer"
+    }
+}
+
+## @todo supprimer
 timeline_delete_schema = {
     "type": "object",
     "required": ["id", "day_of_week", "punch_in", "punch_out"],

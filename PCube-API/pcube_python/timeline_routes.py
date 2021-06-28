@@ -12,7 +12,7 @@ from flask_json_schema import JsonValidationError
 from .db_controller import get_db
 from flask.logging import create_logger
 from ..schemas.timeline_schema import (
-    timeline_insert_schema, timeline_delete_schema, timelines_update_schema)
+    timeline_insert_schema, timelines_delete_schema, timelines_update_schema)
 from ..db.timeline_request import TimelineRequest
 from ..domain.timeline import Timeline
 from ..domain.timelineFilter import TimelineFilter
@@ -46,7 +46,41 @@ def create_timeline_from_json_dict():
         log.error('Timeline error: %s', error)
         abort(500)
 
+@timeline.route('', methods=['PUT'])
+@project_manager_required
+@schema.validate(timelines_update_schema)
+def update_timeline_from_json_dict():
+    """
+    Reçois une ligne de temps en format JSON et update celle-ci avec les
+    nouvelles informations.
+    """
+    try:
+        timelines = list(map(timelineTreatment, request.json))
+        connection = get_db().get_connection()
+        query = TimelineRequest(connection)
+        query.update(timelines)
+        return make_response(jsonify(""), 200)
+    except sqlite3.Error as error:
+        log.error('Timeline error: %s', error)
+        abort(500)
 
+@timeline.route('', methods=['DELETE'])
+@project_manager_required
+@schema.validate(timelines_delete_schema)
+def delete_timeline():
+    """
+    Supprimer une ligne de temps de la BD.
+    Les champs id, day_of_week, punch_in, punch_out doivent être présent
+    pour confirmer la suppression.
+    """
+    try:
+        connection = get_db().get_connection()
+        query = TimelineRequest(connection)
+        query.delete_timelines(request.json)
+        return make_response(jsonify(""), 200)
+    except sqlite3.Error as error:
+        log.error('Timeline error: %s', error)
+        abort(500)
 
 def timelineTreatment(data):
     timeline = Timeline()
@@ -61,47 +95,7 @@ def timelineTreatment(data):
     timeline.user_id = escape(data["user_id"]).strip()
     timeline.day_of_week = escape(data["day_of_week"]).strip()
     return timeline
-
-@timeline.route('', methods=['PUT'])
-@project_manager_required
-@schema.validate(timelines_update_schema)
-def update_timeline_from_json_dict():
-    """
-    Reçois une ligne de temps en format JSON et update celle-ci avec les
-    nouvelles informations.
-    """
-    timelines = list(map(timelineTreatment, request.json))
     
-    connection = get_db().get_connection()
-    query = TimelineRequest(connection)
-    query.update(timelines)
-
-    return jsonify(""), 200
-
-
-@timeline.route('', methods=['DELETE'])
-@project_manager_required
-@schema.validate(timeline_delete_schema)
-def delete_timeline():
-    """
-    Supprimer une ligne de temps de la BD.
-    Les champs id, day_of_week, punch_in, punch_out doivent être présent
-    pour confirmer la suppression.
-    """
-    data = request.json
-    timeline = Timeline()
-    timeline.id = data["id"]
-    timeline.day_of_week = data["day_of_week"]
-    timeline.punch_out = data["punch_out"]
-    timeline.punch_in = data["punch_in"]
-
-    connection = get_db().get_connection()
-    query = TimelineRequest(connection)
-
-    query.delete_timeline(timeline)
-
-    return jsonify(""), 200
-
 
 @timeline.route('/filter', methods=['GET'])
 @auth_required
