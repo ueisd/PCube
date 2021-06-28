@@ -15,6 +15,8 @@ import { UserService } from 'src/app/services/user/user.service';
 import { MatTable } from '@angular/material/table';
 import { TimelineService } from 'src/app/services/timeline/timeline.service';
 import { Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 
 @Component({
   selector: 'app-timeline',
@@ -28,6 +30,7 @@ export class TimelineComponent implements OnInit {
   reportRequestBackend : ReportRequestForBackend;
   timelines : TimelineItem[] = [];
   @ViewChild('table') table: MatTable<Element>;
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
 
 
   timelinesSubscription: Subscription;
@@ -47,7 +50,8 @@ export class TimelineComponent implements OnInit {
     private activityService: ActivityService,
     private userService: UserService,
     private timelineService: TimelineService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    private snackBar: MatSnackBar
     ) { }
 
   get timelinesGr(): FormArray {
@@ -139,8 +143,11 @@ export class TimelineComponent implements OnInit {
     if(modifiedTimelines.length>0) await this.timelineService.updateTimelines(modifiedTimelines).toPromise();
     if(newTimelines.length>0) await this.timelineService.addNewTimelines(newTimelines).toPromise();
 
-    this.timelines = await this.reportReqService.getTimelines(this.reportRequestBackend).toPromise();
-    this.refreshTimelinesForm(this.timelines);
+    if(deletedTimelinesids.length>0 || modifiedTimelines.length>0 || newTimelines.length>0) {
+      this.timelines = await this.reportReqService.getTimelines(this.reportRequestBackend).toPromise();
+      this.refreshTimelinesForm(this.timelines);
+      this.customSnackBar.openSnackBar("Succès, enregistré", 'notif-success');
+    }
   }
 
   ngOnDestroy() {
