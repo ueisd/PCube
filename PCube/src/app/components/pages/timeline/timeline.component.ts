@@ -24,7 +24,7 @@ export class TimelineComponent implements OnInit {
   form: FormGroup;
   reportRequest : ReportRequest;
   reportRequestBackend : ReportRequestForBackend;
-  timelines : TimelineItem[];
+  timelines : TimelineItem[] = [];
   @ViewChild('table') table: MatTable<Element>;
 
   // Options
@@ -100,6 +100,20 @@ export class TimelineComponent implements OnInit {
     let control = <FormArray>this.form.controls.timelinesGr;
     control.removeAt(index);
     this.table.renderRows();
+  }
+
+  saveTimelines() {
+    let loadedTimelinesIds = this.timelines.map(timeline => timeline.id);
+    let timelines = <TimelineItem[]>this.form.value.timelinesGr.map(
+      timeline => TimelineItem.builFromFormGroup(timeline)
+    );
+    let timelinesids = timelines.map(timeline => timeline.id);
+
+    let newTimelines = timelines.filter(timeline => timeline.id < 1);
+    let modifiedTimelines = timelines.filter(timeline => timeline.isChanged);
+    let deletedTimelinesids = console.log(loadedTimelinesIds.filter(n => !timelinesids.includes(n)));
+    
+    //console.log("Timelines ids:" + JSON.stringify(modifiedTimelines));
   }
 
   addFormTimeline() {

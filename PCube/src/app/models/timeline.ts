@@ -20,7 +20,7 @@ export class TimelineItem{
     isChanged: boolean = false;
 
     constructor(timelineResponse?: any) {
-        this.id = timelineResponse && timelineResponse.id || "";
+        this.id = timelineResponse && timelineResponse.id || 0;
         this.day_of_week = timelineResponse && timelineResponse.day_of_week || "";
         this.punch_in = timelineResponse && timelineResponse.punch_in || "";
         this.punch_out = timelineResponse && timelineResponse.punch_out || "";
@@ -42,6 +42,15 @@ export class TimelineItem{
         cloned.user_id = this.user_id;
         cloned.isChanged = this.isChanged;
         return cloned;
+    }
+
+    static builFromFormGroup(item: any): TimelineItem {
+        let buildedItem = new TimelineItem(item);
+        if(item.project_id) buildedItem.project_id = item.project_id.id;
+        if(item.activity_id) buildedItem.activity_id = item.activity_id.id;
+        if(item.user_id) buildedItem.user_id = item.user_id.id;
+        if(item.expense_account_id) buildedItem.expense_account_id = item.expense_account_id.id;
+        return buildedItem;
     }
 
     static isUnchanged(data: any) {
