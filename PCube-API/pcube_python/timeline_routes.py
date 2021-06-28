@@ -1,4 +1,5 @@
 # coding=utf-8
+import sqlite3
 from flask import Flask
 from flask import abort
 from flask import jsonify
@@ -11,7 +12,7 @@ from flask_json_schema import JsonValidationError
 from .db_controller import get_db
 from flask.logging import create_logger
 from ..schemas.timeline_schema import (
-    timeline_insert_schema, timeline_delete_schema, timeline_update_schema)
+    timeline_insert_schema, timeline_delete_schema, timelines_update_schema)
 from ..db.timeline_request import TimelineRequest
 from ..domain.timeline import Timeline
 from ..domain.timelineFilter import TimelineFilter
@@ -19,8 +20,7 @@ from ..domain.treeGenerationParam import ChampsArbreParam
 from ..domain.accountRequestParams import AccountRequestParams
 from ..schemas.report_request_schema import report_request_schema
 from ..utility.auth import (
-    auth_required, auth_refresh_required, AuthenticationError,
-    admin_required, project_manager_required, member_required
+    auth_required, project_manager_required, member_required
 )
 
 timeline = Blueprint('timeline', __name__)
@@ -34,35 +34,24 @@ schema = JsonSchema(app)
 @schema.validate(timeline_insert_schema)
 def create_timeline_from_json_dict():
     """
-    Cette route reçois une liste JSON de ligne de temps et l'ajoute à la
+    Cette route reçoit une liste JSON de ligne de temps et l'ajoute à la
     base de données
     """
-    data = request.json
-    timelines = data['timelines']
-
-    connection = get_db().get_connection()
-    query = TimelineRequest(connection)
-
-    for timeline in timelines:
-        timeline = query.insert(timeline)
-        if timeline["id"] < 0:
-            log.error("Contrainte unique pour ligne de temps non respecté")
-
-    return jsonify({"timelines": timelines}), 201
+    try:
+        connection = get_db().get_connection()
+        query = TimelineRequest(connection)
+        rep = query.insertMany(request.json)
+        return make_response(jsonify(rep))
+    except sqlite3.Error as error:
+        log.error('Timeline error: %s', error)
+        abort(500)
 
 
-@timeline.route('', methods=['PUT'])
-@project_manager_required
-@schema.validate(timeline_update_schema)
-def update_timeline_from_json_dict():
-    """
-    Reçois une ligne de temps en format JSON et update celle-ci avec les
-    nouvelles informations.
-    """
-    data = request.json
 
+def timelineTreatment(data):
     timeline = Timeline()
-    timeline.id = escape(data["id"]).strip()
+    if data["id"]:
+        timeline.id = escape(data["id"]).strip()
     timeline.punch_in = escape(data["punch_in"]).strip()
     timeline.punch_out = escape(data["punch_out"]).strip()
     timeline.project_id = escape(data["project_id"]).strip()
@@ -71,10 +60,21 @@ def update_timeline_from_json_dict():
         data["expense_account_id"]).strip()
     timeline.user_id = escape(data["user_id"]).strip()
     timeline.day_of_week = escape(data["day_of_week"]).strip()
+    return timeline
 
+@timeline.route('', methods=['PUT'])
+@project_manager_required
+@schema.validate(timelines_update_schema)
+def update_timeline_from_json_dict():
+    """
+    Reçois une ligne de temps en format JSON et update celle-ci avec les
+    nouvelles informations.
+    """
+    timelines = list(map(timelineTreatment, request.json))
+    
     connection = get_db().get_connection()
     query = TimelineRequest(connection)
-    query.update(timeline)
+    query.update(timelines)
 
     return jsonify(""), 200
 

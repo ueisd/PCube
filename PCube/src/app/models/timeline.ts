@@ -50,6 +50,7 @@ export class TimelineItem{
         if(item.activity_id) buildedItem.activity_id = item.activity_id.id;
         if(item.user_id) buildedItem.user_id = item.user_id.id;
         if(item.expense_account_id) buildedItem.expense_account_id = item.expense_account_id.id;
+        buildedItem.day_of_week = formatDate(item.day_of_week, format, locale);
         return buildedItem;
     }
 

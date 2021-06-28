@@ -30,7 +30,7 @@ export class RepportRequestService {
   getReport(params: ReportRequestForBackend): Observable<ReportItem[]>{
     const opts = {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
         'Content-Type': 'application/json'
       })
     };
@@ -40,15 +40,13 @@ export class RepportRequestService {
   getTimelines(params: ReportRequestForBackend): Observable<TimelineItem[]>{
     const opts = {
       headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
         'Content-Type': 'application/json'
       })
     };
     return this.http.post<TimelineItem[]>(API_GET_TIMELINES, params, opts).pipe(map(
       timelines => timelines.map(
-        timeline => {
-          return new TimelineItem(timeline);
-        }
+        timeline => new TimelineItem(timeline)
       )
     ));
   }

@@ -13,6 +13,7 @@ import { ExpenseAccountItem } from 'src/app/models/expense-account';
 import { User } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user/user.service';
 import { MatTable } from '@angular/material/table';
+import { TimelineService } from 'src/app/services/timeline/timeline.service';
 
 @Component({
   selector: 'app-timeline',
@@ -41,6 +42,7 @@ export class TimelineComponent implements OnInit {
     private expenseAccountServices: ExpenseAccountService,
     private activityService: ActivityService,
     private userService: UserService,
+    private timelineService: TimelineService,
     private _formBuilder: FormBuilder
     ) { }
 
@@ -78,7 +80,7 @@ export class TimelineComponent implements OnInit {
     this.reportRequest = req;
     this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(req);
     this.timelines = await this.reportReqService.getTimelines(this.reportRequestBackend).toPromise();
-    this.refreshTimelinesForm(this.timelines);
+    if(this.timelines.length > 0) this.refreshTimelinesForm(this.timelines);
   }
 
   refreshTimelinesForm = async (timelines: TimelineItem[]) => {
@@ -92,6 +94,7 @@ export class TimelineComponent implements OnInit {
       )
     );
     this.form.setControl('timelinesGr', new FormArray(fgs));
+    if(fgs.length >0) this.table.renderRows();
   }
 
               // fonctions d'interraction
@@ -101,21 +104,6 @@ export class TimelineComponent implements OnInit {
     control.removeAt(index);
     this.table.renderRows();
   }
-
-  saveTimelines() {
-    let loadedTimelinesIds = this.timelines.map(timeline => timeline.id);
-    let timelines = <TimelineItem[]>this.form.value.timelinesGr.map(
-      timeline => TimelineItem.builFromFormGroup(timeline)
-    );
-    let timelinesids = timelines.map(timeline => timeline.id);
-
-    let newTimelines = timelines.filter(timeline => timeline.id < 1);
-    let modifiedTimelines = timelines.filter(timeline => timeline.isChanged);
-    let deletedTimelinesids = console.log(loadedTimelinesIds.filter(n => !timelinesids.includes(n)));
-    
-    //console.log("Timelines ids:" + JSON.stringify(modifiedTimelines));
-  }
-
   addFormTimeline() {
     let timeline = new TimelineItem();
     timeline.day_of_week = "2029-01-01"; // @todo mettre la date actuelle sous ce format
@@ -130,6 +118,22 @@ export class TimelineComponent implements OnInit {
     let control = <FormArray>this.form.controls.timelinesGr;
     control.insert(0, fgTime);
     this.table.renderRows();
+  }
+
+  async saveTimelines() {
+    let loadedTimelinesIds = this.timelines.map(timeline => timeline.id);
+    let timelines = <TimelineItem[]>this.form.value.timelinesGr.map(
+      timeline => TimelineItem.builFromFormGroup(timeline)
+    );
+    let timelinesids = timelines.map(timeline => timeline.id);
+
+    let newTimelines = timelines.filter(timeline => timeline.id < 1);
+    let modifiedTimelines = timelines.filter(timeline => timeline.isChanged && !(timeline.id<1));
+    let deletedTimelinesids = loadedTimelinesIds.filter(n => !timelinesids.includes(n));
+    if(modifiedTimelines.length>0) await this.timelineService.updateTimelines(modifiedTimelines).toPromise();
+    if(newTimelines.length>0) await this.timelineService.addNewTimelines(newTimelines).toPromise();
+    
+    
   }
 
 }

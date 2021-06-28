@@ -36,7 +36,7 @@ CREATE TABLE expense_account (
 );
 
 CREATE TABLE timeline (
-    id INTEGER PRIMARY KEY,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
     day_of_week VARCHAR(40),
     punch_in VARCHAR(20),
     punch_out VARCHAR(20),

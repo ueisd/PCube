@@ -38,6 +38,32 @@ class TimelineRequest:
             timeline_dict["id"] = -999
         finally:
             return timeline_dict
+    
+    def insertMany(self, timeline_dict):
+        """
+        Permet d'insère les lignes de temps dans la base de données.
+        La fonctionne retourne une ligne de temps avec son nouvel identifiant.
+        """
+        insertParams = []
+        for timeline in timeline_dict:
+            insertParams = insertParams + [
+                timeline["day_of_week"], timeline["punch_in"], timeline["punch_out"], 
+                timeline["project_id"], timeline["expense_account_id"], 
+                timeline["activity_id"], timeline["user_id"]
+            ]
+        cursor = self.connection.cursor()
+        insertions = ["(?, ?, ?, ?, ?, ?, ?)"] * len(timeline_dict)
+        insertions = ', '.join(insertions)
+
+        cursor.execute(
+            "INSERT INTO timeline ("
+                "day_of_week, punch_in, punch_out, project_id, expense_account_id, activity_id, user_id"
+            ") VALUES "
+                + insertions, 
+                insertParams
+        )
+        self.connection.commit()
+        cursor.close()
 
     def checkUniqueConstraint(self, timeline_dict):
         cursor = self.connection.cursor()
@@ -183,15 +209,28 @@ class TimelineRequest:
         cursor.close()
         return data
 
-    def update(self, timeline):
-        cursor = self.connection.cursor()
-        cursor.execute("update timeline set day_of_week = ?, punch_in = ?,"
-                       " punch_out = ?, project_id = ?,"
-                       " expense_account_id = ?, activity_id = ?, user_id = ?"
-                       " where id = ?",
-                       (timeline.day_of_week, timeline.punch_in,
-                        timeline.punch_out, timeline.project_id,
-                        timeline.expense_account_id, timeline.activity_id,
-                        timeline.user_id, timeline.id))
-        self.connection.commit()
-        cursor.close()
+
+
+    def update(self, timelines):
+        if len(timelines) > 0:
+            insertParams = []
+            for timeline in timelines:
+                insertParams = insertParams + [timeline.id, timeline.day_of_week, timeline.punch_in,
+                    timeline.punch_out, timeline.project_id,
+                    timeline.expense_account_id, timeline.activity_id,
+                    timeline.user_id]
+            insertions = ["(?, ?, ?, ?, ?, ?, ?, ?)"] * len(timelines)
+            insertions = ', '.join(insertions)
+            cursor = self.connection.cursor()
+            cursor.execute( "INSERT INTO timeline("
+                " id, day_of_week, punch_in, punch_out, project_id, "
+                " expense_account_id, activity_id, user_id) "
+                " VALUES" + insertions +
+                " ON CONFLICT(id) DO UPDATE SET day_of_week = EXCLUDED.day_of_week, "
+                " punch_in = EXCLUDED.punch_in, punch_out = EXCLUDED.punch_out, "
+                " project_id = EXCLUDED.project_id, expense_account_id = EXCLUDED.expense_account_id, "
+                " activity_id = EXCLUDED.activity_id, user_id = EXCLUDED.user_id ",
+                (insertParams))
+
+            self.connection.commit()
+            cursor.close()

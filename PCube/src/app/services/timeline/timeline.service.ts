@@ -30,6 +30,27 @@ export class TimelineService {
     return this.http.post<TimelineItem[]>(API_TIMELINE, body, opts);
   }
 
+  addNewTimelines(timelines: TimelineItem[]): Observable<TimelineItem[]> {
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.post<TimelineItem[]>(API_TIMELINE, timelines, opts);
+  }
+
+  updateTimelines(timelines: TimelineItem[]): Observable<TimelineItem> {
+    const opts = {
+      headers: new HttpHeaders({
+        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
+        'Content-Type': 'application/json'
+      })
+    };
+    return this.http.put<TimelineItem>(API_TIMELINE, timelines, opts);
+  }
+
+  //@todo à supprimer
   updateTimeline(timeline: TimelineItem): Observable<TimelineItem> {
     const opts = {
       headers: new HttpHeaders({
