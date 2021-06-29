@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 const SEPARATOR: string = " * ";
 
 const API_EXPENSE_ACCOUNT = environment.api_url + "/api/expense-account";
-const API_APPARENTABLE = API_EXPENSE_ACCOUNT + environment.api_url + "/getApparentable";
+const API_APPARENTABLE = environment.api_url + "/api/expense-account/getApparentable";
 const API_IS_UNIQUE = environment.api_url + "/api/expense-account/is-unique";
 const API_AUTOCOMPLTE = environment.api_url + "api/expense-account/autocomplete";
 const API_FILTER = environment.api_url + "/api/expense-account/filter";
