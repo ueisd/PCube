@@ -35,7 +35,7 @@ def get_all_parent_project():
     connection = get_db().get_connection()
     request = ProjectRequest(connection)
     projects = request.select_all_parent()
-    return jsonify(projects)
+    return jsonify(projects), 200
 
 
 @project.route('/get-sub-parents/<parent_id>', methods=['GET'])
@@ -48,7 +48,7 @@ def get_all_sub_parent_project(parent_id):
     connection = get_db().get_connection()
     request = ProjectRequest(connection)
     projects = request.select_all_project_from_parent(parent_id)
-    return jsonify(projects)
+    return jsonify(projects), 200
 
 
 def find_all_child(parent_id):
@@ -83,7 +83,7 @@ def get_all_project():
     for project in parents_dict:
         project['child_project'] = find_all_child(project['id'])
 
-    return jsonify(parents_dict)
+    return jsonify(parents_dict), 200
 
 
 @project.route('/filter', methods=['GET'])
@@ -101,7 +101,7 @@ def get_project_by_filter():
     for project in parents_dict:
         project['child_project'] = find_all_child(project['id'])
 
-    return jsonify(parents_dict)
+    return jsonify(parents_dict), 200
 
 
 @project.route('/filter/one-level', methods=['GET'])
@@ -118,7 +118,7 @@ def get_one_level_project_by_filter():
     query = ProjectRequest(connection)
     projects = query.select_project_one_level_filter(project)
 
-    return jsonify(projects)
+    return jsonify(projects), 200
 
 
 @project.route('', methods=['POST'])
@@ -183,9 +183,9 @@ def is_project_unique(name):
     request = ProjectRequest(connection)
     isUnique = request.select_one_project(name.upper())
     if isUnique is None:
-        return jsonify(True)
+        return jsonify(True), 200
     else:
-        return jsonify(False)
+        return jsonify(False), 200
 
 
 def obtenirLesDesendants(projects, parent):
@@ -219,7 +219,7 @@ def getDescendants(_idA, _idB):
     descendantIdA = next((
         projet for projet in listeDescedantsDeB if projet['id'] == idA
     ), None)
-    return jsonify(descendantIdA is not None)
+    return jsonify(descendantIdA is not None), 200
 
 # @param id: l'identifiant du noeud de la racine du sous-arbre à ne pas inclure
 
@@ -255,7 +255,7 @@ def getApparentable(_id):
     parents = [x for x in projects if x['id'] == x['parent_id']]
     for parent in parents:
         parent = construireArbreSansSousArbre(projects, parent, id)
-    return jsonify(parents)
+    return jsonify(parents), 200
 
 
 @project.route('/autocomplete/<name>', methods=['GET'])

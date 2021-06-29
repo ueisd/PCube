@@ -1,7 +1,6 @@
 import { Component, OnInit, Output, EventEmitter, Optional, Inject } from '@angular/core';
 import { FormGroup, FormControl, ValidationErrors, ValidatorFn, NgControl, FormBuilder, Validators, AsyncValidatorFn, AbstractControl } from '@angular/forms';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
-import * as $ from 'jquery/dist/jquery.min.js';
 import { ExpenseAccountService } from 'src/app/services/expense-account/expense-account.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable } from 'rxjs/internal/Observable';
@@ -49,6 +48,7 @@ export class AddExpenseAccountComponent implements OnInit {
     }
     this.initForm();
 
+    console.log("this.expenseAccount.id:" + this.expenseAccount.id);
     let accounts = await this.expenseAccountServices.getApparentableExpenseAccounts(this.expenseAccount.id).toPromise();
     this.parentOptions = this.expenseAccountServices.generateParentOption(accounts, 0);
     let selected: ExpenseAccountItem = this.findExpenseAccount(this.parentOptions, this.expenseAccount.parent_id);

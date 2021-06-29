@@ -35,7 +35,7 @@ def get_all_parent_expense_account():
     connection = get_db().get_connection()
     request = ExpenseAccountRequest(connection)
     expense_accounts = request.select_all_parent()
-    return jsonify(expense_accounts)
+    return jsonify(expense_accounts), 200
 
 
 @expense_account.route('/get-sub-parents/<parent_id>', methods=['GET'])
@@ -49,7 +49,7 @@ def get_all_sub_parent_expense_account(parent_id):
     request = ExpenseAccountRequest(connection)
     expense_accounts = request.select_all_expense_account_from_parent(
         parent_id)
-    return jsonify(expense_accounts)
+    return jsonify(expense_accounts), 200
 
 
 def find_all_child(parent_id):
@@ -82,7 +82,7 @@ def get_all_expense_account():
     for expense_account in parents_dict:
         expense_account['child'] = find_all_child(expense_account['id'])
 
-    return jsonify(parents_dict)
+    return jsonify(parents_dict), 200
 
 
 # @param id: l'identifiant du noeud de la racine du sous-arbre à ne pas inclure
@@ -116,7 +116,7 @@ def getApparentable(_id):
     parents = [x for x in comptes if x['id'] == x['parent_id']]
     for parent in parents:
         parent = construireArbreSansSousArbre(comptes, parent, id)
-    return jsonify(parents)
+    return jsonify(parents), 200
 
 
 @expense_account.route('/filter', methods=['GET'])
@@ -133,7 +133,7 @@ def get_expense_account_by_filter():
     for expense_account in parents_dict:
         expense_account['child'] = find_all_child(expense_account['id'])
 
-    return jsonify(parents_dict)
+    return jsonify(parents_dict), 200
 
 
 @expense_account.route('/is-unique/<name>', methods=['GET'])
@@ -146,9 +146,9 @@ def is_expense_account_unique(name):
     request = ExpenseAccountRequest(connection)
     isUnique = request.select_one_expense_account(name.upper())
     if isUnique is None:
-        return jsonify(True)
+        return jsonify(True), 200
     else:
-        return jsonify(False)
+        return jsonify(False), 200
 
 
 @expense_account.route('/filter/one-level', methods=['GET'])
@@ -164,7 +164,7 @@ def get_one_level_expense_account_by_filter():
     query = ExpenseAccountRequest(connection)
     accounts = query.select_expense_account_one_level_filter(account)
 
-    return jsonify(accounts)
+    return jsonify(accounts), 200
 
 
 @expense_account.route('/autocomplete/<name>', methods=['GET'])
@@ -176,7 +176,7 @@ def expense_account_autocomplete(name):
     connection = get_db().get_connection()
     request = ExpenseAccountRequest(connection)
     expense_accounts = request.select_expense_account_name_like(name.upper())
-    return jsonify(expense_accounts)
+    return jsonify(expense_accounts), 200
 
 
 @expense_account.route('', methods=['DELETE'])
