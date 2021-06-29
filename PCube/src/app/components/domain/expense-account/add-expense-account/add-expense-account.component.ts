@@ -48,7 +48,6 @@ export class AddExpenseAccountComponent implements OnInit {
     }
     this.initForm();
 
-    console.log("this.expenseAccount.id:" + this.expenseAccount.id);
     let accounts = await this.expenseAccountServices.getApparentableExpenseAccounts(this.expenseAccount.id).toPromise();
     this.parentOptions = this.expenseAccountServices.generateParentOption(accounts, 0);
     let selected: ExpenseAccountItem = this.findExpenseAccount(this.parentOptions, this.expenseAccount.parent_id);
