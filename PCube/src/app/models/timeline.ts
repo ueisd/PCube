@@ -19,6 +19,7 @@ export class TimelineItem{
     activity_id: number;
     user_id: number;
     isChanged: boolean = false;
+    isDelete: boolean = false;
 
     constructor(timelineResponse?: any) {
         this.id = timelineResponse && timelineResponse.id || 0;
@@ -30,6 +31,7 @@ export class TimelineItem{
         this.activity_id = timelineResponse && timelineResponse.activity_id || "";
         this.user_id = timelineResponse && timelineResponse.user_id || "";
         if(timelineResponse && timelineResponse.isChanged) this.isChanged = timelineResponse.isChanged;
+        if(timelineResponse && timelineResponse.isDelete) this.isDelete = timelineResponse.isDelete;
     }
 
     clone(): TimelineItem {
@@ -42,6 +44,7 @@ export class TimelineItem{
         cloned.activity_id = this.activity_id;
         cloned.user_id = this.user_id;
         cloned.isChanged = this.isChanged;
+        cloned.isDelete = this.isDelete;
         return cloned;
     }
 
@@ -102,6 +105,7 @@ export class TimelineItem{
                 user_id: new FormControl(user, Validators.required),
                 oldValue: new FormControl(timeline),
                 isChanged: new FormControl(timeline.isChanged, Validators.required),
+                isDelete: new FormControl(timeline.isDelete, Validators.required),
             },  [TimelineItem.IsTimelineFormChanged, TimelineItem.ensurepunchIsInterval]
         );
         return fg;

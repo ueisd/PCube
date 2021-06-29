@@ -135,8 +135,11 @@
         <ng-container matColumnDef="operations">
           <th mat-header-cell *matHeaderCellDef> operations </th>
           <td mat-cell *matCellDef="let element; let i=index" [formGroup]="element">
-            <button type="button" class="btn btn-danger pull-right" (click)="deleteFormTimeline(i)">
-              <span class="glyphicon glyphicon-minus" aria-hidden="true"></span> Retirer
+            <button type="button" class="btn pull-right" (click)="deleteFormTimeline(i)">
+              <mat-icon *ngIf="!element.value.isDelete">delete</mat-icon>
+              <span *ngIf="!element.value.isDelete" class="cdk-visually-hidden">Enlever&#x200b; </span>
+              <mat-icon *ngIf="element.value.isDelete">settings_backup_restore</mat-icon>
+              <span *ngIf="element.value.isDelete" class="cdk-visually-hidden">Rétablir </span>
             </button>
           </td>
         </ng-container>
@@ -145,7 +148,7 @@
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"
         [ngClass]="{'changed-row': row.controls.isChanged.value,
-        'new-row': !(row.controls.id.value > 0) }"></tr>
+        'new-row': !(row.controls.id.value > 0), 'delete-row': row.controls.isDelete.value }"></tr>
       </table>
     </ng-container>
   </form>

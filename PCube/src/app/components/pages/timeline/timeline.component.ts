@@ -113,9 +113,23 @@ export class TimelineComponent implements OnInit {
 
   deleteFormTimeline(index) {
     let control = <FormArray>this.form.controls.timelinesGr;
-    control.removeAt(index);
-    this.table.renderRows();
-    this.customSnackBar.openSnackBar("Ligne Item supprimée", 'notif-warning');
+    let rowControls = control.at(index);
+    let id = rowControls.get("id").value;
+    let isDeleteField = rowControls.get("isDelete");
+
+    if(!(id>0)) {
+      control.removeAt(index);
+      this.table.renderRows();
+      this.customSnackBar.openSnackBar("Ligne Item supprimée", 'notif-warning');
+    }else if(!isDeleteField.value){
+      isDeleteField.setValue(true);
+      rowControls.disable();
+    }   
+    else {
+      isDeleteField.setValue(false);
+      rowControls.enable();
+    }
+      
   }
 
   addFormTimeline() {
@@ -136,19 +150,24 @@ export class TimelineComponent implements OnInit {
   }
 
   async saveTimelines() {
-    let loadedTimelinesIds = this.timelines.map(timeline => timeline.id);
+    this.form.controls.timelinesGr.enable();
+
     let timelines = <TimelineItem[]>this.form.value.timelinesGr.map(
       timeline => TimelineItem.builFromFormGroup(timeline)
     );
-    let timelinesids = timelines.map(timeline => timeline.id);
 
     let newTimelines = timelines.filter(timeline => timeline.id < 1);
-    let modifiedTimelines = timelines.filter(timeline => timeline.isChanged && !(timeline.id<1));
-    let deletedTimelinesids = loadedTimelinesIds.filter(n => !timelinesids.includes(n));
+    let modifiedTimelines = timelines.filter(
+      timeline => timeline.isChanged && !(timeline.id<1) && !timeline.isDelete
+    );
+    let deletedTimelinesids = timelines.filter(timeline => timeline.isDelete).map(
+      timeline => timeline.id
+    );
+    
     if(deletedTimelinesids.length>0) await this.timelineService.deleteTimelines(deletedTimelinesids).toPromise();
     if(modifiedTimelines.length>0) await this.timelineService.updateTimelines(modifiedTimelines).toPromise();
     if(newTimelines.length>0) await this.timelineService.addNewTimelines(newTimelines).toPromise();
-
+    
     if(deletedTimelinesids.length>0 || modifiedTimelines.length>0 || newTimelines.length>0) {
       this.timelines = await this.reportReqService.getTimelines(this.reportRequestBackend).toPromise();
       this.refreshTimelinesForm(this.timelines);
