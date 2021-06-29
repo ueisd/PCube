@@ -54,7 +54,7 @@ def email_comment():
         abort(404)
 
     send_email(last_name, first_name, email, comment)
-    return jsonify(last_name, first_name, email, comment)
+    return jsonify(last_name, first_name, email, comment), 201
 
 
 def send_email(last_name, first_name, email, comment):

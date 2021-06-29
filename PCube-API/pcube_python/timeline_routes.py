@@ -40,8 +40,8 @@ def create_timeline_from_json_dict():
     try:
         connection = get_db().get_connection()
         query = TimelineRequest(connection)
-        rep = query.insertMany(request.json)
-        return make_response(jsonify(rep))
+        query.insertMany(request.json)
+        return make_response("")
     except sqlite3.Error as error:
         log.error('Timeline error: %s', error)
         abort(500)
@@ -77,7 +77,7 @@ def delete_timeline():
         connection = get_db().get_connection()
         query = TimelineRequest(connection)
         query.delete_timelines(request.json)
-        return make_response(jsonify(""), 200)
+        return make_response(jsonify("")), 200
     except sqlite3.Error as error:
         log.error('Timeline error: %s', error)
         abort(500)

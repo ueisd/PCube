@@ -97,7 +97,7 @@ def refresh_api():
 @auth_required
 def get_authenticated_user_info():
     try:
-        return(jsonify(get_authenticated_user()))
+        return(jsonify(get_authenticated_user())), 200
     except AuthenticationError as error:
         log.error('authentication error %s', error)
         abort(403)
@@ -106,19 +106,19 @@ def get_authenticated_user_info():
 @auth.route('admin-check', methods=['GET'])
 @admin_required
 def admin_check():
-    return json.dumps(True)
+    return json.dumps(True), 200
 
 
 @auth.route('project-manager-check', methods=['GET'])
 @project_manager_required
 def project_manager_check():
-    return json.dumps(True)
+    return json.dumps(True), 200
 
 
 @auth.route('member-check', methods=['GET'])
 @member_required
 def member_check():
-    return json.dumps(True)
+    return json.dumps(True), 200
 
 
 @auth.errorhandler(JsonValidationError)

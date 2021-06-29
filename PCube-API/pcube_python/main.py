@@ -16,7 +16,7 @@ def start_page():
     """
     Route pour la page d'accueil.
     """
-    return '<h1>Accueil</h1>'
+    return '<h1>Accueil</h1>', 200
 
 
 @main.route('/api/role/<id>', methods=['GET'])
@@ -27,7 +27,7 @@ def get_role(id):
     connection = get_db().get_connection()
     request = AuthRequest(connection)
     role = request.get_role(id)
-    return jsonify(role)
+    return jsonify(role), 200
 
 
 @main.route('/api/roles', methods=['GET'])
@@ -38,4 +38,4 @@ def get_roles():
     connection = get_db().get_connection()
     request = AuthRequest(connection)
     role = request.get_all_roles()
-    return jsonify(role)
+    return jsonify(role), 201

@@ -36,7 +36,7 @@ def get_all_user():
     connection = get_db().get_connection()
     query = UserRequest(connection)
     users = query.select_all_user()
-    return jsonify(users)
+    return jsonify(users), 200
 
 
 @user.route('/auth-info', methods=['GET'])
@@ -76,7 +76,7 @@ def get_user_by_filter():
     connection = get_db().get_connection()
     query = UserRequest(connection)
     users = query.select_user_by_filter(user, role_name)
-    return jsonify(users)
+    return jsonify(users), 200
 
 
 @user.route('', methods=['DELETE'])
@@ -112,9 +112,9 @@ def is_unique_user(email):
     user.email = escape(email).upper().strip()
     isUnique = request.select_one_user(user)
     if isUnique is None:
-        return jsonify(True)
+        return jsonify(True), 200
     else:
-        return jsonify(False)
+        return jsonify(False), 200
 
 
 @user.route('', methods=['POST'])

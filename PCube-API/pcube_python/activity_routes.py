@@ -35,7 +35,7 @@ def get_all_activity():
     connection = get_db().get_connection()
     query = ActivityRequest(connection)
     activities = query.select_all_activity()
-    return jsonify(activities)
+    return jsonify(activities), 200
 
 
 @activity.route('/filter', methods=['GET'])
@@ -51,7 +51,7 @@ def get_activity_by_filter():
     connection = get_db().get_connection()
     query = ActivityRequest(connection)
     activities = query.select_activity_by_filter(activity)
-    return jsonify(activities)
+    return jsonify(activities), 200
 
 
 @activity.route('/is-unique-activity/<name>', methods=['GET'])
@@ -61,9 +61,9 @@ def is_unique_activity(name):
     query = ActivityRequest(connection)
     isUnique = query.select_one_activity(name.upper())
     if isUnique is None:
-        return jsonify(True)
+        return jsonify(True), 200
     else:
-        return jsonify(False)
+        return jsonify(False), 200
 
 
 @activity.route('', methods=['POST'])
@@ -120,7 +120,7 @@ def modify_activity():
         abort(404)
 
     new_activity = query.update_activity(activity, new_name)
-    return jsonify(new_activity.asDictionnary())
+    return jsonify(new_activity.asDictionnary()), 201
 
 
 @activity.route('<id>', methods=['DELETE'])
