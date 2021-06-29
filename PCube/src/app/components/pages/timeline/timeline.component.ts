@@ -55,7 +55,7 @@ export class TimelineComponent implements OnInit {
     private timelineService: TimelineService,
     private _formBuilder: FormBuilder,
     private snackBar: MatSnackBar
-    ) { }
+  ) { }
 
   get timelinesGr(): FormArray {
     return this.form.get('timelinesGr') as FormArray;
@@ -115,6 +115,7 @@ export class TimelineComponent implements OnInit {
     let control = <FormArray>this.form.controls.timelinesGr;
     control.removeAt(index);
     this.table.renderRows();
+    this.customSnackBar.openSnackBar("Ligne Item supprimée", 'notif-warning');
   }
 
   addFormTimeline() {
