@@ -12,17 +12,13 @@
     <a *ngIf="accessLevel == 1" mat-list-item routerLink="/gestion-des-comptes-de-depenses">
         <mat-icon>monetization_on</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Comptes de Dépense</span>
     </a>
-
-    <a *ngIf="accessLevel == 1 || accessLevel == 2" mat-list-item routerLink="/gestion-des-lignes-de-temps">
-        <mat-icon>timelapse</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Ligne de temps</span>
-    </a>
-
+    <mat-divider></mat-divider>
     <a *ngIf="accessLevel == 1 || accessLevel == 2 || accessLevel == 3" mat-list-item (click)="openReportReqDialog('temps')">
-        <mat-icon>add</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Gérer lignes de temps</span>
+        <mat-icon>view_list</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Gérer lignes de temps</span>
     </a>
 
     <a *ngIf="accessLevel == 1 || accessLevel == 2 || accessLevel == 3" mat-list-item (click)="openReportReqDialog('rapport')">
-        <mat-icon>add</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Générer rapport</span>
+        <mat-icon>remove_red_eye</mat-icon><span class="nav-caption margin-left" *ngIf="isShowTitle">Générer rapport</span>
     </a>
 
 </mat-nav-list>

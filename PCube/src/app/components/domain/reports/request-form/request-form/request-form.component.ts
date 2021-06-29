@@ -1,21 +1,17 @@
-import { Component, OnInit, AfterViewInit, AfterContentInit, Optional, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
+import { Component, OnInit, AfterContentInit, Optional, Inject } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ValidatorFn, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { ProjectItem } from 'src/app/models/project';
 import { ActivityService } from 'src/app/services/activity/activity.service';
 import { ActivityItem } from 'src/app/models/activity';
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/models/user';
-import { formatDate } from "@angular/common";
 import { ErrorStateMatcher } from '@angular/material/core';
-import { Router, NavigationExtras } from '@angular/router';
+import { Router } from '@angular/router';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RepportRequestService } from 'src/app/services/request/repport-request.service';
 import { ReportRequest } from 'src/app/models/report-request';
 import { DateManip } from 'src/app/utils/date-manip';
-
-const format = 'yyyy-MM-dd';
-const locale = 'en-US';
 
 @Component({
   selector: 'app-request-form',
@@ -161,20 +157,16 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
           []
         ],
       },
-      {validators: this.DateRangeValidator}
+      {validators: this.ensureIsInterval}
     );
   }
 
-  DateRangeValidator: ValidatorFn = (fg: FormGroup) => {
+  ensureIsInterval: ValidatorFn = (fg: FormGroup) => {
     const start = fg.get('dateDebut').value;
     const end = fg.get('dateFin').value;
     
-    if(start && end) {
-      let formattedDebut = formatDate(start, format, locale);
-      let formattedEnd = formatDate(end, format, locale);
-      if(formattedEnd < formattedDebut)
+    if(start && end && !DateManip.isDatesAreIntevals(start, end))
         return { dateFinAvantDebut: true };
-    }
     return null;
   };
 
@@ -185,11 +177,11 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
  
   onSubmit() {
     let dateDeb = this.requestForm.controls['dateDebut'].value;
-    if(dateDeb) this.params.dateDebut = formatDate(dateDeb, format, locale);
+    if(dateDeb) this.params.dateDebut = DateManip.formatDate(dateDeb);
     else this.params.dateDebut = "";
 
     let dateFin = this.requestForm.controls['dateFin'].value;
-    if(dateFin) this.params.dateFin = formatDate(dateFin, format, locale);
+    if(dateFin) this.params.dateFin = DateManip.formatDate(dateFin);
     else this.params.dateFin = "";
 
     if(this.requestForm.controls['projects'].value) 

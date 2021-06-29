@@ -17,6 +17,7 @@ import { TimelineService } from 'src/app/services/timeline/timeline.service';
 import { Subscription } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
+import { DateManip } from 'src/app/utils/date-manip';
 
 @Component({
   selector: 'app-timeline',
@@ -40,6 +41,8 @@ export class TimelineComponent implements OnInit {
   projectsOptions: ProjectItem[] = null;
   comptesOptions: ExpenseAccountItem[] = null;
   usersOptions: User[] = null;
+
+  timelineValidationMessages = TimelineItem.getValidationMessages();
 
   displayedColumns = ['day_of_week', 'punch_in', 'punch_out', 'expense_account_id', 'activity_id', 'operations'];
 
@@ -113,9 +116,11 @@ export class TimelineComponent implements OnInit {
     control.removeAt(index);
     this.table.renderRows();
   }
+
   addFormTimeline() {
     let timeline = new TimelineItem();
-    timeline.day_of_week = "2020-01-01"; // @todo mettre la date actuelle sous ce format
+
+    timeline.day_of_week = DateManip.formatDate(new Date());
 
     let fgTime = TimelineItem.asFormGroup(
       timeline, 
@@ -150,8 +155,12 @@ export class TimelineComponent implements OnInit {
     }
   }
 
+  isValidationError(element, validation, titreElem) {
+    return element.get(titreElem).hasError(validation.type) && 
+          (element.get(titreElem).dirty || element.get(titreElem).touched);
+  }
+
   ngOnDestroy() {
     this.timelinesSubscription.unsubscribe();
   }
-
 }

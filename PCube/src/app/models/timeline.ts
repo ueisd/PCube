@@ -4,6 +4,7 @@ import { ExpenseAccountItem } from "./expense-account";
 import { ProjectItem } from "./project";
 import { User } from "./user";
 import { formatDate } from "@angular/common";
+import { DateManip } from "../utils/date-manip";
 
 const format = 'yyyy-MM-dd';
 const locale = 'en-US';
@@ -95,16 +96,29 @@ export class TimelineItem{
                 day_of_week: new FormControl(timeline.day_of_week, Validators.required),
                 punch_in: new FormControl(timeline.punch_in, Validators.required),
                 punch_out: new FormControl(timeline.punch_out, Validators.required),
-                activity_id: new FormControl(activity, Validators.required),
-                project_id: new FormControl(project, Validators.required),
+                activity_id: new FormControl(activity),
+                project_id: new FormControl(project),
                 expense_account_id: new FormControl(compte, Validators.required),
                 user_id: new FormControl(user, Validators.required),
                 oldValue: new FormControl(timeline),
                 isChanged: new FormControl(timeline.isChanged, Validators.required),
-            }, TimelineItem.IsTimelineFormChanged
+            },  [TimelineItem.IsTimelineFormChanged, TimelineItem.ensurepunchIsInterval]
         );
         return fg;
     }
+
+    static ensurepunchIsInterval: ValidatorFn = (fg: FormGroup) => {
+        const punch_in = fg.get('punch_in').value;
+        const punch_out = fg.get('punch_out').value;
+        let punch_out_field = fg.get('punch_out');
+        if(punch_in && punch_out && punch_in > punch_out) {
+            fg.get('punch_out').setErrors({ punchFinAvantDebut: true });
+        }else if(punch_out_field.hasError("punchFinAvantDebut")) {
+            punch_out_field.setErrors({ punchFinAvantDebut: false });
+            punch_out_field.updateValueAndValidity();
+        }
+        return null;
+    };
 
     static IsTimelineFormChanged: ValidatorFn = (fg: FormGroup) => {
         let isDifferent = !TimelineItem.isUnchanged(fg.value);
@@ -117,4 +131,26 @@ export class TimelineItem{
         } 
         return null;
     };
+
+
+    static getValidationMessages() {
+        return {
+            'punch_in': [
+                { type: 'required', message: 'requis' /*'Une heure de début est requise'*/ },
+            ],
+            'punch_out': [
+                { type: 'required', message: 'requis' /*'Une heure de fin est requise'*/ },
+                { type: 'punchFinAvantDebut', message: 'punch fin trop petit' },
+            ],
+            'user_id': [
+                { type: 'required', message: 'requis' /*'Un utilisateur est requis'*/ },
+            ],
+            'expense_account_id': [
+                { type: 'required', message: 'requis' /*'Un compte est requis'*/ },
+            ],
+            'day_of_week' : [
+                { type: 'required', message: 'requis'/*'Un jour est requis'*/ },
+            ],
+        };
+    }
 }
