@@ -31,25 +31,13 @@ import { MatDialogModule, MAT_DIALOG_DATA, MatDialogRef } from '@angular/materia
 import { ModifyUserComponent } from './components/domain/user/modify-user/modify-user.component';
 import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
 import { ExpenseAccountListComponent } from './components/domain/expense-account/expense-account-list/expense-account-list.component';
-import { NgSelectModule, NgOption, } from '@ng-select/ng-select';
+import { NgSelectModule, } from '@ng-select/ng-select';
 
 import { FlexLayoutModule } from "@angular/flex-layout";
-import { AddTimelineComponent } from './components/domain/timeline/add-timeline/add-timeline.component';
-import { AddTimelineStep1Component } from './components/domain/timeline/add-timeline/add-timeline-step1/add-timeline-step1.component';
-import { AddTimelineStep2Component } from './components/domain/timeline/add-timeline/add-timeline-step2/add-timeline-step2.component';
-import { AddTimelineStep3Component } from './components/domain/timeline/add-timeline/add-timeline-step3/add-timeline-step3.component';
-import { AddTimelineStep4Component } from './components/domain/timeline/add-timeline/add-timeline-step4/add-timeline-step4.component';
-import { AddTimelineStep5Component } from './components/domain/timeline/add-timeline/add-timeline-step5/add-timeline-step5.component';
 import { NgxMaterialTimepickerModule } from 'ngx-material-timepicker';
 
-import { TimelineListComponent } from './components/domain/timeline/timeline-list/timeline-list.component';
-import { ManageTimelineComponent } from './components/pages/timeline/manage-timeline/manage-timeline.component';
-import { AddingTimelineComponent } from './components/pages/timeline/adding-timeline/adding-timeline.component';
-import { DeleteTimelineComponent } from './components/domain/timeline/delete-timeline/delete-timeline.component';
 
 import { DeleteActivityComponent } from './components/domain/activity/delete-activity/delete-activity.component';
-import { ModifyTimelineComponent } from './components/domain/timeline/modify-timeline/modify-timeline.component';
-import { ModifyingTimelineComponent } from './components/pages/timeline/modifying-timeline/modifying-timeline.component';
 import { TimelineComponent } from './components/pages/timeline/timeline.component';
 import { DeleteProjectComponent } from './components/domain/project/delete-project/delete-project.component';
 import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
@@ -61,8 +49,7 @@ import { RequestFormComponent } from './components/domain/reports/request-form/r
 import { ReportsComponent } from './components/pages/reports/reports/reports.component';
 import { ContactUsComponent } from './components/pages/contact-us/contact-us.component';
 import { RequestComponent } from './components/layouts/request/request.component';
-import { EditComponent } from './components/domain/timelines/edit/edit.component';
-import { MomentDateModule, MomentDateAdapter } from '@angular/material-moment-adapter';
+import { MomentDateAdapter } from '@angular/material-moment-adapter';
 
 const MY_FORMATS = {
   parse: {
@@ -99,19 +86,7 @@ const MY_FORMATS = {
     ModifyUserComponent,
     ExpenseAccountsComponent,
     ExpenseAccountListComponent,
-    AddTimelineComponent,
-    AddTimelineStep1Component,
-    AddTimelineStep2Component,
-    AddTimelineStep3Component,
-    AddTimelineStep4Component,
-    AddTimelineStep5Component,
     DeleteActivityComponent,
-    TimelineListComponent,
-    ManageTimelineComponent,
-    AddingTimelineComponent,
-    DeleteTimelineComponent,
-    ModifyTimelineComponent,
-    ModifyingTimelineComponent,
     TimelineComponent,
     DeleteProjectComponent,
     AddExpenseAccountComponent,
@@ -122,7 +97,6 @@ const MY_FORMATS = {
     ReportsComponent,
     ContactUsComponent,
     RequestComponent,
-    EditComponent,
   ],
   imports: [
     MatDialogModule,

@@ -11,12 +11,7 @@ import { ProjectManagerGuard } from './services/auth/project_manager.guard';
 import { MemberGuard } from './services/auth/member.guard';
 
 import { HomeComponent } from 'src/app/components/pages/home/home.component';
-import { AddUserComponent } from './components/domain/user/add-user/add-user.component';
 import { ExpenseAccountsComponent } from 'src/app/components/pages/expense-accounts/expense-accounts.component';
-import { ManageTimelineComponent } from 'src/app/components/pages/timeline/manage-timeline/manage-timeline.component';
-import { AddingTimelineComponent } from 'src/app/components/pages/timeline/adding-timeline/adding-timeline.component';
-import { ModifyingTimelineComponent } from 'src/app/components/pages/timeline/modifying-timeline/modifying-timeline.component';
-import { AddExpenseAccountComponent } from './components/domain/expense-account/add-expense-account/add-expense-account.component';
 
 import { ReportsComponent } from './components/pages/reports/reports/reports.component';
 
@@ -64,16 +59,6 @@ const routes: Routes = [
       {
         path: 'gestion-des-lignes-de-temps',
         component: TimelineComponent,
-        canActivate: [ProjectManagerGuard]
-      },
-      {
-        path: 'gestion-des-lignes-de-temps/ajouter-ligne-de-temps',
-        component: AddingTimelineComponent,
-        canActivate: [ProjectManagerGuard]
-      },
-      {
-        path: 'gestion-des-lignes-de-temps/modifier-ligne-de-temps/:id',
-        component: ModifyingTimelineComponent,
         canActivate: [ProjectManagerGuard]
       },
       {
