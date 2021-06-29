@@ -33,10 +33,8 @@ export class ModifyUserComponent implements OnInit {
     this.refreshDataEvent.emit(this.hasToRefresh);
   }
 
-  ngOnInit(): void {
-    this.roleService.getRoles().subscribe(res=>{
-      this.roles= res;
-    });
+  async ngOnInit(): Promise<void> {
+    this.roles = await this.roleService.getRoles().toPromise();
     this.initForm();
     this.isAdded = false;
     this.isUnique = true;
@@ -61,7 +59,7 @@ export class ModifyUserComponent implements OnInit {
     this.dialogRef.close(true);
   }
 
-  onSubmit() {
+  async onSubmit() {
     if(this.modifyUserForm.valid){
       const id = this.modifyUserForm.controls['id'].value;
       const email = this.modifyUserForm.controls['email'].value;
@@ -70,17 +68,17 @@ export class ModifyUserComponent implements OnInit {
       const newEmail = this.modifyUserForm.controls['newEmail'].value;
       const roleId : number = this.modifyUserForm.get("roles").value["id"];
       
-      this.userService.modifyUser(id, email, firstName, lastName, newEmail, roleId).subscribe(user => {
-          if(user.id != -1){
-            this.onSubmitSuccess();
-          }else{
-            this.isAdded = false;
-          }
-      });
+      let user = await this.userService.modifyUser(
+        id, email, firstName, lastName, newEmail, roleId
+      ).toPromise()
+      if(user.id != -1) 
+        this.onSubmitSuccess();
+      else 
+        this.isAdded = false;
     }
   }
 
-  checkUniqueEmail(newValue){
+  async checkUniqueEmail(newValue){
     if(newValue != null && newValue.toUpperCase() === this.data.email.toUpperCase()) {
       this.isUnique = true;
       return;
@@ -88,7 +86,7 @@ export class ModifyUserComponent implements OnInit {
 
     if(newValue != null && newValue.trim().length != 0){
       this.isUnique = true;
-      this.userService.isEmailUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
+      this.isUnique = await this.userService.isEmailUnique(newValue).toPromise();
     }
   }
 

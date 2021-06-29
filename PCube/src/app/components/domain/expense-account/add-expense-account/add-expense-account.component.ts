@@ -39,7 +39,7 @@ export class AddExpenseAccountComponent implements OnInit {
   ExpenseForm: FormGroup;
 
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.expenseAccount = this.data.expenseAccount;
     if(!(this.expenseAccount.id > 0)) this.expenseAccount.id = -1;
     if(!(this.expenseAccount.parent_id > 0)) this.expenseAccount.parent_id = -1;
@@ -49,13 +49,12 @@ export class AddExpenseAccountComponent implements OnInit {
     }
     this.initForm();
 
-    this.expenseAccountServices.getApparentableExpenseAccounts(this.expenseAccount.id).subscribe(accounts =>{
-      this.parentOptions = this.expenseAccountServices.generateParentOption(accounts, 0);
-      let selected: ExpenseAccountItem = this.findExpenseAccount(this.parentOptions, this.expenseAccount.parent_id);
-      if(this.expenseAccount.id != this.expenseAccount.parent_id) {
-        this.ExpenseForm.controls['parent'].setValue(selected);
-      }
-    });
+    let accounts = await this.expenseAccountServices.getApparentableExpenseAccounts(this.expenseAccount.id).toPromise();
+    this.parentOptions = this.expenseAccountServices.generateParentOption(accounts, 0);
+    let selected: ExpenseAccountItem = this.findExpenseAccount(this.parentOptions, this.expenseAccount.parent_id);
+    if(this.expenseAccount.id != this.expenseAccount.parent_id) {
+      this.ExpenseForm.controls['parent'].setValue(selected);
+    }
   }
 
 
@@ -105,7 +104,7 @@ export class AddExpenseAccountComponent implements OnInit {
   }
 
 
-  onSubmit(){
+  async onSubmit(){
     if(this.ExpenseForm.valid){
 
       let name: string = this.ExpenseForm.controls['name'].value
@@ -123,13 +122,12 @@ export class AddExpenseAccountComponent implements OnInit {
         }
         proj.name = this.ExpenseForm.value['name'];
 
-        this.expenseAccountServices.addExpenseAccount(proj).subscribe(project => {
-          if(project.id != -1){
-            this.onSubmitSuccess();
-          }else{
-            this.onSubmitFailled();
-          }
-        });
+        let project = await this.expenseAccountServices.addExpenseAccount(proj).toPromise();
+        if(project.id != -1){
+          this.onSubmitSuccess();
+        }else{
+          this.onSubmitFailled();
+        }
       }else {
         let proj :ExpenseAccountItem = new ExpenseAccountItem();
         proj.id = this.expenseAccount.id
@@ -142,9 +140,8 @@ export class AddExpenseAccountComponent implements OnInit {
           proj.parent_id = this.expenseAccount.parent_id;
         }
         proj.name = this.ExpenseForm.value['name'];
-        this.expenseAccountServices.updateExpenseAccount(proj).subscribe(project => {
-          this.onSubmitSuccess();
-        });
+        await this.expenseAccountServices.updateExpenseAccount(proj).toPromise();
+        this.onSubmitSuccess();
       }
     }
   }

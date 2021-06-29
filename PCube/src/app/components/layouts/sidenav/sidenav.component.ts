@@ -22,7 +22,7 @@ export class SidenavComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  openReportReqDialog(type) {
+  async openReportReqDialog(type) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = { 
       user : this.user,
@@ -31,18 +31,16 @@ export class SidenavComponent implements OnInit {
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(RequestFormComponent, dialogConfig);
     
-    this.fileNameDialogRef.afterClosed().subscribe(result => { 
-        if(result) {
-          let navigationExtras: NavigationExtras = { state: { params: result } };
-          this.openSnackBar('La requête a été envoyé', 'notif-success');
+    let result = await this.fileNameDialogRef.afterClosed().toPromise();
+    if(result) {
+      let navigationExtras: NavigationExtras = { state: { params: result } };
+      this.openSnackBar('La requête a été envoyé', 'notif-success');
 
-          if(type == 'rapport')
-            this.router.navigate(['/rapport'], navigationExtras);
-          else if(type == 'temps')
-            this.router.navigate(['/gestion-des-lignes-de-temps'], navigationExtras);
-        }
-      }
-    );
+      if(type == 'rapport')
+        this.router.navigate(['/rapport'], navigationExtras);
+      else if(type == 'temps')
+        this.router.navigate(['/gestion-des-lignes-de-temps'], navigationExtras);
+    }
   }
 
   openSnackBar(message, panelClass) {

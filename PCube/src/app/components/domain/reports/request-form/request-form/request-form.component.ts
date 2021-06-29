@@ -63,41 +63,37 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
         this.title = 'Génération d\'un rapport';
     }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.initForm();
     
     this.params = this.reportReqService.paramForForm;
 
-    this.projectService.getApparentableProject(-1).subscribe(projets =>{
-      this.projetsOptions = this.projectService.generateParentOption(projets, 0);
+    let projets = await this.projectService.getApparentableProject(-1).toPromise();
+    this.projetsOptions = this.projectService.generateParentOption(projets, 0);
       this.requestForm.controls['projects'].setValue(this.params.projects);
-      if(this.params.projects.length && this.params.projects.length > 0)
-        this.requestForm.controls['isProjets'].setValue(true);
-    });
-
-    this.activityService.getAllActivity().subscribe(activitys =>{
-      this.activityOptions = activitys;
+    if(this.params.projects.length && this.params.projects.length > 0)
+      this.requestForm.controls['isProjets'].setValue(true);
+    
+    let activitys = await this.activityService.getAllActivity().toPromise();
+    this.activityOptions = activitys;
       this.requestForm.controls['activitys'].setValue(this.params.activitys);
-      if(this.params.activitys.length && this.params.activitys.length > 0)
-        this.requestForm.controls['isActivitys'].setValue(true);
-    });
+    if(this.params.activitys.length && this.params.activitys.length > 0)
+      this.requestForm.controls['isActivitys'].setValue(true);
+    
+
 
     if(!this.isMember) {
-      this.userService.getAllUser().subscribe(users =>{
-        this.usersOptions = users;
-        for(let user of this.usersOptions) {
-          user.display_string = user.first_name + " " + user.last_name;
-        }
-        this.requestForm.controls['users'].setValue(this.params.users);
-        if(this.params.users.length && this.params.users.length > 0)
-          this.requestForm.controls['isUsers'].setValue(true);
-      });
+      this.usersOptions = await this.userService.getAllUser().toPromise();
+      for(let user of this.usersOptions) {
+        user.display_string = user.first_name + " " + user.last_name;
+      }
+      this.requestForm.controls['users'].setValue(this.params.users);
+      if(this.params.users.length && this.params.users.length > 0)
+        this.requestForm.controls['isUsers'].setValue(true);
     } else {
-      this.userService.getUser(new User({"email" : this.data.user.email})).subscribe((data) => {
-        this.member = data;
-        this.member.display_string = this.member.first_name + " " + this.member.last_name;
-        this.requestForm.controls['users'].setValue(this.member.display_string);
-      });
+      this.member = await this.userService.getUser(new User({"email" : this.data.user.email})).toPromise();
+      this.member.display_string = this.member.first_name + " " + this.member.last_name;
+      this.requestForm.controls['users'].setValue(this.member.display_string);
     }
 
     if(this.params.dateDebut != "")

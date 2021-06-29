@@ -43,31 +43,29 @@ export class LoginComponent implements OnInit {
 
   isAuthAccepted:boolean = false;
 
-  showWelcomeMessage(isAlreadyAuth:boolean){
+  async showWelcomeMessage(isAlreadyAuth:boolean){
     this.isAuthAccepted = true;
-    this.userService.getUserPublicData(localStorage.getItem('email')).subscribe(user => {
-      this.pageTitle = "Bienvenue";
-      if(!isAlreadyAuth){
-        $('form').fadeOut(500);
-      }
-      $('.wrapper').addClass('form-success');
-      setTimeout(() => {
-        this.userName = user.first_name + " " + user.last_name;
-      }, 500);
-    });
+    let user = await this.userService.getUserPublicData(localStorage.getItem('email')).toPromise();
+    this.pageTitle = "Bienvenue";
+    if(!isAlreadyAuth){
+      $('form').fadeOut(500);
+    }
+    $('.wrapper').addClass('form-success');
+    setTimeout(() => {
+      this.userName = user.first_name + " " + user.last_name;
+    }, 500);
   }
 
-  onSubmit() {
+  async onSubmit() {
     const email = this.formGroup.get('email').value;
     const password = this.formGroup.get('password').value;
-    this.auth.authenticate(email, password).subscribe(
-      () => {
-        this.message = "";
-        this.showWelcomeMessage(false);
-      },
-      (error) => {
-        this.message = error;
-      }
-    );
+
+    try {
+      await this.auth.authenticate(email, password).toPromise();
+      this.message = "";
+      this.showWelcomeMessage(false);
+    } catch(error) {
+      this.message = error;
+    }
   }
 }

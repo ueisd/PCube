@@ -46,7 +46,7 @@ export class ExpenseAccountListComponent implements OnInit {
     };
   }
 
-  openEditDialog(compte: ExpenseAccountItem) {
+  async openEditDialog(compte: ExpenseAccountItem) {
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
@@ -55,43 +55,38 @@ export class ExpenseAccountListComponent implements OnInit {
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddExpenseAccountComponent, dialogConfig);
 
-    this.fileNameDialogRef.afterClosed().subscribe(result => {
-      if (result == "Canceled" || result == undefined) {
-        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-      } else if (result) {
-        this.refreshList({ expanded: true });
-        this.customSnackBar.openSnackBar('Le compte de dépense a été modifié', 'notif-success');
-      }
+    let result = await this.fileNameDialogRef.afterClosed().toPromise();
+    if (result == "Canceled" || result == undefined) {
+      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+    } else if (result) {
+      this.refreshList({ expanded: true });
+      this.customSnackBar.openSnackBar('Le compte de dépense a été modifié', 'notif-success');
     }
-    );
   }
 
-  openDeleteDialog(expenseAccount: ExpenseAccountItem) {
+  async openDeleteDialog(expenseAccount: ExpenseAccountItem) {
 
-    this.expenseAccountService.isExpenseAccountDeletable(expenseAccount.id, expenseAccount.name).subscribe((data) => {
-      this.isDeletable = data;
-      const dialogConfig = this.dialog.open(DeleteExpenseAccountComponent, {
-        data: {
-          id: expenseAccount.id,
-          name: expenseAccount.name,
-          isDeletable: this.isDeletable
-        },
-        panelClass: 'warning-dialog'
-      });
-
-      dialogConfig.afterClosed().subscribe(result => {
-        if (result !== undefined) {
-          this.expenseAccountService.deleteExpenseAccount(expenseAccount.id, expenseAccount.name).subscribe((data) => {
-            this.customSnackBar.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
-            this.refreshList({ expanded: true });
-          },
-            (error) => {
-              this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
-            });
-        }
-      }
-      );
+    this.isDeletable = await this.expenseAccountService.isExpenseAccountDeletable(
+      expenseAccount.id, expenseAccount.name
+    ).toPromise();
+    const dialogConfig = this.dialog.open(DeleteExpenseAccountComponent, {
+      data: {
+        id: expenseAccount.id,
+        name: expenseAccount.name,
+        isDeletable: this.isDeletable
+      },
+      panelClass: 'warning-dialog'
     });
+    let result = await dialogConfig.afterClosed().toPromise();
+    if (result !== undefined) {
+      try {
+        await this.expenseAccountService.deleteExpenseAccount(expenseAccount.id, expenseAccount.name).toPromise();
+        this.customSnackBar.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
+        this.refreshList({ expanded: true });
+      } catch (error) {
+        this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+      }
+    }
   }
 
   treeControl = new FlatTreeControl<FlatNode>(
@@ -108,13 +103,11 @@ export class ExpenseAccountListComponent implements OnInit {
     this.refreshList({ expanded: true });
   }
 
-  refreshList(opts?: refreshOption) {
+  async refreshList(opts?: refreshOption) {
     let expenseAccount = new ExpenseAccountItem();
     expenseAccount.name = this.nameFilter.value.trim();
-    this.expenseAccountService.filterExpenseAccount(expenseAccount).subscribe(expenseAccounts => {
-      this.dataSource.data = expenseAccounts;
-      if (opts.expanded) this.treeControl.expandAll();
-    });
+    this.dataSource.data = await this.expenseAccountService.filterExpenseAccount(expenseAccount).toPromise();
+    if (opts.expanded) this.treeControl.expandAll();
   }
 }
 

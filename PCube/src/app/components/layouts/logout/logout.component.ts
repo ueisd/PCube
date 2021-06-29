@@ -19,17 +19,14 @@ export class LogoutComponent implements OnInit {
 
   showLogOutButton:boolean;
 
-  logout() {
-    this.auth.deauthenticate().subscribe(
-      () => {
-        if(this.router.url == "/")
+  async logout() {
+    await this.auth.deauthenticate().toPromise();
+    if(this.router.url == "/")
           location.reload();
-        else{
-          this.router.navigate(['/']).then(()=>{
-            window.location.reload();
-          });
-        }
-      }
-    );
+    else{
+      this.router.navigate(['/']).then(()=>{
+        window.location.reload();
+      });
+    }
   }
 }

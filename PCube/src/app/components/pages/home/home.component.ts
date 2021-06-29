@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AuthService } from 'src/app/services/auth/auth.service';
-import { Subscription } from 'rxjs';
 import { SidenavComponent } from 'src/app/components/layouts/sidenav/sidenav.component';
 import { Router } from '@angular/router';
 import { HeaderComponent } from '../../layouts/header/header.component';
@@ -29,8 +28,6 @@ export class HomeComponent implements OnInit {
       this.checkForAuth();
     }
 
-  authSubscription: Subscription;
-
   ngOnInit(): void {
     
   }
@@ -55,25 +52,24 @@ export class HomeComponent implements OnInit {
     this.sideNavReference.user.access_level = parseInt(user.level);
   }
 
-  onAuthValid(){
+  async onAuthValid(){
 
     this.isDrawerHidden = false;
-    this.authSubscription = this.auth.getAccessLevel().subscribe(userInfo => {
-      if(this.headerComponent)
+    let userInfo = await this.auth.getAccessLevel().toPromise();
+    if(this.headerComponent)
         this.setHeaderUserInfo(userInfo);
 
-      if(this.sideNavReference)
-        this.setSideNavUserInfo(userInfo);
+    if(this.sideNavReference)
+      this.setSideNavUserInfo(userInfo);
 
-      this.accessLevel = parseInt(userInfo.level)
-      this.sideNavReference.accessLevel = this.accessLevel;
-      setTimeout(() => {
-        this.isHeaderHidden = false;
-      }, 800);
-      setTimeout(() => {
-        this.drawerComponent.toggle();
-      }, 1200);
-    });
+    this.accessLevel = parseInt(userInfo.level);
+    this.sideNavReference.accessLevel = this.accessLevel;
+    setTimeout(() => {
+      this.isHeaderHidden = false;
+    }, 800);
+    setTimeout(() => {
+      this.drawerComponent.toggle();
+    }, 1200);
   }
 
   onAuthInvalid(){
@@ -82,7 +78,8 @@ export class HomeComponent implements OnInit {
     this.isHeaderHidden = true;
   }
 
-  checkForAuth(){
+  async checkForAuth(){
+
     this.auth.subscribe(
       (authenticated) => {
         this.authenticated = authenticated;
@@ -93,10 +90,6 @@ export class HomeComponent implements OnInit {
           this.onAuthInvalid();
       }
     );
-  }
-
-  ngOnDestroy() { 
-    this.authSubscription.unsubscribe();
   }
 
   isShowTitle:boolean = true;

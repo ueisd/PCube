@@ -18,14 +18,14 @@ export class ProjectComponent implements OnInit {
     private snackBar: MatSnackBar
   ) { }
 
-  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar);
 
   ngOnInit(): void { }
 
   fileNameDialogRef: MatDialogRef<AddProjectComponent>;
   @ViewChild(ProjectListComponent) projectListChild;
 
-  openDialog() {
+  async openDialog() {
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
@@ -34,16 +34,13 @@ export class ProjectComponent implements OnInit {
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddProjectComponent, dialogConfig);
 
-    this.fileNameDialogRef.afterClosed().subscribe(result => {
-      
-      if (result == "Canceled" || result == undefined) {
-        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-      } else if (result) {
-        this.customSnackBar.openSnackBar('Le projet a été créé', 'notif-success');
-        this.projectListChild.refreshList({ expanded: true });
-      }
+    let result = await this.fileNameDialogRef.afterClosed().toPromise();
+    if (result == "Canceled" || result == undefined) {
+      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+    } else if (result) {
+      this.customSnackBar.openSnackBar('Le projet a été créé', 'notif-success');
+      this.projectListChild.refreshList({ expanded: true });
     }
-    );
   }
 
 }

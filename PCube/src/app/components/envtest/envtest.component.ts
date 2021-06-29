@@ -42,8 +42,6 @@ export class EnvTestComponent implements OnInit {
   filteredOptions: Observable<string[]>;
 
   private initForm(){
-
-    //this.projectSubscription = this.projectService.getAllParentProject().subscribe();
     
     this.newActivityForm = new FormGroup({
       'parentProject': new FormControl('', [Validators.required]),

@@ -38,13 +38,11 @@ export class AddUserComponent implements OnInit {
     private snackBar : MatSnackBar){ 
   }
 
-  ngOnInit(): void { 
-    this.roleService.getRoles().subscribe(res=>{
-      this.roles= res;
-    });
+  async ngOnInit(): Promise<void> { 
     this.isAdded = false;
     this.isUnique = true;
     this.initForm();
+    this.roles = await this.roleService.getRoles().toPromise();
   }
 
   askForDataRefresh() {
@@ -58,7 +56,7 @@ export class AddUserComponent implements OnInit {
     this.dialogRef.close(true);
   }
 
-  onSubmit(){
+  async onSubmit(){
     let user = new User();
     user.first_name = this.userForm.get("name").value;
     user.last_name = this.userForm.get("lname").value;
@@ -68,12 +66,12 @@ export class AddUserComponent implements OnInit {
     const passwordConfirmation = this.userForm.get("passwordConfirmation").value;
     
     if (this.passwordsMatch(password, passwordConfirmation)){
-      this.userService.createUser(user, password, passwordConfirmation).subscribe((data) => {
+      try {
+        await this.userService.createUser(user, password, passwordConfirmation).toPromise();
         this.onSubmitSuccess();
-      },
-      (error) => {
+      }catch(error) {
         this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
-      });
+      }
     }else{
       this.isAdded = false;
     }
@@ -114,10 +112,10 @@ export class AddUserComponent implements OnInit {
       },{validators: this.passwordMatchValidator});
     }
 
-    checkUniqueEmail(newValue){  
+    async checkUniqueEmail(newValue){  
       if(newValue != null && newValue.trim().length != 0){
         this.isUnique = true;
-        this.userService.isEmailUnique(newValue).subscribe(isUnique => this.isUnique = isUnique);
+        this.isUnique = await this.userService.isEmailUnique(newValue).toPromise();
       }
     }
 }

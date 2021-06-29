@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { AddExpenseAccountComponent } from '../../domain/expense-account/add-expense-account/add-expense-account.component';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
+import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-expense-accounts',
@@ -17,17 +18,16 @@ export class ExpenseAccountsComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-    private router: Router
   ) { }
 
-  customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar)
+  customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar);
 
   ngOnInit(): void {
   }
   fileNameDialogRef: MatDialogRef<AddExpenseAccountComponent>;
   @ViewChild(ExpenseAccountListComponent) expenseAccountListChild;
 
-  openAddDialog() {
+  async openAddDialog() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.minWidth = 600;
     dialogConfig.data = {
@@ -35,13 +35,12 @@ export class ExpenseAccountsComponent implements OnInit {
     }
     this.fileNameDialogRef = this.dialog.open(AddExpenseAccountComponent, dialogConfig);
 
-    this.fileNameDialogRef.afterClosed().subscribe(result => {
-      if (result == "Canceled" || result == undefined) {
-        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-      } else if (result) {
-        this.expenseAccountListChild.refreshList({ expanded: true });
-        this.customSnackBar.openSnackBar('Le compte de dépense a été créée', 'notif-success');
-      }
-    });
+    let result = await this.fileNameDialogRef.afterClosed().toPromise();
+    if (result == "Canceled" || result == undefined) {
+      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+    } else if (result) {
+      this.expenseAccountListChild.refreshList({ expanded: true });
+      this.customSnackBar.openSnackBar('Le compte de dépense a été créée', 'notif-success');
+    }
   }
 }

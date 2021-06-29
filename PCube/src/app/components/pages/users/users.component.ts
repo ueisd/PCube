@@ -20,26 +20,26 @@ export class UsersComponent implements OnInit {
     private dialog: MatDialog,
     private snackBar : MatSnackBar) { }
 
-  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
+  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar);
 
   ngOnInit(): void {
   }
   
-  openDialog() {
+  async openDialog() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.width = "500px";
     this.fileNameDialogRef = this.dialog.open(AddUserComponent, dialogConfig);
 
-    this.fileNameDialogRef.afterClosed().subscribe(result => { 
-        this.child.refreshList();
 
-        if(result == "Canceled" || result == undefined){
-          this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-        }else if(result) {
-          this.customSnackBar.openSnackBar('L\'utilisateur a été créé!', 'notif-success');
-        }
-      }
-    );
+    let result = await this.fileNameDialogRef.afterClosed().toPromise();
+    this.child.refreshList();
+    if(result == "Canceled" || result == undefined){
+      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+    }else if(result) {
+      this.customSnackBar.openSnackBar('L\'utilisateur a été créé!', 'notif-success');
+    }
   }
+
+
 
 }

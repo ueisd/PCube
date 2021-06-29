@@ -25,20 +25,17 @@ export class ActivityComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  openDialog() {
+  async openDialog() {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddActivityComponent, dialogConfig);
 
-    this.fileNameDialogRef.afterClosed().subscribe(result => {
-
-      if (result == "Canceled" || result == undefined) {
-        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-      } else if (result) {
-        this.customSnackBar.openSnackBar('L\'activité a été créée', 'notif-success');
-        this.child.refreshList();   
-      }
+    let result = await this.fileNameDialogRef.afterClosed().toPromise();
+    if (result == "Canceled" || result == undefined) {
+      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+    } else if (result) {
+      this.customSnackBar.openSnackBar('L\'activité a été créée', 'notif-success');
+      this.child.refreshList();   
     }
-    );
   }
 }

@@ -24,17 +24,14 @@ export class HeaderComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  logout() {
-    this.auth.deauthenticate().subscribe(
-      () => {
-        if(this.router.url == "/")
-          location.reload();
-        else{
-          this.router.navigate(['/']).then(()=>{
-            window.location.reload();
-          });
-        }
-      }
-    );
+  async logout() {
+    await this.auth.deauthenticate().toPromise();
+    if(this.router.url == "/")
+      location.reload();
+    else{
+      this.router.navigate(['/']).then(()=>{
+        window.location.reload();
+      });
+    }
   }
 }

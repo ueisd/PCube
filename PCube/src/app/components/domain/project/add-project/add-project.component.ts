@@ -42,7 +42,7 @@ export class AddProjectComponent implements OnInit {
   private dialogRef: MatDialogRef<AddProjectComponent>) { }
 
   
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.projet = this.data.projet;
     if(!(this.projet.id > 0)) this.projet.id = -1;
     if(!(this.projet.parent_id > 0)) this.projet.parent_id = -1;
@@ -52,14 +52,13 @@ export class AddProjectComponent implements OnInit {
     }
     this.initForm();
 
-    this.projectService.getApparentableProject(this.projet.id).subscribe(projets =>{
-      this.parentOptions = this.projectService.generateParentOption(projets, 0);
+    let projets = await this.projectService.getApparentableProject(this.projet.id).toPromise();
+    this.parentOptions = this.projectService.generateParentOption(projets, 0);
 
-      let selected: ProjectItem = this.findProject(this.parentOptions, this.projet.parent_id);
-      if(this.projet.id != this.projet.parent_id) {
-        this.newProjectForm.controls['parent'].setValue(selected);
-      }
-    });
+    let selected: ProjectItem = this.findProject(this.parentOptions, this.projet.parent_id);
+    if(this.projet.id != this.projet.parent_id) {
+      this.newProjectForm.controls['parent'].setValue(selected);
+    }
 
   }
 
@@ -110,7 +109,7 @@ export class AddProjectComponent implements OnInit {
   }
 
 
-  public onSubmit(){
+  public async onSubmit(){
     if(this.newProjectForm.valid){
 
       let name: string = this.newProjectForm.controls['projectName'].value
@@ -118,13 +117,12 @@ export class AddProjectComponent implements OnInit {
       let parentName: string = (projetParent != null) ? projetParent.name : name;
 
       if(this.isCreateForm) {
-        this.projectService.addNewProject(name, parentName).subscribe(project => {
-          if(project.id != -1){
-            this.onSubmitSuccess();
-          }else{
-            this.onSubmitFailled();
-          }
-        });
+        let project = await this.projectService.addNewProject(name, parentName).toPromise();
+        if(project.id != -1){
+          this.onSubmitSuccess();
+        }else{
+          this.onSubmitFailled();
+        }
       }else {
         let proj :ProjectItem = new ProjectItem();
         proj.id = this.projet.id
@@ -137,9 +135,8 @@ export class AddProjectComponent implements OnInit {
           proj.parent_id = this.projet.parent_id;
         }
         proj.name = this.newProjectForm.value['projectName'];
-        this.projectService.updateProject(proj).subscribe(project => {
-          this.onSubmitSuccess();
-        });
+        await this.projectService.updateProject(proj).toPromise();
+        this.onSubmitSuccess();
       }
       
     }

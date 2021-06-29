@@ -5,6 +5,7 @@ import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
 import { ReportRequest } from 'src/app/models/report-request';
 import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-reports',
@@ -16,6 +17,7 @@ export class ReportsComponent implements OnInit {
   reportRequest : ReportRequest;
   reportRequestBackend : ReportRequestForBackend;
   reportsItems: ReportItem[];
+  reportReqSubscription: Subscription;
 
   private _transformer = (node: ReportItem, level: number) => {
     let nodeNochild: ReportItem = new ReportItem(node);
@@ -65,7 +67,7 @@ export class ReportsComponent implements OnInit {
       this.refreshReport();
     }
 
-    this.reportReqService.paramsAnnounced$.subscribe(
+    this.reportReqSubscription = this.reportReqService.paramsAnnounced$.subscribe(
       params => {
         this.reportRequest = params;
         this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(params);
@@ -74,12 +76,15 @@ export class ReportsComponent implements OnInit {
     ); 
   }
 
-  refreshReport() {
-    this.reportReqService.getReport(this.reportRequestBackend).subscribe(reportsI =>{
-      this.dataSource.data = reportsI;
-      this.reportsItems = reportsI;
-      this.treeControl.expandAll();
-    });
+  async refreshReport() {
+    let reportsI: ReportItem[] = await this.reportReqService.getReport(this.reportRequestBackend).toPromise();
+    this.dataSource.data = reportsI;
+    this.reportsItems = reportsI;
+    this.treeControl.expandAll();
+  }
+
+  ngOnDestroy() {
+    this.reportReqSubscription.unsubscribe();
   }
 
 }

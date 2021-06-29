@@ -21,12 +21,10 @@ export class ContactUsComponent implements OnInit {
     private snackBar : MatSnackBar,
     private authService : AuthService) { }
 
-  ngOnInit(): void {
-    this.authService.getAuthenticatedUser().subscribe((user) => {
-      this.user = user;
-      this.setDefaultValues();
-    });
+  async ngOnInit() {
     this.initForm();
+    this.user = await this.authService.getAuthenticatedUser().toPromise();
+    this.setDefaultValues();
   }
   
   initForm() {
@@ -56,19 +54,21 @@ export class ContactUsComponent implements OnInit {
     this.contactUsForm.controls['comment'].setErrors(null);
   }
 
-  onSubmit() {
+  async onSubmit() {
     if(this.contactUsForm.valid){
       const email = this.contactUsForm.controls['email'].value;
       const firstName = this.contactUsForm.controls['firstName'].value;
       const lastName = this.contactUsForm.controls['lastName'].value;
       const comment = this.contactUsForm.controls['comment'].value;
 
-      this.utilsService.emailComment(lastName, firstName, email, comment).subscribe((result) => {
-        if(result) {
-          this.customSnackBar.openSnackBar('Votre commentaire a été envoyé!', 'notif-success');
-          this.setDefaultValues();
-        }
-      });
+      
+      try {
+        let result = await this.utilsService.emailComment(lastName, firstName, email, comment).toPromise();
+        this.customSnackBar.openSnackBar('Votre commentaire a été envoyé!', 'notif-success');
+        this.setDefaultValues();
+      } catch(error) {
+        console.log("Le message n'a pu être envoyé: " + error);
+      }
     }
   }
 }

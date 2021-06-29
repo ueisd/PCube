@@ -42,7 +42,7 @@ export class UserListComponent implements OnInit {
     this.refreshList();
   }
 
-  openEditDialog(user) {
+  async openEditDialog(user) {
     const dialogRef = this.dialog.open(ModifyUserComponent, {
       data: { 
         id: user.id, 
@@ -54,19 +54,16 @@ export class UserListComponent implements OnInit {
       }
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-
-      if(result == "Canceled" || result === undefined) {
-        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-      }else if(result !== undefined) {
-        this.customSnackBar.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
-        this.refreshList();
-      }
-
-    });
+    let result = await dialogRef.afterClosed().toPromise();
+    if(result == "Canceled" || result === undefined) {
+      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+    }else if(result !== undefined) {
+      this.customSnackBar.openSnackBar('L\'utilisateur a été modifié!', 'notif-success');
+      this.refreshList();
+    }
   }
 
-  openDeleteDialog(user) {
+  async openDeleteDialog(user) {
     const dialogRef = this.dialog.open(DeleteUserComponent, {
       data: { 
         id: user.id, 
@@ -79,25 +76,21 @@ export class UserListComponent implements OnInit {
       panelClass: 'warning-dialog'
     });
 
-    dialogRef.afterClosed().subscribe(result => {
-
-      if(result == "Canceled" || result == undefined){
-        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-      } else if(result !== undefined) {
-        this.userService.deleteUser(result.id, result.email).subscribe((data) => {
-          this.customSnackBar.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
-          this.refreshList();
-        },
-        (error) => {
-          this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
-        });
+    let result = await dialogRef.afterClosed().toPromise();
+    if(result == "Canceled" || result == undefined){
+      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+    } else if(result !== undefined) {
+      try {
+        await this.userService.deleteUser(result.id, result.email).toPromise();
+        this.customSnackBar.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
+        this.refreshList();
+      } catch(error) {
+        this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
       }
-
-
-    });
+    }
   }
 
-  refreshList() {
+  async refreshList() {
 
     let user = new User();
     user.first_name = this.nameFilter.value.trim();
@@ -106,10 +99,9 @@ export class UserListComponent implements OnInit {
     user.role_name = this.roleFilter.value.trim();
 
     this.displayedColumns = ['firstName', 'lastName', 'email', 'role', 'operations'];
-    this.userService.getUserByFilter(user).subscribe(users => {
-      this.dataSource = new MatTableDataSource<User>(users);
-      this.dataSource.paginator = this.paginator;
-    });
+    let users = await this.userService.getUserByFilter(user).toPromise()
+    this.dataSource = new MatTableDataSource<User>(users);
+    this.dataSource.paginator = this.paginator;
   }
 
 }

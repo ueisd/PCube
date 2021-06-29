@@ -49,7 +49,7 @@ export class ProjectListComponent implements OnInit {
     };
   }
 
-  openEditDialog(projet: ProjectItem) {
+  async openEditDialog(projet: ProjectItem) {
 
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
@@ -58,46 +58,38 @@ export class ProjectListComponent implements OnInit {
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddProjectComponent, dialogConfig);
 
-    this.fileNameDialogRef.afterClosed().subscribe(result => {
-      if (result == "Canceled" || result == undefined) {
-        this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-      } else if (result) {
-        this.refreshList({ expanded: true });
-        this.customSnackBar.openSnackBar('Le projet a été modifié', 'notif-success');
-      }
+    let result = await this.fileNameDialogRef.afterClosed().toPromise();
+    if (result == "Canceled" || result == undefined) {
+      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+    } else if (result) {
+      this.refreshList({ expanded: true });
+      this.customSnackBar.openSnackBar('Le projet a été modifié', 'notif-success');
     }
-    );
   }
 
-  openDeleteDialog(project: ProjectItem) {
+  async openDeleteDialog(project: ProjectItem) {
 
-    this.projectService.isProjectDeletable(project.id, project.name).subscribe((data) => {
-      this.isDeletable = data;
-      const dialogConfig = this.dialog.open(DeleteProjectComponent, {
-        data: {
-          id: project.id,
-          name: project.name,
-          isDeletable: this.isDeletable
-        },
-        panelClass: 'warning-dialog'
-      });
-
-      dialogConfig.afterClosed().subscribe(result => {
-
-        if (result == "Canceled" || result == undefined) {
-          this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-        } else if (result !== undefined) {
-          this.projectService.deleteProject(project.id, project.name).subscribe((data) => {
-            this.customSnackBar.openSnackBar('Le projet a été supprimé', 'notif-success');
-            this.refreshList({ expanded: true });
-          },
-            (error) => {
-              this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
-            });
-        }
-      }
-      );
+    this.isDeletable = await this.projectService.isProjectDeletable(project.id, project.name).toPromise();
+    const dialogConfig = this.dialog.open(DeleteProjectComponent, {
+      data: {
+        id: project.id,
+        name: project.name,
+        isDeletable: this.isDeletable
+      },
+      panelClass: 'warning-dialog'
     });
+    let result = await dialogConfig.afterClosed().toPromise();
+    if (result == "Canceled" || result == undefined) {
+      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
+    } else if (result !== undefined) {
+      try {
+        await this.projectService.deleteProject(project.id, project.name).toPromise();
+        this.customSnackBar.openSnackBar('Le projet a été supprimé', 'notif-success');
+        this.refreshList({ expanded: true });
+      }catch (error) {
+        this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+      }
+    }
   }
 
   onFilterChanged() {
@@ -114,13 +106,11 @@ export class ProjectListComponent implements OnInit {
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
-  refreshList(opts?: refreshOption) {
+  async refreshList(opts?: refreshOption) {
     let project = new ProjectItem();
     project.name = this.nameFilter.value.trim();
-    this.projectService.filterProject(project).subscribe(projets => {
-      this.dataSource.data = projets;
-      if (opts.expanded) this.treeControl.expandAll();
-    });
+    this.dataSource.data = await this.projectService.filterProject(project).toPromise();
+    if (opts.expanded) this.treeControl.expandAll();
   }
 }
 

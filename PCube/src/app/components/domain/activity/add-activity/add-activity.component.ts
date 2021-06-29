@@ -55,24 +55,27 @@ export class AddActivityComponent implements OnInit{
     this.dialogRef.close(true);
   }
 
-  createNewActivity(){
-    this.activityService.addNewActivity(this.newActivityForm.controls['activityName'].value).subscribe(activity => {
-      if(activity.id != -1){
-        this.onSubmitSuccess();
-      }else{
-        this.isAdded = false;
-      }
-    });
+  async createNewActivity(){
+    let activity = await this.activityService.addNewActivity(
+      this.newActivityForm.controls['activityName'].value
+    ).toPromise();
+    if(activity.id != -1){
+      this.onSubmitSuccess();
+    }else{
+      this.isAdded = false;
+    }
   }
 
-  updateAnActivity(newName:string){
-
-      this.activityService.updateActivity(this.activityItem.id, this.activityItem.name, newName).subscribe(activity=>{
-        this.dialogRef.close(true);
-      },(error)=>{
-        this.customSnackBar.openSnackBar("Une erreur s'est produit, veuillez", 'notif-error');
-        this.isAdded = false;
-      });
+  async updateAnActivity(newName:string){
+    try {
+      await this.activityService.updateActivity(
+        this.activityItem.id, this.activityItem.name, newName
+      ).toPromise();
+      this.dialogRef.close(true);
+    } catch(error) {
+      this.customSnackBar.openSnackBar("Une erreur s'est produit, veuillez", 'notif-error');
+      this.isAdded = false;
+    }
   }
 
   onSubmit(){
@@ -89,7 +92,7 @@ export class AddActivityComponent implements OnInit{
 
   isUnique: boolean;
 
-  checkUniqueName(newValue){
+  async checkUniqueName(newValue){
 
     if(!this.isCreateForm && newValue == this.activityItem.name){
       this.isUnique = true;
@@ -98,10 +101,8 @@ export class AddActivityComponent implements OnInit{
     }
 
     if(newValue != null && newValue.trim().length != 0){
-      this.activityService.isNameUnique(newValue).subscribe(isUnique => {
-        this.isUnique = isUnique
-        this.isUnmodifiedValue = false;
-      });
+      this.isUnique = await this.activityService.isNameUnique(newValue).toPromise();
+      this.isUnmodifiedValue = false;
     }
   }
 
