@@ -1,5 +1,17 @@
-table {
-    min-width: 90%; 
+.timelines-table {
+    margin-left: auto;
+    margin-right: auto;
+    min-width: 70%;
+}
+
+.conteneur-principal {
+    padding-bottom: 50px;
+}
+
+.button-header {
+    width: 70%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .jour-form-widget {

@@ -1,24 +1,28 @@
-<div class="main-container-95">
+<div class="main-container-95 conteneur-principal">
 
-  <mat-card class="list-activite-card">
+  <mat-card>
     <mat-card-title>Gestion des lignes de temps</mat-card-title>
     <mat-card-content>
       <app-request [(reportRequest)]="this.reportRequest"></app-request> 
     </mat-card-content>    
   </mat-card>
 
-  
 
   <form [formGroup]="form" autocomplete="off">
-    <button mat-raised-button color="accent" (click)="saveTimelines()" *ngIf="timelinesGr.controls.length >0" 
-      type="submit" [disabled]="form.invalid">
-      <mat-icon>save</mat-icon> Enregistrer les changements
-    </button>
-    <button mat-raised-button color="primary" (click)="addFormTimeline()">
-      <mat-icon>add</mat-icon>Ajouter une ligne de temps :)
-    </button>
-    <ng-container formArrayName="timelinesGr">
-      <table #table mat-table [dataSource]="timelinesGr.controls" class="mat-elevation-z8" >
+    <div formArrayName="timelinesGr">
+
+      <div class="button-header">
+        <button mat-raised-button color="accent" (click)="saveTimelines()" *ngIf="timelinesGr.controls.length >0" 
+          type="submit" [disabled]="form.invalid">
+          <mat-icon>save</mat-icon> Enregistrer les changements
+        </button>
+        <button mat-raised-button color="primary" (click)="addFormTimeline()" >
+          <mat-icon>add_box</mat-icon>Ajouter une ligne de temps
+        </button>
+      </div>
+
+
+      <table #table mat-table [dataSource]="timelinesGr.controls" class="mat-elevation-z8 timelines-table" >
 
         <!-- day_of_week Column -->
         <ng-container matColumnDef="day_of_week">
@@ -138,9 +142,16 @@
             <button type="button" class="btn pull-right" (click)="deleteFormTimeline(i)">
               <mat-icon *ngIf="!element.value.isDelete">delete</mat-icon>
               <span *ngIf="!element.value.isDelete" class="cdk-visually-hidden">Enlever&#x200b; </span>
-              <mat-icon *ngIf="element.value.isDelete">settings_backup_restore</mat-icon>
+              <mat-icon *ngIf="element.value.isDelete">restore_from_trash</mat-icon>
               <span *ngIf="element.value.isDelete" class="cdk-visually-hidden">Rétablir </span>
             </button>
+
+            <button *ngIf="!element.value.isDelete && !(element.value.id<1) && element.value.isChanged" 
+              type="button" class="btn pull-right" (click)="restoreToOldsValues(i)">
+              <mat-icon>restore</mat-icon>
+              <span class="cdk-visually-hidden">Restaurer selon les valeures initiales </span>
+            </button>
+            
           </td>
         </ng-container>
 
@@ -150,19 +161,21 @@
         [ngClass]="{'changed-row': row.controls.isChanged.value,
         'new-row': !(row.controls.id.value > 0), 'delete-row': row.controls.isDelete.value }"></tr>
       </table>
-    </ng-container>
+    </div>
   </form>
+</div>  
 
-  <mat-accordion>
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <mat-panel-title>
-          Form value
-        </mat-panel-title>
-      </mat-expansion-panel-header>
-      <code>
-        <pre>{{ form.value | json}}</pre>
-      </code>
-    </mat-expansion-panel>
-  </mat-accordion>
-</div>
+<!--
+<mat-accordion>
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <mat-panel-title>
+        Form value
+      </mat-panel-title>
+    </mat-expansion-panel-header>
+    <code>
+      <pre>{{ form.value | json}}</pre>
+    </code>
+  </mat-expansion-panel>
+</mat-accordion>
+-->

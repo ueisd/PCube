@@ -110,6 +110,20 @@ export class TimelineComponent implements OnInit {
   }
 
               // fonctions d'interraction
+  restoreToOldsValues(index) {
+    let control = <FormArray>this.form.controls.timelinesGr;
+    let rowControls = control.at(index);
+    let oldTimeline =  TimelineItem.asFormGroup(
+      rowControls.value.oldValue, 
+      this.activityOptions, 
+      this.projectsOptions, 
+      this.comptesOptions, 
+      this.usersOptions
+    );
+    control.removeAt(index);
+    control.insert(index, oldTimeline);
+    this.table.renderRows();
+  }
 
   deleteFormTimeline(index) {
     let control = <FormArray>this.form.controls.timelinesGr;
