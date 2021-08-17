@@ -14,11 +14,3 @@ services:
     environment:
       - FLASK_APP=src
       - FLASK_ENV=development
-  reverse-proxy:
-    build:
-      context: ./reverse-proxy
-      dockerfile: Dockerfile.dev
-    ports:
-      - 80:80
-    depends_on:
-      - api
