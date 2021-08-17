@@ -1,0 +1,24 @@
+version: "3.8"
+services:
+  api:
+    build:
+      context: ./PCube-API
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    volumes:
+      - type: bind
+        source: ./PCube-API/src
+        target: /app/src
+    ports:
+      - 5000:80
+    environment:
+      - FLASK_APP=src
+      - FLASK_ENV=development
+  reverse-proxy:
+    build:
+      context: ./reverse-proxy
+      dockerfile: Dockerfile.dev
+    ports:
+      - 80:80
+    depends_on:
+      - api

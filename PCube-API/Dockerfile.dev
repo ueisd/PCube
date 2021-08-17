@@ -1,0 +1,9 @@
+FROM python:3
+WORKDIR /app
+RUN apt update && apt install sqlite3
+COPY . .
+RUN python3 -m venv env
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+RUN rm -f src/db/database/pcube.db 2> /dev/null && sqlite3 src/db/database/pcube.db < src/db/database/pcube.sql && sqlite3 src/db/database/pcube.db < src/db/database/data_generation.sql
+CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0", "-p", "4000"]
