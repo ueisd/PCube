@@ -1,0 +1,9 @@
+build:
+  docker:
+    web: PCube-API/Dockerfile.dev
+  config:
+    FLASK_APP: src
+    FLASK_ENV: development
+run:
+  web: export FLASK_APP=src && python3 -m flask run --host=$HOST -p $PORT
+    
