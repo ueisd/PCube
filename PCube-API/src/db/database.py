@@ -23,7 +23,7 @@ class Database:
         Retourne la connection à la base de données.
         """
         if self.connection is None:
-            self.connection = sqlite3.connect('db/database/pcube.db')
+            self.connection = sqlite3.connect('src/db/database/pcube.db')
         return self.connection
 
     def disconnect(self):
