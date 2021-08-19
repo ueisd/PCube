@@ -10,6 +10,7 @@ from ..utility.auth import (
     auth_required, auth_refresh_required, AuthenticationError,
     admin_required, project_manager_required, member_required
 )
+import os
 import base64
 import yaml
 import smtplib
@@ -19,13 +20,6 @@ from email.mime.multipart import MIMEMultipart
 utils = Blueprint('utils', __name__)
 app = Flask(__name__)
 log = create_logger(app)
-
-# On cherche le fichier de configuration
-try:
-    stream = open('config.yaml', 'r')
-except IOError as e:
-    print("Erreur avec le fichier en lecture : ", e.strerror)
-content = yaml.load(stream, Loader=yaml.FullLoader)
 
 
 @utils.route('/contact-us', methods=['POST'])
@@ -52,15 +46,14 @@ def email_comment():
     if comment is None:
         log.error("Le commentaire est manquant!")
         abort(404)
-
+    # @todo utiliser la gestion des erreures et un gestionnaire d'email type sparkpost
     send_email(last_name, first_name, email, comment)
     return jsonify(last_name, first_name, email, comment), 201
 
 
 def send_email(last_name, first_name, email, comment):
-    username = content['accounts']['gmail']['username']
-    password = content['accounts']['gmail']['password']
-
+    username = os.getenv('EMAIL_USERNAME')
+    password = os.getenv('EMAIL_PASSWORD')
     source = username
     destination = username
     subject = "Commentaire Utilisateur"
