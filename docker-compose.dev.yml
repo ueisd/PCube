@@ -14,3 +14,14 @@ services:
     environment:
       - FLASK_APP=src
       - FLASK_ENV=development
+  client:
+    build:
+      context: ./PCube
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    volumes:
+      - type: bind
+        source: ./PCube/src
+        target: /app/src
+    ports:
+      - 4200:80
