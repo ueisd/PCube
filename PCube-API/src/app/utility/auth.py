@@ -17,7 +17,7 @@ from .security import (
 
 from ..db.auth_request import AuthRequest
 from ..domain.access_token import AccessToken
-from ..pcube_python.db_controller import get_db
+from ..routes.db_controller import get_db
 
 app = Flask(__name__)
 log = create_logger(app)
