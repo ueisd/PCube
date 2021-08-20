@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/pierrelucueisd/PCube#readme",
   "dependencies": {
-    "@angular/material-moment-adapter": "^12.1.0",
+    "@angular/material-moment-adapter": "^12.2.2",
     "moment": "^2.29.1"
   }
 }

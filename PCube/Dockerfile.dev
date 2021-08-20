@@ -1,7 +1,5 @@
 FROM node:alpine
-WORKDIR '/app'
-COPY package.json .
+WORKDIR /app
+COPY . .
 RUN npm install
 RUN npm update
-COPY . .
-CMD ["node_modules/.bin/ng", "serve", "--open", "--proxy-config", "proxy.config.json", "--port", "80", "--host", "0.0.0.0" ]

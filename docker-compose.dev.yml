@@ -18,27 +18,6 @@ services:
       - EMAIL_USERNAME=plateforme.petit.peuple@gmail.com
       - EMAIL_PASSWORD=ablmpr_5_gpp
     entrypoint: ["python3", "-m", "flask", "run", "--host=0.0.0.0", "-p", "80"]
-
-    #entrypoint:
-    #[
-    # "python3",
-    # "-m",
-    # "debugpy",
-    # "--listen",
-    # "0.0.0.0:5678",
-    # "-m",
-    # "app",
-    # "--wait-for-client",
-    # "--multiprocess",
-    # "-m",
-    #"flask",
-    #"run",
-    # "-h",
-    #  "0.0.0.0",
-    #   "-p",
-    #    "5000",
-    #  ]
-    #entrypoint: sh
   client:
     build:
       context: ./PCube
@@ -50,3 +29,21 @@ services:
         target: /app/src
     ports:
       - 4200:80
+      - 9229:9229
+      - 8000:8000
+    environment: 
+      - DEBUG=*
+      - NODE_ENV=development
+    entrypoint:
+      - node_modules/.bin/ng
+      - serve 
+      - --proxy-config 
+      - proxy.config.json 
+      - --port 
+      - "80" 
+      - --host 
+      - "0.0.0.0"
+    volumes:
+      - type: bind
+        source: ./PCube/src
+        target: /app/src
