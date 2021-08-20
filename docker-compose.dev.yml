@@ -14,7 +14,6 @@ services:
       - 5000:5000
       - 10001:10001
     environment:
-      - FLASK_DEBUG=0
       - DEBUGGER=True
       - EMAIL_USERNAME=plateforme.petit.peuple@gmail.com
       - EMAIL_PASSWORD=ablmpr_5_gpp

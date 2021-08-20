@@ -14,9 +14,10 @@ from .pcube_python.timeline_routes import timeline
 from .pcube_python.utils_routes import utils
 from debugger import initialize_flask_server_debugger_if_needed
 
-initialize_flask_server_debugger_if_needed()
 
 def create_app():
+    initialize_flask_server_debugger_if_needed()
+    
     app = Flask(__name__)
     CORS(app)
 

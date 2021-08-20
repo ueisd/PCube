@@ -2,7 +2,7 @@ FROM python:3 as base
 WORKDIR /app
 RUN apt update && apt install sqlite3
 COPY . .
-ENV FLASK_APP=src
+ENV FLASK_APP=src/app
 ENV FLASK_ENV=development
 RUN python3 -m venv env
 RUN pip install --upgrade pip
@@ -13,8 +13,6 @@ RUN	sqlite3 database/pcube.db < database/data_generation.sql
 
 FROM base as debug
 # Debug image reusing the base
-# Install dev dependencies for debugging
-RUN pip install debugpy
 # Keeps Python from generating .pyc files in the container
 ENV PYTHONDONTWRITEBYTECODE 1
 # Turns off buffering for easier container logging
