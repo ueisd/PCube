@@ -11,14 +11,13 @@ services:
         source: ./PCube-API/src
         target: /app/src
     ports:
-      - 5000:5000
+      - 5000:80
       - 10001:10001
     environment:
       - DEBUGGER=True
       - EMAIL_USERNAME=plateforme.petit.peuple@gmail.com
       - EMAIL_PASSWORD=ablmpr_5_gpp
-    entrypoint:
-      ["python3", "-m", "flask", "run", "--host=0.0.0.0", "-p", "5000"]
+    entrypoint: ["python3", "-m", "flask", "run", "--host=0.0.0.0", "-p", "80"]
 
     #entrypoint:
     #[
