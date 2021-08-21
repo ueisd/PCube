@@ -1,0 +1,49 @@
+version: "3.8"
+services:
+  api:
+    build:
+      context: ./PCube-API
+      dockerfile: Dockerfile.dev
+      target: debug
+    stdin_open: true
+    volumes:
+      - type: bind
+        source: ./PCube-API/src
+        target: /app/src
+    ports:
+      - 5000:80
+      - 10001:10001
+    environment:
+      - DEBUGGER=True
+      - EMAIL_USERNAME=plateforme.petit.peuple@gmail.com
+      - EMAIL_PASSWORD=ablmpr_5_gpp
+    entrypoint: ["python3", "-m", "flask", "run", "--host=0.0.0.0", "-p", "80"]
+  client:
+    build:
+      context: ./PCube
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    volumes:
+      - type: bind
+        source: ./PCube/src
+        target: /app/src
+    ports:
+      - 4200:80
+      - 9229:9229
+      - 8000:8000
+    environment: 
+      - DEBUG=*
+      - NODE_ENV=development
+    entrypoint:
+      - node_modules/.bin/ng
+      - serve 
+      - --proxy-config 
+      - proxy.config.json 
+      - --port 
+      - "80" 
+      - --host 
+      - "0.0.0.0"
+    volumes:
+      - type: bind
+        source: ./PCube/src
+        target: /app/src

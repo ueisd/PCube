@@ -1,0 +1,11 @@
+build:
+  docker:
+    web: 
+      dockerfile: PCube-API/Dockerfile.dev
+      target: heroku
+  config:
+    FLASK_APP: src/app
+    FLASK_ENV: development
+run:
+  web: export FLASK_APP=src/app && python3 -m flask run --host=$HOST -p $PORT
+    

@@ -1,0 +1,31 @@
+FROM python:3 as base
+WORKDIR /app
+RUN apt update && apt install sqlite3
+COPY ./requirements.txt ./requirements.txt
+ENV FLASK_APP=src/app
+ENV FLASK_ENV=development
+RUN pip install --no-cache-dir -r requirements.txt
+COPY ./database ./database
+RUN rm -f database/pcube.db 2> /dev/null
+RUN	sqlite3 database/pcube.db < database/pcube.sql
+RUN	sqlite3 database/pcube.db < database/data_generation.sql
+# Switch to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
+RUN useradd appuser && chown -R appuser /app
+
+
+FROM base as debug
+# Debug image reusing the base
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE 1
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED 1
+# Switch to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
+USER appuser
+
+FROM base as heroku
+COPY src src
+USER appuser
+
+FROM base as prod
+USER appuser
+CMD [ "python3", "-m" , "flask", "run", "--host="$HOST, "-p", $PORT]

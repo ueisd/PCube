@@ -6,9 +6,9 @@ run:
 
 #installation commandes
 regenerate-db:
-	rm -f db/database/pcube.db 2> /dev/null
-	sqlite3 db/database/pcube.db < db/database/pcube.sql
-	sqlite3 db/database/pcube.db < db/database/data_generation.sql
+	rm -f database/pcube.db 2> /dev/null
+	sqlite3 database/pcube.db < database/pcube.sql
+	sqlite3 database/pcube.db < database/data_generation.sql
 
 pycodestyle:
 	pycodestyle ../PCube-API
