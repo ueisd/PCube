@@ -39,9 +39,9 @@ Placez le terminal dans le répertoire racine.
 Taper la commande `docker-compose -f docker-compose.dev.yml up` pour la première fois installera le backend suivi du frontend.
 L'application démarera ensuite dans le même ordre et il vous sera possible d'attacher un debugger au frontend et/ou au backend.
 
-## Informations d'utilisation
+## Informations d'utilisation locale
 
-**Accès:** utiliser l'adresse suivante: http://localhost:4200. pour accéder au frontend.
+**Accès :** utiliser l'adresse suivante: http://localhost:4200. pour accéder au frontend.
 http://localhost:5000 peut être utilisée pour voir si le backend fonctionne en affichant une page html
 contenant un titre nommé accueil.
 
@@ -70,6 +70,7 @@ L'application ne manipule aucune donnée sensibles pour le moment mais le roadma
 [Backend déployée sur heroku](https://pcube-backend.herokuapp.com/)
 
 Le backend du démo en ligne utilise la stack container d'heroku.
+La version en ligne devrait permettre de s'authentifier avec les mêmes identifiants que la version locale nouvellement installé.
 
 ## License
 
