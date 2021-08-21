@@ -20,12 +20,12 @@ services:
     entrypoint: ["python3", "-m", "flask", "run", "--host=0.0.0.0", "-p", "80"]
   client:
     build:
-      context: ./PCube
+      context: ./client
       dockerfile: Dockerfile.dev
     stdin_open: true
     volumes:
       - type: bind
-        source: ./PCube/src
+        source: ./client/src
         target: /app/src
     ports:
       - 4200:80
@@ -43,7 +43,7 @@ services:
       - "0.0.0.0"
     volumes:
       - type: bind
-        source: ./PCube/src
+        source: ./client/src
         target: /app/src
     depends_on:
       - api
