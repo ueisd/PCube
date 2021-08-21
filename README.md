@@ -70,7 +70,7 @@ L'application ne manipule aucune donnée sensibles pour le moment mais le roadma
 [Backend déployée sur heroku](https://pcube-backend.herokuapp.com/)
 
 Le backend du démo en ligne utilise la stack container d'heroku.
-La version en ligne devrait permettre de s'authentifier avec les mêmes identifiants que la version locale nouvellement installé.
+Le frontend en ligne devrait permettre de s'authentifier avec les mêmes identifiants que cités plus haut dans la section de documentation intitulée Authentification.
 
 ## License
 
