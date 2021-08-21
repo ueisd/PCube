@@ -1,0 +1,33 @@
+{
+  "configurations": [
+    {
+      "name": "Python: Attacher",
+      "type": "python",
+      "request": "attach",
+      "connect": {
+        "host": "localhost",
+        "port": 10001
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolder}/PCube-API",
+          "remoteRoot": "/app"
+        }
+      ]
+    },
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Local chrome",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}/PCube"
+    },
+    {
+      "type": "pwa-msedge",
+      "request": "launch",
+      "name": "Local edge",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}/PCube"
+    }
+  ]
+}

@@ -149,4 +149,3 @@ envtest*
 # PyCharm
 .idea*
 
-.vscode/launch.json
