@@ -1,7 +1,7 @@
 {
   "configurations": [
     {
-      "name": "Python: Attacher",
+      "name": "Debug backend - python",
       "type": "python",
       "request": "attach",
       "connect": {
@@ -16,16 +16,16 @@
       ]
     },
     {
-      "type": "chrome",
+      "type": "pwa-chrome",
       "request": "launch",
-      "name": "Local chrome",
+      "name": "Debug frontend - chrome",
       "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}/PCube"
     },
     {
       "type": "pwa-msedge",
       "request": "launch",
-      "name": "Local edge",
+      "name": "Debug frontend - edge",
       "url": "http://localhost:4200",
       "webRoot": "${workspaceFolder}/PCube"
     }
