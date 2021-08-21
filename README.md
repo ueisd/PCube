@@ -35,7 +35,7 @@ S'assurer de posséder les prérequis suivants:
 ## Installation locale et utilisation
 
 Placez le terminal dans le répertoire racine
-Taper la commande `docker-compose up` pour la première fois installera le backend suivi du forntend.
+Taper la commande `docker-compose -f docker-compose.dev.yml up` pour la première fois installera le backend suivi du forntend.
 L'application démarera ensuite dans le même ordre et il vous sera possible d'attacher un debugger au frontend et/ou au backend
 
 ## Informations d'utilisation
