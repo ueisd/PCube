@@ -60,13 +60,15 @@ L'utilisation d'un autre système de base de données est prévue dans le roadma
 
 L'application ne manipule aucune donnée sensibles pour le moment mais le roadmap priorisera l'utilisation de variables d'evironnement afin de stocker les mots de passes et les clés.
 
-### Demo
+### Demo en ligne
 
 [Frontend déployée sur heroku](https://pcube-frontend.herokuapp.com/)
 
+[Buildpack utilisé pour le frontend heroku](https://github.com/ueisd/PCUBE-front-buildpack)
+
 [Backend déployée sur heroku](https://pcube-backend.herokuapp.com/)
 
-[Buildpack utilisé pour le backend heroku](https://github.com/ueisd/PCUBE-front-buildpack)
+Le backend du démo en ligne utilise la stack container d'heroku.
 
 ## License
 
