@@ -2,13 +2,13 @@ version: "3.8"
 services:
   api:
     build:
-      context: ./PCube-API
+      context: ./api
       dockerfile: Dockerfile.dev
       target: debug
     stdin_open: true
     volumes:
       - type: bind
-        source: ./PCube-API/src
+        source: ./api/src
         target: /app/src
     ports:
       - 5000:80
