@@ -23,6 +23,7 @@ ENV PYTHONUNBUFFERED 1
 USER appuser
 
 FROM base as heroku
+COPY src src
 USER appuser
 
 FROM base as prod
