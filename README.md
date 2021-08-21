@@ -10,8 +10,6 @@ Groupe : 10
 
 Un organisme communautaire Le Petit Peuple souhaiterait que soit réalisé un système de suivi des heures bénévoles. Le projet permettrait au client de comptabiliser les heures bénévoles effectuées dans l’organisme pour contrôler la performance de ses membres ou de ses projets et informer ses partenaires/donateurs sur les performances de l’organisme.
 
-  
-
 ## Auteurs
 
 - Boutaous, Oussema
@@ -25,78 +23,52 @@ Un organisme communautaire Le Petit Peuple souhaiterait que soit réalisé un sy
 - Richer Stébenne, Sébastien
 
 - Arcole, Alexandre-Thibault
- 
 
 ## Prérequis
- S'assurer de posséder les prérequis suivants:
-| Nom| vérification | installation |
-|--|--|--|
-| Python >= 3.8 | `python --version` |  [installation sur ubuntu](https://linuxize.com/post/how-to-install-python-3-8-on-ubuntu-18-04/).
-| npm | `npm -v` | `sudo apt install npm`
-|sqlite3 | `sqltite3`| - linux `sudo apt-get install sqlite3`
-| makefile | `make -v` | windows: `choco install make`
-|pip| `python -m pip --version` |
 
+S'assurer de posséder les prérequis suivants:
+| Nom| vérification |
+|--|--|
+| docker | `docker -v`
+| docker compose | `docker-compose -v`
 
-## Installation
-Placez le terminal dans le répertoire PCube contenant le répertoire  PCube-API.
-Tapez la commande `make` pour installer l'application.
+## Installation locale et utilisation
 
-## Démmarage
+Placez le terminal dans le répertoire racine
+Taper la commande `docker-compose up` pour la première fois installera le backend suivi du forntend.
+L'application démarera ensuite dans le même ordre et il vous sera possible d'attacher un debugger au frontend et/ou au backend
 
-Vous devez ensuite démarrer l'application.
+## Informations d'utilisation
 
-Démarer le backend: `make app-run-dev`
+**Accès:** utiliser l'adresse suivante: http://localhost:4200. pour accéder au frontend.
+http://localhost:5000 peut être utilisée pour voir si le backend fonctionne en affichant une page html
+contenant un titre nommé accueil.
 
-Démarer la frontend: `make api-run-dev`
-
-## Utilisation
-**Accès:** utiliser l'adresse suivante: http://localhost:4200.
-
-**Authentification:** Vous pourrez alors utiliser les codes suivants
-| Compte       |email |password                     |
+**Authentification:** Vous pourrez utiliser les codes suivants
+| Compte |email |password |
 |--------------|------|-----------------------------|
-|admin 		   |A 	|a |
+|admin |A |a |
 |PM | P | p|
 |Membre | M | m|
-  
 
+### note sur la persistance des données
 
-## Notes: 
-l'application utilise un environnement vituel.
+Le système utilise une base de donnée mysql et les données sont souvent réinitialisées lors des builds.
+L'utilisation d'un autre système de base de données est prévue dans le roadmap mais imliquera possiblement de changer l'hébergeur du démo
 
+### note sur la sécurité
 
-  
-
-### Installer RAML
-L'application fournit un API **REST** documenté avec **RAML**. Le document est généré automatiquement à chaque appel du **Makefile**. L'installation de **RAML** se fait uniquement par le gestionnaire de paquet **NPM**
-
-Commande pour l'installation :
-- RAML : `sudo npm i -g raml2html`
-
- 
-### Installer la base de données Sqlite3
-La base de données **pcube.db** est dans l répertoire **PCube-API/db/database/**.
-
-Vous pouvez ensuite faire les commandes suivantes dans ce répertoire 
-
-1) Sur le terminal : `sqlite3 pcube.db`
-2) Sur Sqlite3 : `.read pcube.sql`
-3) Sur Sqlite3 : `.read data_generation.sql`
-4) Sur Sqlite3 : `select * from user;` (Pour tester que le tout fonctionne)
-
-
-Une fois l'installer complété, regarder votre terminal pour visualiser les codes d'erreurs. Il ce pourrait que la commande doit être lancer avec **sudo**. Regarder aussi pour un message du genre *found 1 low severity vulnerability*. Pas de panique, lancer la commande `npm audit fix`. Si rien ne se règle, on ne touche à rien. C'est "normal" la communauté travail pour régler ces problèmes.
+L'application ne manipule aucune donnée sensibles pour le moment mais le roadmap priorisera l'utilisation de variables d'evironnement afin de stocker les mots de passes et les clés.
 
 ### Demo
+
 [Frontend déployée sur heroku](https://pcube-frontend.herokuapp.com/)
 
 [Backend déployée sur heroku](https://pcube-backend.herokuapp.com/)
 
-[Buildpack utilisé pour le backend heroku](https://github.com/pierrelucueisd/PCube-buildpack)
+[Buildpack utilisé pour le backend heroku](https://github.com/ueisd/PCUBE-front-buildpack)
 
-
-## License 
+## License
 
 Le projet est sous licence MIT X11.
 
