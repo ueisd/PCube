@@ -32,7 +32,7 @@ S'assurer de posséder les prérequis suivants:
 | docker | `docker -v`
 | docker compose | `docker-compose -v`
 
-## Installation locale et utilisation
+## Installation locale et démarrage
 
 ### 1 variables d'environnement
 
@@ -58,16 +58,27 @@ L'utilisation de fichier de configuration comportant des informations de sécuri
   - Lors de la première utilisation de cette commande, l'application sera installé puis executé. Les autres fois, la commande executera l'application.
 - Une fois l'application démarrée, il vous sera possible d'attacher un debugger au frontend et/ou au backend. Une préconfiguration des dégugger existe pour vs code dans `.vscode/launch.json`.
 
-## Informations d'utilisation locale
+## Utilisation
 
+### Utilisation locale
+
+**\*Note**: L'étape _Installation locale et démarrage_ doit être complétée
 **Accès :**
 
 - Frontend: http://localhost:4200
   interface graphique utilisée par les utilisateurs
 - Backend: http://localhost:5000
   Peut être utilisée pour voir si le backend fonctionne en affichant une page html le cas échéant.
+  Lors de l'accès au frontend, les informations pour vous connectés sont dans la section _Authentification aux frontends_
 
-## Authentification au frontend:
+### Utilisation du démo en ligne
+
+**\*Note**: Ne nécéssite aucune étape préalable (pas d'installation)
+[Frontend déployée sur heroku](https://pcube-frontend.herokuapp.com/)
+[Backend déployée sur heroku](https://pcube-backend.herokuapp.com/)
+Lors de l'accès au frontend, les informations pour vous connectés sont dans la section _Authentification aux frontends_
+
+### Authentification aux frontends:
 
 L'interface graphique vous demandera un nom d'utilisateur et un mot de passe.
 Voici des comptes disponnibles après l'intallation.
@@ -76,7 +87,7 @@ Voici des comptes disponnibles après l'intallation.
 |admin |A |a |
 |PM | P | p|
 |Membre | M | m|
-**\*Notes** Changez rapidement ces informations
+**\*Notes** Changez rapidement ces informations (sauf sur le démo heroku)
 
 ## notes
 
@@ -89,16 +100,12 @@ L'utilisation d'un autre système de base de données est prévue dans le roadma
 
 L'utilisation de variables d'environnement pour un compte administrateur initial sera privillégié dans le roadmap plutôt que d'utiliser un préset de données pour le spécifier.
 
-## Demo en ligne
-
-[Frontend déployée sur heroku](https://pcube-frontend.herokuapp.com/)
-
-[Buildpack utilisé pour le frontend heroku](https://github.com/ueisd/PCUBE-front-buildpack)
-
-[Backend déployée sur heroku](https://pcube-backend.herokuapp.com/)
+### Le démo en ligne
 
 Le backend du démo en ligne utilise la stack container d'heroku.
-Le frontend en ligne devrait permettre de s'authentifier avec les mêmes identifiants que cités plus haut dans la section de documentation intitulée Authentification.
+[Buildpack utilisé pour le frontend heroku](https://github.com/ueisd/PCUBE-front-buildpack)
+Le choix d'heroku permet un déploiement automatique mais la séparation en deux services permet déviter d'Avoir à utiliser un addon payant utilisant docker compose.
+Les bases de données sont fréquement rechargées avec les données initiales d'installation.
 
 ## License
 
