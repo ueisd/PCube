@@ -44,7 +44,7 @@ Invariants: assurez vous de toujours définir les variables d'environnement suiv
 
 #### Configuration en local
 
-Si vous souhaitez utiliser un fichier pour déclarer vos variables d'environnement, veuillez le mettre à la racine et obligatoirement l'intituler `.env.compose` afin que le fichier soit ignoré par git.
+Si vous souhaitez utiliser un fichier pour déclarer vos variables d'environnement, veuillez le créer à la racine du projet et obligatoirement l'intituler `.env.compose` afin que le fichier soit ignoré par git.
 L'utilisation de fichier de configuration comportant des informations de sécurité est souvent déconseillé en production.
 
 ### 2 Commandes d'installation
@@ -67,24 +67,29 @@ L'utilisation de fichier de configuration comportant des informations de sécuri
 - Backend: http://localhost:5000
   Peut être utilisée pour voir si le backend fonctionne en affichant une page html le cas échéant.
 
-**Authentification au frontend:** Suivant l'installation, vous pourrez utiliser les codes suivants:
+## Authentification au frontend:
+
+L'interface graphique vous demandera un nom d'utilisateur et un mot de passe.
+Voici des comptes disponnibles après l'intallation.
 | Compte |email |password |
 |--------------|------|-----------------------------|
 |admin |A |a |
 |PM | P | p|
 |Membre | M | m|
-**Notes** Changez rapidement ces mots de passe
+**\*Notes** Changez rapidement ces informations
 
-### note sur la persistance des données
+## notes
+
+### \* La persistance des données
 
 Le système utilise une base de donnée mysql et les données sont souvent réinitialisées lors des builds.
 L'utilisation d'un autre système de base de données est prévue dans le roadmap mais il est possible qu'elle implique de changer l'hébergeur du démo.
 
-### notes sur l'authentification:
+### \* L'authentification:
 
-L'utilisation de variables d'environnement pour un copte admiinistrateur initial sera privillégié dans le roadmap plutôt que d'utiliser un préset de données.
+L'utilisation de variables d'environnement pour un compte administrateur initial sera privillégié dans le roadmap plutôt que d'utiliser un préset de données pour le spécifier.
 
-### Demo en ligne
+## Demo en ligne
 
 [Frontend déployée sur heroku](https://pcube-frontend.herokuapp.com/)
 
