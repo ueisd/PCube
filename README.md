@@ -87,7 +87,7 @@ Ne nécéssite aucune étape préalable (pas d'installation)
 ### Authentification aux frontends:
 
 L'interface graphique vous demandera un nom d'utilisateur et un mot de passe.
-Voici des comptes disponnibles après l'intallation.
+Voici des comptes disponnibles après l'intallation:
 | Compte |email |password |
 |--------------|------|-----------------------------|
 |admin |A |a |
@@ -108,10 +108,10 @@ L'utilisation de variables d'environnement pour un compte administrateur initial
 
 ### Le démo en ligne
 
-Le backend du démo en ligne utilise la stack container d'heroku.
-[Buildpack utilisé pour le frontend heroku](https://github.com/ueisd/PCUBE-front-buildpack)
-Le choix d'heroku permet un déploiement automatique mais la séparation en deux services permet déviter d'Avoir à utiliser un addon payant utilisant docker compose.
-Les bases de données sont fréquement rechargées avec les données initiales d'installation.
+- Le backend du démo en ligne utilise la stack container d'heroku.
+- [Buildpack utilisé pour le frontend heroku](https://github.com/ueisd/PCUBE-front-buildpack)
+- Le choix d'heroku permet un déploiement automatique mais la séparation en deux services permet déviter d'Avoir à utiliser un addon payant utilisant docker compose.
+- Les bases de données sont fréquement rechargées avec les données initiales d'installation.
 
 ## License
 
