@@ -42,18 +42,21 @@ Invariants: assurez vous de toujours définir les variables d'environnement suiv
 - EMAIL_PASSWORD=passwordbidon
 - SECRET_KEY=grosseCleSecreteAChangerQuiDoitAvoirDesCaracteresSpeciaux
 
-- **Configuration en local**
-  Si vous souhaitez utiliser un fichier, veuillez le mettre à la racine et obligatoirement l'intituler `.env.compose` afin que le fichier soit ignoré par git.
-  L'utilisation de fichier de configuration comportant des informations de sécurité est souvent déconseillé en production
+#### Configuration en local
 
-### 2 Commande d'installation
+Si vous souhaitez utiliser un fichier, veuillez le mettre à la racine et obligatoirement l'intituler `.env.compose` afin que le fichier soit ignoré par git.
+L'utilisation de fichier de configuration comportant des informations de sécurité est souvent déconseillé en production.
+
+### 2 Commandes d'installation
 
 **\*Important**: Assurez vous d'avoir définis les variables d'environnement comme demandé à l'étape précédente.
 
-- **En développement**: Si vous utilisez un fichier le configuration pour les variables d'environnement, taper la commande `docker compose --env-file ./.env.compose -f docker-compose.dev.yml up client`. Sinon tapez la commande sans `--env-file ./.env.compose`. Lors de la première utilisation de cette commande l'application sera installé puis executé. Les autres fois, la commande executera l'application.
-  Pour démarer le service api défini dans docker compose, vous devez également avoir définis et utilisé les variables d'environnement.
+#### En développement:
 
-L'application démarera ensuite il vous sera possible d'attacher un debugger au frontend et/ou au backend.
+- Dans un terminal, placez vous d'abord à la racine du projet.
+- Si vous utilisez un fichier le configuration pour les variables d'environnement, taper la commande `docker compose --env-file ./.env.compose -f docker-compose.dev.yml up`. Sinon tapez la commande sans `--env-file ./.env.compose`.
+  - Lors de la première utilisation de cette commande, l'application sera installé puis executé. Les autres fois, la commande executera l'application.
+- Une fois l'application démarrée, il vous sera possible d'attacher un debugger au frontend et/ou au backend. Une préconfiguration des dégugger existe pour vs code dans `.vscode/launch.json`.
 
 ## Informations d'utilisation locale
 
@@ -72,11 +75,7 @@ L'application démarera ensuite il vous sera possible d'attacher un debugger au 
 ### note sur la persistance des données
 
 Le système utilise une base de donnée mysql et les données sont souvent réinitialisées lors des builds.
-L'utilisation d'un autre système de base de données est prévue dans le roadmap mais imliquera possiblement de changer l'hébergeur du démo
-
-### note sur la sécurité
-
-L'application ne manipule aucune donnée sensibles pour le moment mais le roadmap priorisera l'utilisation de variables d'evironnement afin de stocker les mots de passes et les clés.
+L'utilisation d'un autre système de base de données est prévue dans le roadmap mais il est possible qu'elle implique de changer l'hébergeur du démo.
 
 ### Demo en ligne
 
