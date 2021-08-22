@@ -36,11 +36,13 @@ S'assurer de posséder les prérequis suivants:
 
 ### 1 variables d'environnement
 
-Invariants: assurez vous de toujours définir les variables d'environnement suivantes avec les bonnes valeurs. Les valeurs doivent être différentes de cet exemple:
+Invariants: assurez vous de toujours définir les variables d'environnement suivantes avec les bonnes valeurs avant d'installer ou démarrer l'application.
 
 - EMAIL_USERNAME=emailbidon@gmail.com
 - EMAIL_PASSWORD=passwordbidon
 - SECRET_KEY=grosseCleSecreteAChangerQuiDoitAvoirDesCaracteresSpeciaux
+
+**\*Notes**: Les valeurs doivent être différentes de cet exemple
 
 #### Configuration en local
 
@@ -60,7 +62,7 @@ L'utilisation de fichier de configuration comportant des informations de sécuri
 
 ## Utilisation
 
-### Utilisation locale
+### Utilisation locale (souvent pour le développement)
 
 **\*Note**: L'étape _Installation locale et démarrage_ doit être complétée
 **Accès :**
