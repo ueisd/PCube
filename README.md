@@ -72,14 +72,17 @@ L'utilisation de fichier de configuration comportant des informations de sécuri
   interface graphique utilisée par les utilisateurs
 - Backend: http://localhost:5000
   Peut être utilisée pour voir si le backend fonctionne en affichant une page html le cas échéant.
-  Lors de l'accès au frontend, les informations pour vous connectés sont dans la section _Authentification aux frontends_
+
+  **\*Note**: Lors de l'accès au frontend, les informations pour vous connectés sont dans la section _Authentification aux frontends_
 
 ### Utilisation du démo en ligne
 
-**\*Note**: Ne nécéssite aucune étape préalable (pas d'installation)
-[Frontend déployée sur heroku](https://pcube-frontend.herokuapp.com/)
-[Backend déployée sur heroku](https://pcube-backend.herokuapp.com/)
-Lors de l'accès au frontend, les informations pour vous connectés sont dans la section _Authentification aux frontends_
+Ne nécéssite aucune étape préalable (pas d'installation)
+
+- [Frontend déployée sur heroku](https://pcube-frontend.herokuapp.com/)
+- [Backend déployée sur heroku](https://pcube-backend.herokuapp.com/)
+
+**\*Note**: Lors de l'accès au frontend, les informations pour vous connectés sont dans la section _Authentification aux frontends_
 
 ### Authentification aux frontends:
 
