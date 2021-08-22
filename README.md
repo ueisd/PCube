@@ -65,6 +65,7 @@ L'utilisation de fichier de configuration comportant des informations de sécuri
 ### Utilisation locale (souvent pour le développement)
 
 **\*Note**: L'étape _Installation locale et démarrage_ doit être complétée
+
 **Accès :**
 
 - Frontend: http://localhost:4200
