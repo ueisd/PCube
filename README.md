@@ -73,7 +73,7 @@ L'utilisation de fichier de configuration comportant des informations de sécuri
 - Backend: http://localhost:5000
   Peut être utilisée pour voir si le backend fonctionne en affichant une page html le cas échéant.
 
-  **\*Note**: Lors de l'accès au frontend, les informations pour vous connectés sont dans la section _Authentification aux frontends_
+  **\*Note**: Lors de l'accès au frontend, les informations pour vous connecter sont dans la section _Authentification aux frontends_
 
 ### Utilisation du démo en ligne
 
@@ -82,11 +82,11 @@ Ne nécéssite aucune étape préalable (pas d'installation)
 - [Frontend déployée sur heroku](https://pcube-frontend.herokuapp.com/)
 - [Backend déployée sur heroku](https://pcube-backend.herokuapp.com/)
 
-**\*Note**: Lors de l'accès au frontend, les informations pour vous connectés sont dans la section _Authentification aux frontends_
+**\*Note**: Lors de l'accès au frontend, les informations pour vous connecter sont dans la section _Authentification aux frontends_
 
 ### Authentification aux frontends:
 
-L'interface graphique vous demandera un nom d'utilisateur et un mot de passe.
+L'interface graphique vous demande un nom d'utilisateur et un mot de passe.
 Voici des comptes disponnibles après l'intallation:
 | Compte |email |password |
 |--------------|------|-----------------------------|
@@ -110,7 +110,7 @@ L'utilisation de variables d'environnement pour un compte administrateur initial
 
 - Le backend du démo en ligne utilise la stack container d'heroku.
 - [Buildpack utilisé pour le frontend heroku](https://github.com/ueisd/PCUBE-front-buildpack)
-- Le choix d'heroku permet un déploiement automatique mais la séparation en deux services permet déviter d'utiliser docker compose qui nécéssiterait d'installer un `addons` payant.
+- Le choix d'heroku permet un déploiement automatique mais la séparation en deux services permet déviter d'utiliser docker compose qui nécessiterait d'installer un `addons` payant.
 - Les bases de données sont fréquement rechargées avec les données initiales d'installation.
 
 ## License
