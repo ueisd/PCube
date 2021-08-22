@@ -49,7 +49,7 @@ Invariants: assurez vous de toujours définir les variables d'environnement suiv
 Si vous souhaitez utiliser un fichier pour déclarer vos variables d'environnement, veuillez le créer à la racine du projet et obligatoirement l'intituler `.env.compose` afin que le fichier soit ignoré par git.
 L'utilisation de fichier de configuration comportant des informations de sécurité est souvent déconseillé en production.
 
-### Utilisation des commandes d'installation et de démarrage
+### Utiliser les commandes d'installation et de démarrage
 
 **\*Important**: Assurez vous d'avoir définis les variables d'environnement comme demandé à l'étape _Mettre en place les variables d'environnement_.
 
