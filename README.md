@@ -97,12 +97,12 @@ Voici des comptes disponnibles après l'intallation:
 
 ## Notes
 
-### \* La persistance des données
+### La persistance des données
 
 Le système utilise une base de donnée mysql et les données sont souvent réinitialisées lors des builds.
 L'utilisation d'un autre système de base de données est prévue dans le roadmap mais il est possible qu'elle implique de changer l'hébergeur du démo.
 
-### \* L'authentification:
+### L'authentification:
 
 L'utilisation de variables d'environnement pour un compte administrateur initial sera privillégié dans le roadmap plutôt que d'utiliser un préset de données pour le spécifier.
 
