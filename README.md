@@ -34,16 +34,17 @@ S'assurer de posséder les prérequis suivants:
 
 ## Installation locale et utilisation
 
-Utiliser les variables d'environnement suivantes:
-
-- EMAIL_USERNAME (email du site utilisé pour communiquer avec les utilisateurs)
-- EMAIL_PASSWORD
-- SECRET_KEY
+### Commande d'installation
 
 Placez le terminal dans le répertoire racine.
 
-Taper la commande `docker-compose -f docker-compose.dev.yml up` pour la première fois installera le backend suivi du frontend.
+- **En production**: Veillez définir les variables d'environnement définies dans le fichier `compose.dev.env` de façon sécuritaires avant d'installer le logiciel. En production, il est souvent reccomendé d'éviter de stocker les informations sensibles dans des fichiers.
+
+- **En développement**: vous pouvez remplir le fichier `compose.dev.env` et ensuite taper la commande `docker compose --env-file ./compose.dev.env -f docker-compose.dev.yml up client`. Lors de la première utilisation de cette commande l'application sera installé puis executé. Les autres fois, la comande executera l'application.
+
 L'application démarera ensuite dans le même ordre et il vous sera possible d'attacher un debugger au frontend et/ou au backend.
+
+- **notes** les changements apportés au fichier `compose.dev.env` ne seront pas pris en compte par git.
 
 ## Informations d'utilisation locale
 
