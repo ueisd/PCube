@@ -1,7 +1,6 @@
 {
     "APPLICATION_TITLE": "PCube",
     "DEBUG": true,
-    "SECRET_KEY": "'/B3o-p8-9iua`3421~FS'",
     "JWT_TOKEN_LOCATION": "headers",
     "JWT_ACCESS_TOKEN_EXPIRES": 72000,
     "JWT_REFRESH_TOKEN_EXPIRES": 72000,

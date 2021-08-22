@@ -8,18 +8,18 @@ from ..db.auth_request import AuthRequest
 
 from .db_controller import get_db
 
-main = Blueprint('main', __name__)
+main = Blueprint("main", __name__)
 
 
-@main.route('/')
+@main.route("/")
 def start_page():
     """
     Route pour la page d'accueil.
     """
-    return '<h1>Accueil :)</h1>', 200
+    return "<h1>Accueil :)</h1>", 200
 
 
-@main.route('/api/role/<id>', methods=['GET'])
+@main.route("/api/role/<id>", methods=["GET"])
 def get_role(id):
     """
     Retourne un rôle avec un identifiant.
@@ -30,7 +30,7 @@ def get_role(id):
     return jsonify(role), 200
 
 
-@main.route('/api/roles', methods=['GET'])
+@main.route("/api/roles", methods=["GET"])
 def get_roles():
     """
     Retourne tous les roles.

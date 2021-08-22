@@ -34,6 +34,12 @@ S'assurer de posséder les prérequis suivants:
 
 ## Installation locale et utilisation
 
+Utiliser les variables d'environnement suivantes:
+
+- EMAIL_USERNAME (email du site utilisé pour communiquer avec les utilisateurs)
+- EMAIL_PASSWORD
+- SECRET_KEY
+
 Placez le terminal dans le répertoire racine.
 
 Taper la commande `docker-compose -f docker-compose.dev.yml up` pour la première fois installera le backend suivi du frontend.

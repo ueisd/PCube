@@ -21,6 +21,7 @@ def create_app():
     CORS(app)
 
     app.config.from_json(os.path.join("./resources", "config.json"))
+    app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 
     app.register_blueprint(main)
     app.register_blueprint(auth, url_prefix="/api/auth")
