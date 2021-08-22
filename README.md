@@ -41,10 +41,9 @@ Placez le terminal dans le répertoire racine.
 - **En production**: Veillez définir les variables d'environnement définies dans le fichier `compose.dev.env` de façon sécuritaires avant d'installer le logiciel. En production, il est souvent reccomendé d'éviter de stocker les informations sensibles dans des fichiers.
 
 - **En développement**: Suite au clone du dépôt tapez absolument la commande `git update-index --assume-unchanged compose.dev.env`vous pourez ensuite remplir sécuritairement le fichier `compose.dev.env`. Une fois ce fichier correctement remplis, taper la commande `docker compose --env-file ./compose.dev.env -f docker-compose.dev.yml up client`. Lors de la première utilisation de cette commande l'application sera installé puis executé. Les autres fois, la commande executera l'application.
+  Pour démarer le service api défini dans docker compose, vous devez également avoir définis et utilisé les variables dans le fichier `compose.dev.env`
 
 L'application démarera ensuite dans le même ordre et il vous sera possible d'attacher un debugger au frontend et/ou au backend.
-
-- **notes** les changements apportés au fichier `compose.dev.env` ne seront pas pris en compte par git.
 
 ## Informations d'utilisation locale
 
