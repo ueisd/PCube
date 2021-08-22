@@ -34,22 +34,33 @@ S'assurer de posséder les prérequis suivants:
 
 ## Installation locale et utilisation
 
-### Commande d'installation
+### 1 variables d'environnement
 
-Placez le terminal dans le répertoire racine.
+Invariants: assurez vous de toujours définir les variables d'environnement suivantes avec les bonnes valeurs. Les valeurs doivent être différentes de cet exemple:
 
-- **En production**: Veillez définir les variables d'environnement définies dans le fichier `compose.dev.env` de façon sécuritaires avant d'installer le logiciel. En production, il est souvent reccomendé d'éviter de stocker les informations sensibles dans des fichiers.
+- EMAIL_USERNAME=emailbidon@gmail.com
+- EMAIL_PASSWORD=passwordbidon
+- SECRET_KEY=grosseCleSecreteAChangerQuiDoitAvoirDesCaracteresSpeciaux
 
-- **En développement**: Suite au clone du dépôt tapez absolument la commande `git update-index --assume-unchanged compose.dev.env`vous pourez ensuite remplir sécuritairement le fichier `compose.dev.env`. Une fois ce fichier correctement remplis, taper la commande `docker compose --env-file ./compose.dev.env -f docker-compose.dev.yml up client`. Lors de la première utilisation de cette commande l'application sera installé puis executé. Les autres fois, la commande executera l'application.
-  Pour démarer le service api défini dans docker compose, vous devez également avoir définis et utilisé les variables dans le fichier `compose.dev.env`
+- **Configuration en local**
+  Si vous souhaitez utiliser un fichier, veuillez le mettre à la racine et obligatoirement l'intituler `.env.compose` afin que le fichier soit ignoré par git.
+  L'utilisation de fichier de configuration comportant des informations de sécurité est souvent déconseillé en production
 
-L'application démarera ensuite dans le même ordre et il vous sera possible d'attacher un debugger au frontend et/ou au backend.
+### 2 Commande d'installation
+
+**\*Important**: Assurez vous d'avoir définis les variables d'environnement comme demandé à l'étape précédente.
+
+- **En développement**: Si vous utilisez un fichier le configuration pour les variables d'environnement, taper la commande `docker compose --env-file ./.env.compose -f docker-compose.dev.yml up client`. Sinon tapez la commande sans `--env-file ./.env.compose`. Lors de la première utilisation de cette commande l'application sera installé puis executé. Les autres fois, la commande executera l'application.
+  Pour démarer le service api défini dans docker compose, vous devez également avoir définis et utilisé les variables d'environnement.
+
+L'application démarera ensuite il vous sera possible d'attacher un debugger au frontend et/ou au backend.
 
 ## Informations d'utilisation locale
 
-**Accès :** utiliser l'adresse suivante: http://localhost:4200. pour accéder au frontend.
-http://localhost:5000 peut être utilisée pour voir si le backend fonctionne en affichant une page html
-contenant un titre nommé accueil.
+**Accès :**
+
+- utiliser l'adresse suivante: http://localhost:4200. pour accéder au frontend.
+- http://localhost:5000 peut être utilisée pour voir si le backend fonctionne en affichant une page html contenant un titre nommé accueil.
 
 **Authentification:** Vous pourrez utiliser les codes suivants
 | Compte |email |password |
