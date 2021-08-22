@@ -95,7 +95,7 @@ Voici des comptes disponnibles après l'intallation:
 |Membre | M | m|
 **\*Notes** Changez rapidement ces informations (sauf sur le démo heroku)
 
-## notes
+## Notes
 
 ### \* La persistance des données
 
@@ -110,7 +110,7 @@ L'utilisation de variables d'environnement pour un compte administrateur initial
 
 - Le backend du démo en ligne utilise la stack container d'heroku.
 - [Buildpack utilisé pour le frontend heroku](https://github.com/ueisd/PCUBE-front-buildpack)
-- Le choix d'heroku permet un déploiement automatique mais la séparation en deux services permet déviter d'Avoir à utiliser un addon payant utilisant docker compose.
+- Le choix d'heroku permet un déploiement automatique mais la séparation en deux services permet déviter d'utiliser docker compose qui nécéssiterait d'installer un `addons` payant.
 - Les bases de données sont fréquement rechargées avec les données initiales d'installation.
 
 ## License
