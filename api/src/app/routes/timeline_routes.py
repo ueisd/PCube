@@ -1,5 +1,4 @@
 # coding=utf-8
-import sqlite3
 from flask import Flask
 from flask import abort
 from flask import jsonify
@@ -12,24 +11,30 @@ from flask_json_schema import JsonValidationError
 from .db_controller import get_db
 from flask.logging import create_logger
 from ..schemas.timeline_schema import (
-    timeline_insert_schema, timelines_delete_schema, timelines_update_schema)
+    timeline_insert_schema,
+    timelines_delete_schema,
+    timelines_update_schema,
+)
 from ..db.timeline_request import TimelineRequest
 from ..domain.timeline import Timeline
 from ..domain.timelineFilter import TimelineFilter
 from ..domain.treeGenerationParam import ChampsArbreParam
 from ..domain.accountRequestParams import AccountRequestParams
 from ..schemas.report_request_schema import report_request_schema
+from mysql.connector import errorcode
 from ..utility.auth import (
-    auth_required, project_manager_required, member_required
+    auth_required,
+    project_manager_required,
+    member_required,
 )
 
-timeline = Blueprint('timeline', __name__)
+timeline = Blueprint("timeline", __name__)
 app = Flask(__name__)
 log = create_logger(app)
 schema = JsonSchema(app)
 
 
-@timeline.route('', methods=['POST'])
+@timeline.route("", methods=["POST"])
 @project_manager_required
 @schema.validate(timeline_insert_schema)
 def create_timeline_from_json_dict():
@@ -42,11 +47,13 @@ def create_timeline_from_json_dict():
         query = TimelineRequest(connection)
         query.insertMany(request.json)
         return make_response("")
-    except sqlite3.Error as error:
-        log.error('Timeline error: %s', error)
+
+    except mysql.connector.Error as error:
+        log.error("Timeline error: %s", error)
         abort(500)
 
-@timeline.route('', methods=['PUT'])
+
+@timeline.route("", methods=["PUT"])
 @project_manager_required
 @schema.validate(timelines_update_schema)
 def update_timeline_from_json_dict():
@@ -60,11 +67,12 @@ def update_timeline_from_json_dict():
         query = TimelineRequest(connection)
         query.update(timelines)
         return make_response(jsonify(""), 200)
-    except sqlite3.Error as error:
-        log.error('Timeline error: %s', error)
+    except mysql.connector.Error as error:
+        log.error("Timeline error: %s", error)
         abort(500)
 
-@timeline.route('', methods=['DELETE'])
+
+@timeline.route("", methods=["DELETE"])
 @project_manager_required
 @schema.validate(timelines_delete_schema)
 def delete_timeline():
@@ -78,9 +86,10 @@ def delete_timeline():
         query = TimelineRequest(connection)
         query.delete_timelines(request.json)
         return make_response(jsonify("")), 200
-    except sqlite3.Error as error:
-        log.error('Timeline error: %s', error)
+    except mysql.connector.Error as error:
+        log.error("Timeline error: %s", error)
         abort(500)
+
 
 def timelineTreatment(data):
     timeline = Timeline()
@@ -90,14 +99,13 @@ def timelineTreatment(data):
     timeline.punch_out = escape(data["punch_out"]).strip()
     timeline.project_id = escape(data["project_id"]).strip()
     timeline.activity_id = escape(data["activity_id"]).strip()
-    timeline.expense_account_id = escape(
-        data["expense_account_id"]).strip()
+    timeline.expense_account_id = escape(data["expense_account_id"]).strip()
     timeline.user_id = escape(data["user_id"]).strip()
     timeline.day_of_week = escape(data["day_of_week"]).strip()
     return timeline
-    
 
-@timeline.route('/filter', methods=['GET'])
+
+@timeline.route("/filter", methods=["GET"])
 @auth_required
 def get_all_user():
     """
@@ -105,16 +113,21 @@ def get_all_user():
     éléments correspondants.
     """
     timeline = TimelineFilter()
-    timeline.day_of_week = escape(
-        request.args.get('day_of_week', "")).upper().strip()
-    timeline.expense_account_name = escape(
-        request.args.get('expense_name', "")).upper().strip()
-    timeline.activity_name = escape(
-        request.args.get('activity_name', "")).upper().strip()
-    timeline.member_name = escape(
-        request.args.get('member_name', "")).upper().strip()
-    timeline.project_name = escape(
-        request.args.get('project_name', "")).upper().strip()
+    timeline.day_of_week = (
+        escape(request.args.get("day_of_week", "")).upper().strip()
+    )
+    timeline.expense_account_name = (
+        escape(request.args.get("expense_name", "")).upper().strip()
+    )
+    timeline.activity_name = (
+        escape(request.args.get("activity_name", "")).upper().strip()
+    )
+    timeline.member_name = (
+        escape(request.args.get("member_name", "")).upper().strip()
+    )
+    timeline.project_name = (
+        escape(request.args.get("project_name", "")).upper().strip()
+    )
 
     connection = get_db().get_connection()
     query = TimelineRequest(connection)
@@ -123,7 +136,7 @@ def get_all_user():
     return jsonify(data), 200
 
 
-@timeline.route('/<id>', methods=['GET'])
+@timeline.route("/<id>", methods=["GET"])
 @auth_required
 def get_timeline_by_id(id):
     """
@@ -153,30 +166,31 @@ def construireArbre(listeNoeuds, parent, champsParams):
     FACTORISATION DU CODE DE REQUETES COMPLEXES
     """
     c = champsParams
-    if (parent is None or parent[c.id] == id):
+    if parent is None or parent[c.id] == id:
         return []
 
-    parent[c.childs] = [node for node in listeNoeuds
-                        if node[c.parentId] == parent[c.id]
-                        and node[c.parentId] != node[c.id]
-                        ]
+    parent[c.childs] = [
+        node
+        for node in listeNoeuds
+        if node[c.parentId] == parent[c.id] and node[c.parentId] != node[c.id]
+    ]
     for enfant in parent[c.childs]:
         enfant = construireArbre(listeNoeuds, enfant, c)
     return parent
 
 
 def sommationAscendante(listeNoeuds, parent):
-    parent['sumTotal'] = parent['summline']
-    for enfant in parent['child']:
+    parent["sumTotal"] = parent["summline"]
+    for enfant in parent["child"]:
         enfant = sommationAscendante(listeNoeuds, enfant)
-        if not parent['sumTotal']:
-            parent['sumTotal'] = 0
-        if enfant['sumTotal']:
-            parent['sumTotal'] = parent['sumTotal'] + enfant['sumTotal']
+        if not parent["sumTotal"]:
+            parent["sumTotal"] = 0
+        if enfant["sumTotal"]:
+            parent["sumTotal"] = parent["sumTotal"] + enfant["sumTotal"]
     return parent
 
 
-@timeline.route('/getLines', methods=['POST'])
+@timeline.route("/getLines", methods=["POST"])
 @member_required
 @schema.validate(report_request_schema)
 def getLines():
@@ -185,23 +199,24 @@ def getLines():
     """
     data = request.json
     params = AccountRequestParams()
-    params.projects = data.get('projects')
-    params.activitys = data.get('activitys')
-    params.users = data.get('users')
-    params.dateDebut = str(escape(data.get('dateDebut')).strip())
-    params.dateFin = str(escape(data.get('dateFin')).strip())
+    params.projects = data.get("projects")
+    params.activitys = data.get("activitys")
+    params.users = data.get("users")
+    params.dateDebut = str(escape(data.get("dateDebut")).strip())
+    params.dateFin = str(escape(data.get("dateFin")).strip())
 
     connection = get_db().get_connection()
     query = TimelineRequest(connection)
     timelines = query.get_timelines(params)
 
-    if timeline: return jsonify(timelines), 200
+    if timeline:
+        return jsonify(timelines), 200
     else:
         log.error("La ressource n'existe pas.")
         abort(404)
 
 
-@timeline.route('/testsum', methods=['POST'])
+@timeline.route("/testsum", methods=["POST"])
 @member_required
 @schema.validate(report_request_schema)
 def testsum():
@@ -210,18 +225,18 @@ def testsum():
     """
     data = request.json
     params = AccountRequestParams()
-    params.projects = data.get('projects')
-    params.activitys = data.get('activitys')
-    params.users = data.get('users')
-    params.dateDebut = str(escape(data.get('dateDebut')).strip())
-    params.dateFin = str(escape(data.get('dateFin')).strip())
+    params.projects = data.get("projects")
+    params.activitys = data.get("activitys")
+    params.users = data.get("users")
+    params.dateDebut = str(escape(data.get("dateDebut")).strip())
+    params.dateFin = str(escape(data.get("dateFin")).strip())
 
     connection = get_db().get_connection()
     query = TimelineRequest(connection)
     timeline = query.get_accountTimeWithSum(params)
 
     if timeline:
-        parents = [x for x in timeline if x['id'] == x['parent_id']]
+        parents = [x for x in timeline if x["id"] == x["parent_id"]]
         for parent in parents:
             parent = construireArbre(timeline, parent, ChampsArbreParam())
         for parent in parents:
@@ -232,7 +247,7 @@ def testsum():
         abort(404)
 
 
-@timeline.route('/timelines-validation', methods=['POST'])
+@timeline.route("/timelines-validation", methods=["POST"])
 @project_manager_required
 @schema.validate(timeline_insert_schema)
 def validate_timeline_from_json_dict():
@@ -241,7 +256,7 @@ def validate_timeline_from_json_dict():
     base de données
     """
     data = request.json
-    timelines = data['timelines']
+    timelines = data["timelines"]
 
     connection = get_db().get_connection()
     query = TimelineRequest(connection)
@@ -258,4 +273,4 @@ def validate_timeline_from_json_dict():
 @timeline.errorhandler(JsonValidationError)
 def validation_error(e):
     errors = [validation_error.message for validation_error in e.errors]
-    return jsonify({'error': e.message, 'errors': errors}), 400
+    return jsonify({"error": e.message, "errors": errors}), 400
