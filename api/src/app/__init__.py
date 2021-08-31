@@ -23,7 +23,10 @@ def create_app():
     CORS(app)
     app.config.from_json(os.path.join("./resources", "config.json"))
     app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-    app.config["DATATBASE_PASSWORD"] = os.getenv("DATATBASE_PASSWORD")
+
+    databasePassword = os.getenv("DATATBASE_PASSWORD")
+    if databasePassword is not None and not not databasePassword:
+        app.config["DATATBASE_PASSWORD"] = databasePassword
 
     databaseUser = os.getenv("DATABASE_USER")
     if databaseUser is not None and not not databaseUser:

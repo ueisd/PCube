@@ -24,6 +24,8 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - DATABASE_USER2=${DATABASE_USER2}
     entrypoint: ["python3", "-m", "flask", "run", "--host=0.0.0.0", "-p", "80"]
+    depends_on:
+      - db
   #docker run -it --network pcube_default --rm 39b149522983 mysql -h pcube_db_1 -u root -p
   db:
     build:
@@ -39,6 +41,8 @@ services:
     - type: volume
       source: dbdata
       target: /var/lib/mysql
+    security_opt:
+    - seccomp:unconfined
     ports:
       - 3308:3306
   adminer:
