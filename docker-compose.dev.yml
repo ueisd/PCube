@@ -17,8 +17,37 @@ services:
       - DEBUGGER=True
       - EMAIL_USERNAME=${EMAIL_USERNAME} 
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - DATATBASE_PASSWORD=${DATATBASE_PASSWORD}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_DB=${DATABASE_DB}
       - SECRET_KEY=${SECRET_KEY}
+      - DATABASE_USER2=${DATABASE_USER2}
     entrypoint: ["python3", "-m", "flask", "run", "--host=0.0.0.0", "-p", "80"]
+  #docker run -it --network pcube_default --rm 39b149522983 mysql -h pcube_db_1 -u root -p
+  db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_DATABASE=pcube
+    volumes:
+    - type: volume
+      source: dbdata
+      target: /var/lib/mysql
+    ports:
+      - 3308:3306
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+     - db
   client:
     build:
       context: ./client
@@ -50,3 +79,5 @@ services:
         target: /app/src
     depends_on:
       - api
+volumes:
+  dbdata:

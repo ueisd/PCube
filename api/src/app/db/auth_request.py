@@ -1,10 +1,8 @@
 import sqlite3
 from .database import Database
-from .dict_factory import dict_factory
 
 
 class AuthRequest:
-
     def __init__(self, connection):
         self.connection = connection
 
@@ -17,18 +15,14 @@ class AuthRequest:
         id : integer
             L'identifiant du rôle
         """
-        cursor = self.connection.cursor()
-        cursor.execute(("SELECT role_name FROM role "
-                        "WHERE id = ?"),
-                       (id))
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute(("SELECT role_name FROM role " "WHERE id = %s"), (id))
         role = cursor.fetchall()
         return role[0]
 
     def select_user(self, email):
-        self.connection.row_factory = dict_factory
-        cursor = self.connection.cursor()
-        cursor.execute("select * from user where email = ?",
-                       (email,))
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute("select * from user where email = %s", (email,))
         data = cursor.fetchone()
         cursor.close()
         return data
@@ -37,10 +31,8 @@ class AuthRequest:
         """
         Permet d'obtenir le nom de l'accès
         """
-        self.connection.row_factory = dict_factory
-        cursor = self.connection.cursor()
-        cursor.execute("select * from role where id = ?",
-                       (role_id,))
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute("select * from role where id = %s", (role_id,))
         data = cursor.fetchone()
         cursor.close()
         return data
@@ -49,10 +41,10 @@ class AuthRequest:
         """
         Permet d'obtenir tous les roles.
         """
-        self.connection.row_factory = dict_factory
-        cursor = self.connection.cursor()
-        cursor.execute("select * from role",
-                       )
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute(
+            "select * from role",
+        )
         data = cursor.fetchall()
         cursor.close()
         return data

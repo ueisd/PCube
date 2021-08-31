@@ -1,49 +1,56 @@
-import sqlite3
 from .database import Database
-from .dict_factory import dict_factory
 from ..domain.user import User
 
 
 class UserRequest:
-
     def __init__(self, connection):
         self.connection = connection
 
     def select_all_user(self):
-        self.connection.row_factory = dict_factory
-        cursor = self.connection.cursor()
-        cursor.execute("select user.id, first_name, last_name, email,"
-                       " role_id, isActive, role_name, access_level "
-                       "from user "
-                       "inner join role on user.role_id = role.id "
-                       "where isActive = 1")
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute(
+            "select user.id, first_name, last_name, email,"
+            " role_id, isActive, role_name, access_level "
+            "from user "
+            "inner join role on user.role_id = role.id "
+            "where isActive = 1"
+        )
         data = cursor.fetchall()
         cursor.close()
         return data
 
     def select_user_by_filter(self, user, role_name):
-        self.connection.row_factory = dict_factory
-        cursor = self.connection.cursor()
-        cursor.execute("select user.id, first_name, last_name, email,"
-                       " role_id, isActive, role_name, access_level "
-                       "from user "
-                       "inner join role on user.role_id = role.id "
-                       "where isActive = 1 and user.id LIKE ? "
-                       "and first_name LIKE ? and last_name LIKE ? "
-                       "and email LIKE ? and role_name LIKE ?",
-                       ('%'+user.id+'%', '%'+user.first_name+'%',
-                        '%'+user.last_name+'%', '%'+user.email+'%',
-                        '%'+role_name+'%'))
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute(
+            "select user.id, first_name, last_name, email,"
+            " role_id, isActive, role_name, access_level "
+            "from user "
+            "inner join role on user.role_id = role.id "
+            "where isActive = 1 and user.id LIKE %s "
+            "and first_name LIKE %s and last_name LIKE %s "
+            "and email LIKE %s and role_name LIKE %s",
+            (
+                "%" + user.id + "%",
+                "%" + user.first_name + "%",
+                "%" + user.last_name + "%",
+                "%" + user.email + "%",
+                "%" + role_name + "%",
+            ),
+        )
         data = cursor.fetchall()
         cursor.close()
         return data
 
     def delete_user(self, user_id, email):
-        self.connection.row_factory = dict_factory
-        cursor = self.connection.cursor()
+        cursor = self.connection.cursor(dictionary=True)
         cursor.execute(
-            "update user set isActive = ? where id = ? and email = ?",
-            (False, user_id, email))
+            "update user set isActive = %s where id = %s and email = %s",
+            (
+                False,
+                user_id,
+                email,
+            ),
+        )
         self.connection.commit()
         cursor.close()
 
@@ -52,40 +59,59 @@ class UserRequest:
         Permet de sélectionner un utilisateur actif soit par son email ou son
         identifiant.
         """
-        self.connection.row_factory = dict_factory
-        cursor = self.connection.cursor()
-        cursor.execute("select user.id, first_name, last_name, email,"
-                       " role_name from user "
-                       "inner join role on user.role_id = role.id where"
-                       " email = ? or user.id = ? and isActive = 1",
-                       (user.email, user.id))
+
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute(
+            "select user.id, first_name, last_name, email,"
+            " role_name from user "
+            "inner join role on user.role_id = role.id where"
+            " email = %s or user.id = %s and isActive = 1",
+            (
+                user.email,
+                user.id,
+            ),
+        )
         data = cursor.fetchone()
         cursor.close()
         return data
 
     def is_id_email_combo_exist(self, id, email):
-        self.connection.row_factory = dict_factory
-        cursor = self.connection.cursor()
-        cursor.execute("select * from user where email = ? and id = ?",
-                       (email, id))
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute(
+            "select * from user where email = %s and id = %s",
+            (
+                email,
+                id,
+            ),
+        )
         data = cursor.fetchone()
         cursor.close()
         return True if data else False
 
     def email_in_use(self, id, email):
-        self.connection.row_factory = dict_factory
-        cursor = self.connection.cursor()
-        cursor.execute("select * from user where email = ?", (email,))
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute(
+            "select * from user where email = %s",
+            (email,),
+        )
         data = cursor.fetchone()
         cursor.close()
         return data
 
     def update_user(self, user, new_email):
-        cursor = self.connection.cursor()
-        cursor.execute("update user set first_name = ?, last_name = ?, "
-                       "email = ?, role_id = ? where id = ? and email = ?",
-                       (user.first_name, user.last_name, new_email,
-                        user.role_id, user.id, user.email))
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute(
+            "update user set first_name = %s, last_name = %s, "
+            "email = %s, role_id = %s where id = %s and email = %s",
+            (
+                user.first_name,
+                user.last_name,
+                new_email,
+                user.role_id,
+                user.id,
+                user.email,
+            ),
+        )
         self.connection.commit()
         cursor.close()
         user.email = new_email
@@ -96,13 +122,21 @@ class UserRequest:
         Permet d'Insère un nouvel utilisateur dans la base de données.
         La fonctionne retourne un utilisateur avec son nouvel identifiant.
         """
-
-        cursor = self.connection.cursor()
-        cursor.execute("insert into user(first_name, last_name, email,"
-                       " hashed_password, salt, isActive, role_id)"
-                       " values(?, ?, ?, ?, ?, ?, ?)",
-                       (user.first_name, user.last_name, user.email,
-                        hashed_password, salt, True, user.role_id))
+        cursor = self.connection.cursor(dictionary=True)
+        cursor.execute(
+            "insert into user(first_name, last_name, email,"
+            " hashed_password, salt, isActive, role_id)"
+            " values(%s, %s, %s, %s, %s, %s, %s)",
+            (
+                user.first_name,
+                user.last_name,
+                user.email,
+                hashed_password,
+                salt,
+                True,
+                user.role_id,
+            ),
+        )
         self.connection.commit()
         id = cursor.lastrowid
         cursor.close()
@@ -113,11 +147,11 @@ class UserRequest:
         """
         Permet d'obtenir les informations d'un utilisateur non sensible.
         """
-        self.connection.row_factory = dict_factory
-        cursor = self.connection.cursor()
+        cursor = self.connection.cursor(dictionary=True)
         cursor.execute(
-            "select first_name, last_name, email from user where email = ?",
-            (email,))
+            "select first_name, last_name, email from user where email = %s",
+            (email,),
+        )
         data = cursor.fetchone()
         cursor.close()
         return data

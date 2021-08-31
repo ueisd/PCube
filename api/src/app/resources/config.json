@@ -5,5 +5,9 @@
     "JWT_ACCESS_TOKEN_EXPIRES": 72000,
     "JWT_REFRESH_TOKEN_EXPIRES": 72000,
     "JSON_AS_ASCII": false,
-    "JSON_SORT_KEYS": false
+    "JSON_SORT_KEYS": false,
+    "DATABASE": "pcube",
+    "DATABASE_URL": "db",
+    "DATABASE_USER": "root"
+
 }

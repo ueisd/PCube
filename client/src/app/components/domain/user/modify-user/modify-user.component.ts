@@ -34,10 +34,10 @@ export class ModifyUserComponent implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
-    this.roles = await this.roleService.getRoles().toPromise();
-    this.initForm();
     this.isAdded = false;
     this.isUnique = true;
+    this.initForm();
+    this.roles = await this.roleService.getRoles().toPromise();
     this.setDefaultValues();
   }
 

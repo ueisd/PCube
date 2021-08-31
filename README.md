@@ -41,6 +41,10 @@ Invariants: assurez vous de toujours définir les variables d'environnement suiv
 - EMAIL_USERNAME=emailbidon@gmail.com
 - EMAIL_PASSWORD=passwordbidon
 - SECRET_KEY=grosseCleSecreteAChangerQuiDoitAvoirDesCaracteresSpeciaux
+- DATATBASE_PASSWORD=motDePasseDeLUtilisateurDeLaBd
+- DATABASE_USER=UtilisateurDeLaBD
+- DATABASE_HOST=adresseDeLaBD
+- DATABASE_DB=BaseDeDonneeUtiliseeParLapp
 
 **\*Notes**: Les valeurs doivent être différentes de cet exemple
 
@@ -99,8 +103,7 @@ Voici des comptes disponnibles après l'intallation:
 
 ### La persistance des données
 
-Le système utilise une base de donnée mysql et les données sont souvent réinitialisées lors des builds.
-L'utilisation d'un autre système de base de données est prévue dans le roadmap mais il est possible qu'elle implique de changer l'hébergeur du démo.
+Le système utilise une base de donnée mysql.
 
 ### L'authentification:
 
@@ -112,6 +115,9 @@ L'utilisation de variables d'environnement pour un compte administrateur initial
 - [Buildpack utilisé pour le frontend heroku](https://github.com/ueisd/PCUBE-front-buildpack)
 - Le choix d'heroku permet un déploiement automatique mais la séparation en deux services permet déviter d'utiliser docker compose qui nécessiterait d'installer un `addons` payant.
 - Les bases de données sont fréquement rechargées avec les données initiales d'installation.
+
+- Attention! Les performances sont très limitées sur ce démo puisque nous utilisons une base de donnée
+  gratuite qui ralentis grandement l'application. Dans un futur rapproché, nous prévoyons plutôt utiliser une autre bd qui sera situé sur notre serveur de production.
 
 ## License
 

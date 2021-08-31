@@ -7,13 +7,16 @@ from flask import Flask
 from flask import abort
 from flask.logging import create_logger
 from flask_jwt_extended import (
-    JWTManager, jwt_required, get_raw_jwt,
-    create_access_token, create_refresh_token, get_jwt_identity,
-    verify_jwt_in_request, verify_jwt_refresh_token_in_request
+    JWTManager,
+    jwt_required,
+    get_raw_jwt,
+    create_access_token,
+    create_refresh_token,
+    get_jwt_identity,
+    verify_jwt_in_request,
+    verify_jwt_refresh_token_in_request,
 )
-from .security import (
-    is_password_valid, generate_salt, encrypt_password
-)
+from .security import is_password_valid, generate_salt, encrypt_password
 
 from ..db.auth_request import AuthRequest
 from ..domain.access_token import AccessToken
@@ -22,15 +25,15 @@ from ..routes.db_controller import get_db
 app = Flask(__name__)
 log = create_logger(app)
 
-app.config['JWT_BLACKLIST_ENABLED'] = True
-app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = ['access', 'refresh']
+app.config["JWT_BLACKLIST_ENABLED"] = True
+app.config["JWT_BLACKLIST_TOKEN_CHECKS"] = ["access", "refresh"]
 jwt = JWTManager(app)
 blacklist = set()
 
 
 @jwt.token_in_blacklist_loader
 def check_if_token_in_blacklist(decrypted_token):
-    jti = decrypted_token['jti']
+    jti = decrypted_token["jti"]
     return jti in blacklist
 
 
@@ -41,7 +44,7 @@ class AuthenticationError(Exception):
         self.msg = msg
 
     def __str__(self):
-        return self.__class__.__name__ + '(' + str(self.msg) + ')'
+        return self.__class__.__name__ + "(" + str(self.msg) + ")"
 
 
 class InvalidCredentials(AuthenticationError):
@@ -71,11 +74,13 @@ def authenticate_user(email, password):
     connection = get_db().get_connection()
     request = AuthRequest(connection)
     user = request.select_user(email)
-
-    if user is None or not is_password_valid(user['hashed_password'],
-                                             password, user['salt']):
+    hashed_password = user["hashed_password"]
+    salt = user["salt"]
+    if user is None or not is_password_valid(
+        user["hashed_password"], password, user["salt"]
+    ):
         raise InvalidCredentials(email)
-    elif not user['isActive']:
+    elif not user["isActive"]:
         raise AccountInactive(email)
     else:
         return (
@@ -100,20 +105,20 @@ def get_authenticated_user():
 
     if user is None:
         raise UserNotFound(identity)
-    elif not user['isActive']:
+    elif not user["isActive"]:
         raise AccountInactive(identity)
 
-    role = request.select_role(user['role_id'])
+    role = request.select_role(user["role_id"])
 
     if role is None:
         raise AccountInactive()
 
     return {
-        'email': user['email'],
-        'role': role['role_name'],
-        'access_level': str(role['access_level']),
-        'first_name': user['first_name'],
-        'last_name': user['last_name']
+        "email": user["email"],
+        "role": role["role_name"],
+        "access_level": str(role["access_level"]),
+        "first_name": user["first_name"],
+        "last_name": user["last_name"],
     }
 
 
@@ -123,7 +128,7 @@ def deauthenticate_user():
     in a real app, set a flag in user database requiring login, or
     implement token revocation scheme
     """
-    jti = get_raw_jwt()['jti']
+    jti = get_raw_jwt()["jti"]
     blacklist.add(jti)
 
 
@@ -132,13 +137,14 @@ def refresh_authentication():
     Refresh authentication, issue new access token
     """
     user = get_authenticated_user()
-    return create_access_token(identity=user['email'])
+    return create_access_token(identity=user["email"])
 
 
 def auth_required(func):
     """
     View decorator - require valid access token
     """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
@@ -146,8 +152,9 @@ def auth_required(func):
             get_authenticated_user()
             return func(*args, **kwargs)
         except (UserNotFound, AccountInactive) as error:
-            log.error('authorization failed: %s', error)
+            log.error("authorization failed: %s", error)
             abort(403)
+
     return wrapper
 
 
@@ -155,6 +162,7 @@ def auth_refresh_required(func):
     """
     View decorator - require valid refresh token
     """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         verify_jwt_refresh_token_in_request()
@@ -162,8 +170,9 @@ def auth_refresh_required(func):
             get_authenticated_user()
             return func(*args, **kwargs)
         except (UserNotFound, AccountInactive) as error:
-            log.error('authorization failed: %s', error)
+            log.error("authorization failed: %s", error)
             abort(403)
+
     return wrapper
 
 
@@ -171,20 +180,22 @@ def admin_required(func):
     """
     View decorator - required valid access token and admin access
     """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
 
-            if int(user['access_level']) == 1:
+            if int(user["access_level"]) == 1:
                 return func(*args, **kwargs)
             else:
-                log.error('Access Denied')
+                log.error("Access Denied")
                 abort(403)
         except (UserNotFound, AccountInactive) as error:
-            log.error('authorization failed: %s', error)
+            log.error("authorization failed: %s", error)
             abort(403)
+
     return wrapper
 
 
@@ -192,19 +203,21 @@ def project_manager_required(func):
     """
     View decorator - required valid access token and project manager access
     """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
-            if int(user['access_level']) <= 2:
+            if int(user["access_level"]) <= 2:
                 return func(*args, **kwargs)
             else:
-                log.error('Access Denied')
+                log.error("Access Denied")
                 abort(403)
         except (UserNotFound, AccountInactive) as error:
-            log.error('authorization failed: %s', error)
+            log.error("authorization failed: %s", error)
             abort(403)
+
     return wrapper
 
 
@@ -212,17 +225,19 @@ def member_required(func):
     """
     View decorator - required valid access token and member access
     """
+
     @wraps(func)
     def wrapper(*args, **kwargs):
         verify_jwt_in_request()
         try:
             user = get_authenticated_user()
-            if int(user['access_level']) <= 3:
+            if int(user["access_level"]) <= 3:
                 return func(*args, **kwargs)
             else:
-                log.error('Access Denied')
+                log.error("Access Denied")
                 abort(403)
         except (UserNotFound, AccountInactive) as error:
-            log.error('authorization failed: %s', error)
+            log.error("authorization failed: %s", error)
             abort(403)
+
     return wrapper
