@@ -12,6 +12,7 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { RepportRequestService } from 'src/app/services/request/repport-request.service';
 import { ReportRequest } from 'src/app/models/report-request';
 import { DateManip } from 'src/app/utils/date-manip';
+import { CurentUserService } from 'src/app/shared/services/curent-user.service';
 
 @Component({
   selector: 'app-request-form',
@@ -53,10 +54,10 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
     private dialogRef: MatDialogRef<RequestFormComponent>,
     private reportReqService: RepportRequestService,
     private userService: UserService,
+    private curentUserService: CurentUserService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any) { 
-      if(data.user.access_level == 3) {
+      if(curentUserService.curentUser.value.accessLevel == 3)
         this.isMember = true;
-      }
       if(data.type == "temps")
         this.title = 'Gérer les lignes de temps';
       if(data.type == "rapport")
@@ -91,7 +92,8 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
       if(this.params.users.length && this.params.users.length > 0)
         this.requestForm.controls['isUsers'].setValue(true);
     } else {
-      this.member = await this.userService.getUser(new User({"email" : this.data.user.email})).toPromise();
+      let email = this.curentUserService.curentUser.value.email;
+      this.member = await this.userService.getUser(new User({"email" : email})).toPromise();
       this.member.display_string = this.member.first_name + " " + this.member.last_name;
       this.requestForm.controls['users'].setValue(this.member.display_string);
     }

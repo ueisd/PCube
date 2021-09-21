@@ -1,31 +1,43 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialogConfig, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { RequestFormComponent } from '../../domain/reports/request-form/request-form/request-form.component';
 import { NavigationExtras, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { User } from 'src/app/models/user';
+import { CurentUserService } from 'src/app/shared/services/curent-user.service';
+import { Subscription } from 'rxjs';
+import { CurentUser } from 'src/app/shared/models/curent-user.model';
 
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
   styleUrls: ['./sidenav.component.css']
 })
-export class SidenavComponent implements OnInit {
+export class SidenavComponent implements OnInit, OnDestroy {
 
   accessLevel: number = -1;
   fileNameDialogRef: MatDialogRef<RequestFormComponent>;
-  user: User = new User();
-
-  constructor(private dialog: MatDialog, private router: Router, private snackBar : MatSnackBar) { }
-
   isShowTitle:boolean = true;
+  
+  curentUserSubscription : Subscription = this.curentUserService.curentUser.subscribe(curentUser => {
+    if(curentUser.accessLevel != this.accessLevel)
+      this.accessLevel = curentUser.accessLevel;
+  });
 
-  ngOnInit(): void {}
+  constructor(
+    private dialog: MatDialog, 
+    private router: Router, 
+    private snackBar : MatSnackBar,
+    private curentUserService : CurentUserService
+  ) { }
+
+  ngOnInit(): void {
+    this.accessLevel = this.curentUserService.curentUser.value.accessLevel;
+  }
 
   async openReportReqDialog(type) {
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = { 
-      user : this.user,
       type : type
     }
     dialogConfig.minWidth = 600;
@@ -50,6 +62,10 @@ export class SidenavComponent implements OnInit {
       verticalPosition: "bottom",
       panelClass: [panelClass]
     });
+  }
+
+  ngOnDestroy() {
+    this.curentUserSubscription.unsubscribe();
   }
 
 }

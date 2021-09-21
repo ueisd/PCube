@@ -1,36 +1,66 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormControl, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { UserService } from 'src/app/services/user/user.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AuthService } from '../../../shared/services/auth.service';
+import { CurentUserService } from 'src/app/shared/services/curent-user.service';
 import * as $ from 'jquery/dist/jquery.min.js';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent implements OnInit, OnDestroy {
   
-  message = '';
+  conf = {
+    message: '',
+    pageTitle: "",
+    userName: "",
+  }
+
+  isAuthenticated: boolean = false;
+  authSubscribtion: Subscription;
+
   formGroup: FormGroup;
 
-  pageTitle = "Plateforme Petit Peuple";
-  userName = "";
-
-  isShowingForm:boolean = true;
-
-  constructor(private auth: AuthService,
-              private router: Router,
-              private formBuilder: FormBuilder,
-              private userService: UserService
-              ) { }
+  constructor(
+    private auth: AuthService,
+    private formBuilder: FormBuilder,
+    private curentUserService: CurentUserService
+  ) {
+    this.isAuthenticated = this.auth.jwtToken.value.isAuthenticated;          
+  }
 
   ngOnInit() {
-    this.createForm();
-    if(this.auth.isAuthenticated()){
-      this.isShowingForm = false;
-      this.showWelcomeMessage(true);
+    this.conf = this.getTextForLogin();
+    if(this.auth.jwtToken.value.isAuthenticated) {
+      this.showWelcomeMessage();
+    }else {
+      this.createForm();
+    }
+
+    this.authSubscribtion = this.auth.jwtToken.subscribe(token => {
+      let wasAuthenticated = this.isAuthenticated;
+      
+      if(this.isAuthenticated ==! token.isAuthenticated) {
+        this.isAuthenticated = token.isAuthenticated;
+        if(wasAuthenticated == false) { // on vient d'authentifier
+          this.showWelcomeMessage();
+          $('form').fadeOut(500);
+        }else { // on vient de déconnecter
+          this.conf = this.getTextForLogin();
+          this.createForm();
+          $('form').fadeIn(1000);
+        }
+      }    
+    });
+  }
+
+  getTextForLogin() {
+    return {
+      pageTitle : "Plateforme Petit Peuple",
+      message   : "",
+      userName  : "",
     }
   }
 
@@ -41,18 +71,11 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  isAuthAccepted:boolean = false;
-
-  async showWelcomeMessage(isAlreadyAuth:boolean){
-    this.isAuthAccepted = true;
-    let user = await this.userService.getUserPublicData(localStorage.getItem('email')).toPromise();
-    this.pageTitle = "Bienvenue";
-    if(!isAlreadyAuth){
-      $('form').fadeOut(500);
-    }
-    $('.wrapper').addClass('form-success');
+  async showWelcomeMessage(){
+    this.conf.pageTitle = "Bienvenue";
     setTimeout(() => {
-      this.userName = user.first_name + " " + user.last_name;
+      let curentUser = this.curentUserService.curentUser.value;
+      this.conf.userName = curentUser.getFullName();
     }, 500);
   }
 
@@ -61,11 +84,17 @@ export class LoginComponent implements OnInit {
     const password = this.formGroup.get('password').value;
 
     try {
-      await this.auth.authenticate(email, password).toPromise();
-      this.message = "";
-      this.showWelcomeMessage(false);
+      await this.auth.signin({email: email, password:password }).subscribe(ret => {
+        if(!ret){
+          this.conf.message = "pas de token";
+        }
+      })
     } catch(error) {
-      this.message = error;
+      this.conf.message = error;
     }
+  }
+
+  ngOnDestroy() {
+    this.authSubscribtion.unsubscribe();
   }
 }

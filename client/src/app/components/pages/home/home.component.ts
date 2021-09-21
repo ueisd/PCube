@@ -1,8 +1,10 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { AuthService } from 'src/app/services/auth/auth.service';
-import { SidenavComponent } from 'src/app/components/layouts/sidenav/sidenav.component';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/shared/services/auth.service';
+import { SidenavComponent } from 'src/app/components/layouts/sidenav/sidenav.component';
 import { HeaderComponent } from '../../layouts/header/header.component';
+import { MatDrawer } from '@angular/material/sidenav';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -10,93 +12,53 @@ import { HeaderComponent } from '../../layouts/header/header.component';
   styleUrls: ['./home.component.css'],
 })
 
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
   @ViewChild(SidenavComponent) sideNavReference;
-  @ViewChild("drawer") drawerComponent;
+  @ViewChild("drawer") drawerComponent:MatDrawer;
   @ViewChild("header") headerComponent:HeaderComponent;
 
-  authenticated: boolean;
-  accessLevel: number;
-
-  events: string[] = [];
-  opened: boolean = true;
+  isShowTitle:boolean = true;
+  isAuthenticated:boolean = false;
+  autSubscription: Subscription;
 
   constructor(
     private auth: AuthService,
     public router: Router
-    ) { 
-      this.checkForAuth();
-    }
+  ) { }
 
   ngOnInit(): void {
-    
+    if(this.auth.jwtToken.value.isAuthenticated)
+      this.onAuthValid();
+    this.autSubscription = this.auth.jwtToken.subscribe(token => {
+      if(token.isAuthenticated)
+        this.onAuthValid();
+      else
+        this.onAuthInvalid();
+    });
   }
 
   ngAfterViewInit(){
     this.isShowTitle =  this.sideNavReference.isShowTitle;
   }
 
-  isDrawerHidden:boolean = false;
-  isHeaderHidden:boolean = true;
-
-  setHeaderUserInfo(user){
-    this.headerComponent.user.email = user.email;
-    this.headerComponent.user.first_name = user.first_name;
-    this.headerComponent.user.last_name = user.last_name;
-  }
-
-  setSideNavUserInfo(user){
-    this.sideNavReference.user.email = user.email;
-    this.sideNavReference.user.first_name = user.first_name;
-    this.sideNavReference.user.last_name = user.last_name;
-    this.sideNavReference.user.access_level = parseInt(user.level);
-  }
-
   async onAuthValid(){
-
-    this.isDrawerHidden = false;
-    let userInfo = await this.auth.getAccessLevel().toPromise();
-    if(this.headerComponent)
-        this.setHeaderUserInfo(userInfo);
-
-    if(this.sideNavReference)
-      this.setSideNavUserInfo(userInfo);
-
-    this.accessLevel = parseInt(userInfo.level);
-    this.sideNavReference.accessLevel = this.accessLevel;
+    this.isAuthenticated = true;
     setTimeout(() => {
-      this.isHeaderHidden = false;
+      this.drawerComponent.open();
     }, 800);
-    setTimeout(() => {
-      this.drawerComponent.toggle();
-    }, 1200);
   }
 
   onAuthInvalid(){
-    this.accessLevel = -1;
-    this.isDrawerHidden = true;
-    this.isHeaderHidden = true;
+    this.isAuthenticated = false;
   }
 
-  async checkForAuth(){
-
-    this.auth.subscribe(
-      (authenticated) => {
-        this.authenticated = authenticated;
-        this.accessLevel = -1;
-        if(authenticated)
-          this.onAuthValid();
-        else
-          this.onAuthInvalid();
-      }
-    );
-  }
-
-  isShowTitle:boolean = true;
-
-  toggleDrawer(){
+  toggleSidebar(){
     this.sideNavReference.isShowTitle = !this.sideNavReference.isShowTitle;
     this.isShowTitle =  this.sideNavReference.isShowTitle;
+  }
+
+  ngOnDestroy() {
+    this.autSubscription.unsubscribe();
   }
 
 }

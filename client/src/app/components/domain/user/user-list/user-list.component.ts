@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from 'src/app/services/user/user.service';
 import { User } from 'src/app/models/user';
-import { MatDialog, MatDialogConfig } from "@angular/material/dialog";
+import { MatDialog } from "@angular/material/dialog";
 import { DeleteUserComponent } from 'src/app/components/domain/user/delete-user/delete-user.component';
 import { ModifyUserComponent } from 'src/app/components/domain/user/modify-user/modify-user.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -35,7 +35,12 @@ export class UserListComponent implements OnInit {
   
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
-    this.refreshList();
+    this.userService.getAllUser().toPromise().then(users => {
+      this.dataSource = new MatTableDataSource<User>(users);
+    }).catch(err => {
+      // gérer l'ereure
+    });
+    //this.refreshList();
   }
 
   onFilterChanged(){
@@ -99,7 +104,7 @@ export class UserListComponent implements OnInit {
     user.role_name = this.roleFilter.value.trim();
 
     this.displayedColumns = ['firstName', 'lastName', 'email', 'role', 'operations'];
-    let users = await this.userService.getUserByFilter(user).toPromise()
+    let users = await this.userService.getUserByFilter(user).toPromise();
     this.dataSource = new MatTableDataSource<User>(users);
     this.dataSource.paginator = this.paginator;
   }

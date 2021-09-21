@@ -1,6 +1,17 @@
 {
   "configurations": [
     {
+      "name": "Docker: Attach to Node",
+      "type": "node",
+      "request": "attach",
+      "restart": true,
+      "port": 9229,
+      "address": "localhost",
+      "localRoot": "${workspaceFolder}/api2",
+      "remoteRoot": "/app", // /usr/src/app // /app/src
+      "protocol": "inspector"
+    },
+    {
       "name": "Debug backend - python",
       "type": "python",
       "request": "attach",

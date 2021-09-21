@@ -1,8 +1,12 @@
 {
     "/api/*": 
     {
-        "target":"http://api",
+        "target":"http://api2:80",
         "secure":false,
-        "logLevel":"debug"
+        "logLevel":"debug",
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/api": ""
+        }
     }
 }

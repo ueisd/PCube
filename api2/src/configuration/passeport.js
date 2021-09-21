@@ -1,0 +1,1 @@
+// https://github.com/adivamshi/passport-jwt-mysql/blob/master/app/db.js

@@ -1,0 +1,30 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prod": "pm2-runtime ecosystem.config.js",
+    "start": "nodemon --inspect=0.0.0.0:9229 --legacy-watch ./src/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "cookie-parser": "^1.4.5",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.1.2",
+    "morgan": "^1.10.0",
+    "mysql": "^2.18.1",
+    "mysql-import": "^5.0.21",
+    "mysql2": "^2.3.0",
+    "nconf": "^0.11.3",
+    "nodemon": "^2.0.12",
+    "sequelize": "^6.6.5",
+    "tslib": "^2.3.1"
+  }
+}

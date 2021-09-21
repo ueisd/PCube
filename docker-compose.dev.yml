@@ -1,5 +1,29 @@
 version: "3.8"
 services:
+  api2:
+    build:
+      context: ./api2
+      dockerfile: Dockerfile.dev
+    volumes:
+      - type: bind
+        source: ./api2/src
+        target: /app/src
+    ports:
+      - "3000:80"
+      - "5678:5678"
+      - "9229:9229"
+    environment:
+      - EMAIL_USERNAME=${EMAIL_USERNAME} 
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_DB=${DATABASE_DB}
+      - SECRET_KEY=${SECRET_KEY}
+#    networks:
+#      - backend-net
+    depends_on:
+      - db
   api:
     build:
       context: ./api
@@ -50,6 +74,8 @@ services:
     restart: always
     ports:
       - 8080:8080
+#    networks:
+#      - backend-net
     depends_on:
      - db
   client:
@@ -81,7 +107,12 @@ services:
       - type: bind
         source: ./client/src
         target: /app/src
+#    networks:
+#      - backend-net
     depends_on:
-      - api
+      - api2
 volumes:
   dbdata:
+#networks:
+#  backend-net:
+#    driver: bridge

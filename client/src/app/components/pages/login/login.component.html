@@ -1,11 +1,15 @@
 <div class="wrapper">
 	<div class="container">
         <div class="login-container">
-            <h1>{{ pageTitle }}<span style="opacity: 0;" [ngClass]="isAuthAccepted ? 'show-name' : 'hidden'" >{{ userName | titlecase }}</span></h1>
+            <h1>{{ conf.pageTitle }}
+                <span style="opacity: 0;" [ngClass]="isAuthenticated ? 'show-name' : 'hidden'" >
+                    {{ conf.userName | titlecase }}
+                </span>
+            </h1>
 
-            <p style="color:red">{{ message }}</p>
+            <p style="color:red">{{ conf.message }}</p>
 
-            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form" *ngIf="isShowingForm">
+            <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form" *ngIf="!isAuthenticated">
                 <mat-form-field appearance="fill" class="form-element" >
                     <mat-label>Courriel</mat-label>
                     <input id="emailInput" matInput formControlName="email">

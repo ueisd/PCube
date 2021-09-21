@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { User } from 'src/app/models/user';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const API_ALL_USER = environment.api_url + "/api/user";
+const API_ALL_USER = environment.api_url + "/api/api/user";
 const API_IS_UNIQUE = environment.api_url + "/api/user/is-unique-user";
 const API_USER = environment.api_url + "/api/user";
 const API_GET_BY_FILTER = environment.api_url + "/api/user/filter";
@@ -46,13 +46,7 @@ export class UserService {
   }
 
   getAllUser():Observable<User[]> {
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
-      })
-    };
-    
-    return this.http.get<User[]>(API_ALL_USER, opts).pipe(
+    return this.http.get<User[]>(API_ALL_USER).pipe(
       map(users => users.map(user => {
         user.display_string = user.first_name + " " + user.last_name;
         return user;

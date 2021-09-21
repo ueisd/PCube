@@ -1,0 +1,10 @@
+{
+    "application_title": "PCube",
+    "JWT_TOKEN_LOCATION": "headers",
+    "JWT_ACCESS_TOKEN_EXPIRES": 72000,
+    "JWT_REFRESH_TOKEN_EXPIRES": 72000,
+    "database_db": "pcube",
+    "database_host": "db",
+    "database_user": "root"
+
+}
