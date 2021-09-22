@@ -41,7 +41,7 @@ Invariants: assurez vous de toujours définir les variables d'environnement suiv
 - EMAIL_USERNAME=emailbidon@gmail.com
 - EMAIL_PASSWORD=passwordbidon
 - SECRET_KEY=grosseCleSecreteAChangerQuiDoitAvoirDesCaracteresSpeciaux
-- DATATBASE_PASSWORD=motDePasseDeLUtilisateurDeLaBd
+- DATABASE_PASSWORD=motDePasseDeLUtilisateurDeLaBd
 - DATABASE_USER=UtilisateurDeLaBD
 - DATABASE_HOST=adresseDeLaBD
 - DATABASE_DB=BaseDeDonneeUtiliseeParLapp
