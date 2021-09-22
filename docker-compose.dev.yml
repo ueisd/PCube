@@ -41,12 +41,12 @@ services:
       - DEBUGGER=True
       - EMAIL_USERNAME=${EMAIL_USERNAME} 
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
-      - DATATBASE_PASSWORD=${DATATBASE_PASSWORD}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
       - DATABASE_USER=${DATABASE_USER}
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_DB=${DATABASE_DB}
       - SECRET_KEY=${SECRET_KEY}
-      - DATABASE_USER2=${DATABASE_USER2}
+      - DATABASE_USER2=${DATABASE_USER}
     entrypoint: ["python3", "-m", "flask", "run", "--host=0.0.0.0", "-p", "80"]
     depends_on:
       - db
@@ -59,8 +59,8 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
-      - MYSQL_ROOT_PASSWORD=password
-      - MYSQL_DATABASE=pcube
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_DB}
     volumes:
     - type: volume
       source: dbdata
