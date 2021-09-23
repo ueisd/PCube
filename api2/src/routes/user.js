@@ -18,7 +18,7 @@ function isLoggedIn(req, res, next) {
       })
       .catch(err => {
         console.log(err);
-        res.status(401).json('error')
+        res.status(401).json('error');
       });
 
       /*User.findOne({ '_id': sub }).exec( (err, user) => {
@@ -38,8 +38,7 @@ router.get('/curent', isLoggedIn, (req, res) => {
 });
 
 router.get('/', isLoggedIn, (req, res) => {
-  User.find().then(response => {
-    let test = response;
+  User.findAllEager().then(response => {
     res.json(response);
   })
   .catch(err => {

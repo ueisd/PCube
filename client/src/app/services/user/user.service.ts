@@ -47,9 +47,8 @@ export class UserService {
 
   getAllUser():Observable<User[]> {
     return this.http.get<User[]>(API_ALL_USER).pipe(
-      map(users => users.map(user => {
-        user.display_string = user.first_name + " " + user.last_name;
-        return user;
+      map(users => users.map(response => {
+        return new User(response);
       }))
     );
   }

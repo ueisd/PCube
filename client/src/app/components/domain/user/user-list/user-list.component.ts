@@ -19,6 +19,7 @@ export class UserListComponent implements OnInit {
 
   displayedColumns : string[];
   dataSource = new MatTableDataSource<User>();
+  userList: User[];
 
   nameFilter = new FormControl('');
   lastNameFilter = new FormControl('');
@@ -36,7 +37,10 @@ export class UserListComponent implements OnInit {
   ngOnInit(): void {
     this.dataSource.paginator = this.paginator;
     this.userService.getAllUser().toPromise().then(users => {
+      this.userList = users;
+      this.displayedColumns = ['firstName', 'lastName', 'email', 'role', 'operations'];
       this.dataSource = new MatTableDataSource<User>(users);
+      this.dataSource.paginator = this.paginator;
     }).catch(err => {
       // gérer l'ereure
     });
@@ -44,7 +48,28 @@ export class UserListComponent implements OnInit {
   }
 
   onFilterChanged(){
-    this.refreshList();
+    let userFilter = new User();
+    userFilter.first_name = this.nameFilter.value.trim();
+    userFilter.last_name = this.lastNameFilter.value.trim();
+    userFilter.email = this.emailFilter.value.trim();
+    userFilter.role_name = this.roleFilter.value.trim();
+
+    let regexs = {
+      first_name: new RegExp("^" + userFilter.first_name  + "", "i"),
+      last_name:  new RegExp("^" + userFilter.last_name   + "", "i"),
+      email:      new RegExp("^" + userFilter.email       + "", "i"),
+      role_name:  new RegExp("^" + userFilter.role_name   + "", "i")
+    }
+
+    let filteredUsers = this.userList.filter(u => {
+      return regexs.first_name.test(u.first_name) 
+        && regexs.last_name.test(u.last_name)
+        && regexs.email.test(u.email)
+        && regexs.role_name.test(u.role_name);
+    });
+
+    this.dataSource = new MatTableDataSource<User>(filteredUsers);
+    this.dataSource.paginator = this.paginator;
   }
 
   async openEditDialog(user) {

@@ -40,7 +40,7 @@ export class AuthService implements OnDestroy{
   }
 
   public initTimer() {
-    return timer(this.timeRefresToken, 5000)
+    return timer(2000, this.timeRefresToken)
       .pipe(
         switchMap(() => {
           if (localStorage.getItem("jwt")) {

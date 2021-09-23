@@ -7,6 +7,15 @@ module.exports.User = User;
 
 module.exports.initModel = function(sequelize) {
 
+    User.findAllEager = () => {
+      return User.findAll({
+        include: [{
+          model: sequelize.models.Role,
+        }],
+        raw: true
+      })
+    }
+
     User.findUserByEmail = (email) => {
       return User.findAll(
         {
