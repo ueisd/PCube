@@ -1,4 +1,5 @@
-const { DataTypes, Model } = require('sequelize');
+const { DataTypes, Model, Sequelize } = require('sequelize');
+const Op = Sequelize.Op;
 
 class User extends Model { }
 
@@ -7,13 +8,42 @@ module.exports.User = User;
 
 module.exports.initModel = function(sequelize) {
 
-    User.findAllEager = () => {
+    User.isEmailUnique = (email, id) => {
       return User.findAll({
-        include: [{
-          model: sequelize.models.Role,
-        }],
-        raw: true
+        where: {
+          [Op.and] : [
+            {
+              id: {
+                [Op.ne]: id,
+              }
+            },
+            {email: email}
+          ] 
+        },
+        raw: true 
       })
+    }
+
+    User.deleteById = (id) => {
+      return User.destroy({
+        where: {
+          id: id
+        }
+      });
+    }
+
+    User.findAllEager = () => {
+      return User.findAll(
+        {
+          order: [
+            ['createdAt', 'DESC']
+          ],
+          include: [{
+            model: sequelize.models.Role,
+          }],
+          raw: true
+        }
+      );
     }
 
     User.findUserByEmail = (email) => {

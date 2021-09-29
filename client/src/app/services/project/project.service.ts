@@ -4,14 +4,15 @@ import { Observable } from 'rxjs';
 import { ProjectItem } from 'src/app/models/project';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
+import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 
-const API_PROJECT = environment.api_url + "/api/project";
-const API_IS_UNIQUE = environment.api_url + "/api/project/is-unique";
+const API_PROJECT = environment.api_url + "api/api/project";
+const API_IS_UNIQUE = environment.api_url + "api/api/project/is-name-unique";
 const API_AUTOCOMPLTE = environment.api_url + "/api/project/autocomplete";
 const API_FILTER = environment.api_url + "/api/project/filter";
 const API_APPARENTABLE = environment.api_url + "/api/project/getApparentableProjects";
 const API_ONE_LEVEL_FILTER = environment.api_url + "/api/project/filter/one-level";
-const API_IS_DELETABLE = environment.api_url + "/api/project/is-deletable";
+const API_IS_DELETABLE = environment.api_url + "api/api/project/is-deletable";
 
 const SEPARATOR: string = " * ";
 
@@ -24,21 +25,36 @@ export class ProjectService {
   constructor(private http: HttpClient) { }
 
   getAllProject(): Observable<ProjectItem[]>{
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
-      })
-    };
-    return this.http.get<ProjectItem[]>(API_PROJECT, opts);
+
+    return this.http.get<ProjectItem[]>(API_PROJECT).pipe(
+      map(projects => 
+      {
+        let ret = projects.map(response => {
+          return ProjectItem.fetchProjectFromResponse(response);
+        });
+        return ret;
+      }
+        
+
+      )
+    );
   }
 
+
+  //équivalent de getParentOptions
   getApparentableProject(id: number): Observable<ProjectItem[]>{
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
-      })
-    };
-    return this.http.get<ProjectItem[]>(API_APPARENTABLE + "/" + id, opts);
+    return this.getAllProject().pipe(
+      map(
+        projets => DataTreeFetcher.fetchProjectTree({
+            itemList: projets,
+            fieldsNames : {
+                childs:     'child_project',
+                id :        'id',
+                parentId :  'parent_id'
+            }
+          }, id) 
+      )
+    )
   }
 
   getParentOptions(id: number): Observable<ProjectItem[]>{
@@ -73,46 +89,31 @@ export class ProjectService {
     return retour;
   }
 
-  addNewProject(name, parent_name): Observable<ProjectItem>{
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
-        'Content-Type': 'application/json'
-      })
-    };
+  addNewProject(name, parentId): Observable<ProjectItem>{
     let body = {
       name: name,
-      parent_name: parent_name
+      ProjectId: parentId
     }
-    return this.http.post<ProjectItem>(API_PROJECT, body, opts);
+    return this.http.post<ProjectItem>(API_PROJECT, body);
   }
 
-  updateProject(projetct: ProjectItem): Observable<ProjectItem>{
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
-        'Content-Type': 'application/json'
-      })
-    };
-   
+  updateProject(projetct: ProjectItem): Observable<ProjectItem>{  
     let body = {
       id: projetct.id,
-      projectName: projetct.name,
-      parent_id: projetct.parent_id,
+      name: projetct.name,
+      ProjectId: projetct.parent_id,
     }
-    
-    return this.http.put<ProjectItem>(API_PROJECT, body, opts);
+    return this.http.put<ProjectItem>(API_PROJECT, body);
   }
   
   isNameUnique(name): Observable<boolean> {
 
-    var url = API_IS_UNIQUE + "/" + name
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
-      })
-    };
-    return this.http.get<boolean>(url, opts);
+    var url = API_IS_UNIQUE
+    let body = { 
+      id: -1,
+      name: name
+    }
+    return this.http.post<boolean>(url, body);
   }
 
   getProjectNameForAutocomplete(name): Observable<ProjectItem[]>{
@@ -146,28 +147,12 @@ export class ProjectService {
     return this.http.get<ProjectItem[]>(url, opts);
   }
 
-  deleteProject(id, name:string) {
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
-      }),
-      body: {
-        id: id,
-        name: name
-      }
-    };
-
-    return this.http.delete(API_PROJECT, opts);
+  deleteProject(id) {
+    return this.http.delete(API_PROJECT + "/" + id);
   }
 
   isProjectDeletable(id, name:string): Observable<boolean> {
-    let url = API_IS_DELETABLE + "/" + id + "/" + name;
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  
-      })
-    };
-
-    return this.http.get<boolean>(url, opts);
+    let url = API_IS_DELETABLE + "/" + id
+    return this.http.get<boolean>(url);
   }
 }

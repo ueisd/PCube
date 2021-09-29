@@ -56,9 +56,9 @@ export class AddActivityComponent implements OnInit{
   }
 
   async createNewActivity(){
-    let activity = await this.activityService.addNewActivity(
-      this.newActivityForm.controls['activityName'].value
-    ).toPromise();
+    let name = this.newActivityForm.controls['activityName'].value;
+    let activity = await this.activityService.addNewActivity(name).toPromise();
+    console.log(activity);
     if(activity.id != -1){
       this.onSubmitSuccess();
     }else{
@@ -69,7 +69,7 @@ export class AddActivityComponent implements OnInit{
   async updateAnActivity(newName:string){
     try {
       await this.activityService.updateActivity(
-        this.activityItem.id, this.activityItem.name, newName
+        this.activityItem.id, newName
       ).toPromise();
       this.dialogRef.close(true);
     } catch(error) {
@@ -101,7 +101,8 @@ export class AddActivityComponent implements OnInit{
     }
 
     if(newValue != null && newValue.trim().length != 0){
-      this.isUnique = await this.activityService.isNameUnique(newValue).toPromise();
+      let id = (this.activityItem) ?  this.activityItem.id : -1;
+      this.isUnique = await this.activityService.isNameUnique(newValue, id).toPromise();
       this.isUnmodifiedValue = false;
     }
   }

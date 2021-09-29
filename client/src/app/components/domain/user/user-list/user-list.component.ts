@@ -44,29 +44,43 @@ export class UserListComponent implements OnInit {
     }).catch(err => {
       // gérer l'ereure
     });
-    //this.refreshList();
   }
 
-  onFilterChanged(){
-    let userFilter = new User();
-    userFilter.first_name = this.nameFilter.value.trim();
-    userFilter.last_name = this.lastNameFilter.value.trim();
-    userFilter.email = this.emailFilter.value.trim();
-    userFilter.role_name = this.roleFilter.value.trim();
-
+  filterListFromUserFilter(user:User, userList): User[] {
     let regexs = {
-      first_name: new RegExp("^" + userFilter.first_name  + "", "i"),
-      last_name:  new RegExp("^" + userFilter.last_name   + "", "i"),
-      email:      new RegExp("^" + userFilter.email       + "", "i"),
-      role_name:  new RegExp("^" + userFilter.role_name   + "", "i")
+      first_name: new RegExp("^" + user.first_name  + "", "i"),
+      last_name:  new RegExp("^" + user.last_name   + "", "i"),
+      email:      new RegExp("^" + user.email       + "", "i"),
+      role_name:  new RegExp("^" + user.role_name   + "", "i")
     }
 
-    let filteredUsers = this.userList.filter(u => {
+    return userList.filter(u => {
       return regexs.first_name.test(u.first_name) 
         && regexs.last_name.test(u.last_name)
         && regexs.email.test(u.email)
         && regexs.role_name.test(u.role_name);
     });
+  }
+
+  resetFilters() {
+    this.nameFilter.setValue("");
+    this.lastNameFilter.setValue("");
+    this.emailFilter.setValue("");
+    this.roleFilter.setValue("");
+  }
+
+  getUserFilterFromForm(): User {
+    let user = new User();
+    user.first_name = this.nameFilter.value.trim();
+    user.last_name = this.lastNameFilter.value.trim();
+    user.email = this.emailFilter.value.trim();
+    user.role_name = this.roleFilter.value.trim();
+    return user;
+  }
+
+  onFilterChanged(){
+    let userFilter = this.getUserFilterFromForm();
+    let filteredUsers = this.filterListFromUserFilter(userFilter, this.userList);
 
     this.dataSource = new MatTableDataSource<User>(filteredUsers);
     this.dataSource.paginator = this.paginator;
@@ -93,7 +107,7 @@ export class UserListComponent implements OnInit {
     }
   }
 
-  async openDeleteDialog(user) {
+  async openDeleteDialog(user: User) {
     const dialogRef = this.dialog.open(DeleteUserComponent, {
       data: { 
         id: user.id, 
@@ -111,7 +125,7 @@ export class UserListComponent implements OnInit {
       this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
     } else if(result !== undefined) {
       try {
-        await this.userService.deleteUser(result.id, result.email).toPromise();
+        await this.userService.deleteUser(result.id).toPromise();
         this.customSnackBar.openSnackBar('L\'utilisateur a été supprimé!', 'notif-success');
         this.refreshList();
       } catch(error) {
@@ -120,17 +134,20 @@ export class UserListComponent implements OnInit {
     }
   }
 
+  addUserToTable(user: User) {
+    this.userList.unshift(user);
+    this.dataSource.data = this.userList;
+    this.dataSource._updateChangeSubscription();
+    this.resetFilters();
+  }
+
+  
+
   async refreshList() {
-
-    let user = new User();
-    user.first_name = this.nameFilter.value.trim();
-    user.last_name = this.lastNameFilter.value.trim();
-    user.email = this.emailFilter.value.trim();
-    user.role_name = this.roleFilter.value.trim();
-
-    this.displayedColumns = ['firstName', 'lastName', 'email', 'role', 'operations'];
-    let users = await this.userService.getUserByFilter(user).toPromise();
-    this.dataSource = new MatTableDataSource<User>(users);
+    this.userList = await this.userService.getAllUser().toPromise();
+    let userFilter = this.getUserFilterFromForm();
+    let filteredUsers = this.filterListFromUserFilter(userFilter, this.userList);
+    this.dataSource = new MatTableDataSource<User>(filteredUsers);
     this.dataSource.paginator = this.paginator;
   }
 

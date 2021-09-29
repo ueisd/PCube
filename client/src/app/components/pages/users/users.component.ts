@@ -5,6 +5,7 @@ import { AddUserComponent } from 'src/app/components/domain/user/add-user/add-us
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
+import { User } from 'src/app/models/user';
 
 @Component({
   selector: 'app-users',
@@ -30,12 +31,11 @@ export class UsersComponent implements OnInit {
     dialogConfig.width = "500px";
     this.fileNameDialogRef = this.dialog.open(AddUserComponent, dialogConfig);
 
-
     let result = await this.fileNameDialogRef.afterClosed().toPromise();
-    this.child.refreshList();
     if(result == "Canceled" || result == undefined){
       this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
     }else if(result) {
+      this.child.addUserToTable(result);
       this.customSnackBar.openSnackBar('L\'utilisateur a été créé!', 'notif-success');
     }
   }

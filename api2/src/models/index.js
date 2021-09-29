@@ -3,7 +3,13 @@ const bcrypt = require('bcrypt');
 
 exports.initSchemas = async (sequelize) => {
 
-    const schemasFiles = ['./user.model', './role.model'];
+    const schemasFiles = [
+        './user.model', 
+        './role.model', 
+        './activity.model',
+        './project.model',
+        './expense-account.model'
+    ];
 
     for(fileName of schemasFiles) {
         await require(fileName).initModel(sequelize);
@@ -11,11 +17,19 @@ exports.initSchemas = async (sequelize) => {
 
     const User = sequelize.models.User;
     const Role = sequelize.models.Role;
-
+    const Activity = sequelize.models.Activity;
+    const Project = sequelize.models.Project;
+    const ExpenseAccount = sequelize.models.ExpenseAccount;
     
 
     Role.hasMany(User);
     User.belongsTo(Role);
+
+    Project.hasMany(Project);
+    Project.belongsTo(Project);
+
+    ExpenseAccount.hasMany(ExpenseAccount);
+    ExpenseAccount.belongsTo(ExpenseAccount);
     
 
     //@todo si prod on utilise alter
@@ -24,7 +38,6 @@ exports.initSchemas = async (sequelize) => {
     const membre = await Role.create({ name: "membre",  accessLevel: 3});
     const pm = await Role.create({ name: "product manager",  accessLevel: 2});
     const admin = await Role.create({ name: "admin",  accessLevel: 1});
-
 
     /*const jane = await User.create({ 
         email: 'baba@gmail.com', 
@@ -176,6 +189,83 @@ exports.initSchemas = async (sequelize) => {
             RoleId: membre.id
         },
     ]);
+
+
+
+    const activites = await Activity.bulkCreate([
+        {name: 'Ditribution de prospectus'},
+        {name: 'Appel marketing'},
+        {name: 'Préparation marketing'},
+        {name: 'Commis à la vente'},
+        {name: 'Organisation événementielle'},
+    ]);
+
+    let projetVeloJeunesse2018 = await Project.create(
+        {name: "Vélo jeunesse 2018"}
+    );
+    let marketingVeloJeunesse2018 = await Project.create(
+        {name: "Marketing vélo jeunesse 2018"}
+    );
+    let administrationVeloJeunesse = await Project.create(
+        {name: "Administration - vélo jeunesse 2018"}
+    );
+    let ventesVeloJeunesse = await Project.create(
+        {name: "Ventes - vélo jeunesse 2018"}
+    );
+
+    let activiteMarketing5juin = await Project.create(
+        {name: "Marketing - 5 juin 2018"}
+    );
+
+    let refonteComptabilite = await Project.create(
+        {name: "Refonte de la comptabilité"}
+    );
+
+    await projetVeloJeunesse2018.setProjects([
+        marketingVeloJeunesse2018, 
+        administrationVeloJeunesse,
+        ventesVeloJeunesse
+    ]);
+
+    await marketingVeloJeunesse2018.setProjects([
+        activiteMarketing5juin
+    ]);
+
+
+
+
+    let administrationEA = await ExpenseAccount.create(
+        {name: "administration"}
+    );
+
+    let admin2018EA = await ExpenseAccount.create(
+        {name: "administration - 2018"}
+    ); 
+
+    let marketingEA = await ExpenseAccount.create(
+        {name: "marketing"}
+    ); 
+
+    let marketing2018EA = await ExpenseAccount.create(
+        {name: "marketing - 2018"}
+    ); 
+
+    let ventesEA = await ExpenseAccount.create(
+        {name: "ventes"}
+    );
+
+    let ventes2018EA = await ExpenseAccount.create(
+        {name: "ventes - 2018"}
+    );
+
+
+    administrationEA.setExpenseAccounts([admin2018EA]);
+
+    marketingEA.setExpenseAccounts([marketing2018EA]);
+
+    ventesEA.setExpenseAccounts([ventes2018EA]);
+
+
 
     //await membre.setUsers([jane]);
 

@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddExpenseAccountComponent } from '../add-expense-account/add-expense-account.component';
 import { DeleteExpenseAccountComponent } from 'src/app/components/domain/expense-account/delete-expense-account/delete-expense-account.component';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
+import {DataTreeFetcher} from 'src/app/models/utils/DataTreeFetcher'
 
 @Component({
   selector: 'app-expense-account-list',
@@ -67,7 +68,7 @@ export class ExpenseAccountListComponent implements OnInit {
   async openDeleteDialog(expenseAccount: ExpenseAccountItem) {
 
     this.isDeletable = await this.expenseAccountService.isExpenseAccountDeletable(
-      expenseAccount.id, expenseAccount.name
+      expenseAccount.id
     ).toPromise();
     const dialogConfig = this.dialog.open(DeleteExpenseAccountComponent, {
       data: {
@@ -80,7 +81,7 @@ export class ExpenseAccountListComponent implements OnInit {
     let result = await dialogConfig.afterClosed().toPromise();
     if (result !== undefined) {
       try {
-        await this.expenseAccountService.deleteExpenseAccount(expenseAccount.id, expenseAccount.name).toPromise();
+        await this.expenseAccountService.deleteExpenseAccount(expenseAccount.id).toPromise();
         this.customSnackBar.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
         this.refreshList({ expanded: true });
       } catch (error) {
@@ -106,7 +107,16 @@ export class ExpenseAccountListComponent implements OnInit {
   async refreshList(opts?: refreshOption) {
     let expenseAccount = new ExpenseAccountItem();
     expenseAccount.name = this.nameFilter.value.trim();
-    this.dataSource.data = await this.expenseAccountService.filterExpenseAccount(expenseAccount).toPromise();
+    let expensesAccounts = await this.expenseAccountService.getAllExpenseAccount().toPromise();
+    let expensesAccountsTree = DataTreeFetcher.fetchProjectTree({
+      itemList: expensesAccounts,
+      fieldsNames : {
+          childs:     'child',
+          id :        'id',
+          parentId :  'parent_id'
+      }
+    });
+    this.dataSource.data = expensesAccountsTree;
     if (opts.expanded) this.treeControl.expandAll();
   }
 }

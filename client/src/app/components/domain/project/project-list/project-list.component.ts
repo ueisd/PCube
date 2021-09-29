@@ -10,6 +10,7 @@ import { DeleteProjectComponent } from 'src/app/components/domain/project/delete
 import { MatDialogRef, MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
+import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 
 @Component({
   selector: 'app-project-list',
@@ -83,7 +84,7 @@ export class ProjectListComponent implements OnInit {
       this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
     } else if (result !== undefined) {
       try {
-        await this.projectService.deleteProject(project.id, project.name).toPromise();
+        await this.projectService.deleteProject(project.id).toPromise();
         this.customSnackBar.openSnackBar('Le projet a été supprimé', 'notif-success');
         this.refreshList({ expanded: true });
       }catch (error) {
@@ -107,9 +108,18 @@ export class ProjectListComponent implements OnInit {
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
   async refreshList(opts?: refreshOption) {
-    let project = new ProjectItem();
-    project.name = this.nameFilter.value.trim();
-    this.dataSource.data = await this.projectService.filterProject(project).toPromise();
+    //let project = new ProjectItem();
+    //project.name = this.nameFilter.value.trim();
+    let items: ProjectItem[] = await this.projectService.getAllProject().toPromise();
+    let itemsTree = DataTreeFetcher.fetchProjectTree({
+      itemList: items,
+      fieldsNames : {
+          childs:     'child_project',
+          id :        'id',
+          parentId :  'parent_id'
+      }
+    });
+    this.dataSource.data = itemsTree;
     if (opts.expanded) this.treeControl.expandAll();
   }
 }

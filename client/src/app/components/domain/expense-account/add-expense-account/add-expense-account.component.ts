@@ -43,13 +43,12 @@ export class AddExpenseAccountComponent implements OnInit {
     if(!(this.expenseAccount.id > 0)) this.expenseAccount.id = -1;
     if(!(this.expenseAccount.parent_id > 0)) this.expenseAccount.parent_id = -1;
 
-    if(this.expenseAccount.parent_id === undefined ||  this.expenseAccount.parent_id <= 0) {
+    if(this.expenseAccount.id <0) {
       this.isCreateForm = true;
     }
     this.initForm();
 
-    let accounts = await this.expenseAccountServices.getApparentableExpenseAccounts(this.expenseAccount.id).toPromise();
-    this.parentOptions = this.expenseAccountServices.generateParentOption(accounts, 0);
+    this.parentOptions = await this.expenseAccountServices.getParentOptions(this.expenseAccount.id).toPromise();
     let selected: ExpenseAccountItem = this.findExpenseAccount(this.parentOptions, this.expenseAccount.parent_id);
     if(this.expenseAccount.id != this.expenseAccount.parent_id) {
       this.ExpenseForm.controls['parent'].setValue(selected);
@@ -128,18 +127,18 @@ export class AddExpenseAccountComponent implements OnInit {
           this.onSubmitFailled();
         }
       }else {
-        let proj :ExpenseAccountItem = new ExpenseAccountItem();
-        proj.id = this.expenseAccount.id
-        
-        if(this.ExpenseForm.value['isChild'] == false) {
-          proj.parent_id = this.expenseAccount.id;
-        }else if(this.ExpenseForm.value['parent']) {
-          proj.parent_id = this.ExpenseForm.value['parent']['id'];
-        }else {
-          proj.parent_id = this.expenseAccount.parent_id;
+        let exp :ExpenseAccountItem = new ExpenseAccountItem();
+        exp.id = this.expenseAccount.id;
+
+        if(this.ExpenseForm.value['isChild'] == false 
+          || !this.ExpenseForm.value['parent']) {
+          exp.parent_id = -1;
+        } else {
+          exp.parent_id = this.ExpenseForm.value['parent']['id'];
         }
-        proj.name = this.ExpenseForm.value['name'];
-        await this.expenseAccountServices.updateExpenseAccount(proj).toPromise();
+        
+        exp.name = this.ExpenseForm.value['name'];
+        await this.expenseAccountServices.updateExpenseAccount(exp).toPromise();
         this.onSubmitSuccess();
       }
     }
@@ -174,7 +173,10 @@ export class AddExpenseAccountComponent implements OnInit {
     return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
       return timer(500)
         .pipe(
-          switchMap(() =>  this.expenseAccountServices.isNameUnique(control.value)
+          switchMap(() =>  
+            this.expenseAccountServices.isNameUnique(
+              control.value, this.expenseAccount.id
+            )
             .pipe(
               map((isUnique: boolean) => {
                 return (isUnique || control.value == this.expenseAccount.name) ? null : { ereureNonUnique: true };

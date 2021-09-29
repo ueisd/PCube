@@ -76,7 +76,7 @@ export class TimelineComponent implements OnInit {
     ] = await Promise.all([
       <Promise<any>>this.activityService.getAllActivity().toPromise(), 
       <Promise<any>>this.projectService.getParentOptions(-1).toPromise(), 
-      <Promise<any>>this.expenseAccountServices.getExpensesAccountOptions().toPromise(),
+      <Promise<any>>this.expenseAccountServices.getParentOptions(-1).toPromise(),
       <Promise<any>>this.userService.getAllUser().toPromise()
     ]);
 

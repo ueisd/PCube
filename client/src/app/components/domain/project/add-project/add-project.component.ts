@@ -47,13 +47,12 @@ export class AddProjectComponent implements OnInit {
     if(!(this.projet.id > 0)) this.projet.id = -1;
     if(!(this.projet.parent_id > 0)) this.projet.parent_id = -1;
 
-    if(this.projet.parent_id === undefined ||  this.projet.parent_id <= 0) {
+    if(this.projet.id <0) {
       this.isCreateForm = true;
     }
     this.initForm();
 
-    let projets = await this.projectService.getApparentableProject(this.projet.id).toPromise();
-    this.parentOptions = this.projectService.generateParentOption(projets, 0);
+    this.parentOptions = await this.projectService.getParentOptions(this.projet.id).toPromise();
 
     let selected: ProjectItem = this.findProject(this.parentOptions, this.projet.parent_id);
     if(this.projet.id != this.projet.parent_id) {
@@ -114,10 +113,10 @@ export class AddProjectComponent implements OnInit {
 
       let name: string = this.newProjectForm.controls['projectName'].value
       let projetParent : ProjectItem = this.newProjectForm.controls['parent'].value;
-      let parentName: string = (projetParent != null) ? projetParent.name : name;
+      let parentId: number = (projetParent != null) ? projetParent.id: -1;
 
       if(this.isCreateForm) {
-        let project = await this.projectService.addNewProject(name, parentName).toPromise();
+        let project = await this.projectService.addNewProject(name, parentId).toPromise();
         if(project.id != -1){
           this.onSubmitSuccess();
         }else{
@@ -127,12 +126,11 @@ export class AddProjectComponent implements OnInit {
         let proj :ProjectItem = new ProjectItem();
         proj.id = this.projet.id
         
-        if(this.newProjectForm.value['isChild'] == false) {
-          proj.parent_id = this.projet.id;
-        }else if(this.newProjectForm.value['parent'] != undefined) {
+        if(this.newProjectForm.value['isChild'] == false 
+          || !this.newProjectForm.value['parent']) {
+          proj.parent_id = -1;
+        } else {
           proj.parent_id = this.newProjectForm.value['parent']['id'];
-        }else {
-          proj.parent_id = this.projet.parent_id;
         }
         proj.name = this.newProjectForm.value['projectName'];
         await this.projectService.updateProject(proj).toPromise();

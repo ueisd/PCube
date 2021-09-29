@@ -1,3 +1,5 @@
+import {DataTreeFetcher}  from './utils/DataTreeFetcher';
+
 export class ExpenseAccountItem {
     id : number;
     name : string;
@@ -13,5 +15,11 @@ export class ExpenseAccountItem {
         this.nomAffichage = expenseAccountResponse && expenseAccountResponse.nomAffichage || "";
         this.child = expenseAccountResponse && expenseAccountResponse.child || [];
         this.nbLignesDeTemps = expenseAccountResponse && expenseAccountResponse.nbLignesDeTemps || "";
+    }
+
+    static fetchItemFromResponse(response): ExpenseAccountItem {
+        let expenseAccount = new ExpenseAccountItem(response);
+        expenseAccount.parent_id = response.ExpenseAccountId;
+        return expenseAccount;
     }
 }

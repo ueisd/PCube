@@ -49,11 +49,11 @@ export class AddUserComponent implements OnInit {
     this.refreshDataEvent.emit(this.hasToRefresh);
   }
 
-  private onSubmitSuccess(){
+  private onSubmitSuccess(user: User){
     this.isAdded = true;
     this.askForDataRefresh();
     this.userForm.reset();
-    this.dialogRef.close(true);
+    this.dialogRef.close(user);
   }
 
   async onSubmit(){
@@ -62,13 +62,14 @@ export class AddUserComponent implements OnInit {
     user.last_name = this.userForm.get("lname").value;
     user.email = this.userForm.get("email").value;
     user.role_id = this.userForm.get("roles").value["id"];
+    user.role_name = this.userForm.get("roles").value["name"];
     const password = this.userForm.get("password").value
     const passwordConfirmation = this.userForm.get("passwordConfirmation").value;
     
     if (this.passwordsMatch(password, passwordConfirmation)){
       try {
-        await this.userService.createUser(user, password, passwordConfirmation).toPromise();
-        this.onSubmitSuccess();
+        let result = await this.userService.createUser(user, password).toPromise();
+        this.onSubmitSuccess(new User(result));
       }catch(error) {
         this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
       }

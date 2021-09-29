@@ -12,6 +12,7 @@ import { CustomDiaglogConfig } from 'src/app/utils/custom-dialog-config';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
+import { LIFECYCLE_HOOKS_VALUES } from '@angular/compiler/src/lifecycle_reflector';
 
 const HIDDEN_CLASS = 'hidden';
 
@@ -32,6 +33,7 @@ export class ActivityListComponent implements OnInit {
   ) { }
 
   displayedColumns: string[];
+  activitys: ActivityItem[];
   dataSource = new MatTableDataSource<ActivityItem>();
 
   customDiagConfig: CustomDiaglogConfig = new CustomDiaglogConfig();
@@ -40,6 +42,7 @@ export class ActivityListComponent implements OnInit {
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
 
   ngOnInit(): void {
+    this.displayedColumns = ['name', 'operations'];
     this.dataSource.paginator = this.paginator;
     this.refreshList();
   }
@@ -50,8 +53,22 @@ export class ActivityListComponent implements OnInit {
     this.isViewInitDone = true;
   }
 
+  filterListFromActivityFilter(activity:ActivityItem, activityList): ActivityItem[] {
+    let regexs = {
+      name: new RegExp("^" + activity.name  + "", "i"),
+    }
+
+    return activityList.filter(u => {
+      return regexs.name.test(u.name)
+    });
+  }
+
   onNameFilterChanged() {
-    this.refreshList();
+    let activity = new ActivityItem();
+    activity.name = this.nameFilter.value.trim();
+    let filteredActivitys = this.filterListFromActivityFilter(activity, this.activitys);
+    this.dataSource = new MatTableDataSource<ActivityItem>(filteredActivitys);
+    this.dataSource.paginator = this.paginator;
   }
 
   async openDeleteDialog(activity) {
@@ -78,11 +95,10 @@ export class ActivityListComponent implements OnInit {
   }
 
   async refreshList() {
-    let activity = new ActivityItem();
-    activity.name = this.nameFilter.value.trim();
-    this.displayedColumns = ['name', 'operations'];
-    let activities = await this.activityService.filterActivity(activity).toPromise();
-    this.dataSource = new MatTableDataSource<ActivityItem>(activities);
+    /*let activity = new ActivityItem();
+    activity.name = this.nameFilter.value.trim();*/
+    this.activitys = await this.activityService.getAllActivity().toPromise();
+    this.dataSource = new MatTableDataSource<ActivityItem>(this.activitys);
     this.dataSource.paginator = this.paginator;
   }
 

@@ -62,14 +62,13 @@ export class ModifyUserComponent implements OnInit {
   async onSubmit() {
     if(this.modifyUserForm.valid){
       const id = this.modifyUserForm.controls['id'].value;
-      const email = this.modifyUserForm.controls['email'].value;
       const firstName = this.modifyUserForm.controls['firstName'].value;
       const lastName = this.modifyUserForm.controls['lastName'].value;
-      const newEmail = this.modifyUserForm.controls['newEmail'].value;
+      const email = this.modifyUserForm.controls['newEmail'].value;
       const roleId : number = this.modifyUserForm.get("roles").value["id"];
       
       let user = await this.userService.modifyUser(
-        id, email, firstName, lastName, newEmail, roleId
+        id, email, firstName, lastName, roleId
       ).toPromise()
       if(user.id != -1) 
         this.onSubmitSuccess();

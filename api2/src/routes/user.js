@@ -1,40 +1,39 @@
 const router = require('express').Router();
-const fs = require('fs');
-const RSA_PUBLIC_KEY = fs.readFileSync('./src/rsa/key.pub');
-const jwt = require('jsonwebtoken');
 const { User } = require('../models/user.model');
-const { Role } = require('../models/role.model');
-
-function isLoggedIn(req, res, next) {
-  const token = req.headers.authorization;
-  if (token) {
-    jwt.verify(token, RSA_PUBLIC_KEY, (err, decoded) => {
-      if (err) { return res.status(401).json('token invalid'); }
-      const sub = decoded.sub;
-      User.findByPk(sub, {raw: true, include: Role})
-      .then(response => {
-        req.user = response;
-        next();
-      })
-      .catch(err => {
-        console.log(err);
-        res.status(401).json('error');
-      });
-
-      /*User.findOne({ '_id': sub }).exec( (err, user) => {
-        if (err || !user) { res.status(401).json('error') }
-        req.user = user;
-        next();
-      })*/
-    })
-  } else {
-    res.status(401).json('pas de token !');
-  }
-}
+const { isLoggedIn } = require('../guards/isLoggedIn.guard');
 
 router.get('/curent', isLoggedIn, (req, res) => {
-  let test = req.user;
   res.json(req.user);
+});
+
+router.get('/emailUnique/:email', isLoggedIn, (req, res) => {
+  let email = req.params.email.trim();
+  User.isEmailUnique(email, req.user.id)
+  .then(result => {
+    if(result.length >0)
+      res.json(false);
+    else 
+      res.json(true);
+  }).catch(err => {
+    res.status(401).json('error' + err);
+  });
+});
+
+router.put('/', isLoggedIn, (req, res) => {
+  req.body.firstName = req.body.firstName.trim();
+  req.body.lastName = req.body.lastName.trim();
+  req.body.email = req.body.email.trim();
+  User.update(req.body, {
+    where: {
+      id: req.body.id
+    }
+  }).then(result => {
+    console.log(result);
+    res.json(result);
+  }).catch(err => {
+    console.log(err);
+    res.status(401).json('error' + err);
+  });
 });
 
 router.get('/', isLoggedIn, (req, res) => {
@@ -42,13 +41,34 @@ router.get('/', isLoggedIn, (req, res) => {
     res.json(response);
   })
   .catch(err => {
-    console.log(err);
-    res.status(401).json('error');
+    res.status(401).json('error' + err);
   });
-  let test = 6;
 });
 
+router.post('/', isLoggedIn, async (req, res) => {
+  let user = req.body;
+  user.firstName = user.firstName.trim();
+  user.lastName = user.lastName.trim();
+  user.email = user.email.trim();
 
+  User.create(user)
+  .then(response => { 
+    return User.findUserById(response.id);
+  }).then(response => {
+    res.json(response);
+  })
+  .catch(err => {
+    res.status(401).json('error' + err);
+  });
+});
 
+router.delete('/:id', isLoggedIn, (req, res) => {
+  let id = req.params.id;
+  User.deleteById(id).then(result => {
+    res.json(result);
+  }).catch(err => {
+    res.status(401).json('error' + err);
+  })
+});
 
 module.exports = router;

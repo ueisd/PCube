@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const API_ALL_USER = environment.api_url + "/api/api/user";
-const API_IS_UNIQUE = environment.api_url + "/api/user/is-unique-user";
-const API_USER = environment.api_url + "/api/user";
+const API_IS_UNIQUE = environment.api_url + "api/api/user/emailUnique";
+const API_USER = environment.api_url + "api/api/user";
 const API_GET_BY_FILTER = environment.api_url + "/api/user/filter";
 const API_GET_PROFIL = environment.api_url + "/api/user/profil";
 const API_GET_PUBLIC_DATA = environment.api_url + "/api/user/auth-info";
@@ -53,71 +53,38 @@ export class UserService {
     );
   }
 
-  deleteUser(id, email): Observable<{}> {
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
-        'Content-Type' : 'application/json'
-      }),
-      body : {
-        id: id,
-        email: email
-      }
-    };
-
-    return this.http.delete(API_USER, opts);
+  deleteUser(id): Observable<{}> {
+    return this.http.delete(API_USER + "/" + id);
   }
 
   isEmailUnique(email): Observable<boolean> {
 
     var url = API_IS_UNIQUE + "/" + email
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
-      })
-    };
-    return this.http.get<boolean>(url, opts);
+    return this.http.get<boolean>(url);
   }
 
-  modifyUser(id, email, firstName, lastName, newEmail, roleId : number) {
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
-        'Content-Type': 'application/json'
-      })
-    };
-
+  modifyUser(id, email, firstName, lastName, roleId : number) {
     let body = {
       id: id,
       email: email,
-      first_name: firstName,
-      last_name: lastName,
-      new_email: newEmail,
-      role_id: roleId
+      firstName: firstName,
+      lastName: lastName,
+      RoleId: roleId
     }
 
-    return this.http.put<User>(API_USER, body, opts);
+    return this.http.put<User>(API_USER, body);
   }
 
-  createUser(user: User, pwd, confirmedPwd): Observable<User> {
-
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),  // tslint:disable-line:object-literal-key-quotes
-        'Content-Type': 'application/json'
-      })
-    };
-
+  createUser(user: User, pwd): Observable<User> {
     let body = {
       email: user.email,
-      first_name: user.first_name,
-      last_name: user.last_name,
-      role_id: user.role_id,
-      password: pwd,
-      password_confirmed: confirmedPwd
+      firstName: user.first_name,
+      lastName: user.last_name,
+      RoleId: user.role_id,
+      roleName: user.role_name,
+      password: pwd
     }
-
-    return this.http.post<User>(API_USER, body, opts);
+    return this.http.post<User>(API_USER, body);
   }
 
   getUserByFilter(user: User){
