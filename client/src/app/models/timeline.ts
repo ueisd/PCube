@@ -4,7 +4,7 @@ import { ExpenseAccountItem } from "./expense-account";
 import { ProjectItem } from "./project";
 import { User } from "./user";
 import { formatDate } from "@angular/common";
-import { DateManip } from "../utils/date-manip";
+import * as moment from 'moment-timezone';
 
 const format = 'yyyy-MM-dd';
 const locale = 'en-US';
@@ -32,6 +32,68 @@ export class TimelineItem{
         this.user_id = timelineResponse && timelineResponse.user_id || "";
         if(timelineResponse && timelineResponse.isChanged) this.isChanged = timelineResponse.isChanged;
         if(timelineResponse && timelineResponse.isDelete) this.isDelete = timelineResponse.isDelete;
+    }
+
+    static fetchPunchTzNY(day, h1, h2) {
+        let timezone = "America/New_York";
+        let a = moment.tz(day + " " + h1, timezone);
+        let b = moment.tz(day + " " + h2, timezone);
+        return {
+            punchIn: a.unix(),
+            punchOut: b.unix()
+        };
+    }
+
+    static fetchDay(timestamp) {
+        let t = timestamp;
+        let month = t.month()+1;
+        month = (month < 10) ? "0" + month : month;
+        let day = (t.date() < 10) ? "0" + t.date() : t.date();
+        return t.year() + "-" + month + "-" + day;
+      }
+    
+    static fetchHHMM(timestamp) {
+        let t = timestamp;
+        let hour = (t.hour() < 10) ? "0" + t.hour() : t.hour();
+        let min = (t.minute() < 10) ? '0' + t.minute() : t.minute();
+        return hour + ":" + min;
+      }
+
+    static fetchTimelineFromResponse(item) {
+        let timeIn = parseInt(item.punchIn);
+        let timeOut = parseInt(item.punchOut);
+        var a = moment.unix(timeIn);
+        var b = moment.unix(timeOut);
+        a.tz("America/New_York");
+        b.tz("America/New_York");
+
+        item.day_of_week = this.fetchDay(a);
+        item.punch_in  = this.fetchHHMM(a);
+        item.punch_out = this.fetchHHMM(b);
+        item.project_id = item.ProjectId;
+        item.expense_account_id = item.ExpenseAccountId;
+        item.user_id = item.UserId;
+        item.activity_id = item.ActivityId;
+        return new TimelineItem(item);
+    }
+    
+    fetchEntryFromTimeline():any {
+        let item: any = {};
+        if(this.id) item.id = this.id;
+        if(this.project_id)
+            item.ProjectId = this.project_id;
+        if(this.expense_account_id) 
+            item.ExpenseAccountId = this.expense_account_id;
+        if(this.user_id) 
+            item.UserId = this.user_id;
+        if(this.activity_id) 
+            item.ActivityId = this.activity_id;
+        let punch = TimelineItem.fetchPunchTzNY(
+            this.day_of_week, this.punch_in, this.punch_out
+        );
+        item.punchIn = punch.punchIn;
+        item.punchOut = punch.punchOut;
+        return item;
     }
 
     clone(): TimelineItem {

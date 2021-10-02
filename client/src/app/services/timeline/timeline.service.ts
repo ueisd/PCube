@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TimelineItem } from 'src/app/models/timeline';
 import { TimelineFilterItem } from 'src/app/models/timelineFilter';
 import { environment } from 'src/environments/environment';
 
-const API_TIMELINE = environment.api_url + "/api/timeline";
+const API_TIMELINE = environment.api_url + "api/api/timeline";
 const API_GET_FILTER = environment.api_url + "/api/timeline/filter";
 const API_UNIQUE_VALIDATION = environment.api_url + "/api/timeline/timelines-validation"
 
@@ -31,23 +31,24 @@ export class TimelineService {
   }
 
   addNewTimelines(timelines: TimelineItem[]): Observable<TimelineItem[]> {
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-        'Content-Type': 'application/json'
-      })
-    };
-    return this.http.post<TimelineItem[]>(API_TIMELINE, timelines, opts);
+    let entrys = timelines.map(timeline => {
+      return timeline.fetchEntryFromTimeline();
+    });
+    const body = {
+      timelines: entrys
+    }
+
+    return this.http.post<TimelineItem[]>(API_TIMELINE, body);
   }
 
   updateTimelines(timelines: TimelineItem[]): Observable<TimelineItem> {
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-        'Content-Type': 'application/json'
-      })
-    };
-    return this.http.put<TimelineItem>(API_TIMELINE, timelines, opts);
+    let entrys = timelines.map(timeline => {
+      return timeline.fetchEntryFromTimeline();
+    });
+    const body = {
+      timelines: entrys
+    }
+    return this.http.put<TimelineItem>(API_TIMELINE, body);
   }
 
   //@todo à supprimer
@@ -103,9 +104,7 @@ export class TimelineService {
 
   deleteTimelines(idsToDelete:number[]) {
     const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-      }),
+      headers: new HttpHeaders(),
       body: idsToDelete
     };
     return this.http.delete(API_TIMELINE, opts);

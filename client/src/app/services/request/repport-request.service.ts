@@ -8,9 +8,10 @@ import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
 import { environment } from 'src/environments/environment';
 import { TimelineItem } from 'src/app/models/timeline';
 import { map } from 'rxjs/operators';
+import * as moment from 'moment-timezone';
 
 const API_REPORT = environment.api_url + '/api/timeline/testsum';
-const API_GET_TIMELINES = environment.api_url + '/api/timeline/getLines';
+const API_GET_TIMELINES = environment.api_url + 'api/api/timeline/getLines';
 
 @Injectable({
   providedIn: 'root'
@@ -37,16 +38,44 @@ export class RepportRequestService {
     return this.http.post<ReportItem[]>(API_REPORT, params, opts);
   }
 
+  private fetchDay(timestamp) {
+    let t = timestamp;
+    let month = t.month()+1;
+    month = (month < 10) ? "0" + month : month;
+    let day = (t.date() < 10) ? "0" + t.date() : t.date();
+    return t.year() + "-" + month + "-" + day;
+  }
+
+  private fetchHHMM(timestamp) {
+    let t = timestamp;
+    let hour = (t.hour() < 10) ? "0" + t.hour() : t.hour();
+    let min = (t.minute() < 10) ? '0' + t.minute() : t.minute();
+    return hour + ":" + min;
+  }
+
+  fetchPunchFromDateTzNY(day1, min) {
+    let timezone = "America/New_York";
+    return (day1) ? moment.tz(day1 + " " + min, timezone).unix(): null;
+}
+
   getTimelines(params: ReportRequestForBackend): Observable<TimelineItem[]>{
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-        'Content-Type': 'application/json'
-      })
-    };
-    return this.http.post<TimelineItem[]>(API_GET_TIMELINES, params, opts).pipe(map(
-      timelines => timelines.map(
-        timeline => new TimelineItem(timeline)
+    // doit convertir dateDebut et dateFin
+
+    let paramsReq:any = params;
+    if(params.dateDebut) {
+      paramsReq.debut = this.fetchPunchFromDateTzNY(
+        params.dateDebut.toString(), " 00:00:00"
+      );
+    }
+    if(params.dateFin) {
+      paramsReq.fin = this.fetchPunchFromDateTzNY(
+        params.dateFin.toString(), " 23:59:59"
+      );
+    }
+    
+    return this.http.post<any[]>(API_GET_TIMELINES, paramsReq).pipe(map(
+      itemsResponse => itemsResponse.map(
+        item => TimelineItem.fetchTimelineFromResponse(item)
       )
     ));
   }

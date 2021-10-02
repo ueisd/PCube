@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+var moment = require('moment-timezone');
 
 
 exports.initSchemas = async (sequelize) => {
@@ -8,7 +9,8 @@ exports.initSchemas = async (sequelize) => {
         './role.model', 
         './activity.model',
         './project.model',
-        './expense-account.model'
+        './expense-account.model',
+        './timeline.model'
     ];
 
     for(fileName of schemasFiles) {
@@ -20,16 +22,35 @@ exports.initSchemas = async (sequelize) => {
     const Activity = sequelize.models.Activity;
     const Project = sequelize.models.Project;
     const ExpenseAccount = sequelize.models.ExpenseAccount;
-    
+    const Timeline = sequelize.models.Timeline;
 
+    // role
     Role.hasMany(User);
     User.belongsTo(Role);
 
+
+    // project
     Project.hasMany(Project);
     Project.belongsTo(Project);
 
+    
+    // expense account
     ExpenseAccount.hasMany(ExpenseAccount);
     ExpenseAccount.belongsTo(ExpenseAccount);
+
+
+    // timeline
+    User.hasMany(Timeline);
+    Timeline.belongsTo(User);
+
+    Project.hasMany(Timeline);
+    Timeline.belongsTo(Project);
+
+    Activity.hasMany(Timeline);
+    Timeline.belongsTo(Activity);
+    
+    ExpenseAccount.hasMany(Timeline);
+    Timeline.belongsTo(ExpenseAccount);
     
 
     //@todo si prod on utilise alter
@@ -47,7 +68,7 @@ exports.initSchemas = async (sequelize) => {
         RoleId: admin.id
     });*/
 
-    let test = await User.bulkCreate([
+    let users = await User.bulkCreate([
         { 
             email: 'A', 
             firstName: 'monsieur',
@@ -191,84 +212,227 @@ exports.initSchemas = async (sequelize) => {
     ]);
 
 
+    let activites = {};
 
-    const activites = await Activity.bulkCreate([
-        {name: 'Ditribution de prospectus'},
-        {name: 'Appel marketing'},
-        {name: 'Préparation marketing'},
-        {name: 'Commis à la vente'},
-        {name: 'Organisation événementielle'},
-    ]);
+    activites.NdistribProspectus = await Activity.create({
+        name: 'Ditribution de prospectus'
+    });
+    activites.NappelMarketing = await Activity.create({
+        name: 'Appel marketing'
+    });
+    activites.NpreparationMarketing = await Activity.create({
+        name: 'Préparation marketing'
+    });
+    activites.NcommisALavente = await Activity.create({
+        name: 'Commis à la vente'
+    });
+    activites.NorganisationEvenementielle = await Activity.create({
+        name: 'Organisation événementielle'
+    });
 
-    let projetVeloJeunesse2018 = await Project.create(
+    let projets = {};
+    projets.NprojetVeloJeunesse2018 = await Project.create(
         {name: "Vélo jeunesse 2018"}
     );
-    let marketingVeloJeunesse2018 = await Project.create(
+    projets.NmarketingVeloJeunesse2018 = await Project.create(
         {name: "Marketing vélo jeunesse 2018"}
     );
-    let administrationVeloJeunesse = await Project.create(
+    projets.NadministrationVeloJeunesse = await Project.create(
         {name: "Administration - vélo jeunesse 2018"}
     );
-    let ventesVeloJeunesse = await Project.create(
+    projets.NventesVeloJeunesse = await Project.create(
         {name: "Ventes - vélo jeunesse 2018"}
     );
 
-    let activiteMarketing5juin = await Project.create(
+    projets.NactiviteMarketing5juin = await Project.create(
         {name: "Marketing - 5 juin 2018"}
     );
 
-    let refonteComptabilite = await Project.create(
+    projets.NrefonteComptabilite = await Project.create(
         {name: "Refonte de la comptabilité"}
     );
 
-    await projetVeloJeunesse2018.setProjects([
-        marketingVeloJeunesse2018, 
-        administrationVeloJeunesse,
-        ventesVeloJeunesse
+    await projets.NprojetVeloJeunesse2018.setProjects([
+        projets.NmarketingVeloJeunesse2018, 
+        projets.NadministrationVeloJeunesse,
+        projets.NventesVeloJeunesse
     ]);
 
-    await marketingVeloJeunesse2018.setProjects([
-        activiteMarketing5juin
+    await projets.NmarketingVeloJeunesse2018.setProjects([
+        projets.NactiviteMarketing5juin
     ]);
 
 
+    let ea = {};
 
-
-    let administrationEA = await ExpenseAccount.create(
+    ea.NadministrationEA = await ExpenseAccount.create(
         {name: "administration"}
     );
 
-    let admin2018EA = await ExpenseAccount.create(
+    ea.Nadmin2018EA = await ExpenseAccount.create(
         {name: "administration - 2018"}
     ); 
 
-    let marketingEA = await ExpenseAccount.create(
+    ea.NmarketingEA = await ExpenseAccount.create(
         {name: "marketing"}
     ); 
 
-    let marketing2018EA = await ExpenseAccount.create(
+    ea.Nmarketing2018EA = await ExpenseAccount.create(
         {name: "marketing - 2018"}
     ); 
 
-    let ventesEA = await ExpenseAccount.create(
+    ea.NventesEA = await ExpenseAccount.create(
         {name: "ventes"}
     );
 
-    let ventes2018EA = await ExpenseAccount.create(
+    ea.Nventes2018EA = await ExpenseAccount.create(
         {name: "ventes - 2018"}
     );
 
 
-    administrationEA.setExpenseAccounts([admin2018EA]);
+    ea.NadministrationEA.setExpenseAccounts([ea.Nadmin2018EA]);
 
-    marketingEA.setExpenseAccounts([marketing2018EA]);
+    ea.NmarketingEA.setExpenseAccounts([ea.Nmarketing2018EA]);
 
-    ventesEA.setExpenseAccounts([ventes2018EA]);
+    ea.NventesEA.setExpenseAccounts([ea.Nventes2018EA]);
 
 
+    let punch = fetchPunchTzNY('2020-07-01', '08:00', '12:00');
+    let tl1 = await Timeline.create(
+        {
+            punchIn : punch.punchIn,
+            punchOut : punch.punchOut,
+            ProjectId : projets.NadministrationVeloJeunesse.id,
+            ExpenseAccountId : ea.NadministrationEA.id,
+            ActivityId : activites.NcommisALavente.id, 
+            UserId: users[4].id
+        }
+    );
+
+    punch = fetchPunchTzNY('2020-07-01', '13:00', '17:00');
+    let tl2 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[4].id
+    });
+
+    punch = fetchPunchTzNY('2020-07-02', '08:00', '12:00');
+    let tl3 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[4].id
+    });
+
+    punch = fetchPunchTzNY('2020-07-03', '06:00', '12:00')
+    let tl4 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[4].id
+    });
+
+    punch = fetchPunchTzNY('2020-07-03', '16:00', '18:00');
+    let tl5 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[4].id
+    });
+    
+    punch = fetchPunchTzNY('2020-07-05', '08:00', '12:00')
+    let tl6 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[4].id
+    });
+
+    punch = fetchPunchTzNY('2020-07-01', '08:00', '12:00');
+    let tl7 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[4].id
+    });
+
+    punch = fetchPunchTzNY('2020-07-01', '13:00', '17:00');
+    let tl8 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[5].id
+    });
+    
+    punch = fetchPunchTzNY('2020-07-02', '08:00', '12:00')
+    let tl9 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[5].id
+    });
+
+    punch = fetchPunchTzNY('2020-07-03', '06:00', '12:00');
+    let tl10 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[5].id
+    });
+
+    punch = fetchPunchTzNY('2020-07-03', '16:00', '18:00');
+    let tl11 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[5].id
+    });
+    
+    punch = fetchPunchTzNY('2020-07-05', '08:00', '12:00');
+    let tl12 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NadministrationVeloJeunesse.id,
+        ExpenseAccountId : ea.NadministrationEA.id,
+        ActivityId : activites.NcommisALavente.id, 
+        UserId: users[5].id
+    }); // 3, 4, 2, 5
+    
+    //debut à 3, 4, 2, 17
 
     //await membre.setUsers([jane]);
 
     //console.log(await membre.hasUser(jane));
       
+}
+
+function fetchPunchTzNY(day, h1, h2) {
+    let timezone = "America/New_York";
+    let a = moment.tz(day + " " + h1, timezone);
+    let b = moment.tz(day + " " + h2, timezone);
+    return {
+        punchIn: a.unix(),
+        punchOut: b.unix()
+    };
 }
