@@ -58,7 +58,7 @@ export const APP_ROUTING: Route[] = [
       {
         path: 'gestion-des-lignes-de-temps',
         component: TimelineComponent,
-        canActivate: [AuthGuard, ProjectManagerGuard]
+        canActivate: [AuthGuard, MemberGuard]
       },
       {
         path: '404', 

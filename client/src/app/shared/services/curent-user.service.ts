@@ -22,6 +22,10 @@ export class CurentUserService {
 
     public updateCurentUser(user: User){
         let modified = false;
+        if(user.id && this.curentUser.value.id != user.id) {
+            this.curentUser.value.id = user.id;
+            modified = true;
+        }
         if(user.email && this.curentUser.value.email != user.email) {
             this.curentUser.value.email = user.email;
             modified = true;
@@ -46,7 +50,6 @@ export class CurentUserService {
             this.curentUser.value.accessLevel = accessLevel;
             modified = true;
         }
-        console.log(this.curentUser.value);
         if(modified)
             this.curentUser.next(this.curentUser.value);    
     }

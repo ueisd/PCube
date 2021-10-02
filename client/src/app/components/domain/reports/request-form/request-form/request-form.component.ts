@@ -92,8 +92,12 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
       if(this.params.users.length && this.params.users.length > 0)
         this.requestForm.controls['isUsers'].setValue(true);
     } else {
-      let email = this.curentUserService.curentUser.value.email;
-      this.member = await this.userService.getUser(new User({"email" : email})).toPromise();
+      let usr = this.curentUserService.curentUser.value;
+      this.member = new User();
+      this.member.first_name = usr.firstName;
+      this.member.last_name = usr.lastName;
+      this.member.email = usr.email;
+      this.member.id = usr.id;
       this.member.display_string = this.member.first_name + " " + this.member.last_name;
       this.requestForm.controls['users'].setValue(this.member.display_string);
     }

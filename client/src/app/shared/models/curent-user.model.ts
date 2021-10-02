@@ -1,4 +1,5 @@
 export class CurentUser {
+    id: number;
     email: string;
     firstName: string;
     lastName: string;
@@ -6,6 +7,7 @@ export class CurentUser {
     roleName:string;
 
     constructor() {
+        this.id = -1;
         this.email = '';
         this.firstName = '';
         this.lastName = '';

@@ -1,6 +1,7 @@
 const router = require('express').Router();
 const { User } = require('../models/user.model');
 const { isLoggedIn } = require('../guards/isLoggedIn.guard');
+const bcrypt = require('bcrypt');
 
 router.get('/curent', isLoggedIn, (req, res) => {
   User.findUserById(req.user.id).then(user => {
@@ -51,6 +52,8 @@ router.get('/', isLoggedIn, (req, res) => {
 
 router.post('/', isLoggedIn, async (req, res) => {
   let user = req.body;
+  let password = user.password.trim();
+  user.password = bcrypt.hashSync(password, bcrypt.genSaltSync(8)),
   user.firstName = user.firstName.trim();
   user.lastName = user.lastName.trim();
   user.email = user.email.trim();

@@ -29,7 +29,6 @@ import { MomentDateAdapter }              from '@angular/material-moment-adapter
 
 // services
 import { AuthService }                    from './shared/services/auth.service';
-import { UserService }                    from './shared/services/user.service';
 import { CurentUserService }              from './shared/services/curent-user.service';
 
 // interceptors
@@ -190,7 +189,6 @@ const MY_FORMATS = {
       useValue: {} // Add any data you wish to test if it is passed/used correctly
     },
     AuthService,
-    UserService,
     CurentUserService,
     AuthGuard,
     AdminGuard,

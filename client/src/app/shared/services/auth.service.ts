@@ -1,10 +1,9 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { User } from "../models/user.model";
+import { User } from 'src/app/models/user'
 import { Observable, BehaviorSubject, timer, of, Subscription } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { JwtToken } from "../models/jwt-token.model";
 import { tap, switchMap, catchError } from "rxjs/operators";
-import { UserService } from "./user.service";
 import { CurentUser } from "../models/curent-user.model";
 import { CurentUserService } from "./curent-user.service";
 
@@ -13,7 +12,6 @@ export class AuthService implements OnDestroy{
   private timeRefresToken = 200000; //200 secondes
 
   public subscription: Subscription;
-  public curentUser: CurentUser;
   private jwtSubscription: Subscription; 
 
   public jwtToken: BehaviorSubject<JwtToken> = new BehaviorSubject({
@@ -24,10 +22,8 @@ export class AuthService implements OnDestroy{
 
   constructor(
     private http: HttpClient,
-    private userService: UserService,
     private curentUserService: CurentUserService
   ) {
-    this.curentUser = new CurentUser();
     this.jwtSubscription = this.jwtToken.subscribe(token => {
       if(token.isAuthenticated) {
         this.curentUserService.getCurentUserFromApi().toPromise().then(user => {
@@ -90,10 +86,6 @@ export class AuthService implements OnDestroy{
     }
   }
 
-  public signup(user: User): Observable<User> {
-    return this.http.post<User>("/api/api/auth/signup", user);
-  }
-
 
 
   public signin(credentials: {
@@ -121,7 +113,7 @@ export class AuthService implements OnDestroy{
       isAuthenticated: false,
       token: null,
     });
-    this.userService.currentUser.next(null);
+    this.curentUserService.curentUser.next(new CurentUser()); // @todo next(null);
     localStorage.removeItem("jwt");
   }
 
