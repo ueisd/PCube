@@ -1,19 +1,15 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
-import { identifierModuleUrl } from '@angular/compiler';
 
 const SEPARATOR: string = " * ";
 
 const API_EXPENSE_ACCOUNT = environment.api_url + "api/api/expense-account";
 const API_IS_UNIQUE = environment.api_url + "api/api/expense-account/is-name-unique";
-const API_AUTOCOMPLTE = environment.api_url + "api/expense-account/autocomplete";
-const API_FILTER = environment.api_url + "/api/expense-account/filter";
-const API_ONE_LEVEL_FILTER = environment.api_url + "/api/expense-account/filter/one-level";
 const API_IS_DELETABLE = environment.api_url + "api/api/expense-account/is-deletable";
 
 
@@ -44,6 +40,40 @@ export class ExpenseAccountService {
         }
     ));
   }
+
+  
+
+  isNameUnique(name, id): Observable<boolean> {
+    let body = {id:id, name: name}; 
+    return this.http.post<boolean>(API_IS_UNIQUE, body);
+  }
+
+  addExpenseAccount(compte: ExpenseAccountItem): Observable<ExpenseAccountItem>{
+    let body = {
+      name: compte.name,
+      ExpenseAccountId: compte.parent_id,
+    }
+    return this.http.post<ExpenseAccountItem>(API_EXPENSE_ACCOUNT, body)
+  }
+
+  deleteExpenseAccount(id) {
+    return this.http.delete(API_EXPENSE_ACCOUNT + "/" + id);
+  }
+
+  isExpenseAccountDeletable(id): Observable<boolean> {
+    let url = API_IS_DELETABLE + "/" + id;
+    return this.http.get<boolean>(url);
+  }
+
+  updateExpenseAccount(compte: ExpenseAccountItem): Observable<ExpenseAccountItem>{
+    let body = {
+      id: compte.id,
+      name: compte.name,
+      ExpenseAccountId: compte.parent_id,
+    }
+    return this.http.put<ExpenseAccountItem>(API_EXPENSE_ACCOUNT, body);
+  }
+
 
   //équivalent de getParentOptions
   private getApparentableExpenseAccounts(id: number): Observable<ExpenseAccountItem[]>{
@@ -82,69 +112,6 @@ export class ExpenseAccountService {
       }
     }
     return retour;
-  }
-
-  isNameUnique(name, id): Observable<boolean> {
-    let body = {id:id, name: name}; 
-    return this.http.post<boolean>(API_IS_UNIQUE, body);
-  }
-
-  getProjectNameForAutocomplete(name): Observable<ExpenseAccountItem[]>{
-    var url = API_AUTOCOMPLTE + "/" + name
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
-      })
-    };
-    return this.http.get<ExpenseAccountItem[]>(url, opts);
-  }
-
-  filterExpenseAccount(expenseAccount: ExpenseAccountItem): Observable<ExpenseAccountItem[]>{
-    let url = API_FILTER + "?name=" + expenseAccount.name;
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
-      })
-    };
-    return this.http.get<ExpenseAccountItem[]>(url, opts);
-  }
-
-  addExpenseAccount(compte: ExpenseAccountItem): Observable<ExpenseAccountItem>{
-    let body = {
-      name: compte.name,
-      ExpenseAccountId: compte.parent_id,
-    }
-    return this.http.post<ExpenseAccountItem>(API_EXPENSE_ACCOUNT, body)
-  }
-
-  oneLevelFilterExpenseAccount(expenseAccount: ExpenseAccountItem): Observable<ExpenseAccountItem[]>{
-    let url = API_ONE_LEVEL_FILTER + "?name=" + expenseAccount.name;
-    url += "&id=" + expenseAccount.id;
-
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken')  // tslint:disable-line:object-literal-key-quotes
-      })
-    };
-    return this.http.get<ExpenseAccountItem[]>(url, opts);
-  }
-
-  deleteExpenseAccount(id) {
-    return this.http.delete(API_EXPENSE_ACCOUNT + "/" + id);
-  }
-
-  isExpenseAccountDeletable(id): Observable<boolean> {
-    let url = API_IS_DELETABLE + "/" + id;
-    return this.http.get<boolean>(url);
-  }
-
-  updateExpenseAccount(compte: ExpenseAccountItem): Observable<ExpenseAccountItem>{
-    let body = {
-      id: compte.id,
-      name: compte.name,
-      ExpenseAccountId: compte.parent_id,
-    }
-    return this.http.put<ExpenseAccountItem>(API_EXPENSE_ACCOUNT, body);
   }
 
 }

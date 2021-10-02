@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ReportRequest } from 'src/app/models/report-request';
 import { Subject } from 'rxjs/internal/Subject';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { ReportItem } from 'src/app/models/report-item';
 import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
@@ -41,21 +41,6 @@ export class RepportRequestService {
       );
     }
     return this.http.post<ReportItem[]>(API_REPORT, params);
-  }
-
-  private fetchDay(timestamp) {
-    let t = timestamp;
-    let month = t.month()+1;
-    month = (month < 10) ? "0" + month : month;
-    let day = (t.date() < 10) ? "0" + t.date() : t.date();
-    return t.year() + "-" + month + "-" + day;
-  }
-
-  private fetchHHMM(timestamp) {
-    let t = timestamp;
-    let hour = (t.hour() < 10) ? "0" + t.hour() : t.hour();
-    let min = (t.minute() < 10) ? '0' + t.minute() : t.minute();
-    return hour + ":" + min;
   }
 
   fetchPunchFromDateTzNY(day1, min) {

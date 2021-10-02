@@ -3,7 +3,11 @@ const { User } = require('../models/user.model');
 const { isLoggedIn } = require('../guards/isLoggedIn.guard');
 
 router.get('/curent', isLoggedIn, (req, res) => {
-  res.json(req.user);
+  User.findUserById(req.user.id).then(user => {
+    res.json(user)
+  }).catch(err => {
+    res.status(401).json('error' + err);
+  })
 });
 
 router.get('/emailUnique/:email', isLoggedIn, (req, res) => {

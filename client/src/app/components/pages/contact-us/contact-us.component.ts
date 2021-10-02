@@ -4,7 +4,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { UtilsService } from 'src/app/services/utils/utils.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
-import { AuthService } from 'src/app/services/auth/auth.service';
+import { CurentUserService } from 'src/app/shared/services/curent-user.service'
 
 @Component({
   selector: 'app-contact-us',
@@ -19,11 +19,15 @@ export class ContactUsComponent implements OnInit {
 
   constructor(private utilsService : UtilsService,
     private snackBar : MatSnackBar,
-    private authService : AuthService) { }
+    private currentUserService : CurentUserService
+  ) { }
 
   async ngOnInit() {
     this.initForm();
-    this.user = await this.authService.getAuthenticatedUser().toPromise();
+    let us = this.currentUserService.curentUser.getValue();
+    this.user.email = us.email;
+    this.user.first_name = us.firstName;
+    this.user.last_name = us.lastName;
     this.setDefaultValues();
   }
   

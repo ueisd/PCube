@@ -34,7 +34,6 @@ import { CurentUserService }              from './shared/services/curent-user.se
 
 // interceptors
 import { AuthInterceptor }                from './shared/interceptors/auth.interceptor';
-import { GlobalHttpInterceptorService }   from './services/Interceptor/GlobalHttpInterceptor.service';
 
 
 // routing
@@ -42,6 +41,9 @@ import { APP_ROUTING }                    from './app-routing.module';
 
 // guards
 import { AuthGuard }                      from './shared/guards/auth.guard';
+import { AdminGuard }                     from './shared/guards/admin.guard';
+import { ProjectManagerGuard }            from './shared/guards/project_manager.guard';
+import { MemberGuard }                    from './shared/guards/member.guard';
 
 // components
 import { AppComponent } 
@@ -191,6 +193,9 @@ const MY_FORMATS = {
     UserService,
     CurentUserService,
     AuthGuard,
+    AdminGuard,
+    ProjectManagerGuard,
+    MemberGuard
   ],
   entryComponents: [AddActivityComponent],
   exports:[UserListComponent, AddActivityComponent],

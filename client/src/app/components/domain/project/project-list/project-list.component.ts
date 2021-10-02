@@ -70,7 +70,7 @@ export class ProjectListComponent implements OnInit {
 
   async openDeleteDialog(project: ProjectItem) {
 
-    this.isDeletable = await this.projectService.isProjectDeletable(project.id, project.name).toPromise();
+    this.isDeletable = await this.projectService.isProjectDeletable(project.id).toPromise();
     const dialogConfig = this.dialog.open(DeleteProjectComponent, {
       data: {
         id: project.id,

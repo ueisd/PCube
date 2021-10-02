@@ -5,19 +5,19 @@ import { Role } from 'src/app/models/role';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 
+const API_ROLE = environment.api_url + '/api/api/roles';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RoleService {
-  url = environment.api_url + '/api/api/roles';
   constructor(private http : HttpClient) { }
 
   getRoles() : Observable<Role[]>{
-    return this.http.get<Role[]>(this.url).pipe(
-      map(users => users.map(response => {
-        return Role.fetchFromRoleResponse(response);
-      }))
+    return this.http.get<Role[]>(API_ROLE).pipe(
+      map(users => users.map(response => 
+        Role.fetchFromRoleResponse(response)
+      ))
     );
   }
 }

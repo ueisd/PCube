@@ -3,12 +3,14 @@ export class CurentUser {
     firstName: string;
     lastName: string;
     accessLevel: number;
+    roleName:string;
 
     constructor() {
         this.email = '';
         this.firstName = '';
         this.lastName = '';
         this.accessLevel = 0;
+        this.roleName = "";
     }
 
     getFullName() {

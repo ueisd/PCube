@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } 
+  from '@angular/router';
 import { Observable } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { JwtToken } from '../models/jwt-token.model';
@@ -16,10 +17,19 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean> {
       return this.authService.jwtToken.pipe(
-        map( (jwtToken: JwtToken) => {
-          return jwtToken.isAuthenticated;
-        })
+        map( (jwtToken: JwtToken) => 
+          jwtToken.isAuthenticated
+        )
       );
+  }
 
+  canActivateChild(
+    next: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot): Observable<boolean> {
+      return this.authService.jwtToken.pipe(
+        map( (jwtToken: JwtToken) => 
+          jwtToken.isAuthenticated
+        )
+      );
   }
 }

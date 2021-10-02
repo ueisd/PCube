@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { RepportRequestService } from 'src/app/services/request/repport-request.service';
+import { RepportRequestService } 
+  from 'src/app/services/request/repport-request.service';
 import { ReportItem } from 'src/app/models/report-item';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
@@ -49,7 +50,11 @@ export class ReportsComponent implements OnInit {
     node => node.level, node => node.expandable);
 
   treeFlattener = new MatTreeFlattener(
-      this._transformer, node => node.level, node => node.expandable, node => node.child);
+      this._transformer, 
+      node => node.level, 
+      node => node.expandable, 
+      node => node.child
+  );
 
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
@@ -64,14 +69,18 @@ export class ReportsComponent implements OnInit {
   ngOnInit(): void {
     if(history.state.params) {
       this.reportRequest = history.state.params;
-      this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(history.state.params);
+      this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(
+        history.state.params
+      );
       this.refreshReport();
     }
 
     this.reportReqSubscription = this.reportReqService.paramsAnnounced$.subscribe(
       params => {
         this.reportRequest = params;
-        this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(params);
+        this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(
+          params
+        );
         this.refreshReport();
       }
     ); 
@@ -90,7 +99,9 @@ export class ReportsComponent implements OnInit {
   }
 
   async refreshReport() {
-    let reportsI: ReportItem[] = await this.reportReqService.getReport(this.reportRequestBackend).toPromise();
+    let reportsI: ReportItem[] = await this.reportReqService.getReport(
+      this.reportRequestBackend
+    ).toPromise();
     let tree = {
       itemList: reportsI,
       fieldsNames: {
