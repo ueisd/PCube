@@ -1,8 +1,7 @@
 const router = require('express').Router();
 const { isLoggedIn } = require('../guards/isLoggedIn.guard');
 const { Timeline } = require('../models/timeline.model');
-const { Sequelize } = require('sequelize');
-const Op = Sequelize.Op;
+
 
 
 router.put('/', isLoggedIn, async (req, res)  => {
@@ -34,38 +33,9 @@ router.post('/', isLoggedIn, (req, res) => {
 
 router.post('/getLines', isLoggedIn, (req, res) => {
     let params = req.body;
-    console.log('getLines');
-    console.log(params);
 
-    
-
-    let projectsIds = params.projects;
-    let activitysIds = params.activitys;
-    let usersIds = params.users;
-
-    let whereClauses = {};
-
-    if(projectsIds.length > 0)
-        whereClauses.ProjectId = projectsIds;
-    if(activitysIds.length > 0)
-        whereClauses.ActivityId = activitysIds;
-    if(usersIds.length > 0 )
-        whereClauses.UserId = usersIds;
-
-    if(params.debut) {
-        whereClauses.punchIn = {[Op.gte]: params.debut}
-    }
-    if(params.fin) {
-        whereClauses.punchOut = {[Op.lte]: params.fin}
-    }
-
-
-    Timeline.findAll({
-        where: whereClauses,
-        raw: true 
-    })
+    Timeline.getAllFromReqParams(params)
     .then(response => {
-        //console.log(response);
         res.json(response);
     })
     .catch(err => {

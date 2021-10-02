@@ -31,5 +31,32 @@ module.exports.initModel = function(sequelize) {
         }
         
     );
+
+    Timeline.getAllFromReqParams = (params) => {
+        let projectsIds = params.projects;
+        let activitysIds = params.activitys;
+        let usersIds = params.users;
+
+        let whereClauses = {};
+
+        if(projectsIds.length > 0)
+            whereClauses.ProjectId = projectsIds;
+        if(activitysIds.length > 0)
+            whereClauses.ActivityId = activitysIds;
+        if(usersIds.length > 0 )
+            whereClauses.UserId = usersIds;
+
+        if(params.debut) {
+            whereClauses.punchIn = {[Op.gte]: params.debut}
+        }
+        if(params.fin) {
+            whereClauses.punchOut = {[Op.lte]: params.fin}
+        }
+
+        return Timeline.findAll({
+            where: whereClauses,
+            raw: true 
+        })
+    }
     return Timeline;
 }
