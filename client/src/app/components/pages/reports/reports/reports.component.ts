@@ -6,6 +6,7 @@ import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree'
 import { ReportRequest } from 'src/app/models/report-request';
 import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
 import { Subscription } from 'rxjs';
+import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 
 @Component({
   selector: 'app-reports',
@@ -76,10 +77,32 @@ export class ReportsComponent implements OnInit {
     ); 
   }
 
+  private static updateTreeSum (dataTree) {
+    for(let rootItem of dataTree)
+      this.updateSum(rootItem)
+  }
+
+  private static updateSum(item) {
+    item.sumTotal = item.summline;
+    for(let child of item.child)
+      item.sumTotal += this.updateSum(child);
+    return item.sumTotal;
+  }
+
   async refreshReport() {
     let reportsI: ReportItem[] = await this.reportReqService.getReport(this.reportRequestBackend).toPromise();
-    this.dataSource.data = reportsI;
-    this.reportsItems = reportsI;
+    let tree = {
+      itemList: reportsI,
+      fieldsNames: {
+          childs: 'child',
+          id: 'id',
+          parentId: 'parent_id'
+      },
+    }
+    let dataTree = DataTreeFetcher.fetchProjectTree<ReportItem>(tree);
+    ReportsComponent.updateTreeSum(dataTree);
+    this.dataSource.data = dataTree;
+    this.reportsItems = dataTree;
     this.treeControl.expandAll();
   }
 

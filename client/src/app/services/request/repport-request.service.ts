@@ -10,7 +10,7 @@ import { TimelineItem } from 'src/app/models/timeline';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
 
-const API_REPORT = environment.api_url + '/api/timeline/testsum';
+const API_REPORT = environment.api_url + 'api/api/timeline/report';
 const API_GET_TIMELINES = environment.api_url + 'api/api/timeline/getLines';
 
 @Injectable({
@@ -29,13 +29,18 @@ export class RepportRequestService {
   ngOnInit(): void {}
 
   getReport(params: ReportRequestForBackend): Observable<ReportItem[]>{
-    const opts = {
-      headers: new HttpHeaders({
-        'Authorization': 'Bearer ' + localStorage.getItem('accessToken'),
-        'Content-Type': 'application/json'
-      })
-    };
-    return this.http.post<ReportItem[]>(API_REPORT, params, opts);
+    let paramsReq:any = params;
+    if(params.dateDebut) {
+      paramsReq.debut = this.fetchPunchFromDateTzNY(
+        params.dateDebut.toString(), " 00:00:00"
+      );
+    }
+    if(params.dateFin) {
+      paramsReq.fin = this.fetchPunchFromDateTzNY(
+        params.dateFin.toString(), " 23:59:59"
+      );
+    }
+    return this.http.post<ReportItem[]>(API_REPORT, params);
   }
 
   private fetchDay(timestamp) {

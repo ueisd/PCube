@@ -364,7 +364,7 @@ exports.initSchemas = async (sequelize) => {
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
+        ExpenseAccountId : ea.NmarketingEA.id,
         ActivityId : activites.NcommisALavente.id, 
         UserId: users[4].id
     });
@@ -374,7 +374,7 @@ exports.initSchemas = async (sequelize) => {
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
+        ExpenseAccountId : ea.NmarketingEA.id,
         ActivityId : activites.NcommisALavente.id, 
         UserId: users[5].id
     });
@@ -384,7 +384,7 @@ exports.initSchemas = async (sequelize) => {
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
+        ExpenseAccountId : ea.NmarketingEA.id,
         ActivityId : activites.NcommisALavente.id, 
         UserId: users[5].id
     });
@@ -399,22 +399,22 @@ exports.initSchemas = async (sequelize) => {
         UserId: users[5].id
     });
 
-    punch = fetchPunchTzNY('2020-07-03', '16:00', '18:00');
+    punch = fetchPunchTzNY('2020-07-03', '16:00', '16:01');
     let tl11 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
+        ExpenseAccountId : ea.Nventes2018EA.id,
         ActivityId : activites.NcommisALavente.id, 
         UserId: users[5].id
     });
     
-    punch = fetchPunchTzNY('2020-07-05', '08:00', '12:00');
+    punch = fetchPunchTzNY('2020-07-05', '08:00', '08:01');
     let tl12 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
+        ExpenseAccountId : ea.Nventes2018EA.id,
         ActivityId : activites.NcommisALavente.id, 
         UserId: users[5].id
     }); // 3, 4, 2, 5
