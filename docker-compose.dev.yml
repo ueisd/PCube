@@ -27,33 +27,7 @@ services:
 #      - backend-net
     depends_on:
       - db
-  api:
-    build:
-      context: ./api
-      dockerfile: Dockerfile.dev
-      target: debug
-    stdin_open: true
-    volumes:
-      - type: bind
-        source: ./api/src
-        target: /app/src
-    ports:
-      - 5000:80
-      - 10001:10001
-    environment:
-      - DEBUGGER=True
-      - EMAIL_USERNAME=${EMAIL_USERNAME} 
-      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
-      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
-      - DATABASE_USER=${DATABASE_USER}
-      - DATABASE_HOST=${DATABASE_HOST}
-      - DATABASE_DB=${DATABASE_DB}
-      - SECRET_KEY=${SECRET_KEY}
-      - DATABASE_USER2=${DATABASE_USER}
-    entrypoint: ["python3", "-m", "flask", "run", "--host=0.0.0.0", "-p", "80"]
-    depends_on:
-      - db
-  #docker run -it --network pcube_default --rm 39b149522983 mysql -h pcube_db_1 -u root -p
+#   entrypoint: ["python3", "-m", "flask", "run", "--host=0.0.0.0", "-p", "80"]
   db:
     build:
       context: ./database
