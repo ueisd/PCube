@@ -34,25 +34,11 @@ loadConfig()
     var sequelize = getSequelize();
     return initSchemas(sequelize);
   }).then(res => {
-    var allowedOrigins = [
-      'http://client',
-    ];
     let apiOrigin = nconf.get('api_url_origin');
-    if(apiOrigin) allowedOrigins.push(apiOrigin);
-    app.use(cors({
-      origin: function(origin, callback){
-        // allow requests with no origin 
-        // (like mobile apps or curl requests)
-        if(!origin) return callback(null, true);
-        if(allowedOrigins.indexOf(origin) === -1){
-          var msg = 'The CORS policy for this site does not ' +
-                    'allow access from the specified Origin. ' + origin +  ' l';
-          //console.log(msg);
-          return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-      }
-    }));
+    if(apiOrigin)
+      app.use(cors({origin: apiOrigin}));
+    else
+      app.use(cors());
     app.use(index);
 
     app.get('/', (req, res) => {
