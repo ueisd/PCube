@@ -77,21 +77,23 @@ exports.initSchemas = async (sequelize) => {
         RoleId: admin.id
     });
 
+    usersLs.NprojectManager = User.create({ 
+        email: 'PM', 
+        firstName: 'monsieur',
+        lastName: 'yota',
+        password: bcrypt.hashSync('pm', bcrypt.genSaltSync(8)),
+        RoleId: pm.id
+    });
+
+    usersLs.Nmember = User.create({ 
+        email: 'M', 
+        firstName: 'monsieur',
+        lastName: 'xeta',
+        password: bcrypt.hashSync('m', bcrypt.genSaltSync(8)),
+        RoleId: membre.id
+    });
+
     let users = await User.bulkCreate([
-        { 
-            email: 'PM', 
-            firstName: 'monsieur',
-            lastName: 'yota',
-            password: bcrypt.hashSync('pm', bcrypt.genSaltSync(8)),
-            RoleId: pm.id
-        },
-        { 
-            email: 'M', 
-            firstName: 'monsieur',
-            lastName: 'xeta',
-            password: bcrypt.hashSync('m', bcrypt.genSaltSync(8)),
-            RoleId: membre.id
-        },
         { 
             email: 'Taylor@Rosales.com', 
             firstName: 'Taylor',
@@ -311,7 +313,7 @@ exports.initSchemas = async (sequelize) => {
             UserId: usersLs.Nadmin.id
         }
     );
-        /*
+        
     punch = fetchPunchTzNY('2020-07-01', '13:00', '17:00');
     let tl2 = await Timeline.create({
         punchIn : punch.punchIn,
@@ -319,9 +321,9 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.NadministrationEA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[4].id
+        UserId: usersLs.NprojectManager.id
     });
-
+    
     punch = fetchPunchTzNY('2020-07-02', '08:00', '12:00');
     let tl3 = await Timeline.create({
         punchIn : punch.punchIn,
@@ -329,9 +331,9 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.NadministrationEA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[4].id
+        UserId: usersLs.Nmember.id
     });
-
+    /*
     punch = fetchPunchTzNY('2020-07-03', '06:00', '12:00')
     let tl4 = await Timeline.create({
         punchIn : punch.punchIn,
