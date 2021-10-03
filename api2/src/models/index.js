@@ -93,21 +93,23 @@ exports.initSchemas = async (sequelize) => {
         RoleId: membre.id
     });
 
+    usersLs.NtaylorRosales = User.create({ 
+        email: 'Taylor@Rosales.com', 
+        firstName: 'Taylor',
+        lastName: 'Rosales',
+        password: bcrypt.hashSync('taylor', bcrypt.genSaltSync(8)),
+        RoleId: membre.id
+    });
+
+    usersLs.NannabelFischer = User.create({ 
+        email: 'Annabel@Fischer', 
+        firstName: 'Annabel',
+        lastName: 'Fischer',
+        password: bcrypt.hashSync('annabel', bcrypt.genSaltSync(8)),
+        RoleId: membre.id
+    });
+
     let users = await User.bulkCreate([
-        { 
-            email: 'Taylor@Rosales.com', 
-            firstName: 'Taylor',
-            lastName: 'Rosales',
-            password: bcrypt.hashSync('taylor', bcrypt.genSaltSync(8)),
-            RoleId: membre.id
-        },
-        { 
-            email: 'Annabel@Fischer', 
-            firstName: 'Annabel',
-            lastName: 'Fischer',
-            password: bcrypt.hashSync('annabel', bcrypt.genSaltSync(8)),
-            RoleId: membre.id
-        },
         { 
             email: 'Anya@Hammond.com', 
             firstName: 'Anya',
@@ -333,7 +335,7 @@ exports.initSchemas = async (sequelize) => {
         ActivityId : activites.NcommisALavente.id, 
         UserId: usersLs.Nmember.id
     });
-    /*
+    
     punch = fetchPunchTzNY('2020-07-03', '06:00', '12:00')
     let tl4 = await Timeline.create({
         punchIn : punch.punchIn,
@@ -341,7 +343,7 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.NadministrationEA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[4].id
+        UserId: usersLs.NannabelFischer.id
     });
 
     punch = fetchPunchTzNY('2020-07-03', '16:00', '18:00');
@@ -351,7 +353,7 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.NadministrationEA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[4].id
+        UserId: usersLs.NannabelFischer.id
     });
     
     punch = fetchPunchTzNY('2020-07-05', '08:00', '12:00')
@@ -361,7 +363,7 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.NadministrationEA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[4].id
+        UserId: usersLs.NannabelFischer.id
     });
 
     punch = fetchPunchTzNY('2020-07-01', '08:00', '12:00');
@@ -371,7 +373,7 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.NmarketingEA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[4].id
+        UserId: usersLs.NannabelFischer.id
     });
 
     punch = fetchPunchTzNY('2020-07-01', '13:00', '17:00');
@@ -381,7 +383,7 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.NmarketingEA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[5].id
+        UserId: usersLs.NannabelFischer.id
     });
     
     punch = fetchPunchTzNY('2020-07-02', '08:00', '12:00')
@@ -391,7 +393,7 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.NmarketingEA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[5].id
+        UserId: usersLs.NannabelFischer.id
     });
 
     punch = fetchPunchTzNY('2020-07-03', '06:00', '12:00');
@@ -401,7 +403,7 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.NadministrationEA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[5].id
+        UserId: usersLs.NannabelFischer.id
     });
 
     punch = fetchPunchTzNY('2020-07-03', '16:00', '16:01');
@@ -411,7 +413,7 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.Nventes2018EA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[5].id
+        UserId: usersLs.NannabelFischer.id
     });
     
     punch = fetchPunchTzNY('2020-07-05', '08:00', '08:01');
@@ -421,9 +423,8 @@ exports.initSchemas = async (sequelize) => {
         ProjectId : projets.NadministrationVeloJeunesse.id,
         ExpenseAccountId : ea.Nventes2018EA.id,
         ActivityId : activites.NcommisALavente.id, 
-        UserId: users[5].id
+        UserId: usersLs.NannabelFischer.id
     }); // 3, 4, 2, 5
-    */
     
     //debut à 3, 4, 2, 17
 
