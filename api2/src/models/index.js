@@ -68,14 +68,16 @@ exports.initSchemas = async (sequelize) => {
         RoleId: admin.id
     });*/
 
+    let usersLs = {};
+    usersLs.Nadmin = User.create({ 
+        email: 'A', 
+        firstName: 'monsieur',
+        lastName: 'zeta',
+        password: bcrypt.hashSync('a', bcrypt.genSaltSync(8)),
+        RoleId: admin.id
+    });
+
     let users = await User.bulkCreate([
-        { 
-            email: 'A', 
-            firstName: 'monsieur',
-            lastName: 'zeta',
-            password: bcrypt.hashSync('a', bcrypt.genSaltSync(8)),
-            RoleId: admin.id
-        },
         { 
             email: 'PM', 
             firstName: 'monsieur',
@@ -297,7 +299,7 @@ exports.initSchemas = async (sequelize) => {
     await ea.NventesEA.setExpenseAccounts([ea.Nventes2018EA]);
 
 
-    /*
+    console.log(usersLs.Nadmin);
     let punch = fetchPunchTzNY('2020-07-01', '08:00', '12:00');
     let tl1 = await Timeline.create(
         {
@@ -306,10 +308,10 @@ exports.initSchemas = async (sequelize) => {
             ProjectId : projets.NadministrationVeloJeunesse.id,
             ExpenseAccountId : ea.NadministrationEA.id,
             ActivityId : activites.NcommisALavente.id, 
-            UserId: users[4].id
+            UserId: usersLs.Nadmin.id
         }
     );
-
+        /*
     punch = fetchPunchTzNY('2020-07-01', '13:00', '17:00');
     let tl2 = await Timeline.create({
         punchIn : punch.punchIn,
