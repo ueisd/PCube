@@ -297,6 +297,7 @@ exports.initSchemas = async (sequelize) => {
     await ea.NventesEA.setExpenseAccounts([ea.Nventes2018EA]);
 
 
+    /*
     let punch = fetchPunchTzNY('2020-07-01', '08:00', '12:00');
     let tl1 = await Timeline.create(
         {
@@ -418,6 +419,7 @@ exports.initSchemas = async (sequelize) => {
         ActivityId : activites.NcommisALavente.id, 
         UserId: users[5].id
     }); // 3, 4, 2, 5
+    */
     
     //debut à 3, 4, 2, 17
 
