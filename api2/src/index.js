@@ -1,7 +1,6 @@
 const express = require('express');
-const { ensureTablesArePopulated, ensureDBIsCreated } = require('./database/presetQuery');
+const { ensureDBIsCreated } = require('./database/presetQuery');
 const { closePool } = require('./database');
-var Activity = require('./database/models/activity.model');
 var nconf = require('nconf');
 const logger = require('morgan');
 const { loadConfig } = require('./configuration');
@@ -23,41 +22,24 @@ loadConfig()
     console.log(res);
     return ensureDBIsCreated(nconf.get("database_db"));
   })
-  .then(res => {
+  /*.then(res => {
     console.log(res);
     return ensureTablesArePopulated([
       'src/database/database_shema.init.sql', 
       'src/database/database_data.init.sql'
     ]);
-  })
+  })*/
   .then(res => {
     console.log(res);
     var sequelize = getSequelize();
     return initSchemas(sequelize);
-    
   }).then(res => {
     app.use(index);
 
-    app.get('/test', (req, res) => {
-      console.log(req.url);
-      Activity.getAllActivitys()
-      .then(data => {
-        res.status(200).json({essai: 'test'});
-      }).catch(err => {
-        console.log(err);
-        res.status(404).end(err);
-      })
-    });
-
     app.get('/', (req, res) => {
-      console.log(req.url);
-      Activity.getAllActivitys()
-      .then(data => {
-        res.status(200).json(data);
-      }).catch(err => {
-        console.log(err);
-        res.status(404).end(err);
-      })
+      res.status(200).json({
+        message: 'accueil'
+      });
     });
 
     app.all('*', (req, res) => {
