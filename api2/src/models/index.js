@@ -299,7 +299,7 @@ exports.initSchemas = async (sequelize) => {
     await ea.NventesEA.setExpenseAccounts([ea.Nventes2018EA]);
 
 
-    console.log(usersLs.Nadmin);
+    //console.log(usersLs.Nadmin);
     let punch = fetchPunchTzNY('2020-07-01', '08:00', '12:00');
     let tl1 = await Timeline.create(
         {
