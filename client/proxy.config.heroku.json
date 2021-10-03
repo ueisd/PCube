@@ -4,6 +4,9 @@
         "target":"https://pcube-backend.herokuapp.com/",
         "secure":true,
         "logLevel":"debug",
-        "changeOrigin": "true"
+        "changeOrigin": true,
+        "pathRewrite": {
+            "^/api": ""
+        }
     }
 }
