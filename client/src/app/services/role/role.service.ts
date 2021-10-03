@@ -5,7 +5,7 @@ import { Role } from 'src/app/models/role';
 import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 
-const API_ROLE = environment.api_url + 'api/roles';
+const API_ROLE = environment.api_url + '/api/roles';
 
 @Injectable({
   providedIn: 'root'

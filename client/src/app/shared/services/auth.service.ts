@@ -7,7 +7,7 @@ import { CurentUser } from "../models/curent-user.model";
 import { CurentUserService } from "./curent-user.service";
 
 import { environment } from 'src/environments/environment';
-const API_AUTH = environment.api_url + "api/auth";
+const API_AUTH = environment.api_url + "/api/auth";
 const API_AUTH_REFRESH = API_AUTH + "/refresh-token";
 const API_AUTH_SIGNING = API_AUTH + "/signin"
 

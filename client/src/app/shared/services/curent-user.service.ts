@@ -6,7 +6,7 @@ import { User } from "src/app/models/user";
 import { CurentUser } from "../models/curent-user.model";
 
 import { environment } from 'src/environments/environment';
-const API_USER = environment.api_url + "api/user";
+const API_USER = environment.api_url + "/api/user";
 const API_USER_CURRENT = API_USER + "/curent";
 
 

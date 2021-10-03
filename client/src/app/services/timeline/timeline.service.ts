@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { TimelineItem } from 'src/app/models/timeline';
 import { environment } from 'src/environments/environment';
 
-const API_TIMELINE = environment.api_url + "api/timeline";
+const API_TIMELINE = environment.api_url + "/api/timeline";
 
 @Injectable({
   providedIn: 'root'

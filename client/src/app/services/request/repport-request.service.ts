@@ -10,7 +10,7 @@ import { TimelineItem } from 'src/app/models/timeline';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
 
-const API_TIMELINE = environment.api_url + 'api/timeline';
+const API_TIMELINE = environment.api_url + '/api/timeline';
 const API_TIMELINE_REPORT = API_TIMELINE + '/report';
 const API_GET_TIMELINES = API_TIMELINE + '/getLines';
 

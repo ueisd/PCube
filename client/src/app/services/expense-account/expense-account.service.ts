@@ -8,7 +8,7 @@ import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 
 const SEPARATOR: string = " * ";
 
-const API_EXPENSE_ACCOUNT = environment.api_url + "api/expense-account";
+const API_EXPENSE_ACCOUNT = environment.api_url + "/api/expense-account";
 const API_IS_UNIQUE = API_EXPENSE_ACCOUNT + "/is-name-unique";
 const API_IS_DELETABLE = API_EXPENSE_ACCOUNT + "/is-deletable";
 
