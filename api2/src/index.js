@@ -7,6 +7,7 @@ const { loadConfig } = require('./configuration');
 const {initSchemas} = require('./models');
 const { getSequelize } = require('./configuration/sequelize');
 const index = require('./routes/index');
+var cors = require('cors');
 
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
@@ -33,6 +34,7 @@ loadConfig()
     var sequelize = getSequelize();
     return initSchemas(sequelize);
   }).then(res => {
+    app.use(cors());
     app.use(index);
 
     app.get('/', (req, res) => {
