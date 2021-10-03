@@ -290,11 +290,11 @@ exports.initSchemas = async (sequelize) => {
     );
 
 
-    ea.NadministrationEA.setExpenseAccounts([ea.Nadmin2018EA]);
+    await ea.NadministrationEA.setExpenseAccounts([ea.Nadmin2018EA]);
 
-    ea.NmarketingEA.setExpenseAccounts([ea.Nmarketing2018EA]);
+    await ea.NmarketingEA.setExpenseAccounts([ea.Nmarketing2018EA]);
 
-    ea.NventesEA.setExpenseAccounts([ea.Nventes2018EA]);
+    await ea.NventesEA.setExpenseAccounts([ea.Nventes2018EA]);
 
 
     let punch = fetchPunchTzNY('2020-07-01', '08:00', '12:00');
