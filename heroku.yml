@@ -1,7 +1,7 @@
 build:
   docker:
     web: 
-      dockerfile: api2/Dockerfile.dev
+      dockerfile: api/Dockerfile.dev
 run:
   web: node ./src/index.js
     

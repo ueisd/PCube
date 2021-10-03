@@ -7,7 +7,7 @@
       "restart": true,
       "port": 9229,
       "address": "localhost",
-      "localRoot": "${workspaceFolder}/api2",
+      "localRoot": "${workspaceFolder}/api",
       "remoteRoot": "/app", // /usr/src/app // /app/src
       "protocol": "inspector"
     },
