@@ -40,11 +40,13 @@ Invariants: assurez vous de toujours définir les variables d'environnement suiv
 
 - EMAIL_USERNAME=emailbidon@gmail.com
 - EMAIL_PASSWORD=passwordbidon
-- SECRET_KEY=grosseCleSecreteAChangerQuiDoitAvoirDesCaracteresSpeciaux
 - DATABASE_PASSWORD=motDePasseDeLUtilisateurDeLaBd
 - DATABASE_USER=UtilisateurDeLaBD
 - DATABASE_HOST=adresseDeLaBD
 - DATABASE_DB=BaseDeDonneeUtiliseeParLapp
+- RSA_KEY_PRIVATE=cleRSAPrivee
+- RSA_PUBLIC_KEY=cleRsaPublique
+- API_URL_ORIGIN=adresseDuSeulFrontendAutorisé
 
 **\*Notes**: Les valeurs doivent être différentes de cet exemple
 
