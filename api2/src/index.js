@@ -35,10 +35,10 @@ loadConfig()
     return initSchemas(sequelize);
   }).then(res => {
     var allowedOrigins = [
-      'http://localhost:4200',
       'http://client',
-      'https://pcube-frontend.herokuapp.com'
     ];
+    let apiOrigin = nconf.get('api_url_origin');
+    if(apiOrigin) allowedOrigins.push(apiOrigin);
     app.use(cors({
       origin: function(origin, callback){
         // allow requests with no origin 

@@ -22,6 +22,7 @@ services:
       - SECRET_KEY=${SECRET_KEY}
       - RSA_KEY_PRIVATE=${RSA_KEY_PRIVATE}
       - RSA_PUBLIC_KEY=${RSA_PUBLIC_KEY}
+      - API_URL_ORIGIN=${API_URL_ORIGIN}
 #    networks:
 #      - backend-net
     depends_on:
