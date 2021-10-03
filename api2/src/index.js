@@ -34,7 +34,25 @@ loadConfig()
     var sequelize = getSequelize();
     return initSchemas(sequelize);
   }).then(res => {
-    app.use(cors());
+    var allowedOrigins = [
+      'http://localhost:4200',
+      'http://client',
+      'https://pcube-frontend.herokuapp.com'
+    ];
+    app.use(cors({
+      origin: function(origin, callback){
+        // allow requests with no origin 
+        // (like mobile apps or curl requests)
+        if(!origin) return callback(null, true);
+        if(allowedOrigins.indexOf(origin) === -1){
+          var msg = 'The CORS policy for this site does not ' +
+                    'allow access from the specified Origin. ' + origin +  ' l';
+          //console.log(msg);
+          return callback(new Error(msg), false);
+        }
+        return callback(null, true);
+      }
+    }));
     app.use(index);
 
     app.get('/', (req, res) => {
