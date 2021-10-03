@@ -45,8 +45,8 @@ loadConfig()
       console.log(req.url);
       res.status(404).end();
     })
-
-    const server = app.listen(80);
+    let port = (process.env.PORT) ? process.env.PORT : 80
+    const server = app.listen(port);
   })
   .catch(error => console.log("ereure de préset" + error));
 
