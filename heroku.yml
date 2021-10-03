@@ -3,5 +3,5 @@ build:
     web: 
       dockerfile: api2/Dockerfile.dev
 run:
-  web: npm start -h=$HOST -p $PORT
+  web: npm start -p $PORT
     
