@@ -1,15 +1,19 @@
 const router = require('express').Router();
 const {User} = require('../models/user.model');
-const { Role } = require('../models/role.model');
+var nconf = require('nconf');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 
-const RSA_KEY_PRIVATE = fs.readFileSync('./src/rsa/key');
-const RSA_PUBLIC_KEY = fs.readFileSync('./src/rsa/key.pub');
+const FILE_RSA_KEY_PRIVATE = fs.readFileSync('./src/rsa/key');
+const FILE_RSA_PUBLIC_KEY = fs.readFileSync('./src/rsa/key.pub');
 const timeRefresh = '1200s';
 
 router.post('/signin', (req, res) => {
+  let nconfKeyPrivate = nconf.get('rsa_key_private');
+  const RSA_KEY_PRIVATE = (nconfKeyPrivate && nconfKeyPrivate!= "") 
+    ? nconfKeyPrivate : FILE_RSA_KEY_PRIVATE;
+
   if(!req.body.password || !req.body.email) 
     return res.status(401).json('signin fail !');
   User.findUserByEmail(req.body.email)
@@ -41,8 +45,15 @@ router.post('/signin', (req, res) => {
 });
 
 
-//@todo mettre en place
+
 router.get('/refresh-token', (req, res) => {
+  let nconfKeyPrivate = nconf.get('rsa_key_private');
+  const RSA_KEY_PRIVATE = (nconfKeyPrivate && nconfKeyPrivate!= "") 
+    ? nconfKeyPrivate : FILE_RSA_KEY_PRIVATE;
+
+  let nconfPublicKey = nconf.get('rsa_public_key');
+  const RSA_PUBLIC_KEY = (nconfPublicKey && nconfPublicKey!= "") 
+    ? nconfPublicKey : FILE_RSA_PUBLIC_KEY;
   const token = req.headers.authorization;
   if (token) {
     jwt.verify(token, RSA_PUBLIC_KEY, (err, decoded) => {

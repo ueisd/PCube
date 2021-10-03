@@ -20,6 +20,8 @@ services:
       - DATABASE_HOST=${DATABASE_HOST}
       - DATABASE_DB=${DATABASE_DB}
       - SECRET_KEY=${SECRET_KEY}
+      - RSA_KEY_PRIVATE=${RSA_KEY_PRIVATE}
+      - RSA_PUBLIC_KEY=${RSA_PUBLIC_KEY}
 #    networks:
 #      - backend-net
     depends_on:

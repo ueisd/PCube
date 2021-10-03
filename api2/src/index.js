@@ -18,10 +18,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 loadConfig()
-  .then(res => {
-    console.log(res);
-    return ensureDBIsCreated(nconf.get("database_db"));
-  })
+  .then(
+    res => ensureDBIsCreated(nconf.get("database_db"))
+  )
   /*.then(res => {
     console.log(res);
     return ensureTablesArePopulated([

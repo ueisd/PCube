@@ -1,11 +1,7 @@
 build:
   docker:
     web: 
-      dockerfile: api/Dockerfile.dev
-      target: heroku
-  config:
-    FLASK_APP: src/app
-    FLASK_ENV: development
+      dockerfile: api2/Dockerfile.dev
 run:
-  web: export FLASK_APP=src/app && python3 -m flask run --host=$HOST -p $PORT
+  web: nodemon ./src/index.js --host=$HOST -p $PORT
     
