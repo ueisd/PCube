@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
 import { map } from 'rxjs/operators';
 import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 
-const API_PROJECT = environment.api_url + "api/api/project";
+const API_PROJECT = environment.api_url + "api/project";
 const API_IS_UNIQUE = environment.api_url + API_PROJECT +"/is-name-unique";
 const API_IS_DELETABLE = environment.api_url + API_PROJECT + "/is-deletable";
 

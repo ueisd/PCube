@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ActivityItem } from 'src/app/models/activity';
 
-const API_ACTIVITY = environment.api_url + "api/api/activity";
+const API_ACTIVITY = environment.api_url + "api/activity";
 const API_IS_UNIQUE = environment.api_url + API_ACTIVITY + "/is-name-unique";
 
 @Injectable({

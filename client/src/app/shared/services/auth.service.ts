@@ -1,11 +1,16 @@
 import { Injectable, OnDestroy } from "@angular/core";
-import { User } from 'src/app/models/user'
 import { Observable, BehaviorSubject, timer, of, Subscription } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { JwtToken } from "../models/jwt-token.model";
 import { tap, switchMap, catchError } from "rxjs/operators";
 import { CurentUser } from "../models/curent-user.model";
 import { CurentUserService } from "./curent-user.service";
+
+import { environment } from 'src/environments/environment';
+const API_AUTH = environment.api_url + "api/auth";
+const API_AUTH_REFRESH = API_AUTH + "/refresh-token";
+const API_AUTH_SIGNING = API_AUTH + "/signin"
+
 
 @Injectable()
 export class AuthService implements OnDestroy{
@@ -40,7 +45,7 @@ export class AuthService implements OnDestroy{
       .pipe(
         switchMap(() => {
           if (localStorage.getItem("jwt")) {
-            return this.http.get<string>("/api/api/auth/refresh-token").pipe(
+            return this.http.get<string>(API_AUTH_REFRESH).pipe(
               tap((result: any) => {
                 console.log("refersh");
                 let token = result.token;
@@ -92,7 +97,7 @@ export class AuthService implements OnDestroy{
     email: string;
     password: string;
   }): Observable<string> {
-    return this.http.post<string>("/api/api/auth/signin", credentials).pipe(
+    return this.http.post<string>(API_AUTH_SIGNING, credentials).pipe(
       tap((response: any) => {
         let token = response.token;
         localStorage.setItem("jwt", token);

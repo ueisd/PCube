@@ -10,8 +10,9 @@ import { TimelineItem } from 'src/app/models/timeline';
 import { map } from 'rxjs/operators';
 import * as moment from 'moment-timezone';
 
-const API_REPORT = environment.api_url + 'api/api/timeline/report';
-const API_GET_TIMELINES = environment.api_url + 'api/api/timeline/getLines';
+const API_TIMELINE = environment.api_url + 'api/timeline';
+const API_TIMELINE_REPORT = API_TIMELINE + '/report';
+const API_GET_TIMELINES = API_TIMELINE + '/getLines';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,7 @@ export class RepportRequestService {
         params.dateFin.toString(), " 23:59:59"
       );
     }
-    return this.http.post<ReportItem[]>(API_REPORT, params);
+    return this.http.post<ReportItem[]>(API_TIMELINE_REPORT, params);
   }
 
   fetchPunchFromDateTzNY(day1, min) {

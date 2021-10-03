@@ -5,6 +5,11 @@ import { map } from "rxjs/internal/operators/map";
 import { User } from "src/app/models/user";
 import { CurentUser } from "../models/curent-user.model";
 
+import { environment } from 'src/environments/environment';
+const API_USER = environment.api_url + "api/user";
+const API_USER_CURRENT = API_USER + "/curent";
+
+
 @Injectable()
 export class CurentUserService {
 
@@ -15,7 +20,7 @@ export class CurentUserService {
     );
 
     getCurentUserFromApi(): Observable<User> {
-        return this.http.get<User>("api/api/user/curent").pipe(map(
+        return this.http.get<User>(API_USER_CURRENT).pipe(map(
             item => new User(item)  
         ));
     }

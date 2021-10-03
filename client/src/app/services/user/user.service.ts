@@ -5,9 +5,8 @@ import { User } from 'src/app/models/user';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const API_ALL_USER = environment.api_url + "/api/api/user";
-const API_IS_UNIQUE = environment.api_url + "api/api/user/emailUnique";
-const API_USER = environment.api_url + "api/api/user";
+const API_USER = environment.api_url + "api/user";
+const API_IS_UNIQUE = API_USER + "/emailUnique";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +16,7 @@ export class UserService {
   constructor(private http: HttpClient) { }
 
   getAllUser():Observable<User[]> {
-    return this.http.get<User[]>(API_ALL_USER).pipe(
+    return this.http.get<User[]>(API_USER).pipe(
       map(users => users.map(response => 
         new User(response)
       ))
