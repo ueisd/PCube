@@ -5,16 +5,26 @@ const Op = Sequelize.Op;
 class Timeline extends Model {
     static fetchWhereClauseFromParams = (params) => {
         let whereClauses = {};
-        
-        let projectsIds = params.projects;
-        if(projectsIds.length > 0)
-            whereClauses.ProjectId = projectsIds;
 
-        let activitysIds = params.activitys;
+        let actyvitys = params.activitys;
+        let activitysIds = (actyvitys.length > 0) ? actyvitys.map(
+            activity => activity.id
+        ) : []
         if(activitysIds.length > 0)
             whereClauses.ActivityId = activitysIds;
 
-        let usersIds = params.users;
+        let projects = params.projects;
+        let projectsIds = (projects.length > 0) ? projects.map(
+            project => project.id
+        ) : []
+        if(projectsIds.length > 0)
+            whereClauses.ProjectId = projectsIds;
+
+
+        let users = params.users;
+        let usersIds = (users.length > 0) ? users.map(
+            user => user.id
+        ) : []
         if(usersIds.length > 0 )
             whereClauses.UserId = usersIds;
 
