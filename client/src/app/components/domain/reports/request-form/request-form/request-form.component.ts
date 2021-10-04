@@ -87,7 +87,7 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
     if(!this.isMember) {
       this.usersOptions = await this.userService.getAllUser().toPromise();
       for(let user of this.usersOptions) {
-        user.display_string = user.first_name + " " + user.last_name;
+        user.display_string = user.getFullName();
       }
       this.requestForm.controls['users'].setValue(this.params.users);
       if(this.params.users.length && this.params.users.length > 0)
@@ -99,7 +99,7 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
       this.member.last_name = usr.last_name;
       this.member.email = usr.email;
       this.member.id = usr.id;
-      this.member.display_string = this.member.first_name + " " + this.member.last_name;
+      this.member.display_string = this.member.getFullName();
       this.requestForm.controls['users'].setValue(this.member.display_string);
     }
 
