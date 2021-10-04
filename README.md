@@ -48,6 +48,12 @@ Invariants: assurez vous de toujours définir les variables d'environnement suiv
 - EMAIL_USERNAME=emailbidon@gmail.com
 - EMAIL_PASSWORD=passwordbidon
 
+pour obtenir des clés rsa:
+- `openssl genrsa -out rsa.private 2048`
+- `openssl rsa -in rsa.private -out rsa.public -pubout -outform PEM`
+
+ensuite chacune doit être une seule chaise de caractère où les retours à la ligne doivent être
+remplacés par \n.
 **\*Notes**: Les valeurs doivent être différentes de cet exemple
 
 #### Configuration en local
