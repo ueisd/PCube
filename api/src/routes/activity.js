@@ -52,8 +52,12 @@ router.put('/', isLoggedIn, (req, res) => {
 });
 
 router.get('/', isLoggedIn, (req, res) => {
-  console.log('Ceci est un test :)');
-  Activity.findAll({raw : true}).then(response => {
+  Activity.findAll({
+    order: [
+      ['id', 'DESC']
+    ],
+    raw : true
+  }).then(response => {
     res.json(response);
   })
   .catch(err => {

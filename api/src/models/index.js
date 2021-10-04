@@ -69,7 +69,7 @@ exports.initSchemas = async (sequelize) => {
     });*/
 
     let usersLs = {};
-    usersLs.Nadmin = User.create({ 
+    usersLs.Nadmin = await User.create({ 
         email: 'A', 
         firstName: 'monsieur',
         lastName: 'zeta',
@@ -77,7 +77,7 @@ exports.initSchemas = async (sequelize) => {
         RoleId: admin.id
     });
 
-    usersLs.NprojectManager = User.create({ 
+    usersLs.NprojectManager = await User.create({ 
         email: 'PM', 
         firstName: 'monsieur',
         lastName: 'yota',
@@ -85,7 +85,7 @@ exports.initSchemas = async (sequelize) => {
         RoleId: pm.id
     });
 
-    usersLs.Nmember = User.create({ 
+    usersLs.Nmember = await User.create({ 
         email: 'M', 
         firstName: 'monsieur',
         lastName: 'xeta',
@@ -93,7 +93,7 @@ exports.initSchemas = async (sequelize) => {
         RoleId: membre.id
     });
 
-    usersLs.NtaylorRosales = User.create({ 
+    usersLs.NtaylorRosales = await User.create({ 
         email: 'Taylor@Rosales.com', 
         firstName: 'Taylor',
         lastName: 'Rosales',
@@ -101,7 +101,7 @@ exports.initSchemas = async (sequelize) => {
         RoleId: membre.id
     });
 
-    usersLs.NannabelFischer = User.create({ 
+    usersLs.NannabelFischer = await User.create({ 
         email: 'Annabel@Fischer', 
         firstName: 'Annabel',
         lastName: 'Fischer',
@@ -425,6 +425,9 @@ exports.initSchemas = async (sequelize) => {
         ActivityId : activites.NcommisALavente.id, 
         UserId: usersLs.NannabelFischer.id
     }); // 3, 4, 2, 5
+
+    //console.log('usersLs.NtaylorRosales');
+    //console.log(usersLs.NtaylorRosales);
     
     //debut à 3, 4, 2, 17
 

@@ -4,8 +4,8 @@ export class ActivityItem {
     nbLignesDeTemps : number;
 
     constructor(activityResponse?: any) {
-        this.id = activityResponse && activityResponse.id || "";
-        this.name = activityResponse && activityResponse.name || "";
-        this.nbLignesDeTemps = activityResponse && activityResponse.nbLignesDeTemps || "";
+        this.id = (activityResponse) ? activityResponse.id : null;
+        this.name = (activityResponse) ? activityResponse.name : "";
+        this.nbLignesDeTemps = (activityResponse) ? activityResponse.nbLignesDeTemps : 0;
     }
 }
