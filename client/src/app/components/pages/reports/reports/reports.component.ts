@@ -5,7 +5,6 @@ import { ReportItem } from 'src/app/models/report-item';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlattener, MatTreeFlatDataSource } from '@angular/material/tree';
 import { ReportRequest } from 'src/app/models/report-request';
-import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
 import { Subscription } from 'rxjs';
 import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 
@@ -17,7 +16,6 @@ import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 export class ReportsComponent implements OnInit {
 
   reportRequest : ReportRequest;
-  reportRequestBackend : ReportRequestForBackend;
   reportsItems: ReportItem[];
   reportReqSubscription: Subscription;
 
@@ -69,18 +67,12 @@ export class ReportsComponent implements OnInit {
   ngOnInit(): void {
     if(history.state.params) {
       this.reportRequest = history.state.params;
-      this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(
-        history.state.params
-      );
       this.refreshReport();
     }
 
     this.reportReqSubscription = this.reportReqService.paramsAnnounced$.subscribe(
       params => {
         this.reportRequest = params;
-        this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(
-          params
-        );
         this.refreshReport();
       }
     ); 
@@ -100,7 +92,7 @@ export class ReportsComponent implements OnInit {
 
   async refreshReport() {
     let reportsI: ReportItem[] = await this.reportReqService.getReport(
-      this.reportRequestBackend
+      this.reportRequest
     ).toPromise();
     let tree = {
       itemList: reportsI,

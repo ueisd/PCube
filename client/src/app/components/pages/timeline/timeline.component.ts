@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ReportRequest } from 'src/app/models/report-request';
-import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
 import { RepportRequestService } from 'src/app/services/request/repport-request.service';
 import { TimelineItem } from 'src/app/models/timeline';
 import { FormArray, FormBuilder, FormGroup } from '@angular/forms';
@@ -28,7 +27,6 @@ import { DateManip } from 'src/app/utils/date-manip';
 export class TimelineComponent implements OnInit {
   form: FormGroup;
   reportRequest : ReportRequest;
-  reportRequestBackend : ReportRequestForBackend;
   timelines : TimelineItem[] = [];
   @ViewChild('table') table: MatTable<Element>;
   customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
@@ -90,8 +88,7 @@ export class TimelineComponent implements OnInit {
 
   async refreshTimelinesListAndForm(req : ReportRequest) {
     this.reportRequest = req;
-    this.reportRequestBackend = ReportRequestForBackend.buildFromReportRequest(req);
-    this.timelines = await this.reportReqService.getTimelines(this.reportRequestBackend).toPromise();
+    this.timelines = await this.reportReqService.getTimelines(this.reportRequest).toPromise();
     this.refreshTimelinesForm(this.timelines);
   }
 
@@ -183,7 +180,7 @@ export class TimelineComponent implements OnInit {
     if(newTimelines.length>0) await this.timelineService.addNewTimelines(newTimelines).toPromise();
     
     if(deletedTimelinesids.length>0 || modifiedTimelines.length>0 || newTimelines.length>0) {
-      this.timelines = await this.reportReqService.getTimelines(this.reportRequestBackend).toPromise();
+      this.timelines = await this.reportReqService.getTimelines(this.reportRequest).toPromise();
       this.refreshTimelinesForm(this.timelines);
       this.customSnackBar.openSnackBar("Succès, enregistré", 'notif-success');
     }

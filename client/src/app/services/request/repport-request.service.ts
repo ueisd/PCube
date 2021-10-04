@@ -4,7 +4,6 @@ import { Subject } from 'rxjs/internal/Subject';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/internal/Observable';
 import { ReportItem } from 'src/app/models/report-item';
-import { ReportRequestForBackend } from 'src/app/models/report-reques-backend';
 import { environment } from 'src/environments/environment';
 import { TimelineItem } from 'src/app/models/timeline';
 import { map } from 'rxjs/operators';
@@ -29,7 +28,7 @@ export class RepportRequestService {
 
   ngOnInit(): void {}
 
-  getReport(params: ReportRequestForBackend): Observable<ReportItem[]>{
+  getReport(params: ReportRequest): Observable<ReportItem[]>{
     let paramsReq:any = params;
     if(params.dateDebut) {
       paramsReq.debut = this.fetchPunchFromDateTzNY(
@@ -49,7 +48,7 @@ export class RepportRequestService {
     return (day1) ? moment.tz(day1 + " " + min, timezone).unix(): null;
 }
 
-  getTimelines(params: ReportRequestForBackend): Observable<TimelineItem[]>{
+  getTimelines(params: ReportRequest): Observable<TimelineItem[]>{
     // doit convertir dateDebut et dateFin
 
     let paramsReq:any = params;

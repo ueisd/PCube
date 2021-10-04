@@ -16,7 +16,7 @@ export class TimelineService {
 
   addNewTimelines(timelines: TimelineItem[]): Observable<TimelineItem[]> {
     let entrys = timelines.map(timeline => 
-      timeline.fetchEntryFromTimeline()    
+      timeline.builApiEntry()    
     );
     return this.http.post<TimelineItem[]>(API_TIMELINE, {
       timelines: entrys
@@ -25,7 +25,7 @@ export class TimelineService {
 
   updateTimelines(timelines: TimelineItem[]): Observable<TimelineItem> {
     let entrys = timelines.map(timeline =>
-      timeline.fetchEntryFromTimeline()
+      timeline.builApiEntry()
     );
     return this.http.put<TimelineItem>(API_TIMELINE, {
       timelines: entrys

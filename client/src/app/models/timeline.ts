@@ -1,10 +1,12 @@
 import { FormControl, FormGroup, ValidatorFn, Validators } from "@angular/forms";
+import { formatDate } from "@angular/common";
+import { DateFetcher } from "./utils/dateFetcher";
+
 import { ActivityItem } from "./activity";
 import { ExpenseAccountItem } from "./expense-account";
 import { ProjectItem } from "./project";
 import { User } from "./user";
-import { formatDate } from "@angular/common";
-import * as moment from 'moment-timezone';
+
 
 const format = 'yyyy-MM-dd';
 const locale = 'en-US';
@@ -34,42 +36,19 @@ export class TimelineItem{
         if(timelineResponse && timelineResponse.isDelete) this.isDelete = timelineResponse.isDelete;
     }
 
-    static fetchPunchTzNY(day, h1, h2) {
-        let timezone = "America/New_York";
-        let a = moment.tz(day + " " + h1, timezone);
-        let b = moment.tz(day + " " + h2, timezone);
-        return {
-            punchIn: a.unix(),
-            punchOut: b.unix()
-        };
-    }
-
-    static fetchDay(timestamp) {
-        let t = timestamp;
-        let month = t.month()+1;
-        month = (month < 10) ? "0" + month : month;
-        let day = (t.date() < 10) ? "0" + t.date() : t.date();
-        return t.year() + "-" + month + "-" + day;
-      }
-    
-    static fetchHHMM(timestamp) {
-        let t = timestamp;
-        let hour = (t.hour() < 10) ? "0" + t.hour() : t.hour();
-        let min = (t.minute() < 10) ? '0' + t.minute() : t.minute();
-        return hour + ":" + min;
-      }
-
     static fetchTimelineFromResponse(item) {
-        let timeIn = parseInt(item.punchIn);
-        let timeOut = parseInt(item.punchOut);
-        var a = moment.unix(timeIn);
-        var b = moment.unix(timeOut);
-        a.tz("America/New_York");
-        b.tz("America/New_York");
+        let a = DateFetcher.fetchMomentFromTimestampStr(
+            item.punchIn, 
+            "America/New_York"
+        );
+        let b = DateFetcher.fetchMomentFromTimestampStr(
+            item.punchOut, 
+            "America/New_York"
+        ); 
 
-        item.day_of_week = this.fetchDay(a);
-        item.punch_in  = this.fetchHHMM(a);
-        item.punch_out = this.fetchHHMM(b);
+        item.day_of_week = DateFetcher.fetchDayString(a);
+        item.punch_in  = DateFetcher.fetchHHMMStr(a);
+        item.punch_out = DateFetcher.fetchHHMMStr(b);
         item.project_id = item.ProjectId;
         item.expense_account_id = item.ExpenseAccountId;
         item.user_id = item.UserId;
@@ -77,7 +56,7 @@ export class TimelineItem{
         return new TimelineItem(item);
     }
     
-    fetchEntryFromTimeline():any {
+    builApiEntry():any {
         let item: any = {};
         if(this.id) item.id = this.id;
         if(this.project_id)
@@ -88,26 +67,16 @@ export class TimelineItem{
             item.UserId = this.user_id;
         if(this.activity_id) 
             item.ActivityId = this.activity_id;
-        let punch = TimelineItem.fetchPunchTzNY(
-            this.day_of_week, this.punch_in, this.punch_out
+        let days = this.day_of_week;
+        item.punchIn = DateFetcher.fetchUnixNbr(
+            days, this.punch_in, 
+            "America/New_York"
         );
-        item.punchIn = punch.punchIn;
-        item.punchOut = punch.punchOut;
+        item.punchOut = DateFetcher.fetchUnixNbr(
+            days, this.punch_out, 
+            "America/New_York"
+        );
         return item;
-    }
-
-    clone(): TimelineItem {
-        let cloned = new TimelineItem();
-        cloned.id = this.id;
-        cloned.day_of_week = this.day_of_week;
-        cloned.punch_in = this.punch_in;
-        cloned.punch_out = this.punch_out;
-        cloned.project_id = this.project_id;
-        cloned.activity_id = this.activity_id;
-        cloned.user_id = this.user_id;
-        cloned.isChanged = this.isChanged;
-        cloned.isDelete = this.isDelete;
-        return cloned;
     }
 
     static builFromFormGroup(item: any): TimelineItem {
@@ -122,25 +91,32 @@ export class TimelineItem{
     }
 
     static isUnchanged(data: any) {
-        return (formatDate(data.day_of_week, format, locale) === data.oldValue.day_of_week)
-        && (data.punch_in === data.oldValue.punch_in)
-        && (data.punch_out === data.oldValue.punch_out)    
-        && (
-            (data.activity_id == null && data.oldValue.activity_id == "") 
-            || (data.activity_id && data.activity_id.id === data.oldValue.activity_id)
-           )                                                                        
-        && (
-            (data.expense_account_id == null && data.oldValue.expense_account_id == "") 
-            || (data.expense_account_id && data.expense_account_id.id === data.oldValue.expense_account_id)
-           )                                                  
-        && (
-            (data.user_id == null && data.oldValue.user_id == "") 
-            || (data.user_id && data.user_id.id === data.oldValue.user_id)
-           )
-        && (
-            (data.project_id == null && data.oldValue.project_id == "") 
-            || (data.project_id && data.project_id.id === data.oldValue.project_id)
-           );
+        let older = data.oldValue;
+        let current = data;
+        return (
+            (formatDate(current.day_of_week, format, locale) === older.day_of_week)
+            && 
+            (current.punch_in === older.punch_in)
+            && 
+            (current.punch_out === older.punch_out)    
+            && (
+                (current.activity_id == null && older.activity_id == "") 
+                ||
+                (current.activity_id && current.activity_id.id === older.activity_id)
+            ) && (
+                (current.expense_account_id == null && older.expense_account_id == "") 
+                ||
+                (current.expense_account_id && current.expense_account_id.id === older.expense_account_id)
+            ) && (
+                (current.user_id == null && older.user_id == "") 
+                || 
+                (current.user_id && current.user_id.id === older.user_id)
+            ) && (
+                (current.project_id == null && older.project_id == "") 
+                || 
+                (current.project_id && current.project_id.id === older.project_id)
+            )
+        );
     }
 
     static asFormGroup(
@@ -157,17 +133,17 @@ export class TimelineItem{
 
         const fg = new FormGroup(
             {
-                id: new FormControl(timeline.id, Validators.required),
-                day_of_week: new FormControl(timeline.day_of_week, Validators.required),
-                punch_in: new FormControl(timeline.punch_in, Validators.required),
-                punch_out: new FormControl(timeline.punch_out, Validators.required),
-                activity_id: new FormControl(activity),
-                project_id: new FormControl(project),
+                id:                 new FormControl(timeline.id, Validators.required),
+                day_of_week:        new FormControl(timeline.day_of_week, Validators.required),
+                punch_in:           new FormControl(timeline.punch_in, Validators.required),
+                punch_out:          new FormControl(timeline.punch_out, Validators.required),
+                activity_id:        new FormControl(activity),
+                project_id:         new FormControl(project),
                 expense_account_id: new FormControl(compte, Validators.required),
-                user_id: new FormControl(user, Validators.required),
-                oldValue: new FormControl(timeline),
-                isChanged: new FormControl(timeline.isChanged, Validators.required),
-                isDelete: new FormControl(timeline.isDelete, Validators.required),
+                user_id:            new FormControl(user, Validators.required),
+                oldValue:           new FormControl(timeline),
+                isChanged:          new FormControl(timeline.isChanged, Validators.required),
+                isDelete:           new FormControl(timeline.isDelete, Validators.required),
             },  [TimelineItem.IsTimelineFormChanged, TimelineItem.ensurepunchIsInterval]
         );
         return fg;

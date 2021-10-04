@@ -38,15 +38,15 @@ S'assurer de posséder les prérequis suivants:
 
 Invariants: assurez vous de toujours définir les variables d'environnement suivantes avec les bonnes valeurs avant d'installer ou démarrer l'application.
 
-- EMAIL_USERNAME=emailbidon@gmail.com
-- EMAIL_PASSWORD=passwordbidon
-- DATABASE_PASSWORD=motDePasseDeLUtilisateurDeLaBd
-- DATABASE_USER=UtilisateurDeLaBD
 - DATABASE_HOST=adresseDeLaBD
+- DATABASE_USER=UtilisateurDeLaBD
+- DATABASE_PASSWORD=motDePasseDeLUtilisateurDeLaBd
 - DATABASE_DB=BaseDeDonneeUtiliseeParLapp
+- API_URL_ORIGIN=adresseDuSeulFrontendAutorisé
 - RSA_KEY_PRIVATE=cleRSAPrivee
 - RSA_PUBLIC_KEY=cleRsaPublique
-- API_URL_ORIGIN=adresseDuSeulFrontendAutorisé
+- EMAIL_USERNAME=emailbidon@gmail.com
+- EMAIL_PASSWORD=passwordbidon
 
 **\*Notes**: Les valeurs doivent être différentes de cet exemple
 
@@ -62,7 +62,8 @@ L'utilisation de fichier de configuration comportant des informations de sécuri
 #### En développement:
 
 - Dans un terminal, placez vous d'abord à la racine du projet.
-- Si vous utilisez un fichier le configuration pour les variables d'environnement, taper la commande `docker compose --env-file ./.env.compose -f docker-compose.dev.yml up`. Sinon tapez la commande sans `--env-file ./.env.compose`.
+- Si vous utilisez un fichier le configuration pour les variables d'environnement,
+taper la commande `docker compose --env-file ./.env.compose -f docker-compose.dev.yml up`. Sinon tapez la commande sans `--env-file ./.env.compose`.
   - Lors de la première utilisation de cette commande, l'application sera installé puis executé. Les autres fois, la commande executera l'application.
 - Une fois l'application démarrée, il vous sera possible d'attacher un debugger au frontend et/ou au backend. Une préconfiguration des dégugger existe pour vs code dans `.vscode/launch.json`.
 
@@ -76,7 +77,7 @@ L'utilisation de fichier de configuration comportant des informations de sécuri
 
 - Frontend: http://localhost:4200
   interface graphique utilisée par les utilisateurs
-- Backend: http://localhost:5000
+- Backend: http://localhost:3000
   Peut être utilisée pour voir si le backend fonctionne en affichant une page html le cas échéant.
 
   **\*Note**: Lors de l'accès au frontend, les informations pour vous connecter sont dans la section _Authentification aux frontends_
@@ -105,7 +106,7 @@ Voici des comptes disponnibles après l'intallation:
 
 ### La persistance des données
 
-Le système utilise une base de donnée mysql.
+Le système utilise une base de donnée mysql et un orm Sequelize.
 
 ### L'authentification:
 
@@ -119,7 +120,7 @@ L'utilisation de variables d'environnement pour un compte administrateur initial
 - Les bases de données sont fréquement rechargées avec les données initiales d'installation.
 
 - Attention! Les performances sont très limitées sur ce démo puisque nous utilisons une base de donnée
-  gratuite qui ralentis grandement l'application. Dans un futur rapproché, nous prévoyons plutôt utiliser une autre bd qui sera situé sur notre serveur de production.
+  gratuite qui ralentis grandement l'application. Dans un futur rapproché, nous prévoyons plutôt utiliser une autre bd qui sera situé sur notre serveur de production. De plus, heroku hiberne parfois ce qui implique de devoir attendre que le service d'interface graphique se réveille et d'etendre encore une fois la première requête envoyé que le backend se réveille.
 
 ## License
 
