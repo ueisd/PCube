@@ -49,14 +49,14 @@ export class UserListComponent implements OnInit {
   filterListFromUserFilter(user:User, userList): User[] {
     let regexs = {
       firstName: new RegExp("^" + user.firstName  + "", "i"),
-      last_name:  new RegExp("^" + user.last_name   + "", "i"),
+      lastName:  new RegExp("^" + user.lastName   + "", "i"),
       email:      new RegExp("^" + user.email       + "", "i"),
       role_name:  new RegExp("^" + user.role.name   + "", "i")
     }
 
     return userList.filter(u => {
       return regexs.firstName.test(u.firstName) 
-        && regexs.last_name.test(u.last_name)
+        && regexs.lastName.test(u.lastName)
         && regexs.email.test(u.email)
         && regexs.role_name.test(u.role.name);
     });
@@ -72,7 +72,7 @@ export class UserListComponent implements OnInit {
   getUserFilterFromForm(): User {
     let user = new User();
     user.firstName = this.nameFilter.value.trim();
-    user.last_name = this.lastNameFilter.value.trim();
+    user.lastName = this.lastNameFilter.value.trim();
     user.email = this.emailFilter.value.trim();
     user.role.name = this.roleFilter.value.trim();
     return user;
@@ -91,7 +91,7 @@ export class UserListComponent implements OnInit {
       data: { 
         id: user.id, 
         firstName: user.firstName, 
-        lastName: user.last_name, 
+        lastName: user.lastName, 
         email: user.email, 
         roleId: user.role.id,
         roleName: user.role.name 
@@ -112,7 +112,7 @@ export class UserListComponent implements OnInit {
       data: { 
         id: user.id, 
         firstName: user.firstName, 
-        lastName: user.last_name, 
+        lastName: user.lastName, 
         email: user.email, 
         roleId: user.role.id,
         roleName: user.role.name

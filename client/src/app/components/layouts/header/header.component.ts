@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
       if(user) {
         this.user.email = user.email;
         this.user.firstName = user.firstName;
-        this.user.last_name = user.last_name;
+        this.user.lastName = user.lastName;
       }
     }
   );

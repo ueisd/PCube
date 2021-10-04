@@ -28,7 +28,7 @@ export class ContactUsComponent implements OnInit {
     if(user) {
       this.user.email = user.email;
       this.user.firstName = user.firstName;
-      this.user.last_name = user.last_name;
+      this.user.lastName = user.lastName;
     }
     this.setDefaultValues();
   }
@@ -54,7 +54,7 @@ export class ContactUsComponent implements OnInit {
     this.contactUsForm.controls['email'].disable();
     this.contactUsForm.controls['firstName'].setValue(this.user.firstName);
     this.contactUsForm.controls['firstName'].disable();
-    this.contactUsForm.controls['lastName'].setValue(this.user.last_name);
+    this.contactUsForm.controls['lastName'].setValue(this.user.lastName);
     this.contactUsForm.controls['lastName'].disable();
     this.contactUsForm.controls['comment'].setValue("");
     this.contactUsForm.controls['comment'].setErrors(null);

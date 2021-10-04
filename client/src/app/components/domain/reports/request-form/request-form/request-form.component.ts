@@ -96,7 +96,7 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
       let usr = this.curentUserService.curentUser.value.user;
       this.member = new User();
       this.member.firstName = usr.firstName;
-      this.member.last_name = usr.last_name;
+      this.member.lastName = usr.lastName;
       this.member.email = usr.email;
       this.member.id = usr.id;
       this.member.display_string = this.member.getFullName();

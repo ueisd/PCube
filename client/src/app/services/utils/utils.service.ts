@@ -20,7 +20,7 @@ export class UtilsService {
     };
 
     let body = {
-      last_name: lastName,
+      lastName: lastName,
       firstName: firstName,
       email: email,
       comment: comment

@@ -46,7 +46,7 @@ export class UserService {
     return this.http.post<User>(API_USER, {
       email: user.email,
       firstName: user.firstName,
-      lastName: user.last_name,
+      lastName: user.lastName,
       RoleId: user.role.id,
       roleName: user.role.name,
       password: pwd

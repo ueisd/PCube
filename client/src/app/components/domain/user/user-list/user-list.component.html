@@ -13,7 +13,7 @@
       <mat-header-cell *matHeaderCellDef>
         <input class="filter" matInput placeholder="Nom" (ngModelChange)="onFilterChanged()" [formControl]="lastNameFilter" autocomplete="off">
       </mat-header-cell>
-      <mat-cell *matCellDef="let user"> {{user.last_name | titlecase}} </mat-cell>
+      <mat-cell *matCellDef="let user"> {{user.lastName | titlecase}} </mat-cell>
     </ng-container>
 
     <!-- Colonne courriel -->
