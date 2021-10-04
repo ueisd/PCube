@@ -109,28 +109,31 @@ exports.initSchemas = async (sequelize) => {
         RoleId: membre.id
     });
 
+    usersLs.NAnnaHammon = await User.create({ 
+        email: 'Anya@Hammond.com', 
+        firstName: 'Anya',
+        lastName: 'Hammond',
+        password: bcrypt.hashSync('anya', bcrypt.genSaltSync(8)),
+        RoleId: membre.id
+    });
+
+    usersLs.NNellieThornton = await User.create({ 
+        email: 'Nellie@Thornton.com', 
+        firstName: 'Nellie',
+        lastName: 'Thornton',
+        password: bcrypt.hashSync('nellie', bcrypt.genSaltSync(8)),
+        RoleId: membre.id
+    });
+
+    usersLs.NKimberleyKeller = await User.create(        { 
+        email: 'Kimberley@Keller.com', 
+        firstName: 'Kimberley',
+        lastName: 'Keller',
+        password: bcrypt.hashSync('kimberly', bcrypt.genSaltSync(8)),
+        RoleId: membre.id
+    });
+
     let users = await User.bulkCreate([
-        { 
-            email: 'Anya@Hammond.com', 
-            firstName: 'Anya',
-            lastName: 'Hammond',
-            password: bcrypt.hashSync('anya', bcrypt.genSaltSync(8)),
-            RoleId: membre.id
-        },
-        { 
-            email: 'Nellie@Thornton.com', 
-            firstName: 'Nellie',
-            lastName: 'Thornton',
-            password: bcrypt.hashSync('nellie', bcrypt.genSaltSync(8)),
-            RoleId: membre.id
-        },
-        { 
-            email: 'Kimberley@Keller.com', 
-            firstName: 'Kimberley',
-            lastName: 'Keller',
-            password: bcrypt.hashSync('kimberly', bcrypt.genSaltSync(8)),
-            RoleId: membre.id
-        },
         { 
             email: 'Kane@Nod.com', 
             firstName: 'Kane',
@@ -258,6 +261,10 @@ exports.initSchemas = async (sequelize) => {
     );
     projets.NsoupePopulaire = await Project.create(
         {name: "Soupe populaire"}
+    );
+
+    projets.NFonctionnementGeneral = await Project.create(
+        {name: "Fonctionnement général de l'organisme"}
     );
 
     await projets.NstageRD.setProjects([
@@ -443,7 +450,83 @@ exports.initSchemas = async (sequelize) => {
         ExpenseAccountId : ea.Ncomptabilite.id,
         ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NannabelFischer.id
-    }); // 3, 4, 2, 5
+    });
+
+    punch = fetchPunchTzNY('2012-07-05', '14:00', '21:43');
+    let tl13 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NstageHaiti2012.id,
+        ExpenseAccountId : ea.Nrestauration.id,
+        ActivityId : activites.NsouperBenefice2015.id, 
+        UserId: usersLs.NtaylorRosales.id
+    });
+
+    punch = fetchPunchTzNY('2012-07-20', '13:00', '21:43');
+    let tl14 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NstageRD2009.id,
+        ExpenseAccountId : ea.Ncuisine.id,
+        ActivityId : activites.NsouperDu20120405.id, 
+        UserId: usersLs.NNellieThornton.id
+    });
+
+    punch = fetchPunchTzNY('2012-07-20', '13:00', '14:51');
+    let tl15 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NstageRD2009.id,
+        ExpenseAccountId : ea.NpreparationSalle.id,
+        ActivityId : activites.NsouperDu20120405.id, 
+        UserId: usersLs.Nadmin.id
+    });
+
+    punch = fetchPunchTzNY('2012-07-20', '14:51', '19:51');
+    let tl16 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NstageRD2009.id,
+        ExpenseAccountId : ea.Ncuisine.id,
+        ActivityId : activites.NsouperDu20120405.id, 
+        UserId: usersLs.Nadmin.id
+    });
+
+    punch = fetchPunchTzNY('2015-07-20', '16:40', '19:51');
+    let tl17 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NFonctionnementGeneral.id,
+        ExpenseAccountId : ea.Ncomptabilite.id,
+        UserId: usersLs.Nadmin.id
+    });
+
+    punch = fetchPunchTzNY('2015-07-27', '16:00', '21:05');
+    let tl18 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NFonctionnementGeneral.id,
+        ExpenseAccountId : ea.Ncomptabilite.id,
+        UserId: usersLs.Nadmin.id
+    });
+
+    punch = fetchPunchTzNY('2015-08-20', '16:00', '21:05');
+    let tl19 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NstageHaiti2012.id,
+        ExpenseAccountId : ea.NventesProduits.id,
+        UserId: usersLs.NtaylorRosales.id
+    });
+
+    punch = fetchPunchTzNY('2015-08-20', '18:00', '19:05');
+    let tl20 = await Timeline.create({
+        punchIn : punch.punchIn,
+        punchOut : punch.punchOut,
+        ProjectId : projets.NstageHaiti2012.id,
+        ExpenseAccountId : ea.NventesProduits.id,
+        UserId: usersLs.NKimberleyKeller.id
+    });
 
     //await membre.setUsers([jane]);
 
