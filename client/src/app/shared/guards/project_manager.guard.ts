@@ -4,6 +4,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot }
 import { Observable } from 'rxjs';
 import { CurentUserService } from '../services/curent-user.service';
 import { map } from 'rxjs/operators';
+import { User } from 'src/app/models/user';
 
 @Injectable()
 export class ProjectManagerGuard implements CanActivate {
@@ -12,15 +13,19 @@ export class ProjectManagerGuard implements CanActivate {
     private curentUserService: CurentUserService
   ) {}
 
+  private canPass(user : User): boolean {
+    return user 
+        && user.role.access_level
+        && user.role.access_level > 0
+        && user.role.access_level <= 2
+  }
+
     canActivate(
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean> {
         return this.curentUserService.curentUser.pipe(map(
-            user => 
-              user.accessLevel 
-              && user.accessLevel > 0
-              && user.accessLevel <= 2
+            curent => this.canPass(curent.user)
         ));
     }
 
@@ -29,10 +34,7 @@ export class ProjectManagerGuard implements CanActivate {
         state: RouterStateSnapshot
     ): Observable<boolean> {
         return this.curentUserService.curentUser.pipe(map(
-            user => 
-              user.accessLevel 
-              && user.accessLevel > 0 
-              && user.accessLevel<= 2
+            curent => this.canPass(curent.user)
         ));
     }
 }

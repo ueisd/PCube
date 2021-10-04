@@ -74,8 +74,8 @@ export class LoginComponent implements OnInit, OnDestroy {
   async showWelcomeMessage(){
     this.conf.pageTitle = "Bienvenue";
     setTimeout(() => {
-      let curentUser = this.curentUserService.curentUser.value;
-      this.conf.userName = curentUser.getFullName();
+      let user = this.curentUserService.curentUser.value.user;
+      this.conf.userName = (user) ? user.getFullName() : "anonymous";
     }, 500);
   }
 

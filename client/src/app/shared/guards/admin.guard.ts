@@ -4,6 +4,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot }
 import { Observable } from 'rxjs';
 import { CurentUserService } from '../services/curent-user.service';
 import { map } from 'rxjs/operators';
+import { User } from 'src/app/models/user';
 
 @Injectable()
 export class AdminGuard implements CanActivate {
@@ -12,14 +13,18 @@ export class AdminGuard implements CanActivate {
     private curentUserService: CurentUserService
   ) {}
 
+    private canPass(user: User) : boolean {
+        return user
+            && user.role.access_level
+            && user.role.access_level == 1;
+    }
+
     canActivate(
         next: ActivatedRouteSnapshot,
         state: RouterStateSnapshot
     ): Observable<boolean> {
         return this.curentUserService.curentUser.pipe(map(
-            user => 
-                user.accessLevel 
-                && user.accessLevel == 1
+            curent => this.canPass(curent.user)
         ));
     }
 
@@ -28,9 +33,7 @@ export class AdminGuard implements CanActivate {
         state: RouterStateSnapshot
     ): Observable<boolean> {
         return this.curentUserService.curentUser.pipe(map(
-            user => 
-                user.accessLevel 
-                && user.accessLevel == 1
+            curent => this.canPass(curent.user)
         ));
     }
 }

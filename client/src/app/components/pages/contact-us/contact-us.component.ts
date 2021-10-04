@@ -24,10 +24,12 @@ export class ContactUsComponent implements OnInit {
 
   async ngOnInit() {
     this.initForm();
-    let us = this.currentUserService.curentUser.getValue();
-    this.user.email = us.email;
-    this.user.first_name = us.firstName;
-    this.user.last_name = us.lastName;
+    let user = this.currentUserService.curentUser.getValue().user;
+    if(user) {
+      this.user.email = user.email;
+      this.user.first_name = user.first_name;
+      this.user.last_name = user.last_name;
+    }
     this.setDefaultValues();
   }
   

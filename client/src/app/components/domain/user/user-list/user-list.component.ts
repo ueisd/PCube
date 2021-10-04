@@ -51,7 +51,7 @@ export class UserListComponent implements OnInit {
       first_name: new RegExp("^" + user.first_name  + "", "i"),
       last_name:  new RegExp("^" + user.last_name   + "", "i"),
       email:      new RegExp("^" + user.email       + "", "i"),
-      role_name:  new RegExp("^" + user.role_name   + "", "i")
+      role_name:  new RegExp("^" + user.role.role_name   + "", "i")
     }
 
     return userList.filter(u => {
@@ -74,7 +74,7 @@ export class UserListComponent implements OnInit {
     user.first_name = this.nameFilter.value.trim();
     user.last_name = this.lastNameFilter.value.trim();
     user.email = this.emailFilter.value.trim();
-    user.role_name = this.roleFilter.value.trim();
+    user.role.role_name = this.roleFilter.value.trim();
     return user;
   }
 
@@ -86,15 +86,15 @@ export class UserListComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  async openEditDialog(user) {
+  async openEditDialog(user: User) {
     const dialogRef = this.dialog.open(ModifyUserComponent, {
       data: { 
         id: user.id, 
         firstName: user.first_name, 
         lastName: user.last_name, 
         email: user.email, 
-        roleId: user.role_id,
-        roleName: user.role_name 
+        roleId: user.role.id,
+        roleName: user.role.role_name 
       }
     });
 
@@ -114,8 +114,8 @@ export class UserListComponent implements OnInit {
         firstName: user.first_name, 
         lastName: user.last_name, 
         email: user.email, 
-        roleId: user.role_id,
-        roleName: user.role_name
+        roleId: user.role.id,
+        roleName: user.role.role_name
       },
       panelClass: 'warning-dialog'
     });

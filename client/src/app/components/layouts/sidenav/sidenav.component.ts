@@ -19,9 +19,9 @@ export class SidenavComponent implements OnInit, OnDestroy {
   fileNameDialogRef: MatDialogRef<RequestFormComponent>;
   isShowTitle:boolean = true;
   
-  curentUserSubscription : Subscription = this.curentUserService.curentUser.subscribe(curentUser => {
-    if(curentUser.accessLevel != this.accessLevel)
-      this.accessLevel = curentUser.accessLevel;
+  curentUserSubscription : Subscription = this.curentUserService.curentUser.subscribe(curent => {
+    let user = curent.user;
+    this.accessLevel = this.getAccesLevelFromUser(user);
   });
 
   constructor(
@@ -31,8 +31,14 @@ export class SidenavComponent implements OnInit, OnDestroy {
     private curentUserService : CurentUserService
   ) { }
 
+  private getAccesLevelFromUser(user: User): number {
+    if(!user) return 0;
+    return user.role.access_level;
+  }
+
   ngOnInit(): void {
-    this.accessLevel = this.curentUserService.curentUser.value.accessLevel;
+    let user = this.curentUserService.curentUser.value.user;
+    this.accessLevel = this.getAccesLevelFromUser(user);
   }
 
   async openReportReqDialog(type) {

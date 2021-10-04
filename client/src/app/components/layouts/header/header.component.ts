@@ -12,14 +12,16 @@ import { CurentUserService } from 'src/app/shared/services/curent-user.service';
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 
-  curentUserSubscription: Subscription = this.curentUserService.curentUser.subscribe(curentUser => {
-    if(curentUser.email)
-      this.user.email = curentUser.email;
-    if(curentUser.firstName)
-      this.user.first_name = curentUser.firstName;
-    if(curentUser.lastName)
-      this.user.last_name = curentUser.lastName;
-  });
+  curentUserSubscription: Subscription = this.curentUserService.curentUser.subscribe(
+    current => {
+      let user = current.user;
+      if(user) {
+        this.user.email = user.email;
+        this.user.first_name = user.first_name;
+        this.user.last_name = user.last_name;
+      }
+    }
+  );
   
   user:User = new User();
 

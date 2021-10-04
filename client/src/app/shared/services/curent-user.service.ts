@@ -26,37 +26,17 @@ export class CurentUserService {
     }
 
     public updateCurentUser(user: User){
+        let curentUser = this.curentUser.value.user;
         let modified = false;
-        if(user.id && this.curentUser.value.id != user.id) {
-            this.curentUser.value.id = user.id;
+        if(!curentUser) {
             modified = true;
+        }else {
+            modified = !user.equals(curentUser);
         }
-        if(user.email && this.curentUser.value.email != user.email) {
-            this.curentUser.value.email = user.email;
-            modified = true;
+        if(modified) {
+            this.curentUser.value.user = user;
+            this.curentUser.next(this.curentUser.value);
         }
-        if(user.first_name && this.curentUser.value.firstName != user.first_name) {
-            this.curentUser.value.firstName = user.first_name;
-            modified = true;
-        }
-        if(user.last_name && this.curentUser.value.lastName != user.last_name) {
-            this.curentUser.value.lastName = user.last_name;
-            modified = true;
-        }
-
-        if(user.role_name && this.curentUser.value.roleName != user.role_name) {
-            this.curentUser.value.roleName = user.role_name;
-            modified = true;
-        }
-        let accessLevel = user.role_access_level;
-        if(accessLevel != undefined  
-            && this.curentUser.value.accessLevel != accessLevel
-        ) {
-            this.curentUser.value.accessLevel = accessLevel;
-            modified = true;
-        }
-        if(modified)
-            this.curentUser.next(this.curentUser.value);    
     }
 
 }

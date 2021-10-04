@@ -55,8 +55,9 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
     private reportReqService: RepportRequestService,
     private userService: UserService,
     private curentUserService: CurentUserService,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: any) { 
-      if(curentUserService.curentUser.value.accessLevel == 3)
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
+      let curentUser = curentUserService.curentUser.value.user;
+      if(curentUser && curentUser.role.access_level == 3)
         this.isMember = true;
       if(data.type == "temps")
         this.title = 'Gérer les lignes de temps';
@@ -92,10 +93,10 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
       if(this.params.users.length && this.params.users.length > 0)
         this.requestForm.controls['isUsers'].setValue(true);
     } else {
-      let usr = this.curentUserService.curentUser.value;
+      let usr = this.curentUserService.curentUser.value.user;
       this.member = new User();
-      this.member.first_name = usr.firstName;
-      this.member.last_name = usr.lastName;
+      this.member.first_name = usr.first_name;
+      this.member.last_name = usr.last_name;
       this.member.email = usr.email;
       this.member.id = usr.id;
       this.member.display_string = this.member.first_name + " " + this.member.last_name;
