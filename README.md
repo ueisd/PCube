@@ -54,6 +54,7 @@ pour obtenir des clés rsa:
 
 ensuite chacune doit être une seule chaise de caractère où les retours à la ligne doivent être
 remplacés par \n.
+
 **\*Notes**: Les valeurs doivent être différentes de cet exemple
 
 #### Configuration en local
@@ -68,8 +69,9 @@ L'utilisation de fichier de configuration comportant des informations de sécuri
 #### En développement:
 
 - Dans un terminal, placez vous d'abord à la racine du projet.
-- Si vous utilisez un fichier le configuration pour les variables d'environnement,
-taper la commande `docker compose --env-file ./.env.compose -f docker-compose.dev.yml up`. Sinon tapez la commande sans `--env-file ./.env.compose`.
+- Si vous utilisez un fichier le configuration pour les variables d'environnement:
+  - tapez la commande `docker compose --env-file ./.env.compose -f docker-compose.dev.yml up`. 
+  - Sinon tapez la commande sans `--env-file ./.env.compose`.
   - Lors de la première utilisation de cette commande, l'application sera installé puis executé. Les autres fois, la commande executera l'application.
 - Une fois l'application démarrée, il vous sera possible d'attacher un debugger au frontend et/ou au backend. Une préconfiguration des dégugger existe pour vs code dans `.vscode/launch.json`.
 
