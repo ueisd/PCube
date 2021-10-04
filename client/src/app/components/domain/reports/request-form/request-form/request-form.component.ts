@@ -57,7 +57,7 @@ export class RequestFormComponent implements OnInit, AfterContentInit {
     private curentUserService: CurentUserService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {
       let curentUser = curentUserService.curentUser.value.user;
-      if(curentUser && curentUser.role.access_level == 3)
+      if(curentUser && curentUser.role.accessLevel == 3)
         this.isMember = true;
       if(data.type == "temps")
         this.title = 'Gérer les lignes de temps';

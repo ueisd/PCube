@@ -46,8 +46,8 @@ export class User {
             )
             ||
             (
-                user.role.access_level 
-                && this.role.access_level  != user.role.access_level 
+                user.role.accessLevel 
+                && this.role.accessLevel  != user.role.accessLevel 
             )
         );
     }

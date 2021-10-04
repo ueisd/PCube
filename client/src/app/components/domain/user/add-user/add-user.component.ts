@@ -62,7 +62,7 @@ export class AddUserComponent implements OnInit {
     user.last_name = this.userForm.get("lname").value;
     user.email = this.userForm.get("email").value;
     user.role.id = this.userForm.get("roles").value["id"];
-    user.role.role_name = this.userForm.get("roles").value["name"];
+    user.role.name = this.userForm.get("roles").value["name"];
     const password = this.userForm.get("password").value
     const passwordConfirmation = this.userForm.get("passwordConfirmation").value;
     

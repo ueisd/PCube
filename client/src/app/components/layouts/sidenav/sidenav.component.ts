@@ -33,7 +33,7 @@ export class SidenavComponent implements OnInit, OnDestroy {
 
   private getAccesLevelFromUser(user: User): number {
     if(!user) return 0;
-    return user.role.access_level;
+    return user.role.accessLevel;
   }
 
   ngOnInit(): void {

@@ -15,8 +15,8 @@ export class AdminGuard implements CanActivate {
 
     private canPass(user: User) : boolean {
         return user
-            && user.role.access_level
-            && user.role.access_level == 1;
+            && user.role.accessLevel
+            && user.role.accessLevel == 1;
     }
 
     canActivate(

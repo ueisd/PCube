@@ -15,9 +15,9 @@ export class MemberGuard implements CanActivate {
 
     private canPass(user : User): boolean {
         return user 
-            && user.role.access_level
-            && user.role.access_level > 0
-            && user.role.access_level <= 3
+            && user.role.accessLevel
+            && user.role.accessLevel > 0
+            && user.role.accessLevel <= 3
     }
 
     canActivate(
