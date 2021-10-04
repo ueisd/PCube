@@ -2,11 +2,9 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ExpenseAccountListComponent } from 'src/app/components/domain/expense-account/expense-account-list/expense-account-list.component';
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material/dialog";
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
 import { AddExpenseAccountComponent } from '../../domain/expense-account/add-expense-account/add-expense-account.component';
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
-import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
   selector: 'app-expense-accounts',

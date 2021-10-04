@@ -37,11 +37,11 @@
             <div fxflex fxFlex="50%">
               <button mat-icon-button matTreeNodeToggle
                   [attr.aria-label]="'toggle ' + node.name">
-              <mat-icon class="mat-icon-rtl-mirror">
-                {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
-              </mat-icon>
-            </button>
-            {{node.name | titlecase}}
+                <mat-icon class="mat-icon-rtl-mirror">
+                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                </mat-icon>
+              </button>
+              {{node.name | titlecase}}
             </div>
             <div fxflex fxFlex="50%"
             fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
