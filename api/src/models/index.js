@@ -220,98 +220,117 @@ exports.initSchemas = async (sequelize) => {
 
     let activites = {};
 
-    activites.NdistribProspectus = await Activity.create({
-        name: 'Ditribution de prospectus'
+    activites.NjourneeSavon2013 = await Activity.create({
+        name: 'Journée promotionelle des savons - 2013-04-05'
     });
-    activites.NappelMarketing = await Activity.create({
-        name: 'Appel marketing'
+    activites.NsouperDu20120405 = await Activity.create({
+        name: 'Souper de financement médieval - 2012-04-05'
     });
-    activites.NpreparationMarketing = await Activity.create({
-        name: 'Préparation marketing'
+    activites.NsouperBenefice2015 = await Activity.create({
+        name: 'Souper benefice halloween - 2015-10-29'
     });
-    activites.NcommisALavente = await Activity.create({
-        name: 'Commis à la vente'
+    activites.NdejeunerBenefice2014 = await Activity.create({
+        name: 'Déjeuner bénéfice - 2014-10-08'
     });
-    activites.NorganisationEvenementielle = await Activity.create({
-        name: 'Organisation événementielle'
+    activites.NvoyageHaïti = await Activity.create({
+        name: 'Voyage humanitaire en Haïti été 2012'
     });
+
 
     let projets = {};
-    projets.NprojetVeloJeunesse2018 = await Project.create(
-        {name: "Vélo jeunesse 2018"}
+    projets.NstageHumanitaires = await Project.create(
+        {name: "Stage humanitaire"}
     );
-    projets.NmarketingVeloJeunesse2018 = await Project.create(
-        {name: "Marketing vélo jeunesse 2018"}
+    projets.NstageHaiti = await Project.create(
+        {name: "Stage humanitaire - Haïti"}
     );
-    projets.NadministrationVeloJeunesse = await Project.create(
-        {name: "Administration - vélo jeunesse 2018"}
+    projets.NstageHaiti2012 = await Project.create(
+        {name: "Stage Haïti 2012"}
     );
-    projets.NventesVeloJeunesse = await Project.create(
-        {name: "Ventes - vélo jeunesse 2018"}
+    projets.NstageHaiti2013 = await Project.create(
+        {name: "Stage Haïti 2013"}
+    );
+    projets.NstageRD = await Project.create(
+        {name: "Stage - République dominicaine"}
+    );
+    projets.NstageRD2009 = await Project.create(
+        {name: "Stage - République dominicaine 2009"}
+    );
+    projets.NsoupePopulaire = await Project.create(
+        {name: "Soupe populaire"}
     );
 
-    projets.NactiviteMarketing5juin = await Project.create(
-        {name: "Marketing - 5 juin 2018"}
-    );
+    await projets.NstageRD.setProjects([
+        projets.NstageRD2009
+    ])
 
-    projets.NrefonteComptabilite = await Project.create(
-        {name: "Refonte de la comptabilité"}
-    );
-
-    await projets.NprojetVeloJeunesse2018.setProjects([
-        projets.NmarketingVeloJeunesse2018, 
-        projets.NadministrationVeloJeunesse,
-        projets.NventesVeloJeunesse
+    await projets.NstageHumanitaires.setProjects([
+        projets.NstageHaiti, projets.NstageRD
     ]);
 
-    await projets.NmarketingVeloJeunesse2018.setProjects([
+    await projets.NstageHaiti.setProjects([
+        projets.NstageHaiti2012, projets.NstageHaiti2013
+    ]);
+
+    
+
+    /*await projets.NmarketingVeloJeunesse2018.setProjects([
         projets.NactiviteMarketing5juin
-    ]);
+    ]);*/
 
 
     let ea = {};
 
-    ea.NadministrationEA = await ExpenseAccount.create(
+    ea.Nadministration = await ExpenseAccount.create(
         {name: "administration"}
     );
 
-    ea.Nadmin2018EA = await ExpenseAccount.create(
-        {name: "administration - 2018"}
-    ); 
+    ea.Ncomptabilite = await ExpenseAccount.create(
+        {name: "comptabilité"}
+    );
 
-    ea.NmarketingEA = await ExpenseAccount.create(
+    ea.NactiviteFinancement = await ExpenseAccount.create(
+        {name: "Activité de financement"}
+    );
+
+    ea.Nrestauration = await ExpenseAccount.create(
+        {name: "restauration"}
+    );
+
+    ea.Ncuisine = await ExpenseAccount.create(
+        {name: "cuisine"}
+    );
+
+    ea.NpreparationSalle = await ExpenseAccount.create(
+        {name: "Préparation de la salle"}
+    );
+
+
+    ea.NventesProduits = await ExpenseAccount.create(
+        {name: "ventes de produits"}
+    );
+
+    ea.Nmarketing = await ExpenseAccount.create(
         {name: "marketing"}
     ); 
 
-    ea.Nmarketing2018EA = await ExpenseAccount.create(
-        {name: "marketing - 2018"}
-    ); 
-
-    ea.NventesEA = await ExpenseAccount.create(
-        {name: "ventes"}
-    );
-
-    ea.Nventes2018EA = await ExpenseAccount.create(
-        {name: "ventes - 2018"}
-    );
 
 
-    await ea.NadministrationEA.setExpenseAccounts([ea.Nadmin2018EA]);
 
-    await ea.NmarketingEA.setExpenseAccounts([ea.Nmarketing2018EA]);
+    //await ea.Nadministration.setExpenseAccounts([ea.Nadmin2018]);
+    await ea.Nrestauration.setExpenseAccounts([ea.Ncuisine, ea.NpreparationSalle]);
+    await ea.Nadministration.setExpenseAccounts([ea.Nmarketing, ea.Ncomptabilite]);
+    await ea.NactiviteFinancement.setExpenseAccounts([ea.Nrestauration, ea.NventesProduits]);
 
-    await ea.NventesEA.setExpenseAccounts([ea.Nventes2018EA]);
 
-
-    //console.log(usersLs.Nadmin);
     let punch = fetchPunchTzNY('2020-07-01', '08:00', '12:00');
     let tl1 = await Timeline.create(
         {
             punchIn : punch.punchIn,
             punchOut : punch.punchOut,
-            ProjectId : projets.NadministrationVeloJeunesse.id,
-            ExpenseAccountId : ea.NadministrationEA.id,
-            ActivityId : activites.NcommisALavente.id, 
+            ProjectId : projets.NstageHumanitaires.id,
+            ExpenseAccountId : ea.Nadministration.id,
+            ActivityId : activites.NjourneeSavon2013.id, 
             UserId: usersLs.Nadmin.id
         }
     );
@@ -320,9 +339,9 @@ exports.initSchemas = async (sequelize) => {
     let tl2 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Nadministration.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NprojectManager.id
     });
     
@@ -330,9 +349,9 @@ exports.initSchemas = async (sequelize) => {
     let tl3 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Nadministration.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.Nmember.id
     });
     
@@ -340,9 +359,9 @@ exports.initSchemas = async (sequelize) => {
     let tl4 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Nadministration.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -350,9 +369,9 @@ exports.initSchemas = async (sequelize) => {
     let tl5 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Nadministration.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NannabelFischer.id
     });
     
@@ -360,9 +379,9 @@ exports.initSchemas = async (sequelize) => {
     let tl6 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Nadministration.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -370,9 +389,9 @@ exports.initSchemas = async (sequelize) => {
     let tl7 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NmarketingEA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Nmarketing.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -380,9 +399,9 @@ exports.initSchemas = async (sequelize) => {
     let tl8 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NmarketingEA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Nmarketing.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NannabelFischer.id
     });
     
@@ -390,9 +409,9 @@ exports.initSchemas = async (sequelize) => {
     let tl9 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NmarketingEA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Nmarketing.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -400,9 +419,9 @@ exports.initSchemas = async (sequelize) => {
     let tl10 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.NadministrationEA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Nadministration.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -410,9 +429,9 @@ exports.initSchemas = async (sequelize) => {
     let tl11 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.Nventes2018EA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Ncomptabilite.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NannabelFischer.id
     });
     
@@ -420,16 +439,11 @@ exports.initSchemas = async (sequelize) => {
     let tl12 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
-        ProjectId : projets.NadministrationVeloJeunesse.id,
-        ExpenseAccountId : ea.Nventes2018EA.id,
-        ActivityId : activites.NcommisALavente.id, 
+        ProjectId : projets.NstageHumanitaires.id,
+        ExpenseAccountId : ea.Ncomptabilite.id,
+        ActivityId : activites.NjourneeSavon2013.id, 
         UserId: usersLs.NannabelFischer.id
     }); // 3, 4, 2, 5
-
-    //console.log('usersLs.NtaylorRosales');
-    //console.log(usersLs.NtaylorRosales);
-    
-    //debut à 3, 4, 2, 17
 
     //await membre.setUsers([jane]);
 

@@ -33,10 +33,8 @@ router.put('/', isLoggedIn, (req, res) => {
       id: req.body.id
     }
   }).then(result => {
-    console.log(result);
     res.json(result);
   }).catch(err => {
-    console.log(err);
     res.status(401).json('error' + err);
   });
 });

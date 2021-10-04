@@ -20,13 +20,10 @@ router.put('/', isLoggedIn, (req, res) => {
             id: project.id
         }
     }).then(result => {
-        console.log(result);
         res.json(result);
     }).catch(err => {
-        console.log(err);
         res.status(401).json('error' + err);
     });
-    console.log(project);
 });
 
 router.post('/', isLoggedIn, (req, res) => {
@@ -41,8 +38,6 @@ router.post('/', isLoggedIn, (req, res) => {
     .catch(err => {
         res.status(401).json('error' + err);
     });
-    //let parentId = req.body.parentId;
-    console.log(project);
 });
 
 router.delete('/:id', isLoggedIn, (req, res) => {

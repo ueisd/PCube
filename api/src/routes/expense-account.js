@@ -4,7 +4,6 @@ const { ExpenseAccount } = require('../models/expense-account.model');
 
 router.get('/', isLoggedIn, (req, res) => {
     ExpenseAccount.findAll({raw : true}).then(response => {
-        console.log(response);
         res.json(response);
     })
     .catch(err => {
@@ -45,8 +44,6 @@ router.post('/', isLoggedIn, (req, res) => {
 router.post('/is-name-unique', isLoggedIn, (req, res) => {
     let id = req.body.id;
     let nameVerif = req.body.name.trim();
-    console.log("is name unique");
-    console.log(req.body);
     ExpenseAccount.isNameUnique(nameVerif, id)
     .then(result => {
         if(result.length >0)

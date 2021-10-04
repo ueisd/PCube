@@ -58,8 +58,7 @@ router.get('/refresh-token', (req, res) => {
   if (token) {
     jwt.verify(token, RSA_PUBLIC_KEY, (err, decoded) => {
       if (err) {
-        console.log("wrong token");
-        return res.status(403).json('wrong token') 
+        return res.status(403).json('wrong token');
       }
       const newToken = jwt.sign({}, RSA_KEY_PRIVATE, {
         algorithm: 'RS256',

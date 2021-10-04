@@ -68,7 +68,6 @@ router.post('/getLines', isLoggedIn, (req, res) => {
 
 router.delete('/', isLoggedIn, (req, res) => {
     let numbers = req.body;
-    console.log(numbers);
     Timeline.destroy({
         where: {
             id: numbers

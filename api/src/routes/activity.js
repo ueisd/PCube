@@ -3,7 +3,6 @@ const { isLoggedIn } = require('../guards/isLoggedIn.guard');
 const { Activity } = require('../models/activity.model');
 
 router.post('/is-name-unique', isLoggedIn, (req, res) => {
-  console.log(req.body);
   let id = req.body.activityId;
   let nameVerif = req.body.name.trim();
   Activity.isNameUnique(nameVerif, id).then(result => {

@@ -7,7 +7,6 @@ router.get('/', isLoggedIn, (req, res) => {
       res.json(response);
     })
     .catch(err => {
-      console.log(err);
       res.status(401).json('error');
     });
   });

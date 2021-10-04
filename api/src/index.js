@@ -22,13 +22,6 @@ loadConfig()
   .then(
     res => ensureDBIsCreated(nconf.get("database_db"))
   )
-  /*.then(res => {
-    console.log(res);
-    return ensureTablesArePopulated([
-      'src/database/database_shema.init.sql', 
-      'src/database/database_data.init.sql'
-    ]);
-  })*/
   .then(res => {
     console.log(res);
     var sequelize = getSequelize();
