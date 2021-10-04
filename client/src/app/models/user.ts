@@ -6,9 +6,6 @@ export class User {
     last_name : string;
     email : string;
     role : Role
-    //role_id : number;
-    //role_name : string;
-    //role_access_level : number
     display_string?: string;
 
     constructor(userResponse?: any) {
@@ -39,7 +36,7 @@ export class User {
             ||
             (user.last_name && this.last_name != user.last_name) 
             ||
-            (user.role.role_name && this.role.role_name != user.role.role_name)
+            (user.role.name && this.role.name != user.role.name)
             ||
             (user.role.id && this.role.id != user.role.id)
             ||

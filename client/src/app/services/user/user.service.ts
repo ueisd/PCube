@@ -48,7 +48,7 @@ export class UserService {
       firstName: user.first_name,
       lastName: user.last_name,
       RoleId: user.role.id,
-      roleName: user.role.role_name,
+      roleName: user.role.name,
       password: pwd
     });
   }
