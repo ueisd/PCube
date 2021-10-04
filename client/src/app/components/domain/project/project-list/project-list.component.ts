@@ -3,7 +3,6 @@ import { ProjectItem } from 'src/app/models/project';
 import { ProjectService } from 'src/app/services/project/project.service';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import * as $ from 'jquery/dist/jquery.min.js';
 import { FormControl } from '@angular/forms';
 import { AddProjectComponent } from '../add-project/add-project.component';
 import { DeleteProjectComponent } from 'src/app/components/domain/project/delete-project/delete-project.component';
@@ -20,7 +19,6 @@ import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 
 export class ProjectListComponent implements OnInit {
 
-  nameFilter = new FormControl('');
   fileNameDialogRef: MatDialogRef<AddProjectComponent>;
   deleteProjectDialogRef: MatDialogRef<DeleteProjectComponent>;
   isDeletable: Boolean = true;
@@ -93,10 +91,6 @@ export class ProjectListComponent implements OnInit {
     }
   }
 
-  onFilterChanged() {
-    this.refreshList({ expanded: true });
-  }
-
   treeControl = new FlatTreeControl<FlatNode>(
     node => node.level, node => node.expandable);
 
@@ -109,7 +103,6 @@ export class ProjectListComponent implements OnInit {
 
   async refreshList(opts?: refreshOption) {
     //let project = new ProjectItem();
-    //project.name = this.nameFilter.value.trim();
     let items: ProjectItem[] = await this.projectService.getAllProject().toPromise();
     let itemsTree = DataTreeFetcher.fetchProjectTree({
       itemList: items,

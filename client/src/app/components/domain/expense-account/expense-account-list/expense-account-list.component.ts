@@ -18,7 +18,6 @@ import {DataTreeFetcher} from 'src/app/models/utils/DataTreeFetcher'
 })
 export class ExpenseAccountListComponent implements OnInit {
 
-  nameFilter = new FormControl('');
   fileNameDialogRef: MatDialogRef<AddExpenseAccountComponent>;
   deleteProjectDialogRef: MatDialogRef<DeleteExpenseAccountComponent>;
   isDeletable: Boolean = true;
@@ -100,13 +99,8 @@ export class ExpenseAccountListComponent implements OnInit {
 
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
-  onFilterChanged() {
-    this.refreshList({ expanded: true });
-  }
 
   async refreshList(opts?: refreshOption) {
-    let expenseAccount = new ExpenseAccountItem();
-    expenseAccount.name = this.nameFilter.value.trim();
     let expensesAccounts = await this.expenseAccountService.getAllExpenseAccount().toPromise();
     let expensesAccountsTree = DataTreeFetcher.fetchProjectTree({
       itemList: expensesAccounts,
