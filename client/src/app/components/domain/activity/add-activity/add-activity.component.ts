@@ -58,7 +58,6 @@ export class AddActivityComponent implements OnInit{
   async createNewActivity(){
     let name = this.newActivityForm.controls['activityName'].value;
     let activity = await this.activityService.addNewActivity(name).toPromise();
-    console.log(activity);
     if(activity.id != -1){
       this.onSubmitSuccess();
     }else{
