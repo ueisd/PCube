@@ -27,7 +27,7 @@ export class ContactUsComponent implements OnInit {
     let user = this.currentUserService.curentUser.getValue().user;
     if(user) {
       this.user.email = user.email;
-      this.user.first_name = user.first_name;
+      this.user.firstName = user.firstName;
       this.user.last_name = user.last_name;
     }
     this.setDefaultValues();
@@ -52,7 +52,7 @@ export class ContactUsComponent implements OnInit {
   setDefaultValues() {
     this.contactUsForm.controls['email'].setValue(this.user.email);
     this.contactUsForm.controls['email'].disable();
-    this.contactUsForm.controls['firstName'].setValue(this.user.first_name);
+    this.contactUsForm.controls['firstName'].setValue(this.user.firstName);
     this.contactUsForm.controls['firstName'].disable();
     this.contactUsForm.controls['lastName'].setValue(this.user.last_name);
     this.contactUsForm.controls['lastName'].disable();

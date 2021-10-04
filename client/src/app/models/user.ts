@@ -2,7 +2,7 @@ import { Role } from "./role";
 
 export class User {
     id : number;
-    first_name : string;
+    firstName : string;
     last_name : string;
     email : string;
     role : Role
@@ -10,7 +10,7 @@ export class User {
 
     constructor(userResponse?: any) {
         this.id = userResponse && userResponse.id || "";
-        this.first_name = userResponse && userResponse.firstName || "";
+        this.firstName = userResponse && userResponse.firstName || "";
         this.last_name = userResponse && userResponse.lastName || "";
         this.email = userResponse && userResponse.email || "";
         this.role = new Role(
@@ -18,11 +18,11 @@ export class User {
             (userResponse) ? userResponse["Role.name"] : "",
             (userResponse) ? userResponse["Role.accessLevel"] : 0
         );
-        this.display_string = this.first_name + " " + this.last_name;
+        this.display_string = this.firstName + " " + this.last_name;
     }
 
     getFullName() {
-        let name = [this.first_name, this.last_name];
+        let name = [this.firstName, this.last_name];
         return name.join(" ").trim();
     }
 
@@ -32,7 +32,7 @@ export class User {
             ||
             (user.email && this.email != user.email) 
             ||
-            (user.first_name && this.first_name != user.first_name) 
+            (user.firstName && this.firstName != user.firstName) 
             ||
             (user.last_name && this.last_name != user.last_name) 
             ||

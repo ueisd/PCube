@@ -21,7 +21,7 @@ export class UtilsService {
 
     let body = {
       last_name: lastName,
-      first_name: firstName,
+      firstName: firstName,
       email: email,
       comment: comment
     };

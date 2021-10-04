@@ -81,7 +81,7 @@ module.exports.initModel = function(sequelize) {
       firstName: {
         type: DataTypes.STRING,
         allowNull: false,
-        field: 'first_name'
+        field: 'firstName'
       },
       lastName: {
         type: DataTypes.STRING,

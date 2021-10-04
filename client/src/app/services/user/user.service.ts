@@ -45,7 +45,7 @@ export class UserService {
   createUser(user: User, pwd): Observable<User> {
     return this.http.post<User>(API_USER, {
       email: user.email,
-      firstName: user.first_name,
+      firstName: user.firstName,
       lastName: user.last_name,
       RoleId: user.role.id,
       roleName: user.role.name,

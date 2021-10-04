@@ -48,14 +48,14 @@ export class UserListComponent implements OnInit {
 
   filterListFromUserFilter(user:User, userList): User[] {
     let regexs = {
-      first_name: new RegExp("^" + user.first_name  + "", "i"),
+      firstName: new RegExp("^" + user.firstName  + "", "i"),
       last_name:  new RegExp("^" + user.last_name   + "", "i"),
       email:      new RegExp("^" + user.email       + "", "i"),
       role_name:  new RegExp("^" + user.role.name   + "", "i")
     }
 
     return userList.filter(u => {
-      return regexs.first_name.test(u.first_name) 
+      return regexs.firstName.test(u.firstName) 
         && regexs.last_name.test(u.last_name)
         && regexs.email.test(u.email)
         && regexs.role_name.test(u.role.name);
@@ -71,7 +71,7 @@ export class UserListComponent implements OnInit {
 
   getUserFilterFromForm(): User {
     let user = new User();
-    user.first_name = this.nameFilter.value.trim();
+    user.firstName = this.nameFilter.value.trim();
     user.last_name = this.lastNameFilter.value.trim();
     user.email = this.emailFilter.value.trim();
     user.role.name = this.roleFilter.value.trim();
@@ -90,7 +90,7 @@ export class UserListComponent implements OnInit {
     const dialogRef = this.dialog.open(ModifyUserComponent, {
       data: { 
         id: user.id, 
-        firstName: user.first_name, 
+        firstName: user.firstName, 
         lastName: user.last_name, 
         email: user.email, 
         roleId: user.role.id,
@@ -111,7 +111,7 @@ export class UserListComponent implements OnInit {
     const dialogRef = this.dialog.open(DeleteUserComponent, {
       data: { 
         id: user.id, 
-        firstName: user.first_name, 
+        firstName: user.firstName, 
         lastName: user.last_name, 
         email: user.email, 
         roleId: user.role.id,

@@ -58,7 +58,7 @@ export class AddUserComponent implements OnInit {
 
   async onSubmit(){
     let user = new User();
-    user.first_name = this.userForm.get("name").value;
+    user.firstName = this.userForm.get("name").value;
     user.last_name = this.userForm.get("lname").value;
     user.email = this.userForm.get("email").value;
     user.role.id = this.userForm.get("roles").value["id"];
