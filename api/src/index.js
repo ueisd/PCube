@@ -18,6 +18,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+exports.app = app;
+
+require('./configuration/passeport');
+
 loadConfig()
   .then(
     res => ensureDBIsCreated(nconf.get("database_db"))
@@ -26,7 +30,8 @@ loadConfig()
     console.log(res);
     var sequelize = getSequelize();
     return initSchemas(sequelize);
-  }).then(res => {
+  })
+  .then(res => {
     let apiOrigin = nconf.get('api_url_origin');
     if(apiOrigin)
       app.use(cors({origin: apiOrigin}));

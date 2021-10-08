@@ -48,12 +48,7 @@ export class AuthService implements OnDestroy{
             return this.http.get<string>(API_AUTH_REFRESH).pipe(
               tap((result: any) => {
                 console.log("refersh");
-                let token = result.token;
-                localStorage.setItem("jwt", token);
-                this.jwtToken.next({
-                  isAuthenticated: true,
-                  token: token,
-                });
+                this.setJwtTokenUInLocalStorage(result.token);
               })
             );
           } else {
@@ -76,6 +71,8 @@ export class AuthService implements OnDestroy{
       );
   }
 
+  
+
   private initToken(): void {
     const token = localStorage.getItem("jwt");
     if (token) {
@@ -93,24 +90,32 @@ export class AuthService implements OnDestroy{
 
 
 
+
   public signin(credentials: {
     email: string;
     password: string;
   }): Observable<string> {
     return this.http.post<string>(API_AUTH_SIGNING, credentials).pipe(
       tap((response: any) => {
-        let token = response.token;
-        localStorage.setItem("jwt", token);
-        this.jwtToken.next({
-          isAuthenticated: true,
-          token: token,
-        });
-        this.subscription = this.initTimer();
+        this.connectWithToken(response.token);
       }),
       catchError(
         this.handleError<string>('aut.signin')
       )
     );
+  }
+
+  public connectWithToken(token:string) {
+    this.setJwtTokenUInLocalStorage(token);
+    this.subscription = this.initTimer()
+  }
+
+  private setJwtTokenUInLocalStorage(token) {
+    localStorage.setItem("jwt", token);
+    this.jwtToken.next({
+      isAuthenticated: true,
+      token: token,
+    });
   }
 
   public logout(): void {

@@ -4,6 +4,12 @@ import { AuthService } from '../../../shared/services/auth.service';
 import { CurentUserService } from 'src/app/shared/services/curent-user.service';
 import * as $ from 'jquery/dist/jquery.min.js';
 import { Subscription } from 'rxjs';
+import { HostListener } from '@angular/core';
+
+import { environment } from 'src/environments/environment';
+
+const API_GOOGLE_AUTH = environment.api_url + "/api/auth/google/";
+// "http://localhost:3000/api/auth/google/"
 
 @Component({
   selector: 'app-login',
@@ -30,6 +36,22 @@ export class LoginComponent implements OnInit, OnDestroy {
   ) {
     this.isAuthenticated = this.auth.jwtToken.value.isAuthenticated;          
   }
+
+
+
+  flogin(){
+    window.open(
+      API_GOOGLE_AUTH,
+      "mywindow","location=1,status=1,scrollbars=1, width=800,height=800"
+    );
+   }
+   
+   @HostListener('window:message', ['$event'])
+    onMessage(ev:MessageEvent) {
+      let token = ev.data.oauth2CallbackToken;
+      if(token)
+        this.auth.connectWithToken(token)
+    }
 
   ngOnInit() {
     this.conf = this.getTextForLogin();

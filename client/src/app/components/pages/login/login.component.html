@@ -10,6 +10,7 @@
             <p style="color:red">{{ conf.message }}</p>
 
             <form [formGroup]="formGroup" (ngSubmit)="onSubmit()" class="form" *ngIf="!isAuthenticated">
+                <a (click)="flogin()">Connexion google</a>
                 <mat-form-field appearance="fill" class="form-element" >
                     <mat-label>Courriel</mat-label>
                     <input id="emailInput" matInput formControlName="email">
