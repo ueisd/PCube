@@ -1,5 +1,6 @@
 const passport = require('passport');
 const { User } = require('../models/user.model');
+const { Role } = require('../models/role.model');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 var nconf = require('nconf');
 
@@ -7,17 +8,22 @@ const { app } = require('../index');
 
 app.use(passport.initialize());
 
-function createUserFromProfile (email, profile) {
+createUserFromProfile = async (email, profile) =>{
   let firstName = (profile.name.givenName) 
                 ? profile.name.givenName: "Anonymous";
   let lastName = (profile.name.familyName) ? profile.name.familyName : "";
+
+  let roles = await Role.findAll({raw : true});
+  let memberRole = roles.find(r => r.name == 'membre');
+  console.log('QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ');
+  console.log(memberRole);
   
   return User.create({ 
     email:      email,
     firstName:  firstName,
     lastName:   lastName,
     password:   "",
-    RoleId:     1
+    RoleId:     memberRole.id
   });
 }
 
