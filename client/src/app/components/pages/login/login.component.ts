@@ -7,11 +7,7 @@ import { Subscription } from 'rxjs';
 import { HostListener } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
-let API_GOOGLE_AUTH
-if(environment.api_url)
-  API_GOOGLE_AUTH = environment.api_url + "/api/auth/google/";
-else 
-  API_GOOGLE_AUTH = "/api/api/auth/google/";
+
 // "http://localhost:3000/api/auth/google/"
 
 @Component({
@@ -43,8 +39,13 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   flogin(){
+    let apiGoogleOauth2Url;
+    if(environment.api_url)
+      apiGoogleOauth2Url = environment.api_url + "/api/auth/google/";
+    else 
+      apiGoogleOauth2Url = "/api/api/auth/google/";
     window.open(
-      API_GOOGLE_AUTH,
+      apiGoogleOauth2Url,
       "mywindow","location=1,status=1,scrollbars=1, width=800,height=800"
     );
    }
