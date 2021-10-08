@@ -5,10 +5,7 @@ import { CurentUserService } from 'src/app/shared/services/curent-user.service';
 import * as $ from 'jquery/dist/jquery.min.js';
 import { Subscription } from 'rxjs';
 import { HostListener } from '@angular/core';
-
 import { environment } from 'src/environments/environment';
-
-// "http://localhost:3000/api/auth/google/"
 
 @Component({
   selector: 'app-login',
@@ -39,13 +36,8 @@ export class LoginComponent implements OnInit, OnDestroy {
 
 
   flogin(){
-    let apiGoogleOauth2Url;
-    if(environment.api_url)
-      apiGoogleOauth2Url = environment.api_url + "/api/auth/google/";
-    else 
-      apiGoogleOauth2Url = "/api/api/auth/google/";
     window.open(
-      apiGoogleOauth2Url,
+      environment.api_url + "/api/auth/google/",
       "mywindow","location=1,status=1,scrollbars=1, width=800,height=800"
     );
    }
