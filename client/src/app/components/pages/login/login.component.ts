@@ -7,8 +7,11 @@ import { Subscription } from 'rxjs';
 import { HostListener } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
-
-const API_GOOGLE_AUTH = environment.api_url + "/api/auth/google/";
+let API_GOOGLE_AUTH
+if(environment.api_url)
+  API_GOOGLE_AUTH = environment.api_url + "/api/auth/google/";
+else 
+  API_GOOGLE_AUTH = "/api/api/auth/google/";
 // "http://localhost:3000/api/auth/google/"
 
 @Component({
