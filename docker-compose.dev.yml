@@ -22,6 +22,9 @@ services:
       - RSA_KEY_PRIVATE=${RSA_KEY_PRIVATE}
       - RSA_PUBLIC_KEY=${RSA_PUBLIC_KEY}
       - API_URL_ORIGIN=${API_URL_ORIGIN}
+      - API_ADDRESS=${API_ADDRESS}
+      - OAUTH2_GOOGLE_ID=${OAUTH2_GOOGLE_ID}
+      - OAUTH2_GOOGLE_SECRET=${OAUTH2_GOOGLE_SECRET}
 #    networks:
 #      - backend-net
     depends_on:

@@ -1,21 +1,35 @@
 const passport = require('passport');
 const { User } = require('../models/user.model');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
+var nconf = require('nconf');
 
 const { app } = require('../index');
 
 app.use(passport.initialize());
 
+function createUserFromProfile (email, profile) {
+  let firstName = (profile.name.givenName) 
+                ? profile.name.givenName: "Anonymous";
+  let lastName = (profile.name.familyName) ? profile.name.familyName : "";
+  
+  return User.create({ 
+    email:      email,
+    firstName:  firstName,
+    lastName:   lastName,
+    password:   "",
+    RoleId:     1
+  });
+}
+
 passport.use(
     'google',
     new GoogleStrategy(
       {
-        clientID: '830137652122-qt007h8omkhsn58ktqrkkgdpg7kd2cbe.apps.googleusercontent.com',
-        clientSecret: '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',
-        callbackURL: 'http://localhost:3000/api/auth/google/cb',
+        clientID: nconf.get('oauth2_google_id'),
+        clientSecret: nconf.get('oauth2_google_secret'),
+        callbackURL: nconf.get('api_address') + '/api/auth/google/cb',
       },
       async (accessToken, refreshToken, profile, done) => {
-        // console.log(util.inspect(profile, { compact: true, depth: 5, breakLength: 80 }));
         try {
           let verifiedEmails = profile.emails
             .filter(e => e.verified)
@@ -25,8 +39,10 @@ passport.use(
             let users = await User.findUserByEmail(verifiedEmails);
             let user = (users.length > 0) ? users[0] : null;
             if(user) done(null, user);
-            else { // @todo créer l'utilisateur
-              done("We should create user but we do not do it for now.");
+            else {
+              let email = verifiedEmails[0];
+              let user = await createUserFromProfile(email, profile);
+              done(null, user);
             }
           }
         } catch (e) {

@@ -2,11 +2,9 @@ const passport = require('passport');
 var nconf = require('nconf');
 const { jwtSignId } = require('./utils/jwt.utils');
 
-const timeRefresh = '1200s';
-
 
 exports.googleAuth = (req, res, next) => {
-  passport.authenticate('google', { session: false, scope: ['email'] })(req, res, next);
+  passport.authenticate('google', { session: false, scope: ['email', 'profile'] })(req, res, next);
 }
   
 exports.googleAuthCb = (req, res, next) => {
@@ -14,6 +12,7 @@ exports.googleAuthCb = (req, res, next) => {
 }
 
 exports.generateOAuth2UserToken = (req, res, next) => {
+  let timeRefresh = nconf.get('jwt_refresh_token_expires');
   let user = req.user;
   let response = {
     user: user

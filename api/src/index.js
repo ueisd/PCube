@@ -20,13 +20,13 @@ app.use(cookieParser());
 
 exports.app = app;
 
-require('./configuration/passeport');
 
 loadConfig()
   .then(
     res => ensureDBIsCreated(nconf.get("database_db"))
   )
   .then(res => {
+    require('./configuration/oauth2.google.passeport');
     console.log(res);
     var sequelize = getSequelize();
     return initSchemas(sequelize);

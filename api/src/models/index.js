@@ -70,7 +70,7 @@ exports.initSchemas = async (sequelize) => {
 
     let usersLs = {};
     usersLs.Nadmin = await User.create({ 
-        email: 'pierrelucueisd@gmail.com', 
+        email: 'A',
         firstName: 'monsieur',
         lastName: 'zeta',
         password: bcrypt.hashSync('a', bcrypt.genSaltSync(8)),
