@@ -15,8 +15,7 @@ createUserFromProfile = async (email, profile) =>{
 
   let roles = await Role.findAll({raw : true});
   let memberRole = roles.find(r => r.name == 'membre');
-  console.log('QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ');
-  console.log(memberRole);
+  // @Todo écrire une requête avec where name='membre'
   
   return User.create({ 
     email:      email,
