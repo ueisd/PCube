@@ -1,0 +1,88 @@
+version: "3.8"
+services:
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile.dev
+    volumes:
+      - type: bind
+        source: ./api/src
+        target: /app/src
+    environment:
+      - EMAIL_USERNAME=${EMAIL_USERNAME} 
+      - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - DATABASE_PASSWORD=${DATABASE_PASSWORD}
+      - DATABASE_USER=${DATABASE_USER}
+      - DATABASE_HOST=${DATABASE_HOST}
+      - DATABASE_DB=${DATABASE_DB}
+      - RSA_KEY_PRIVATE=${RSA_KEY_PRIVATE}
+      - RSA_PUBLIC_KEY=${RSA_PUBLIC_KEY}
+      - API_URL_ORIGIN=${API_URL_ORIGIN}
+      - API_ADDRESS=${API_ADDRESS}
+      - OAUTH2_GOOGLE_ID=${OAUTH2_GOOGLE_ID}
+      - OAUTH2_GOOGLE_SECRET=${OAUTH2_GOOGLE_SECRET}
+    depends_on:
+      - db
+  db:
+    build:
+      context: ./database
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_DB}
+    volumes:
+    - type: volume
+      source: dbdata
+      target: /var/lib/mysql
+    security_opt:
+    - seccomp:unconfined
+    ports:
+      - 3308:3306
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+    depends_on:
+     - db
+  client:
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    volumes:
+      - type: bind
+        source: ./client/src
+        target: /app/src
+    environment: 
+      - DEBUG=*
+      - NODE_ENV=development
+    entrypoint:
+      - node_modules/.bin/ng
+      - serve 
+      - --port 
+      - "80" 
+      - --host 
+      - "0.0.0.0"
+      - --disable-host-check
+      - --poll
+    volumes:
+      - type: bind
+        source: ./client/src
+        target: /app/src
+    depends_on:
+      - api
+  reverse-proxy:
+    build:
+      context: ./reverse-proxy
+      dockerfile: Dockerfile.prod
+    ports: 
+      - 80:80
+    depends_on: 
+      - api
+      - db
+volumes:
+  dbdata:

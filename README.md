@@ -55,6 +55,8 @@ pour obtenir des clés rsa:
 ensuite chacune doit être une seule chaise de caractère où les retours à la ligne doivent être
 remplacés par \n.
 
+Si vous éprouvez des problèmes, utilisez simplement les fichiers pour stocker les clés rsa
+
 
 **\*Notes**: Les valeurs doivent être différentes de cet exemple
 
