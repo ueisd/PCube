@@ -33,9 +33,9 @@ loadConfig()
   })
   .then(res => {
     let apiOrigin = nconf.get('api_url_origin');
-    if(apiOrigin)
-      app.use(cors({origin: apiOrigin}));
-    else
+    //if(apiOrigin)
+      //app.use(cors({origin: apiOrigin}));
+    //else
       app.use(cors());
     app.use(index);
 
@@ -43,6 +43,12 @@ loadConfig()
     app.get('/api', (req, res) => {
       res.status(200).json({
         message: 'accueil'
+      });
+    });
+
+    app.get('/', (req, res) => {
+      res.status(200).json({
+        message: 'accueil heroku'
       });
     });
 
