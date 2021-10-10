@@ -39,7 +39,8 @@ loadConfig()
       app.use(cors());
     app.use(index);
 
-    app.get('/', (req, res) => {
+
+    app.get('/api', (req, res) => {
       res.status(200).json({
         message: 'accueil'
       });
