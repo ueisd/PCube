@@ -83,10 +83,12 @@ services:
       - type: bind
         source: /etc/letsencrypt
         target: /etc/letsencrypt
+    restart: unless-stopped
     ports: 
       - 80:80
     depends_on: 
       - api
       - db
+      - client
 volumes:
   dbdata:
