@@ -20,5 +20,5 @@ exports.configRsa = () => {
     }
     nconf.set('rsaKeyPublic', rsaPublicKey);
     console.log("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB")
-    console.log(nconfKeyPrivate);
+    console.log(rsaPublicKey);
 }
