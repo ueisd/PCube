@@ -55,6 +55,7 @@ coverage.xml
 .hypothesis/
 .pytest_cache/
 cover/
+*/node_modules
 
 # Translations
 *.mo
@@ -152,3 +153,4 @@ envtest*
 # PyCharm
 .idea*
 
+/api/old2/

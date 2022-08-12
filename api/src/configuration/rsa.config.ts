@@ -1,7 +1,7 @@
-const fs = require('fs');
-var nconf = require('nconf');
+import * as fs from 'fs';
+import * as nconf from "nconf";
 
-exports.configRsa = () => {
+export function configRsa() {
     let nconfKeyPrivate;
     try {
         nconfKeyPrivate = fs.readFileSync('./src/rsa/key', 'utf8')

@@ -1,11 +1,11 @@
 const { User } = require('../models/user.model');
 const { Role } = require('../models/role.model');
 const fs = require('fs');
-const jwt = require('jsonwebtoken');
+import jwt = require('jsonwebtoken');
 var nconf = require('nconf');
-//const FILE_RSA_PUBLIC_KEY = fs.readFileSync('./src/rsa/key.pub');
+const FILE_RSA_PUBLIC_KEY = fs.readFileSync('./src/rsa/key.pub');
 
-module.exports.isLoggedIn = async function (req, res, next) {
+export const isLoggedIn = async (req, res, next) => {
   let nconfPublicKey = nconf.get('rsaKeyPublic');
   const token = req.headers.authorization;
   if (token) {

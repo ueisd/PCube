@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { isLoggedIn } = require('../guards/isLoggedIn.guard');
+import { isLoggedIn } from '../guards/isLoggedIn.guard';
 const { ExpenseAccount } = require('../models/expense-account.model');
 
 router.get('/', isLoggedIn, (req, res) => {

@@ -1,10 +1,9 @@
-const router = require('express').Router();
-const { 
+import * as express from 'express'
+const router = express.Router();
+const {
   googleAuth, generateOAuth2UserToken, googleAuthCb 
 } = require('../controllers/auth/auth.google.controller');
-const { 
-  signingLocal, refreshToken 
-} = require('../controllers/auth/auth.controller');
+const { signingLocal, refreshToken } = require('../controllers/auth/auth.controller');
 
 // auth local
 router.post('/signin', signingLocal);

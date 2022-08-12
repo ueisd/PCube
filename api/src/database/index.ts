@@ -1,9 +1,13 @@
-const mysql = require('mysql');
+import * as mysql from "mysql";
 var pool = undefined;
-var nconf = require('nconf');
+import * as nconf from "nconf";
 
-exports.execQuery = async (sql) => {
-    let connection = await exports.getConnection();
+let connection;
+
+
+
+const execQuery = async (sql) => {
+    connection = await exports.getConnection();
     return new Promise(function(resolve, reject) {
         connection.query(sql, function (err, result) {
             connection.release();
@@ -13,7 +17,7 @@ exports.execQuery = async (sql) => {
     });
 }
 
-exports.execQueryNoDB = async (sql) => {
+const execQueryNoDB = async (sql) => {
     let connection = await getConctionNoDB();
     return new Promise(function(resolve, reject) {
         connection.query(sql, function (err, result) {
@@ -24,7 +28,7 @@ exports.execQueryNoDB = async (sql) => {
     });
 }
 
-exports.closePool = () => {
+const closePool = () => {
     return new Promise((reject, resolve) => {
         if(!pool) resolve();
         pool.end(function (err) {
@@ -34,7 +38,7 @@ exports.closePool = () => {
     });
 }
 
-exports.getConnection = () => {
+const getConnection = () => {
     return new Promise((resolve, reject)=>{
         try{
             if(!pool){
@@ -56,8 +60,8 @@ exports.getConnection = () => {
     });
 };
 
-let getConctionNoDB = () => {
-    return new Promise((resolve, reject)=>{
+let getConctionNoDB = (): Promise<any>  => {
+    return new Promise((resolve, reject)  =>{
         try{
             var con = mysql.createConnection({
                 host: nconf.get("database_host"),
@@ -68,6 +72,14 @@ let getConctionNoDB = () => {
                 if (err) reject(err);
                 resolve(con);
             });
+            return con;
         } catch (err) { reject(err); }
     });
 };
+
+export {
+    execQuery, 
+    execQueryNoDB,
+    closePool, 
+    getConnection 
+}

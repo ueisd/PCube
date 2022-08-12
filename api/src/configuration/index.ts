@@ -1,10 +1,12 @@
-var nconf = require('nconf');
+'use strict';
 
-const { configRsa } = require('../configuration/rsa.config');
+const nconf = require('nconf');
+import { configRsa } from "./rsa.config";
 
-exports.loadConfig = () => {
+const loadConfig: Function = () => {
     return new Promise((resolve, reject) => {
         try {
+            // console.log(nconfi);
             nconf.env({lowerCase: true}); // préséance
             nconf.use('file', { file: '/app/src/configuration/config.json' });
             nconf.load(() => { 
@@ -17,4 +19,8 @@ exports.loadConfig = () => {
         }
     }) 
 }
+
+export {
+    loadConfig,
+};
 

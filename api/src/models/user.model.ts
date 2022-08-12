@@ -1,13 +1,9 @@
 const { DataTypes, Model, Sequelize } = require('sequelize');
 const Op = Sequelize.Op;
 
-class User extends Model { }
 
-
-module.exports.User = User;
-
-module.exports.initModel = function(sequelize) {
-
+export default class User extends Model {
+  public static initModel(sequelize) {
     User.isEmailUnique = (email, id) => {
       return User.findAll({
         where: {
@@ -99,13 +95,13 @@ module.exports.initModel = function(sequelize) {
       isActive: { //@todo voir ce que ça fait..
         type: DataTypes.BOOLEAN
       },
-      /*role: {
+      role: {
         type : DataTypes.INTEGER,
         references: {
           model: sequelize.models.Role,
           key: 'id'
         }
-      }*/
+      }
     }, {
       indexes: [
         {unique:true, fields:['id']},
@@ -114,4 +110,5 @@ module.exports.initModel = function(sequelize) {
       sequelize, 
       modelName: 'User'
     });
+  }
 }

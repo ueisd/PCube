@@ -1,8 +1,18 @@
+"use strict";
+
 const bcrypt = require('bcrypt');
-var moment = require('moment-timezone');
+const moment = require('moment-timezone');
+
+import User from "./user.model";
+import Role from "./role.model";
+import Activity from "./activity.model";
+import Project from "./project.model";
+import ExpenseAccount from "./expense-account.model";
+import Timeline from "./timeline.model";
 
 
 exports.initSchemas = async (sequelize) => {
+
 
     const schemasFiles = [
         './user.model', 
@@ -13,63 +23,78 @@ exports.initSchemas = async (sequelize) => {
         './timeline.model'
     ];
 
-    for(fileName of schemasFiles) {
-        await require(fileName).initModel(sequelize);
-    }
+    // for(let fileName of schemasFiles) {
+    //     await require(fileName).initModel(sequelize);
+    // }
 
-    const User = sequelize.models.User;
-    const Role = sequelize.models.Role;
-    const Activity = sequelize.models.Activity;
-    const Project = sequelize.models.Project;
-    const ExpenseAccount = sequelize.models.ExpenseAccount;
-    const Timeline = sequelize.models.Timeline;
+
+    Role.initModel(sequelize);
+    User.initModel(sequelize);
+    Activity.initModel(sequelize);
+    Project.initModel(sequelize);
+    ExpenseAccount.initModel(sequelize);
+    Timeline.initModel(sequelize);
+
+    const RoleModel = sequelize.models.Role;
+    const UserModel = sequelize.models.User;
+    const ActivityModel = sequelize.models.Activity;
+    const ProjectModel = sequelize.models.Project;
+    const ExpenseAccountModel = sequelize.models.ExpenseAccount;
+    const TimelineModel = sequelize.models.Timeline;
+
 
     // role
-    Role.hasMany(User);
-    User.belongsTo(Role);
+    RoleModel.hasMany(UserModel);
+    UserModel.belongsTo(RoleModel);
 
 
     // project
-    Project.hasMany(Project);
-    Project.belongsTo(Project);
+    ProjectModel.hasMany(ProjectModel);
+    ProjectModel.belongsTo(ProjectModel);
 
     
     // expense account
-    ExpenseAccount.hasMany(ExpenseAccount);
-    ExpenseAccount.belongsTo(ExpenseAccount);
+    ExpenseAccountModel.hasMany(ExpenseAccountModel);
+    ExpenseAccountModel.belongsTo(ExpenseAccountModel);
 
 
     // timeline
-    User.hasMany(Timeline);
-    Timeline.belongsTo(User);
+    UserModel.hasMany(TimelineModel);
+    TimelineModel.belongsTo(UserModel);
 
-    Project.hasMany(Timeline);
-    Timeline.belongsTo(Project);
+    ProjectModel.hasMany(TimelineModel);
+    TimelineModel.belongsTo(ProjectModel);
 
-    Activity.hasMany(Timeline);
-    Timeline.belongsTo(Activity);
+    ActivityModel.hasMany(TimelineModel);
+    TimelineModel.belongsTo(ActivityModel);
     
-    ExpenseAccount.hasMany(Timeline);
-    Timeline.belongsTo(ExpenseAccount);
+    ExpenseAccountModel.hasMany(TimelineModel);
+    TimelineModel.belongsTo(ExpenseAccountModel);
     
 
     //@todo si prod on utilise alter
+
+    console.log(`1`.repeat(100));
     await sequelize.sync({ force: true });
+    console.log(`2`.repeat(100));
 
-    const membre = await Role.create({ name: "membre",  accessLevel: 3});
-    const pm = await Role.create({ name: "product manager",  accessLevel: 2});
-    const admin = await Role.create({ name: "admin",  accessLevel: 1});
+    const membre = await RoleModel.create({ name: "membre",  accessLevel: 3});
+    const pm = await RoleModel.create({ name: "product manager",  accessLevel: 2});
+    const admin = await RoleModel.create({ name: "admin",  accessLevel: 1});
 
-    /*const jane = await User.create({ 
-        email: 'baba@gmail.com', 
+    console.log(`3`.repeat(100));
+
+
+    const jane = await User.create({
+        email: 'baba@gmail.com',
         firstName: 'monsieur',
         lastName: 'zeta',
         password: bcrypt.hashSync('gggrrrr11111111', bcrypt.genSaltSync(8)),
         RoleId: admin.id
-    });*/
+    });
 
-    let usersLs = {};
-    usersLs.Nadmin = await User.create({ 
+    let usersLs: any = {};
+    usersLs.Nadmin = await UserModel.create({
         email: 'A',
         firstName: 'monsieur',
         lastName: 'zeta',
@@ -77,56 +102,58 @@ exports.initSchemas = async (sequelize) => {
         RoleId: admin.id
     });
 
-    usersLs.NprojectManager = await User.create({ 
-        email: 'PM', 
+    console.log(`4`.repeat(100));
+
+    usersLs.NprojectManager = await User.create({
+        email: 'PM',
         firstName: 'monsieur',
         lastName: 'yota',
         password: bcrypt.hashSync('pm', bcrypt.genSaltSync(8)),
         RoleId: pm.id
     });
 
-    usersLs.Nmember = await User.create({ 
-        email: 'M', 
+    usersLs.Nmember = await User.create({
+        email: 'M',
         firstName: 'monsieur',
         lastName: 'xeta',
         password: bcrypt.hashSync('m', bcrypt.genSaltSync(8)),
         RoleId: membre.id
     });
 
-    usersLs.NtaylorRosales = await User.create({ 
-        email: 'Taylor@Rosales.com', 
+    usersLs.NtaylorRosales = await User.create({
+        email: 'Taylor@Rosales.com',
         firstName: 'Taylor',
         lastName: 'Rosales',
         password: bcrypt.hashSync('taylor', bcrypt.genSaltSync(8)),
         RoleId: membre.id
     });
 
-    usersLs.NannabelFischer = await User.create({ 
-        email: 'Annabel@Fischer', 
+    usersLs.NannabelFischer = await User.create({
+        email: 'Annabel@Fischer',
         firstName: 'Annabel',
         lastName: 'Fischer',
         password: bcrypt.hashSync('annabel', bcrypt.genSaltSync(8)),
         RoleId: membre.id
     });
 
-    usersLs.NAnnaHammon = await User.create({ 
-        email: 'Anya@Hammond.com', 
+    usersLs.NAnnaHammon = await User.create({
+        email: 'Anya@Hammond.com',
         firstName: 'Anya',
         lastName: 'Hammond',
         password: bcrypt.hashSync('anya', bcrypt.genSaltSync(8)),
         RoleId: membre.id
     });
 
-    usersLs.NNellieThornton = await User.create({ 
-        email: 'Nellie@Thornton.com', 
+    usersLs.NNellieThornton = await User.create({
+        email: 'Nellie@Thornton.com',
         firstName: 'Nellie',
         lastName: 'Thornton',
         password: bcrypt.hashSync('nellie', bcrypt.genSaltSync(8)),
         RoleId: membre.id
     });
 
-    usersLs.NKimberleyKeller = await User.create(        { 
-        email: 'Kimberley@Keller.com', 
+    usersLs.NKimberleyKeller = await User.create(        {
+        email: 'Kimberley@Keller.com',
         firstName: 'Kimberley',
         lastName: 'Keller',
         password: bcrypt.hashSync('kimberly', bcrypt.genSaltSync(8)),
@@ -134,85 +161,85 @@ exports.initSchemas = async (sequelize) => {
     });
 
     let users = await User.bulkCreate([
-        { 
-            email: 'Kane@Nod.com', 
+        {
+            email: 'Kane@Nod.com',
             firstName: 'Kane',
             lastName: 'Nod',
             password: bcrypt.hashSync('kane', bcrypt.genSaltSync(8)),
             RoleId: admin.id
         },
-        { 
-            email: 'Redmond@Boyle.com', 
+        {
+            email: 'Redmond@Boyle.com',
             firstName: 'Redmond',
             lastName: 'Boyle',
             password: bcrypt.hashSync('redmond', bcrypt.genSaltSync(8)),
             RoleId: admin.id
         },
-        { 
-            email: 'Kirce@James.ca', 
+        {
+            email: 'Kirce@James.ca',
             firstName: 'Kirce',
             lastName: 'James',
             password: bcrypt.hashSync('kirce', bcrypt.genSaltSync(8)),
             RoleId: pm.id
         },
-        { 
-            email: 'Kilian@Qatar.ca', 
+        {
+            email: 'Kilian@Qatar.ca',
             firstName: 'Kilian',
             lastName: 'Qatar',
             password: bcrypt.hashSync('kilian', bcrypt.genSaltSync(8)),
             RoleId: pm.id
         },
-        { 
-            email: 'Louise', 
+        {
+            email: 'Louise',
             firstName: 'Louise',
             lastName: 'Strickland',
             password: bcrypt.hashSync('louise', bcrypt.genSaltSync(8)),
             RoleId: membre.id
         },
-        { 
-            email: 'Sebastian@Merrill.qc', 
+        {
+            email: 'Sebastian@Merrill.qc',
             firstName: 'Sebastian',
             lastName: 'Merrill',
             password: bcrypt.hashSync('louise', bcrypt.genSaltSync(8)),
             RoleId: membre.id
         },
-        { 
-            email: 'Edwin@Phillips.ai', 
+        {
+            email: 'Edwin@Phillips.ai',
             firstName: 'Edwin',
             lastName: 'Phillips',
             password: bcrypt.hashSync('edwin', bcrypt.genSaltSync(8)),
             RoleId: pm.id
         },
-        { 
-            email: 'Darren@Vargas.li', 
+        {
+            email: 'Darren@Vargas.li',
             firstName: 'Darren',
             lastName: 'Vargas',
             password: bcrypt.hashSync('darren', bcrypt.genSaltSync(8)),
             RoleId: admin.id
         },
-        { 
-            email: 'James@Mccormick.com', 
+        {
+            email: 'James@Mccormick.com',
             firstName: 'James',
             lastName: 'Mccormick',
             password: bcrypt.hashSync('james', bcrypt.genSaltSync(8)),
             RoleId: membre.id
         },
-        { 
-            email: 'Georgie@Nelson.qc', 
+        {
+            email: 'Georgie@Nelson.qc',
             firstName: 'Georgie',
             lastName: 'Nelson',
             password: bcrypt.hashSync('georgie', bcrypt.genSaltSync(8)),
             RoleId: membre.id
         },
-        { 
-            email: 'Roosevelt@Bradford.eu', 
+        {
+            email: 'Roosevelt@Bradford.eu',
             firstName: 'Roosevelt',
             lastName: 'Bradford',
             password: bcrypt.hashSync('roosevelt', bcrypt.genSaltSync(8)),
             RoleId: membre.id
         },
-        { 
-            email: 'Marcel@Wilcox.ku', 
+        {
+            email: 'Marcel@Wilcox.ku',
             firstName: 'Marcel',
             lastName: 'Wilcox',
             password: bcrypt.hashSync('marcel', bcrypt.genSaltSync(8)),
@@ -221,7 +248,7 @@ exports.initSchemas = async (sequelize) => {
     ]);
 
 
-    let activites = {};
+    let activites:any = {};
 
     activites.NjourneeSavon2013 = await Activity.create({
         name: 'Journée promotionelle des savons - 2013-04-05'
@@ -240,7 +267,7 @@ exports.initSchemas = async (sequelize) => {
     });
 
 
-    let projets = {};
+    let projets:any = {};
     projets.NstageHumanitaires = await Project.create(
         {name: "Stage humanitaire"}
     );
@@ -279,14 +306,14 @@ exports.initSchemas = async (sequelize) => {
         projets.NstageHaiti2012, projets.NstageHaiti2013
     ]);
 
-    
+
 
     /*await projets.NmarketingVeloJeunesse2018.setProjects([
         projets.NactiviteMarketing5juin
     ]);*/
 
 
-    let ea = {};
+    let ea:any = {};
 
     ea.Nadministration = await ExpenseAccount.create(
         {name: "administration"}
@@ -319,7 +346,7 @@ exports.initSchemas = async (sequelize) => {
 
     ea.Nmarketing = await ExpenseAccount.create(
         {name: "marketing"}
-    ); 
+    );
 
 
 
@@ -337,38 +364,38 @@ exports.initSchemas = async (sequelize) => {
             punchOut : punch.punchOut,
             ProjectId : projets.NstageHumanitaires.id,
             ExpenseAccountId : ea.Nadministration.id,
-            ActivityId : activites.NjourneeSavon2013.id, 
+            ActivityId : activites.NjourneeSavon2013.id,
             UserId: usersLs.Nadmin.id
         }
     );
-        
+
     punch = fetchPunchTzNY('2020-07-01', '13:00', '17:00');
     let tl2 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Nadministration.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.NprojectManager.id
     });
-    
+
     punch = fetchPunchTzNY('2020-07-02', '08:00', '12:00');
     let tl3 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Nadministration.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.Nmember.id
     });
-    
+
     punch = fetchPunchTzNY('2020-07-03', '06:00', '12:00')
     let tl4 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Nadministration.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -378,17 +405,17 @@ exports.initSchemas = async (sequelize) => {
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Nadministration.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.NannabelFischer.id
     });
-    
+
     punch = fetchPunchTzNY('2020-07-05', '08:00', '12:00')
     let tl6 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Nadministration.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -398,7 +425,7 @@ exports.initSchemas = async (sequelize) => {
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Nmarketing.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -408,17 +435,17 @@ exports.initSchemas = async (sequelize) => {
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Nmarketing.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.NannabelFischer.id
     });
-    
+
     punch = fetchPunchTzNY('2020-07-02', '08:00', '12:00')
     let tl9 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Nmarketing.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -428,7 +455,7 @@ exports.initSchemas = async (sequelize) => {
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Nadministration.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -438,17 +465,17 @@ exports.initSchemas = async (sequelize) => {
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Ncomptabilite.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.NannabelFischer.id
     });
-    
+
     punch = fetchPunchTzNY('2020-07-05', '08:00', '08:01');
     let tl12 = await Timeline.create({
         punchIn : punch.punchIn,
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHumanitaires.id,
         ExpenseAccountId : ea.Ncomptabilite.id,
-        ActivityId : activites.NjourneeSavon2013.id, 
+        ActivityId : activites.NjourneeSavon2013.id,
         UserId: usersLs.NannabelFischer.id
     });
 
@@ -458,7 +485,7 @@ exports.initSchemas = async (sequelize) => {
         punchOut : punch.punchOut,
         ProjectId : projets.NstageHaiti2012.id,
         ExpenseAccountId : ea.Nrestauration.id,
-        ActivityId : activites.NsouperBenefice2015.id, 
+        ActivityId : activites.NsouperBenefice2015.id,
         UserId: usersLs.NtaylorRosales.id
     });
 
@@ -468,7 +495,7 @@ exports.initSchemas = async (sequelize) => {
         punchOut : punch.punchOut,
         ProjectId : projets.NstageRD2009.id,
         ExpenseAccountId : ea.Ncuisine.id,
-        ActivityId : activites.NsouperDu20120405.id, 
+        ActivityId : activites.NsouperDu20120405.id,
         UserId: usersLs.NNellieThornton.id
     });
 
@@ -478,7 +505,7 @@ exports.initSchemas = async (sequelize) => {
         punchOut : punch.punchOut,
         ProjectId : projets.NstageRD2009.id,
         ExpenseAccountId : ea.NpreparationSalle.id,
-        ActivityId : activites.NsouperDu20120405.id, 
+        ActivityId : activites.NsouperDu20120405.id,
         UserId: usersLs.Nadmin.id
     });
 
@@ -488,7 +515,7 @@ exports.initSchemas = async (sequelize) => {
         punchOut : punch.punchOut,
         ProjectId : projets.NstageRD2009.id,
         ExpenseAccountId : ea.Ncuisine.id,
-        ActivityId : activites.NsouperDu20120405.id, 
+        ActivityId : activites.NsouperDu20120405.id,
         UserId: usersLs.Nadmin.id
     });
 
@@ -528,9 +555,9 @@ exports.initSchemas = async (sequelize) => {
         UserId: usersLs.NKimberleyKeller.id
     });
 
-    //await membre.setUsers([jane]);
+    await membre.setUsers([jane]);
 
-    //console.log(await membre.hasUser(jane));
+    console.log(await membre.hasUser(jane));
       
 }
 

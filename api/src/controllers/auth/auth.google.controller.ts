@@ -1,4 +1,4 @@
-const passport = require('passport');
+// const passport = require('passport');
 var nconf = require('nconf');
 const { jwtSignId } = require('./utils/jwt.utils');
 
@@ -14,7 +14,7 @@ exports.googleAuthCb = (req, res, next) => {
 exports.generateOAuth2UserToken = (req, res, next) => {
   let timeRefresh = nconf.get('jwt_refresh_token_expires');
   let user = req.user;
-  let response = {
+  let response:any = {
     user: user
   };
   let rsaPrivateKey = nconf.get('rsaKeyPrivate')

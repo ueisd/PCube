@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const { isLoggedIn } = require('../guards/isLoggedIn.guard');
+import { isLoggedIn } from '../guards/isLoggedIn.guard';
 const { Project } = require('../models/project.model');
 
 router.get('/', isLoggedIn, (req, res) => {

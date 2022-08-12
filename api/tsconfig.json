@@ -1,0 +1,28 @@
+{
+  "exclude": ["node_modules", "dist"],
+  "include": ["src/**/*.ts"],
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "module": "commonjs", // "ESNext",
+    "target": "ES2021", // "ES2019", es5
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "removeComments": true,
+    "sourceMap": true,
+    "outDir": "dist",
+    //"allowJs": true
+    "baseUrl": "/app",
+//    "paths": {
+//      "bcrypt": ["node_modules/bcrypt/bcrypt"] // This mapping is relative to "baseUrl"
+//    },
+  },
+  "exclude": [
+    "/app/node_modules",
+    "node_modules",
+    "./node_modules",
+    "./node_modules/*",
+    "./node_modules/@types/node/index.d.ts",
+  ],
+}

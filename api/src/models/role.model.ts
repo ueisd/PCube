@@ -1,18 +1,14 @@
 const { DataTypes, Model } = require('sequelize');
 
-class Role extends Model {};
+export default class Role extends Model {
 
-module.exports.Role = Role;
-
-module.exports.initModel = function(sequelize) {
-    
-    Role.init(
-        {
+    public static initModel(sequelize){
+        Role.init({
             id: {
                 type : DataTypes.INTEGER,
                 primaryKey: true,
                 autoIncrement: true
-            }, 
+            },
             name: {
                 type : DataTypes.STRING,
             },
@@ -21,12 +17,10 @@ module.exports.initModel = function(sequelize) {
             }
         }, {
             indexes: [
-                {unique:true, fields:['id']},
+                { unique:true, fields:['id'] },
             ],
             sequelize,
             modelName: 'Role'
-        }
-        
-    );
-    return Role;
+        });
+    }
 }

@@ -1,11 +1,11 @@
 var nconf = require('nconf');
 const { Sequelize } = require('sequelize');
 
-var sequelize = undefined;
+let sequelizeInst = undefined;
 
-exports.getSequelize = () => {
-    if(sequelize) return sequelize;
-    var sequelize = new Sequelize(
+export const getSequelize = () => {
+    if(sequelizeInst) return sequelizeInst;
+    sequelizeInst = new Sequelize(
         nconf.get("database_db"), 
         nconf.get("database_user"), 
         nconf.get("database_password"), 
@@ -14,5 +14,5 @@ exports.getSequelize = () => {
             "dialect" : 'mysql'
         }
     );
-    return sequelize;
+    return sequelizeInst;
 }

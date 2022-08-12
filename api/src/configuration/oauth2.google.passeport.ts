@@ -1,23 +1,30 @@
+'use strict';
+
 const passport = require('passport');
-const { User } = require('../models/user.model');
-const { Role } = require('../models/role.model');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 var nconf = require('nconf');
 
-const { app } = require('../index');
+let UserModel;
+let RoleModel;
 
-app.use(passport.initialize());
+exports.getInitializedPassport = () => {
+  return passport.initialize();
+}
 
-createUserFromProfile = async (email, profile) =>{
-  let firstName = (profile.name.givenName) 
-                ? profile.name.givenName: "Anonymous";
-  let lastName = (profile.name.familyName) ? profile.name.familyName : "";
+exports.injectDependency = (seq) => {
+  UserModel = seq.models.User;
+  RoleModel = seq.models.Role;
+}
 
-  let roles = await Role.findAll({raw : true});
+const createUserFromProfile = async (email, profile) =>{
+  let firstName = profile.name.givenName || 'Anonymous';
+  let lastName = profile.name.familyName || "";
+
+  let roles = await RoleModel.findAll({raw : true});
   let memberRole = roles.find(r => r.name == 'membre');
   // @Todo écrire une requête avec where name='membre'
-  
-  return User.create({ 
+
+  return UserModel.create({
     email:      email,
     firstName:  firstName,
     lastName:   lastName,
@@ -41,7 +48,7 @@ passport.use(
             .map(e => e.value);
           if(verifiedEmails.length <=0) done("no verified emails");
           else {
-            let users = await User.findUserByEmail(verifiedEmails);
+            let users = await UserModel.findUserByEmail(verifiedEmails);
             let user = (users.length > 0) ? users[0] : null;
             if(user) done(null, user);
             else {
@@ -53,6 +60,7 @@ passport.use(
         } catch (e) {
           done(e);
         }
+
       }
     )
   );
