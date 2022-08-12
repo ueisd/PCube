@@ -1,12 +1,10 @@
 import * as mysql from "mysql";
-var pool = undefined;
 import * as nconf from "nconf";
 
+let pool;
 let connection;
 
-
-
-const execQuery = async (sql) => {
+export const execQuery = async (sql) => {
     connection = await exports.getConnection();
     return new Promise(function(resolve, reject) {
         connection.query(sql, function (err, result) {
@@ -17,8 +15,8 @@ const execQuery = async (sql) => {
     });
 }
 
-const execQueryNoDB = async (sql) => {
-    let connection = await getConctionNoDB();
+export const execQueryNoDB = async (sql) => {
+    let connection = await getConnectionNoDB();
     return new Promise(function(resolve, reject) {
         connection.query(sql, function (err, result) {
             connection.end();
@@ -28,7 +26,7 @@ const execQueryNoDB = async (sql) => {
     });
 }
 
-const closePool = () => {
+export const closePool = () => {
     return new Promise((reject, resolve) => {
         if(!pool) resolve();
         pool.end(function (err) {
@@ -38,7 +36,7 @@ const closePool = () => {
     });
 }
 
-const getConnection = () => {
+export const getConnection = () => {
     return new Promise((resolve, reject)=>{
         try{
             if(!pool){
@@ -60,7 +58,7 @@ const getConnection = () => {
     });
 };
 
-let getConctionNoDB = (): Promise<any>  => {
+const getConnectionNoDB = (): Promise<any>  => {
     return new Promise((resolve, reject)  =>{
         try{
             var con = mysql.createConnection({
@@ -76,10 +74,3 @@ let getConctionNoDB = (): Promise<any>  => {
         } catch (err) { reject(err); }
     });
 };
-
-export {
-    execQuery, 
-    execQueryNoDB,
-    closePool, 
-    getConnection 
-}
