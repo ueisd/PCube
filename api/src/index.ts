@@ -16,6 +16,8 @@ import { PresetQuerry } from "./database/presetQuery";
 import ActivityDataBaseGatewayImpl from "./entitiesFamilies/Activity/gatabaseImpls/DatabaseGateway.impl";
 import UserDataBaseGatewayImpl from "./entitiesFamilies/User/databaseImpls/databaseGateway.impl";
 import ProjectDataBaseGatewayImpl from "./entitiesFamilies/Project/databaseImpls/databaseGateway.impl";
+import ExpenseAccountDataBaseGatewayImpl from "./entitiesFamilies/ExpenseAccount/DatabaseImpl/DatabaseGateway.impl";
+
 const index = require("./routes/index");
 
 const app = express();
@@ -42,11 +44,15 @@ async function main() {
   const userDbGateway = new UserDataBaseGatewayImpl(sequelize);
   const activityDbGateway = new ActivityDataBaseGatewayImpl(sequelize);
   const projectDbGateway = new ProjectDataBaseGatewayImpl(sequelize);
+  const expenseAccountDBGateway = new ExpenseAccountDataBaseGatewayImpl(
+    sequelize
+  );
   await initSchemas(
     sequelize,
     userDbGateway,
     activityDbGateway,
-    projectDbGateway
+    projectDbGateway,
+    expenseAccountDBGateway
   );
 
   let apiOrigin = nconf.get("api_url_origin");

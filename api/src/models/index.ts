@@ -9,17 +9,17 @@ import Activity from "../entitiesFamilies/Activity/entities/Activity";
 import ProjectDatabaseGateway from "../entitiesFamilies/Project/databaseGateway/ProjectDatabaseGateway";
 import ActivityDatabaseGateway from "../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway";
 import UserDatabaseGateway from "../entitiesFamilies/User/databaseGateway/UserDatabaseGateway";
+import ExpenseAccountDatabaseGateway from "../entitiesFamilies/ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway";
 
-import ExpenseAccount from "./expense-account.model";
 import Timeline from "./timeline.model";
 
 exports.initSchemas = async (
   sequelize,
   userDbGateway: UserDatabaseGateway,
   activityDbGateway: ActivityDatabaseGateway,
-  projectDbGateway: ProjectDatabaseGateway
+  projectDbGateway: ProjectDatabaseGateway,
+  expenseAccountDBGateway: ExpenseAccountDatabaseGateway
 ) => {
-  ExpenseAccount.initModel(sequelize);
   Timeline.initModel(sequelize);
 
   const UserModel = sequelize.models.User;
@@ -27,10 +27,6 @@ exports.initSchemas = async (
   const ProjectModel = sequelize.models.Project;
   const ExpenseAccountModel = sequelize.models.ExpenseAccount;
   const TimelineModel = sequelize.models.Timeline;
-
-  // expense account
-  ExpenseAccountModel.hasMany(ExpenseAccountModel);
-  ExpenseAccountModel.belongsTo(ExpenseAccountModel);
 
   // timeline
   UserModel.hasMany(TimelineModel);
@@ -337,51 +333,63 @@ exports.initSchemas = async (
 
   let ea: any = {};
 
-  ea.Nadministration = await ExpenseAccount.create({ name: "administration" });
+  ea.Nadministration = await expenseAccountDBGateway.createExpenseAccount({
+    name: "administration",
+  });
 
-  ea.Ncomptabilite = await ExpenseAccount.create({ name: "comptabilité" });
+  ea.Ncomptabilite = await expenseAccountDBGateway.createExpenseAccount({
+    name: "comptabilité",
+  });
 
-  ea.NactiviteFinancement = await ExpenseAccount.create({
+  ea.NactiviteFinancement = await expenseAccountDBGateway.createExpenseAccount({
     name: "Activité de financement",
   });
 
-  ea.Nrestauration = await ExpenseAccount.create({ name: "restauration" });
+  ea.Nrestauration = await expenseAccountDBGateway.createExpenseAccount({
+    name: "restauration",
+  });
 
-  ea.Ncuisine = await ExpenseAccount.create({ name: "cuisine" });
+  ea.Ncuisine = await expenseAccountDBGateway.createExpenseAccount({
+    name: "restauration",
+  });
 
-  ea.NpreparationSalle = await ExpenseAccount.create({
+  ea.NpreparationSalle = await expenseAccountDBGateway.createExpenseAccount({
     name: "Préparation de la salle",
   });
 
-  ea.NventesProduits = await ExpenseAccount.create({
+  ea.NventesProduits = await expenseAccountDBGateway.createExpenseAccount({
     name: "ventes de produits",
   });
 
-  ea.Nmarketing = await ExpenseAccount.create({ name: "marketing" });
+  ea.Nmarketing = await expenseAccountDBGateway.createExpenseAccount({
+    name: "marketing",
+  });
 
   //await ea.Nadministration.setExpenseAccounts([ea.Nadmin2018]);
-  await ea.Nrestauration.setExpenseAccounts([
+  await expenseAccountDBGateway.addSubExpenseAccounts(ea.Nrestauration, [
     ea.Ncuisine,
     ea.NpreparationSalle,
   ]);
-  await ea.Nadministration.setExpenseAccounts([
+
+  await expenseAccountDBGateway.addSubExpenseAccounts(ea.Nadministration, [
     ea.Nmarketing,
     ea.Ncomptabilite,
   ]);
-  await ea.NactiviteFinancement.setExpenseAccounts([
+
+  await expenseAccountDBGateway.addSubExpenseAccounts(ea.NactiviteFinancement, [
     ea.Nrestauration,
     ea.NventesProduits,
   ]);
 
-  // let punch = fetchPunchTzNY("2020-07-01", "08:00", "12:00");
-  // let tl1 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Nadministration.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.Nadmin.id,
-  // });
+  let punch = fetchPunchTzNY("2020-07-01", "08:00", "12:00");
+  let tl1 = await Timeline.create({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Nadministration.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.Nadmin.id,
+  });
   //
   // punch = fetchPunchTzNY("2020-07-01", "13:00", "17:00");
   // let tl2 = await Timeline.create({
