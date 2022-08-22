@@ -43,15 +43,16 @@ passport.use(
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          let verifiedEmails = profile.emails
-            .filter(e => e.verified)
-            .map(e => e.value);
-          if(verifiedEmails.length <=0) done("no verified emails");
-          else {
+          let verifiedEmails = profile.emails.filter(e => e.verified).map(e => e.value);
+          if(verifiedEmails.length <=0){
+            done("no verified emails");
+          } else {
             let users = await UserModel.findUserByEmail(verifiedEmails);
             let user = (users.length > 0) ? users[0] : null;
-            if(user) done(null, user);
-            else {
+
+            if(user) {
+              done(null, user);
+            } else {
               let email = verifiedEmails[0];
               let user = await createUserFromProfile(email, profile);
               done(null, user);
@@ -60,7 +61,6 @@ passport.use(
         } catch (e) {
           done(e);
         }
-
       }
     )
-  );
+);

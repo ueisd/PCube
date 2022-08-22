@@ -1,5 +1,5 @@
-//import { User } from "./user.model";
-import { User } from 'src/app/models/user'
+//import { UserImpl } from "./user.model";
+import { User } from 'src/app/models/user';
 
 export interface JwtToken {
   isAuthenticated: boolean;
