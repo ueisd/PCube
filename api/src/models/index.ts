@@ -10,42 +10,22 @@ import ProjectDatabaseGateway from "../entitiesFamilies/Project/databaseGateway/
 import ActivityDatabaseGateway from "../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway";
 import UserDatabaseGateway from "../entitiesFamilies/User/databaseGateway/UserDatabaseGateway";
 import ExpenseAccountDatabaseGateway from "../entitiesFamilies/ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway";
+import TimelineDatabaseGateway from "../entitiesFamilies/Timeline/DatabaseGateway/TimelineDatabaseGateway";
 
-import Timeline from "./timeline.model";
-
-exports.initSchemas = async (
-  sequelize,
-  userDbGateway: UserDatabaseGateway,
-  activityDbGateway: ActivityDatabaseGateway,
-  projectDbGateway: ProjectDatabaseGateway,
-  expenseAccountDBGateway: ExpenseAccountDatabaseGateway
-) => {
-  Timeline.initModel(sequelize);
-
-  const UserModel = sequelize.models.User;
-  const ActivityModel = sequelize.models.Activity;
-  const ProjectModel = sequelize.models.Project;
-  const ExpenseAccountModel = sequelize.models.ExpenseAccount;
-  const TimelineModel = sequelize.models.Timeline;
-
-  // timeline
-  UserModel.hasMany(TimelineModel);
-  TimelineModel.belongsTo(UserModel);
-
-  ProjectModel.hasMany(TimelineModel);
-  TimelineModel.belongsTo(ProjectModel);
-
-  ActivityModel.hasMany(TimelineModel);
-  TimelineModel.belongsTo(ActivityModel);
-
-  ExpenseAccountModel.hasMany(TimelineModel);
-  TimelineModel.belongsTo(ExpenseAccountModel);
-
+exports.buildDataset = async ({
+  userDbGateway,
+  activityDbGateway,
+  projectDbGateway,
+  expenseAccountDBGateway,
+  timelineDBGateway,
+}: {
+  userDbGateway: UserDatabaseGateway;
+  activityDbGateway: ActivityDatabaseGateway;
+  projectDbGateway: ProjectDatabaseGateway;
+  expenseAccountDBGateway: ExpenseAccountDatabaseGateway;
+  timelineDBGateway: TimelineDatabaseGateway;
+}) => {
   //@todo si prod on utilise alter
-
-  console.log(`1`.repeat(100));
-  await sequelize.sync({ force: true });
-  console.log(`2`.repeat(100));
 
   const membre = await userDbGateway.createRole(
     new Role({
@@ -382,7 +362,12 @@ exports.initSchemas = async (
   ]);
 
   let punch = fetchPunchTzNY("2020-07-01", "08:00", "12:00");
-  let tl1 = await Timeline.create({
+  // const newTimeline = await timelineDBGateway.getTimelineById(tl1.id);
+  //
+  // console.log("7".repeat(100));
+  // console.log(JSON.stringify({ newTimeline }, null, 2));
+
+  let tl1 = await timelineDBGateway.createTimeline({
     punchIn: punch.punchIn,
     punchOut: punch.punchOut,
     ProjectId: projets.NstageHumanitaires.id,
@@ -390,192 +375,192 @@ exports.initSchemas = async (
     ActivityId: activites.NjourneeSavon2013.id,
     UserId: usersLs.Nadmin.id,
   });
-  //
-  // punch = fetchPunchTzNY("2020-07-01", "13:00", "17:00");
-  // let tl2 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Nadministration.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.NprojectManager.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2020-07-02", "08:00", "12:00");
-  // let tl3 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Nadministration.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.Nmember.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2020-07-03", "06:00", "12:00");
-  // let tl4 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Nadministration.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.NannabelFischer.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2020-07-03", "16:00", "18:00");
-  // let tl5 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Nadministration.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.NannabelFischer.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2020-07-05", "08:00", "12:00");
-  // let tl6 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Nadministration.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.NannabelFischer.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2020-07-01", "08:00", "12:00");
-  // let tl7 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Nmarketing.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.NannabelFischer.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2020-07-01", "13:00", "17:00");
-  // let tl8 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Nmarketing.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.NannabelFischer.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2020-07-02", "08:00", "12:00");
-  // let tl9 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Nmarketing.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.NannabelFischer.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2020-07-03", "06:00", "12:00");
-  // let tl10 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Nadministration.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.NannabelFischer.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2020-07-03", "16:00", "16:01");
-  // let tl11 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Ncomptabilite.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.NannabelFischer.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2020-07-05", "08:00", "08:01");
-  // let tl12 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHumanitaires.id,
-  //   ExpenseAccountId: ea.Ncomptabilite.id,
-  //   ActivityId: activites.NjourneeSavon2013.id,
-  //   UserId: usersLs.NannabelFischer.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2012-07-05", "14:00", "21:43");
-  // let tl13 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHaiti2012.id,
-  //   ExpenseAccountId: ea.Nrestauration.id,
-  //   ActivityId: activites.NsouperBenefice2015.id,
-  //   UserId: usersLs.NtaylorRosales.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2012-07-20", "13:00", "21:43");
-  // let tl14 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageRD2009.id,
-  //   ExpenseAccountId: ea.Ncuisine.id,
-  //   ActivityId: activites.NsouperDu20120405.id,
-  //   UserId: usersLs.NNellieThornton.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2012-07-20", "13:00", "14:51");
-  // let tl15 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageRD2009.id,
-  //   ExpenseAccountId: ea.NpreparationSalle.id,
-  //   ActivityId: activites.NsouperDu20120405.id,
-  //   UserId: usersLs.Nadmin.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2012-07-20", "14:51", "19:51");
-  // let tl16 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageRD2009.id,
-  //   ExpenseAccountId: ea.Ncuisine.id,
-  //   ActivityId: activites.NsouperDu20120405.id,
-  //   UserId: usersLs.Nadmin.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2015-07-20", "16:40", "19:51");
-  // let tl17 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NFonctionnementGeneral.id,
-  //   ExpenseAccountId: ea.Ncomptabilite.id,
-  //   UserId: usersLs.Nadmin.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2015-07-27", "16:00", "21:05");
-  // let tl18 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NFonctionnementGeneral.id,
-  //   ExpenseAccountId: ea.Ncomptabilite.id,
-  //   UserId: usersLs.Nadmin.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2015-08-20", "16:00", "21:05");
-  // let tl19 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHaiti2012.id,
-  //   ExpenseAccountId: ea.NventesProduits.id,
-  //   UserId: usersLs.NtaylorRosales.id,
-  // });
-  //
-  // punch = fetchPunchTzNY("2015-08-20", "18:00", "19:05");
-  // let tl20 = await Timeline.create({
-  //   punchIn: punch.punchIn,
-  //   punchOut: punch.punchOut,
-  //   ProjectId: projets.NstageHaiti2012.id,
-  //   ExpenseAccountId: ea.NventesProduits.id,
-  //   UserId: usersLs.NKimberleyKeller.id,
-  // });
+
+  punch = fetchPunchTzNY("2020-07-01", "13:00", "17:00");
+  let tl2 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Nadministration.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.NprojectManager.id,
+  });
+
+  punch = fetchPunchTzNY("2020-07-02", "08:00", "12:00");
+  let tl3 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Nadministration.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.Nmember.id,
+  });
+
+  punch = fetchPunchTzNY("2020-07-03", "06:00", "12:00");
+  let tl4 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Nadministration.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.NannabelFischer.id,
+  });
+
+  punch = fetchPunchTzNY("2020-07-03", "16:00", "18:00");
+  let tl5 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Nadministration.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.NannabelFischer.id,
+  });
+
+  punch = fetchPunchTzNY("2020-07-05", "08:00", "12:00");
+  let tl6 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Nadministration.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.NannabelFischer.id,
+  });
+
+  punch = fetchPunchTzNY("2020-07-01", "08:00", "12:00");
+  let tl7 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Nmarketing.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.NannabelFischer.id,
+  });
+
+  punch = fetchPunchTzNY("2020-07-01", "13:00", "17:00");
+  let tl8 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Nmarketing.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.NannabelFischer.id,
+  });
+
+  punch = fetchPunchTzNY("2020-07-02", "08:00", "12:00");
+  let tl9 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Nmarketing.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.NannabelFischer.id,
+  });
+
+  punch = fetchPunchTzNY("2020-07-03", "06:00", "12:00");
+  let tl10 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Nadministration.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.NannabelFischer.id,
+  });
+
+  punch = fetchPunchTzNY("2020-07-03", "16:00", "16:01");
+  let tl11 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Ncomptabilite.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.NannabelFischer.id,
+  });
+
+  punch = fetchPunchTzNY("2020-07-05", "08:00", "08:01");
+  let tl12 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHumanitaires.id,
+    ExpenseAccountId: ea.Ncomptabilite.id,
+    ActivityId: activites.NjourneeSavon2013.id,
+    UserId: usersLs.NannabelFischer.id,
+  });
+
+  punch = fetchPunchTzNY("2012-07-05", "14:00", "21:43");
+  let tl13 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHaiti2012.id,
+    ExpenseAccountId: ea.Nrestauration.id,
+    ActivityId: activites.NsouperBenefice2015.id,
+    UserId: usersLs.NtaylorRosales.id,
+  });
+
+  punch = fetchPunchTzNY("2012-07-20", "13:00", "21:43");
+  let tl14 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageRD2009.id,
+    ExpenseAccountId: ea.Ncuisine.id,
+    ActivityId: activites.NsouperDu20120405.id,
+    UserId: usersLs.NNellieThornton.id,
+  });
+
+  punch = fetchPunchTzNY("2012-07-20", "13:00", "14:51");
+  let tl15 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageRD2009.id,
+    ExpenseAccountId: ea.NpreparationSalle.id,
+    ActivityId: activites.NsouperDu20120405.id,
+    UserId: usersLs.Nadmin.id,
+  });
+
+  punch = fetchPunchTzNY("2012-07-20", "14:51", "19:51");
+  let tl16 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageRD2009.id,
+    ExpenseAccountId: ea.Ncuisine.id,
+    ActivityId: activites.NsouperDu20120405.id,
+    UserId: usersLs.Nadmin.id,
+  });
+
+  punch = fetchPunchTzNY("2015-07-20", "16:40", "19:51");
+  let tl17 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NFonctionnementGeneral.id,
+    ExpenseAccountId: ea.Ncomptabilite.id,
+    UserId: usersLs.Nadmin.id,
+  });
+
+  punch = fetchPunchTzNY("2015-07-27", "16:00", "21:05");
+  let tl18 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NFonctionnementGeneral.id,
+    ExpenseAccountId: ea.Ncomptabilite.id,
+    UserId: usersLs.Nadmin.id,
+  });
+
+  punch = fetchPunchTzNY("2015-08-20", "16:00", "21:05");
+  let tl19 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHaiti2012.id,
+    ExpenseAccountId: ea.NventesProduits.id,
+    UserId: usersLs.NtaylorRosales.id,
+  });
+
+  punch = fetchPunchTzNY("2015-08-20", "18:00", "19:05");
+  let tl20 = await timelineDBGateway.createTimeline({
+    punchIn: punch.punchIn,
+    punchOut: punch.punchOut,
+    ProjectId: projets.NstageHaiti2012.id,
+    ExpenseAccountId: ea.NventesProduits.id,
+    UserId: usersLs.NKimberleyKeller.id,
+  });
 
   const res = await userDbGateway.findAllUsersEager();
 

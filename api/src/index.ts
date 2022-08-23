@@ -11,12 +11,9 @@ const bodyParser = require("body-parser");
 import { loadConfig } from "./configuration";
 const { getSequelize } = require("./configuration/sequelize");
 const { closePool } = require("./database");
-const { initSchemas } = require("./models");
+const { buildDataset } = require("./models");
 import { PresetQuerry } from "./database/presetQuery";
-import ActivityDataBaseGatewayImpl from "./entitiesFamilies/Activity/gatabaseImpls/DatabaseGateway.impl";
-import UserDataBaseGatewayImpl from "./entitiesFamilies/User/databaseImpls/databaseGateway.impl";
-import ProjectDataBaseGatewayImpl from "./entitiesFamilies/Project/databaseImpls/databaseGateway.impl";
-import ExpenseAccountDataBaseGatewayImpl from "./entitiesFamilies/ExpenseAccount/DatabaseImpl/DatabaseGateway.impl";
+import GatewayBuilder from "./entitiesFamilies/utils/GatewayBuilder";
 
 const index = require("./routes/index");
 
@@ -40,20 +37,8 @@ async function main() {
   injectDependency(getSequelize());
   app.use(getInitializedPassport());
 
-  const sequelize = getSequelize();
-  const userDbGateway = new UserDataBaseGatewayImpl(sequelize);
-  const activityDbGateway = new ActivityDataBaseGatewayImpl(sequelize);
-  const projectDbGateway = new ProjectDataBaseGatewayImpl(sequelize);
-  const expenseAccountDBGateway = new ExpenseAccountDataBaseGatewayImpl(
-    sequelize
-  );
-  await initSchemas(
-    sequelize,
-    userDbGateway,
-    activityDbGateway,
-    projectDbGateway,
-    expenseAccountDBGateway
-  );
+  const gateways = await GatewayBuilder.buildGateways();
+  await buildDataset(gateways);
 
   let apiOrigin = nconf.get("api_url_origin");
 
