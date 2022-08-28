@@ -1,6 +1,6 @@
 "use strict";
 
-import { SignInInteractor } from "./UseCasesFamiles/Signin/Interactors/SignInInteractor";
+import { SignInInteractor } from "./UseCasesFamiles/SignIn/Interactors/SignInInteractor";
 
 declare function require(name: string);
 import * as express from "express";
@@ -18,7 +18,8 @@ import { PresetQuerry } from "./database/presetQuery";
 import GatewayRegisterImpl from "./entitiesFamilies/utils/GatewayRegisterImpl";
 import { RequestFactory } from "./Requestors/RequestFactory";
 import { InteractorFactory } from "./Requestors/InteractorFactory";
-import { SignInController } from "./UseCasesFamiles/Signin/Controllers/SignInControler";
+import { SignInController } from "./UseCasesFamiles/SignIn/Controllers/SignInControler";
+import { SignInRequest } from "./UseCasesFamiles/SignIn/Interactors/SignInRequest";
 
 const { initRouters } = require("./routes/index");
 
@@ -55,7 +56,15 @@ async function main() {
 
   app.use(initRouters(gateways));
 
-  const requestFactory = new RequestFactory();
+  const requestFactories = new RequestFactory([
+    {
+      name: "SignIn",
+      requestFactory: async (req) => {
+        await SignInRequest.checkBuildParamsAreValid(req.body);
+        return new SignInRequest(req.body);
+      },
+    },
+  ]);
   const interactorFactory = new InteractorFactory([
     {
       name: "SignIn",
@@ -64,7 +73,7 @@ async function main() {
   ]);
 
   const signInController = new SignInController({
-    requestFactory,
+    requestFactory: requestFactories,
     interactorFactory,
   });
   signInController.addToRouter(app);

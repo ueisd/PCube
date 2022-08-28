@@ -1,15 +1,29 @@
 "use strict";
 
-import { SignInRequest } from "../UseCasesFamiles/Signin/Interactors/SignInRequest";
 import { UseCaseRequest } from "./UseCaseRequest";
+import _ = require("lodash");
 
 export class RequestFactory {
-  public async make(name: string, params: any): Promise<UseCaseRequest> {
-    if (name === "SignIn") {
-      await SignInRequest.checkBuildParamsAreValid(params.body);
-      return new SignInRequest(params.body);
-    }
+  private registerVals: {
+    name: string;
+    requestFactory: (req) => Promise<UseCaseRequest>;
+  }[];
 
-    return null;
+  constructor(
+    registerVals: {
+      name: string;
+      requestFactory: (req) => Promise<UseCaseRequest>;
+    }[]
+  ) {
+    this.registerVals = registerVals;
+  }
+
+  public async make(name: string, params: any): Promise<UseCaseRequest> {
+    const builderEntry = _.find(
+      this.registerVals,
+      (elem) => elem.name === name
+    );
+    const requestFactory = _.get(builderEntry, "requestFactory", null);
+    return requestFactory(params);
   }
 }
