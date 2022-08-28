@@ -24,6 +24,21 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
     UserImpl.belongsTo(RoleImpl);
   }
 
+  public async findUserByEmail(email: string): Promise<User> {
+    return UserImpl.findOne({
+      where: { email: email },
+      include: [{ model: RoleImpl }],
+      raw: true,
+    });
+  }
+
+  public async findUserById(id: number): Promise<User> {
+    return UserImpl.findByPk(id, {
+      include: [{ model: RoleImpl }],
+      raw: true,
+    });
+  }
+
   public async createRole(role: Role): Promise<Role> {
     const response = await RoleImpl.create(role);
 

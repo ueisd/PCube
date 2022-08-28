@@ -1,5 +1,7 @@
 "use strict";
 
+import { SignInInteractor } from "./UseCasesFamiles/Signin/Interactors/SignInInteractor";
+
 declare function require(name: string);
 import * as express from "express";
 const nconf = require("nconf");
@@ -13,9 +15,11 @@ const { getSequelize } = require("./configuration/sequelize");
 const { closePool } = require("./database");
 const { buildDataset } = require("./models");
 import { PresetQuerry } from "./database/presetQuery";
-import GatewayBuilder from "./entitiesFamilies/utils/GatewayBuilder";
+import GatewayRegisterImpl from "./entitiesFamilies/utils/GatewayRegisterImpl";
+import { RequestFactory } from "./Requestors/RequestFactory";
+import { InteractorFactory } from "./Requestors/InteractorFactory";
 
-const index = require("./routes/index");
+const { initRouters } = require("./routes/index");
 
 const app = express();
 app.use(logger("dev"));
@@ -37,7 +41,7 @@ async function main() {
   injectDependency(getSequelize());
   app.use(getInitializedPassport());
 
-  const gateways = await GatewayBuilder.buildGateways();
+  const gateways = await GatewayRegisterImpl.buildGateways();
   await buildDataset(gateways);
 
   let apiOrigin = nconf.get("api_url_origin");
@@ -48,13 +52,24 @@ async function main() {
     app.use(cors());
   }
 
-  app.use(index);
+  app.use(initRouters(gateways));
 
-  app.get("/api", (req, res) => {
-    res.status(200).json({
-      message: "accueil",
-    });
+  const requestFactory = new RequestFactory();
+  const interactorFactory = new InteractorFactory([
+    {
+      name: "SignIn",
+      activator: new SignInInteractor(gateways.userDbGateway),
+    },
+  ]);
+
+  const signInController = new Controller({
+    strategy: Controller.STRATEGIES.SEND,
+    url: "/api/auth/signin",
+    useCaseName: "SignIn",
+    requestFactory,
+    interactorFactory,
   });
+  signInController.addToRouter(app);
 
   app.get("/", (req, res) => {
     res.status(200).json({
@@ -82,6 +97,13 @@ try {
   console.log(JSON.stringify({ err }, null, 2));
 }
 
+class NotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = "NotFoundError";
+  }
+}
+
 // Graceful shutdown.
 // On empêche les nouvelles connexions sur le serveur
 // Ensuite on close proprement la connexion DB
@@ -101,5 +123,103 @@ process.on("SIGINT", async () => {
     }
   });
 });
+
+class Controller {
+  private url: string;
+  private method: string;
+  private successCode: number;
+  private useCaseName: string;
+  private requestFactory: RequestFactory;
+  private interactorFactory: InteractorFactory;
+
+  public static get STRATEGIES() {
+    return {
+      CREATE: {
+        method: "post",
+        successCode: 201,
+      },
+      GET: {
+        method: "get",
+        successCode: 200,
+      },
+      SEND: {
+        method: "post",
+        successCode: 201,
+      },
+    };
+  }
+
+  constructor(opts: {
+    url: string;
+    strategy: { method: string; successCode: number };
+    requestFactory: RequestFactory;
+    interactorFactory: InteractorFactory;
+    useCaseName: string;
+  }) {
+    this.url = opts.url;
+    this.method = opts.strategy.method;
+    this.successCode = opts.strategy.successCode;
+    this.requestFactory = opts.requestFactory;
+    this.interactorFactory = opts.interactorFactory;
+    this.useCaseName = opts.useCaseName;
+  }
+
+  public addToRouter(route) {
+    route[this.method](this.url, this.executeRouteCmd());
+  }
+
+  private executeRouteCmd() {
+    return async (req, res) => {
+      res.setHeader("Content-Type", "application/json");
+
+      let useCaseRequest;
+      try {
+        useCaseRequest = await this.requestFactory.make(this.useCaseName, req);
+      } catch (err) {
+        if (err.name === "ValidationError") {
+          return res
+            .status(400)
+            .end(
+              JSON.stringify({ name: err.name, message: err.message }, null, 2)
+            );
+        } else {
+          return res
+            .status(500)
+            .end(
+              JSON.stringify(
+                { name: err.name, message: err.message, err },
+                null,
+                2
+              )
+            );
+        }
+      }
+      try {
+        const interactor = this.interactorFactory.make(this.useCaseName);
+        const result = await interactor.execute(useCaseRequest);
+        res.status(this.successCode);
+        return res.end(JSON.stringify(result, null, 2));
+      } catch (err) {
+        if (err.name === "NotFoundError") {
+          return res
+            .status(404)
+            .end(
+              JSON.stringify({ name: err.name, message: err.message }, null, 2)
+            );
+        } else {
+          return res
+            .status(500)
+            .end(
+              JSON.stringify(
+                { name: err.name, message: err.message, err },
+                null,
+                2
+              )
+            );
+        }
+      }
+    };
+  }
+}
 
 module.exports = app;

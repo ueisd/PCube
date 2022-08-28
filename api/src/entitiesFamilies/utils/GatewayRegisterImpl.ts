@@ -12,7 +12,13 @@ import ProjectDatabaseGateway from "../Project/databaseGateway/ProjectDatabaseGa
 import ExpenseAccountDatabaseGateway from "../ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway";
 import TimelineDatabaseGateway from "../Timeline/DatabaseGateway/TimelineDatabaseGateway";
 
-export default class GatewayBuilder {
+export default class GatewayRegisterImpl {
+  static userDbGateway: UserDatabaseGateway;
+  static activityDbGateway: ActivityDatabaseGateway;
+  static projectDbGateway: ProjectDatabaseGateway;
+  static expenseAccountDBGateway: ExpenseAccountDatabaseGateway;
+  static timelineDBGateway: TimelineDatabaseGateway;
+
   public static async buildGateways(): Promise<{
     userDbGateway: UserDatabaseGateway;
     activityDbGateway: ActivityDatabaseGateway;
@@ -22,24 +28,29 @@ export default class GatewayBuilder {
   }> {
     const sequelize = getSequelize();
 
-    const userDbGateway = new UserDataBaseGatewayImpl(sequelize);
-    const activityDbGateway = new ActivityDataBaseGatewayImpl(sequelize);
-    const projectDbGateway = new ProjectDataBaseGatewayImpl(sequelize);
-    const expenseAccountDBGateway = new ExpenseAccountDataBaseGatewayImpl(
+    GatewayRegisterImpl.userDbGateway = new UserDataBaseGatewayImpl(sequelize);
+    GatewayRegisterImpl.activityDbGateway = new ActivityDataBaseGatewayImpl(
       sequelize
     );
-    const timelineDBGateway = new TimelineDataBaseGatewayImpl(sequelize);
+    GatewayRegisterImpl.projectDbGateway = new ProjectDataBaseGatewayImpl(
+      sequelize
+    );
+    GatewayRegisterImpl.expenseAccountDBGateway =
+      new ExpenseAccountDataBaseGatewayImpl(sequelize);
+    GatewayRegisterImpl.timelineDBGateway = new TimelineDataBaseGatewayImpl(
+      sequelize
+    );
 
     console.log(`1`.repeat(100));
     await sequelize.sync({ force: true });
     console.log(`2`.repeat(100));
 
     return {
-      userDbGateway,
-      activityDbGateway,
-      projectDbGateway,
-      expenseAccountDBGateway,
-      timelineDBGateway,
+      userDbGateway: GatewayRegisterImpl.userDbGateway,
+      activityDbGateway: GatewayRegisterImpl.activityDbGateway,
+      projectDbGateway: GatewayRegisterImpl.projectDbGateway,
+      expenseAccountDBGateway: GatewayRegisterImpl.expenseAccountDBGateway,
+      timelineDBGateway: GatewayRegisterImpl.timelineDBGateway,
     };
   }
 }

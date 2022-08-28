@@ -41,31 +41,6 @@ export default class UserImpl extends Model {
       });
     };
 
-    UserImpl.findUserByEmail = (email) => {
-      return UserImpl.findAll({
-        where: {
-          email: email,
-        },
-        include: [
-          {
-            model: sequelize.models.Role,
-          },
-        ],
-        raw: true,
-      });
-    };
-
-    UserImpl.findUserById = (id) => {
-      return UserImpl.findByPk(id, {
-        include: [
-          {
-            model: sequelize.models.Role,
-          },
-        ],
-        raw: true,
-      });
-    };
-
     UserImpl.init(
       {
         id: {
