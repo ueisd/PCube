@@ -18,6 +18,7 @@ import { PresetQuerry } from "./database/presetQuery";
 import GatewayRegisterImpl from "./entitiesFamilies/utils/GatewayRegisterImpl";
 import { RequestFactory } from "./Requestors/RequestFactory";
 import { InteractorFactory } from "./Requestors/InteractorFactory";
+import { SignInController } from "./UseCasesFamiles/Signin/Controllers/SignInControler";
 
 const { initRouters } = require("./routes/index");
 
@@ -62,10 +63,7 @@ async function main() {
     },
   ]);
 
-  const signInController = new Controller({
-    strategy: Controller.STRATEGIES.SEND,
-    url: "/api/auth/signin",
-    useCaseName: "SignIn",
+  const signInController = new SignInController({
     requestFactory,
     interactorFactory,
   });
@@ -123,103 +121,5 @@ process.on("SIGINT", async () => {
     }
   });
 });
-
-class Controller {
-  private url: string;
-  private method: string;
-  private successCode: number;
-  private useCaseName: string;
-  private requestFactory: RequestFactory;
-  private interactorFactory: InteractorFactory;
-
-  public static get STRATEGIES() {
-    return {
-      CREATE: {
-        method: "post",
-        successCode: 201,
-      },
-      GET: {
-        method: "get",
-        successCode: 200,
-      },
-      SEND: {
-        method: "post",
-        successCode: 201,
-      },
-    };
-  }
-
-  constructor(opts: {
-    url: string;
-    strategy: { method: string; successCode: number };
-    requestFactory: RequestFactory;
-    interactorFactory: InteractorFactory;
-    useCaseName: string;
-  }) {
-    this.url = opts.url;
-    this.method = opts.strategy.method;
-    this.successCode = opts.strategy.successCode;
-    this.requestFactory = opts.requestFactory;
-    this.interactorFactory = opts.interactorFactory;
-    this.useCaseName = opts.useCaseName;
-  }
-
-  public addToRouter(route) {
-    route[this.method](this.url, this.executeRouteCmd());
-  }
-
-  private executeRouteCmd() {
-    return async (req, res) => {
-      res.setHeader("Content-Type", "application/json");
-
-      let useCaseRequest;
-      try {
-        useCaseRequest = await this.requestFactory.make(this.useCaseName, req);
-      } catch (err) {
-        if (err.name === "ValidationError") {
-          return res
-            .status(400)
-            .end(
-              JSON.stringify({ name: err.name, message: err.message }, null, 2)
-            );
-        } else {
-          return res
-            .status(500)
-            .end(
-              JSON.stringify(
-                { name: err.name, message: err.message, err },
-                null,
-                2
-              )
-            );
-        }
-      }
-      try {
-        const interactor = this.interactorFactory.make(this.useCaseName);
-        const result = await interactor.execute(useCaseRequest);
-        res.status(this.successCode);
-        return res.end(JSON.stringify(result, null, 2));
-      } catch (err) {
-        if (err.name === "NotFoundError") {
-          return res
-            .status(404)
-            .end(
-              JSON.stringify({ name: err.name, message: err.message }, null, 2)
-            );
-        } else {
-          return res
-            .status(500)
-            .end(
-              JSON.stringify(
-                { name: err.name, message: err.message, err },
-                null,
-                2
-              )
-            );
-        }
-      }
-    };
-  }
-}
 
 module.exports = app;
