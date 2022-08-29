@@ -1,0 +1,56 @@
+<form [formGroup]="newProjectForm" (ngSubmit)="onSubmit()">
+    <h1>{{ (isCreateForm) ? "Création" : "Modification" }} d'un projet</h1>
+
+    <div class="container">
+        <div *ngIf="isAddedFailled" class="alert alert-danger" role="alert">
+            Une erreur s'est produite lors de la soumission du formulaire.<br />
+            Veuillez vérifier les champs et essayer de nouveau.
+        </div>
+        <mat-form-field class="full-width">
+            <mat-label>Nom du projet</mat-label>
+            <input matInput placeholder="Nom du projet" formControlName="projectName" autocomplete="off">
+            <mat-error *ngFor="let validation of validationMessages.projectName">
+                <mat-error class="error-message"
+                *ngIf="newProjectForm.get('projectName').hasError(validation.type) &&
+                ((newProjectForm.get('projectName').dirty || newProjectForm.get('projectName').touched))">
+                    {{validation.message}}
+                </mat-error>
+            </mat-error>
+
+        </mat-form-field>
+    </div>
+    <div class="container"  fxLayout="row" fxLayoutAlign="start center">
+        <div fxflex class="container" fxLayout="row" fxLayoutAlign="start center">
+            <mat-label> Le projet {{ newProjectForm.get('projectName').value }} &nbsp;&nbsp;</mat-label>
+            <mat-slide-toggle (ngModelChange)="isChildChecked($event)" formControlName="isChild">
+                {{ (newProjectForm.get('isChild').value) ? "sera enfant de: " : "sera à la racine." }}
+                </mat-slide-toggle>
+        </div>
+        <div fxflex fxFlex="50%" *ngIf="newProjectForm.value.isChild">
+
+                <ng-select
+                    class="margin-left"
+                    [items]="parentOptions"
+                    bindLabel="nomAffichage"
+                    placeholder="Projet parent choisi"
+                    appendTo="body"
+                    formControlName="parent">
+                </ng-select>
+                <mat-error *ngFor="let validation of validationMessages.parent">
+                    <mat-error class="error-message"
+                    *ngIf="newProjectForm.get('parent').hasError(validation.type) &&
+                    ((newProjectForm.get('parent').dirty || newProjectForm.get('parent').touched))">
+                        {{validation.message}}
+                    </mat-error>
+                </mat-error>
+
+        </div>
+    </div>
+
+    <mat-dialog-actions align="end">
+        <button mat-raised-button color="warn" [mat-dialog-close]="canceledMessage">Annuler</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="newProjectForm.invalid">
+            {{(isCreateForm) ? "Ajouter" : "Enregistrer"}}
+        </button>
+    </mat-dialog-actions>
+</form>

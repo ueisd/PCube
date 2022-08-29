@@ -1,0 +1,73 @@
+<div>
+    <mat-tree [dataSource]="dataSource" [treeControl]="treeControl">
+        <!-- This is the tree node template for leaf nodes -->
+        <mat-tree-node *matTreeNodeDef="let node" matTreeNodePadding>
+          <!-- use a disabled button to provide padding for tree leaf -->
+          <div class="container width100">
+            <div fxflex fxFlex="80%">
+              <button mat-icon-button disabled></button>
+              {{node.name | titlecase}}
+            </div>
+            <div fxflex fxFlex="20%"
+            fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu de gestion">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openEditDialog(node.projectItem)">
+                  <mat-icon color="primary">edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                <div matTooltip="Ne peut être supprimé car contient {{ node.nbLignesDeTemps }} lignes de temps"
+                  matTooltipPosition="after"
+                  [matTooltipDisabled]="node.nbLignesDeTemps <= 0"
+                  matTooltipClass="custom-tooltip">
+                  <button mat-menu-item [disabled]="node.nbLignesDeTemps > 0"
+                    (click)="openDeleteDialog(node.projectItem)">
+                      <mat-icon color="primary">delete</mat-icon>
+                      <span>Supprimer</span>
+                  </button>
+                </div>
+              </mat-menu>
+            </div>
+          </div>
+        </mat-tree-node>
+        <!-- This is the tree node template for expandable nodes -->
+        <mat-tree-node *matTreeNodeDef="let node;when: hasChild" matTreeNodePadding>
+          <div class="container width100">
+            <div fxflex fxFlex="50%">
+              <button mat-icon-button matTreeNodeToggle
+                    [attr.aria-label]="'toggle ' + node.name">
+                <mat-icon class="mat-icon-rtl-mirror">
+                  {{treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right'}}
+                </mat-icon>
+              </button>
+              {{node.name | titlecase}}
+            </div>
+            <div fxflex fxFlex="50%"
+            fxLayout="row" fxLayoutAlign="end center" fxLayoutGap="5px">
+              <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu de gestion">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openEditDialog(node.projectItem)">
+                  <mat-icon color="primary">edit</mat-icon>
+                  <span>Modifier</span>
+                </button>
+                <div matTooltip="Ne peut être supprimé car contient {{ node.nbChild }} enfants
+                      {{ (node.nbLignesDeTemps > 0) ? ' et ' + node.nbLignesDeTemps +  ' lignes de temps ': ''}}."
+                  matTooltipPosition="after"
+                  matTooltipClass="custom-tooltip">
+                  <button mat-menu-item disabled
+                    (click)="openDeleteDialog(node.projectItem)">
+                      <mat-icon color="primary">delete</mat-icon>
+                      <span>Supprimer</span>
+                  </button>
+                </div>
+
+              </mat-menu>
+            </div>
+          </div>
+        </mat-tree-node>
+    </mat-tree>
+</div>
