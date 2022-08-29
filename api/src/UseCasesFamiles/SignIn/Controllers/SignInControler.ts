@@ -1,17 +1,12 @@
 "use strict";
 
 import { Controller } from "../../_utils/Controller";
-import { RequestFactory } from "../../../Requestors/RequestFactory";
-import { InteractorFactory } from "../../../Requestors/InteractorFactory";
 
 export class SignInController extends Controller {
-  constructor(opts: {
-    requestFactory: RequestFactory;
-    interactorFactory: InteractorFactory;
-  }) {
+  constructor(opts: { url: string }) {
     super({
       strategy: Controller.STRATEGIES.SEND,
-      url: "/api/auth/signin",
+      url: opts.url,
       useCaseName: "SignIn",
       ...opts,
     });

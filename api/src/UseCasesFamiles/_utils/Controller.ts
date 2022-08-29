@@ -1,6 +1,7 @@
 import { RequestFactory } from "../../Requestors/RequestFactory";
 import { InteractorFactory } from "../../Requestors/InteractorFactory";
 import { UseCaseRequest } from "../../Requestors/UseCaseRequest";
+import { UseCaseFactories } from "./UseCaseFactories";
 
 export class Controller {
   private url: string;
@@ -9,6 +10,7 @@ export class Controller {
   private useCaseName: string;
   private requestFactory: RequestFactory;
   private interactorFactory: InteractorFactory;
+  private beforeCommandMiddlewares?: any[];
 
   public static get STRATEGIES() {
     return {
@@ -30,23 +32,30 @@ export class Controller {
   constructor(opts: {
     url: string;
     strategy: { method: string; successCode: number };
-    requestFactory: RequestFactory;
-    interactorFactory: InteractorFactory;
     useCaseName: string;
+    beforeCommandMiddlewares?: any[];
   }) {
     this.url = opts.url;
     this.method = opts.strategy.method;
     this.successCode = opts.strategy.successCode;
-    this.requestFactory = opts.requestFactory;
-    this.interactorFactory = opts.interactorFactory;
+    this.requestFactory = UseCaseFactories.getRequestFactories();
+    this.interactorFactory = UseCaseFactories.getInteractorFactories();
     this.useCaseName = opts.useCaseName;
+    this.beforeCommandMiddlewares = opts.beforeCommandMiddlewares || [];
   }
 
   public addToRouter(route) {
-    route[this.method](this.url, this.executeRouteCmd());
+    const middlewares = [
+      ...this.beforeCommandMiddlewares,
+      this.buildCommandMiddleware(),
+    ];
+
+    route[this.method](this.url, ...middlewares);
   }
 
-  private executeRouteCmd() {
+  public static addControllerToRoutes(controller: Controller, route) {}
+
+  private buildCommandMiddleware() {
     return async (req, res) => {
       res.setHeader("Content-Type", "application/json");
 

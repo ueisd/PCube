@@ -20,6 +20,12 @@ import { RequestFactory } from "./Requestors/RequestFactory";
 import { InteractorFactory } from "./Requestors/InteractorFactory";
 import { SignInController } from "./UseCasesFamiles/SignIn/Controllers/SignInControler";
 import { SignInRequest } from "./UseCasesFamiles/SignIn/Interactors/SignInRequest";
+import { GetCurrentUserInteractor } from "./UseCasesFamiles/GetCurrentUser/Interactors/GetCurrentUserInteractor";
+import { GetCurrentUserRequest } from "./UseCasesFamiles/GetCurrentUser/Interactors/GetCurrentUserRequest";
+import { GetCurrentUserController } from "./UseCasesFamiles/GetCurrentUser/Controllers/GetCurrentUserController";
+import _ = require("lodash");
+import { UseCaseFactories } from "./UseCasesFamiles/_utils/UseCaseFactories";
+import { Controller } from "./UseCasesFamiles/_utils/Controller";
 
 const { initRouters } = require("./routes/index");
 
@@ -46,13 +52,15 @@ async function main() {
   const gateways = await GatewayRegisterImpl.buildGateways();
   await buildDataset(gateways);
 
-  let apiOrigin = nconf.get("api_url_origin");
+  // let apiOrigin = nconf.get("api_url_origin");
+  //
+  // if (apiOrigin) {
+  //   app.use(cors({ origin: apiOrigin }));
+  // } else {
+  //   app.use(cors());
+  // }
 
-  if (apiOrigin) {
-    app.use(cors({ origin: apiOrigin }));
-  } else {
-    app.use(cors());
-  }
+  app.use(cors());
 
   app.use(initRouters(gateways));
 
@@ -64,19 +72,38 @@ async function main() {
         return new SignInRequest(req.body);
       },
     },
+    {
+      name: "GetCurrentUser",
+      requestFactory: async (req) => {
+        const params = { id: _.get(req, "user.id") + "" };
+        await GetCurrentUserRequest.checkBuildParamsAreValid(params);
+        return new GetCurrentUserRequest(params);
+      },
+    },
   ]);
-  const interactorFactory = new InteractorFactory([
+  const interactorFactories = new InteractorFactory([
     {
       name: "SignIn",
       activator: new SignInInteractor(gateways.userDbGateway),
     },
+    {
+      name: "GetCurrentUser",
+      activator: new GetCurrentUserInteractor(gateways.userDbGateway),
+    },
   ]);
 
-  const signInController = new SignInController({
-    requestFactory: requestFactories,
-    interactorFactory,
+  UseCaseFactories.initFactories({
+    requestFactories,
+    interactorFactories,
   });
-  signInController.addToRouter(app);
+
+  RouteManager.setRouteHandler(app);
+  RouteManager.addController(new SignInController({ url: "/api/auth/signin" }));
+  RouteManager.addController(
+    new GetCurrentUserController({
+      url: "/api/user/curent",
+    })
+  );
 
   app.get("/", (req, res) => {
     res.status(200).json({
@@ -102,6 +129,16 @@ try {
 } catch (err) {
   console.log(`Erreur`);
   console.log(JSON.stringify({ err }, null, 2));
+}
+
+class RouteManager {
+  private static routeHandler: any;
+  public static setRouteHandler(routeHandler: any) {
+    RouteManager.routeHandler = routeHandler;
+  }
+  public static addController(controller: Controller) {
+    controller.addToRouter(RouteManager.routeHandler);
+  }
 }
 
 class NotFoundError extends Error {

@@ -1,18 +1,24 @@
+import UserDatabaseGateway from "../entitiesFamilies/User/databaseGateway/UserDatabaseGateway";
+
 const router = require("express").Router();
 const { User } = require("../models/user.model");
 const { isLoggedIn } = require("../guards/isLoggedIn.guard");
 import bcrypt = require("bcrypt");
 
-export function getRouter() {
-  router.get("/curent", isLoggedIn, (req, res) => {
-    User.findUserById(req.user.id)
-      .then((user) => {
-        res.json(user);
-      })
-      .catch((err) => {
-        res.status(401).json("error" + err);
-      });
-  });
+export function getRouter(userDb: UserDatabaseGateway) {
+  // const cacaMiddleware = (req, res) => {
+  //   userDb
+  //     .findUserById(req.user.id)
+  //     .then((user) => {
+  //       res.json(user);
+  //     })
+  //     .catch((err) => {
+  //       res.status(401).json("error" + err);
+  //     });
+  // };
+  //
+  // const lesCacas = [isLoggedIn, cacaMiddleware];
+  // router.get("/curent", ...lesCacas);
 
   router.get("/emailUnique/:email", isLoggedIn, (req, res) => {
     let email = req.params.email.trim();
@@ -44,7 +50,8 @@ export function getRouter() {
   });
 
   router.get("/", isLoggedIn, (req, res) => {
-    User.findAllEager()
+    userDb
+      .findAllUsersEager()
       .then((response) => {
         res.json(response);
       })

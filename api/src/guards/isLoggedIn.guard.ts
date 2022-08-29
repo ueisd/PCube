@@ -1,27 +1,72 @@
-const { User } = require('../models/user.model');
-const { Role } = require('../models/role.model');
-const fs = require('fs');
-import jwt = require('jsonwebtoken');
-var nconf = require('nconf');
-const FILE_RSA_PUBLIC_KEY = fs.readFileSync('./src/rsa/key.pub');
+"use strict";
 
-export const isLoggedIn = async (req, res, next) => {
-  let nconfPublicKey = nconf.get('rsaKeyPublic');
-  const token = req.headers.authorization;
-  if (token) {
-    jwt.verify(token, nconfPublicKey, (err, decoded) => {
-      if (err) { return res.status(401).json('token invalid'); }
-      const sub = decoded.sub;
-      User.findByPk(sub, {raw: true, include: Role})
-      .then(response => {
-        req.user = response;
-        next();
-      })
-      .catch(err => {
-        res.status(401).json('error');
-      });
-    })
-  } else {
-    res.status(401).json('pas de token !');
+import jwt = require("jsonwebtoken");
+import GatewayRegisterImpl from "../entitiesFamilies/utils/GatewayRegisterImpl";
+const nconf = require("nconf");
+
+export async function isLoggedIn(req, res, next) {
+  const userDb = GatewayRegisterImpl.getUserDbGateway();
+
+  try {
+    const rsaPublicKey = nconf.get("rsaKeyPublic");
+    const token = tryExtractToken(req);
+
+    let id = await tryExtractUserIdFromToken(token, rsaPublicKey);
+
+    req.user = await tryGetUserById(id);
+
+    console.log("W".repeat(100));
+    console.log(JSON.stringify({ user: req.user }, null, 2));
+    next();
+  } catch (err) {
+    return renderTokenError(res, err);
   }
+
+  async function tryGetUserById(sub) {
+    const user = await userDb.findUserById(sub);
+
+    if (!user) {
+      throw new Error("Pas d'utilisateur associe");
+    }
+
+    return user;
+  }
+}
+
+// service functions
+function tryExtractToken(req) {
+  const token = req.headers.authorization;
+  if (!token) {
+    throw new Error("Il n'y a pas de token");
+  }
+
+  return token;
+}
+
+function renderTokenError(res, err) {
+  if (err.name === "Error") {
+    return res.status(401).end(stringifyError(err));
+  } else {
+    return res.status(500).end(stringifyError(err));
+  }
+}
+
+function stringifyError(error) {
+  return JSON.stringify({ name: error.name, message: error.message }, null, 2);
+}
+
+async function tryExtractUserIdFromToken(token, rsaPublicKey) {
+  let id;
+  await jwt.verify(token, rsaPublicKey, (err, decoded) => {
+    if (err) {
+      throw new Error("Mauvais token");
+    }
+    id = decoded.sub;
+  });
+
+  if (!id) {
+    throw new Error("Pas d'id dans le token");
+  }
+
+  return id;
 }

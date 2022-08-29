@@ -9,5 +9,5 @@ export default interface UserDatabaseGateway {
   createUsers(users: User[]): Promise<User[]>;
   findAllUsersEager(): Promise<User[]>;
   findUserByEmail(email: string): Promise<User>;
-  findUserById(id: number): Promise<User>;
+  findUserById(id): Promise<User>;
 }

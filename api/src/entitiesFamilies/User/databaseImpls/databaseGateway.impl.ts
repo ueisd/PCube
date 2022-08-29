@@ -32,7 +32,7 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
     });
   }
 
-  public async findUserById(id: number): Promise<User> {
+  public async findUserById(id): Promise<User> {
     return UserImpl.findByPk(id, {
       include: [{ model: RoleImpl }],
       raw: true,

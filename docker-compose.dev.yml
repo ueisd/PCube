@@ -59,6 +59,10 @@ services:
     build:
       context: ./client
       dockerfile: Dockerfile.dev
+    volumes:
+      - type: bind
+        source: ./client/src
+        target: /app/src
     stdin_open: true
     ports:
       - 4200:80
@@ -75,10 +79,6 @@ services:
       - "0.0.0.0"
       - --disable-host-check
       - --poll
-    volumes:
-      - type: bind
-        source: ./client/src
-        target: /app/src
   reverse-proxy:
     build:
       context: ./reverse-proxy

@@ -13,11 +13,11 @@ import ExpenseAccountDatabaseGateway from "../ExpenseAccount/DatabaseGateway/Exp
 import TimelineDatabaseGateway from "../Timeline/DatabaseGateway/TimelineDatabaseGateway";
 
 export default class GatewayRegisterImpl {
-  static userDbGateway: UserDatabaseGateway;
-  static activityDbGateway: ActivityDatabaseGateway;
-  static projectDbGateway: ProjectDatabaseGateway;
-  static expenseAccountDBGateway: ExpenseAccountDatabaseGateway;
-  static timelineDBGateway: TimelineDatabaseGateway;
+  private static userDbGateway: UserDatabaseGateway;
+  private static activityDbGateway: ActivityDatabaseGateway;
+  private static projectDbGateway: ProjectDatabaseGateway;
+  private static expenseAccountDBGateway: ExpenseAccountDatabaseGateway;
+  private static timelineDBGateway: TimelineDatabaseGateway;
 
   public static async buildGateways(): Promise<{
     userDbGateway: UserDatabaseGateway;
@@ -52,5 +52,9 @@ export default class GatewayRegisterImpl {
       expenseAccountDBGateway: GatewayRegisterImpl.expenseAccountDBGateway,
       timelineDBGateway: GatewayRegisterImpl.timelineDBGateway,
     };
+  }
+
+  public static getUserDbGateway(): UserDatabaseGateway {
+    return this.userDbGateway;
   }
 }
