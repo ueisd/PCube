@@ -26,7 +26,7 @@ export function initRouters({
   expenseAccountDBGateway: ExpenseAccountDatabaseGateway;
   timelineDBGateway: TimelineDatabaseGateway;
 }) {
-  router.use("/api/auth", AuthController.initRouters(userDbGateway));
+  router.use("/api/auth", AuthController.initRouters());
   router.use("/api/user", getUsersRouter(userDbGateway));
   router.use("/api/roles", getRolesRouter());
   router.use("/api/activity", getActivityRouter());

@@ -1,22 +1,14 @@
 import * as express from "express";
-import UserDatabaseGateway from "../entitiesFamilies/User/databaseGateway/UserDatabaseGateway";
+
 const router = express.Router();
 const {
   googleAuth,
   generateOAuth2UserToken,
   googleAuthCb,
 } = require("../controllers/auth/auth.google.controller");
-import SigningController from "../controllers/auth/auth.controller";
 
 export default class AuthController {
-  public static initRouters(userDbGateway: UserDatabaseGateway) {
-    // auth local
-    SigningController.injectDependencies(userDbGateway);
-    // router.post("/signin", SigningController.signingLocal);
-
-    // auth global
-    router.get("/refresh-token", SigningController.refreshToken);
-
+  public static initRouters() {
     // auth google
     router.get("/google", googleAuth);
     router.get("/google/cb", googleAuthCb, generateOAuth2UserToken);

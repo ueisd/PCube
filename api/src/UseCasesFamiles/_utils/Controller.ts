@@ -12,6 +12,7 @@ export class Controller {
   private interactorFactory: InteractorFactory;
   private beforeCommandMiddlewares?: any[];
 
+  // @ts-ignore
   public static get STRATEGIES() {
     return {
       CREATE: {
@@ -52,8 +53,6 @@ export class Controller {
 
     route[this.method](this.url, ...middlewares);
   }
-
-  public static addControllerToRoutes(controller: Controller, route) {}
 
   private buildCommandMiddleware() {
     return async (req, res) => {

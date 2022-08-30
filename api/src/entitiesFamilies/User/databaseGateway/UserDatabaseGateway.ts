@@ -10,4 +10,5 @@ export default interface UserDatabaseGateway {
   findAllUsersEager(): Promise<User[]>;
   findUserByEmail(email: string): Promise<User>;
   findUserById(id): Promise<User>;
+  findAllRoles(): Promise<Role[]>;
 }

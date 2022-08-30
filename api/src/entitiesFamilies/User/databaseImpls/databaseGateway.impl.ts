@@ -69,6 +69,10 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
     return UserDataBaseGatewayImpl.buildUserListResponse(createdUsers, users);
   }
 
+  public async findAllRoles(): Promise<Role[]> {
+    return RoleImpl.findAll({ raw: true });
+  }
+
   public async findAllUsersEager(): Promise<User[]> {
     const eagerUserListModel = await UserImpl.findAll({
       order: [["createdAt", "DESC"]],

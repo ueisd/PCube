@@ -11,14 +11,13 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 
 import { loadConfig } from "./configuration";
-const { getSequelize } = require("./configuration/sequelize");
 const { closePool } = require("./database");
 const { buildDataset } = require("./models");
 import { PresetQuerry } from "./database/presetQuery";
 import GatewayRegisterImpl from "./entitiesFamilies/utils/GatewayRegisterImpl";
 import { RequestFactory } from "./Requestors/RequestFactory";
 import { InteractorFactory } from "./Requestors/InteractorFactory";
-import { SignInController } from "./UseCasesFamiles/SignIn/Controllers/SignInControler";
+import { SignInController } from "./UseCasesFamiles/SignIn/Controllers/SignInController";
 import { SignInRequest } from "./UseCasesFamiles/SignIn/Interactors/SignInRequest";
 import { GetCurrentUserInteractor } from "./UseCasesFamiles/GetCurrentUser/Interactors/GetCurrentUserInteractor";
 import { GetCurrentUserRequest } from "./UseCasesFamiles/GetCurrentUser/Interactors/GetCurrentUserRequest";
@@ -26,6 +25,9 @@ import { GetCurrentUserController } from "./UseCasesFamiles/GetCurrentUser/Contr
 import _ = require("lodash");
 import { UseCaseFactories } from "./UseCasesFamiles/_utils/UseCaseFactories";
 import { Controller } from "./UseCasesFamiles/_utils/Controller";
+import { RefreshTokenController } from "./UseCasesFamiles/SignIn/Controllers/RefreshTokenController";
+import { RefreshTokenInteractor } from "./UseCasesFamiles/SignIn/Interactors/RefreshTokenInteractor";
+import { RefreshTokenRequest } from "./UseCasesFamiles/SignIn/Interactors/RefreshTokenRequest";
 
 const { initRouters } = require("./routes/index");
 
@@ -44,9 +46,7 @@ async function main() {
 
   const {
     getInitializedPassport,
-    injectDependency,
   } = require("./configuration/oauth2.google.passeport");
-  injectDependency(getSequelize());
   app.use(getInitializedPassport());
 
   const gateways = await GatewayRegisterImpl.buildGateways();
@@ -80,6 +80,14 @@ async function main() {
         return new GetCurrentUserRequest(params);
       },
     },
+    {
+      name: "RefreshToken",
+      requestFactory: async (req) => {
+        const params = { token: _.get(req, "headers.authorization") };
+        await RefreshTokenRequest.checkBuildParamsAreValid(params);
+        return new RefreshTokenRequest(params);
+      },
+    },
   ]);
   const interactorFactories = new InteractorFactory([
     {
@@ -89,6 +97,10 @@ async function main() {
     {
       name: "GetCurrentUser",
       activator: new GetCurrentUserInteractor(gateways.userDbGateway),
+    },
+    {
+      name: "RefreshToken",
+      activator: new RefreshTokenInteractor(gateways.userDbGateway),
     },
   ]);
 
@@ -103,6 +115,10 @@ async function main() {
     new GetCurrentUserController({
       url: "/api/user/curent",
     })
+  );
+
+  RouteManager.addController(
+    new RefreshTokenController({ url: "/api/auth/refresh-token" })
   );
 
   app.get("/", (req, res) => {

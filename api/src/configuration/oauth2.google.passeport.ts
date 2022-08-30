@@ -1,66 +1,61 @@
-'use strict';
+"use strict";
 
-const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-var nconf = require('nconf');
+import GatewayRegisterImpl from "../entitiesFamilies/utils/GatewayRegisterImpl";
+import User from "../entitiesFamilies/User/entities/User";
 
-let UserModel;
-let RoleModel;
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const nconf = require("nconf");
 
-exports.getInitializedPassport = () => {
+export function getInitializedPassport() {
   return passport.initialize();
 }
 
-exports.injectDependency = (seq) => {
-  UserModel = seq.models.User;
-  RoleModel = seq.models.Role;
-}
+const createUserFromProfile = async (email, profile) => {
+  const userDb = GatewayRegisterImpl.getUserDbGateway();
 
-const createUserFromProfile = async (email, profile) =>{
-  let firstName = profile.name.givenName || 'Anonymous';
+  let firstName = profile.name.givenName || "Anonymous";
   let lastName = profile.name.familyName || "";
 
-  let roles = await RoleModel.findAll({raw : true});
-  let memberRole = roles.find(r => r.name == 'membre');
+  let roles = await userDb.findAllRoles();
+  let memberRole = roles.find((r) => r.name == "membre");
   // @Todo écrire une requête avec where name='membre'
 
-  return UserModel.create({
-    email:      email,
-    firstName:  firstName,
-    lastName:   lastName,
-    password:   "",
-    RoleId:     memberRole.id
-  });
-}
+  return userDb.createUser(
+    new User({ firstName, lastName, email, password: "", role: memberRole })
+  );
+};
 
 passport.use(
-    'google',
-    new GoogleStrategy(
-      {
-        clientID: nconf.get('oauth2_google_id'),
-        clientSecret: nconf.get('oauth2_google_secret'),
-        callbackURL: nconf.get('api_address') + '/api/auth/google/cb',
-      },
-      async (accessToken, refreshToken, profile, done) => {
-        try {
-          let verifiedEmails = profile.emails.filter(e => e.verified).map(e => e.value);
-          if(verifiedEmails.length <=0){
-            done("no verified emails");
-          } else {
-            let users = await UserModel.findUserByEmail(verifiedEmails);
-            let user = (users.length > 0) ? users[0] : null;
+  "google",
+  new GoogleStrategy(
+    {
+      clientID: nconf.get("oauth2_google_id"),
+      clientSecret: nconf.get("oauth2_google_secret"),
+      callbackURL: nconf.get("api_address") + "/api/auth/google/cb",
+    },
+    async (accessToken, refreshToken, profile, done) => {
+      const userDb = GatewayRegisterImpl.getUserDbGateway();
+      try {
+        let verifiedEmails = profile.emails
+          .filter((e) => e.verified)
+          .map((e) => e.value);
+        if (verifiedEmails.length <= 0) {
+          done("no verified emails");
+        } else {
+          const user = await userDb.findUserByEmail(verifiedEmails);
 
-            if(user) {
-              done(null, user);
-            } else {
-              let email = verifiedEmails[0];
-              let user = await createUserFromProfile(email, profile);
-              done(null, user);
-            }
+          if (user) {
+            done(null, user);
+          } else {
+            let email = verifiedEmails[0];
+            let user = await createUserFromProfile(email, profile);
+            done(null, user);
           }
-        } catch (e) {
-          done(e);
         }
+      } catch (e) {
+        done(e);
       }
-    )
+    }
+  )
 );
