@@ -141,10 +141,6 @@ Consulter le fichier [LICENSE.md](LICENSE.md) pour les détails de la licence.
 
 
 ### Hints:
-- `./start-dev.sh` pour tout démarrer
-
-- `./logs-api.sh` pour avoir les logs d'Api
-
-- `down-dev.sh` pour stopper tous les containers devs
+- `./dev.sh` en dev pour facilement (démarer, installer, avoir les logs)
 
 localhost en dev pour tester le GUI integré a api
