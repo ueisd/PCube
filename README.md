@@ -138,3 +138,9 @@ L'utilisation de variables d'environnement pour un compte administrateur initial
 Le projet est sous licence MIT X11.
 
 Consulter le fichier [LICENSE.md](LICENSE.md) pour les détails de la licence.
+
+
+### Hints:
+`./start-dev.sh` pour tout démarrer
+
+`./logs-api.sh` pour avoir les logs d'Api
