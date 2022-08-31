@@ -1,3 +1,5 @@
 {
-  "jwt_refresh_token_expires": 12345679
+  "jwt_refresh_token_expires": 12345679,
+  "have_to_sync_schemas": false,
+  "have_to_build_dataset": false
 }

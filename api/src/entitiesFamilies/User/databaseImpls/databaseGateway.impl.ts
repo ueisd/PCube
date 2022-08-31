@@ -102,6 +102,7 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
 
     return userModels;
   }
+
   private static buildUserResponse(userModel, user) {
     const createdUser = new User({
       id: userModel.id,

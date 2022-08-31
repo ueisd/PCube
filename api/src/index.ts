@@ -13,7 +13,7 @@ const bodyParser = require("body-parser");
 import { loadConfig } from "./configuration";
 const { closePool } = require("./database");
 const { buildDataset } = require("./models");
-import { PresetQuerry } from "./database/presetQuery";
+import { PresetQuery } from "./database/presetQuery";
 import GatewayRegisterImpl from "./entitiesFamilies/utils/GatewayRegisterImpl";
 import { RequestFactory } from "./Requestors/RequestFactory";
 import { InteractorFactory } from "./Requestors/InteractorFactory";
@@ -42,7 +42,7 @@ let server;
 
 async function main() {
   await loadConfig();
-  await PresetQuerry.ensureDBIsCreated(nconf.get("database_db"));
+  await PresetQuery.ensureDBIsCreated(nconf.get("database_db"));
 
   const {
     getInitializedPassport,
@@ -50,17 +50,20 @@ async function main() {
   app.use(getInitializedPassport());
 
   const gateways = await GatewayRegisterImpl.buildGateways();
-  await buildDataset(gateways);
 
-  // let apiOrigin = nconf.get("api_url_origin");
-  //
-  // if (apiOrigin) {
-  //   app.use(cors({ origin: apiOrigin }));
-  // } else {
-  //   app.use(cors());
-  // }
+  if (nconf.get("have_to_build_dataset")) {
+    await PresetQuery.syncSchemas();
+  }
+  if (nconf.get("have_to_sync_schemas")) {
+    await buildDataset(gateways);
+  }
 
-  app.use(cors());
+  let apiOrigin = nconf.get("api_url_origin");
+  if (apiOrigin) {
+    app.use(cors({ origin: apiOrigin }));
+  } else {
+    app.use(cors());
+  }
 
   app.use(initRouters(gateways));
 
@@ -123,7 +126,7 @@ async function main() {
 
   app.get("/", (req, res) => {
     res.status(200).json({
-      message: "accueil heroku",
+      message: "accueil heroku ",
     });
   });
 
@@ -141,7 +144,7 @@ async function main() {
 }
 
 try {
-  main().then((r) => console.log(r));
+  main().then(() => console.log("Main started!"));
 } catch (err) {
   console.log(`Erreur`);
   console.log(JSON.stringify({ err }, null, 2));

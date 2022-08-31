@@ -27,7 +27,8 @@ services:
       - OAUTH2_GOOGLE_SECRET=${OAUTH2_GOOGLE_SECRET}
     entrypoint:
       - npm
-      - start
+      - run
+      - dev
     depends_on:
       - db
   db:

@@ -41,10 +41,6 @@ export default class GatewayRegisterImpl {
       sequelize
     );
 
-    console.log(`1`.repeat(100));
-    await sequelize.sync({ force: true });
-    console.log(`2`.repeat(100));
-
     return {
       userDbGateway: GatewayRegisterImpl.userDbGateway,
       activityDbGateway: GatewayRegisterImpl.activityDbGateway,
