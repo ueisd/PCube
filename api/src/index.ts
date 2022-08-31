@@ -146,7 +146,7 @@ async function main() {
 try {
   main().then(() => console.log("Main started!"));
 } catch (err) {
-  console.log(`Erreur`);
+  console.log(`Erreur !`);
   console.log(JSON.stringify({ err }, null, 2));
 }
 
