@@ -146,3 +146,5 @@ Consulter le fichier [LICENSE.md](LICENSE.md) pour les détails de la licence.
 - `./logs-api.sh` pour avoir les logs d'Api
 
 - `down-dev.sh` pour stopper tous les containers devs
+
+localhost en dev pour tester le GUI integré a api
