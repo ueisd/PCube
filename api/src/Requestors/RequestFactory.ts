@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { UseCaseRequest } from "./UseCaseRequest";
-import _ = require("lodash");
+import { UseCaseRequest } from './UseCaseRequest';
+import _ = require('lodash');
 
 export class RequestFactory {
   private registerVals: {
@@ -19,11 +19,13 @@ export class RequestFactory {
   }
 
   public async make(name: string, params: any): Promise<UseCaseRequest> {
-    const builderEntry = _.find(
-      this.registerVals,
-      (elem) => elem.name === name
-    );
-    const requestFactory = _.get(builderEntry, "requestFactory", null);
+    const builderEntry = _.find(this.registerVals, (elem) => elem.name === name);
+    const requestFactory = _.get(builderEntry, 'requestFactory', null);
+
+    if (!requestFactory) {
+      return null;
+    }
+
     return requestFactory(params);
   }
 }

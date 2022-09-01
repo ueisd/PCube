@@ -1,7 +1,7 @@
-import { RequestFactory } from "../../Requestors/RequestFactory";
-import { InteractorFactory } from "../../Requestors/InteractorFactory";
-import { UseCaseRequest } from "../../Requestors/UseCaseRequest";
-import { UseCaseFactories } from "./UseCaseFactories";
+import { RequestFactory } from '../../Requestors/RequestFactory';
+import { InteractorFactory } from '../../Requestors/InteractorFactory';
+import { UseCaseRequest } from '../../Requestors/UseCaseRequest';
+import { UseCaseFactories } from './UseCaseFactories';
 
 export class Controller {
   private url: string;
@@ -16,26 +16,21 @@ export class Controller {
   public static get STRATEGIES() {
     return {
       CREATE: {
-        method: "post",
+        method: 'post',
         successCode: 201,
       },
       GET: {
-        method: "get",
+        method: 'get',
         successCode: 200,
       },
       SEND: {
-        method: "post",
+        method: 'post',
         successCode: 201,
       },
     };
   }
 
-  constructor(opts: {
-    url: string;
-    strategy: { method: string; successCode: number };
-    useCaseName: string;
-    beforeCommandMiddlewares?: any[];
-  }) {
+  constructor(opts: { url: string; strategy: { method: string; successCode: number }; useCaseName?: string; beforeCommandMiddlewares?: any[] }) {
     this.url = opts.url;
     this.method = opts.strategy.method;
     this.successCode = opts.strategy.successCode;
@@ -46,17 +41,18 @@ export class Controller {
   }
 
   public addToRouter(route) {
-    const middlewares = [
-      ...this.beforeCommandMiddlewares,
-      this.buildCommandMiddleware(),
-    ];
+    const middlewares = [...this.beforeCommandMiddlewares];
+
+    if (this.useCaseName) {
+      middlewares.push(this.buildCommandMiddleware());
+    }
 
     route[this.method](this.url, ...middlewares);
   }
 
   private buildCommandMiddleware() {
     return async (req, res) => {
-      res.setHeader("Content-Type", "application/json");
+      res.setHeader('Content-Type', 'application/json');
 
       let useCaseRequest: UseCaseRequest;
       try {
@@ -76,7 +72,7 @@ export class Controller {
     };
 
     function renderInteractorError(res, err) {
-      if (err.name === "NotFoundError") {
+      if (err.name === 'NotFoundError') {
         return res.status(404).end(strignifyError(err));
       } else {
         return res.status(500).end(strignifyError(err));
@@ -84,7 +80,7 @@ export class Controller {
     }
 
     function renderRequestorError(res, err) {
-      if (err.name === "ValidationError") {
+      if (err.name === 'ValidationError') {
         return res.status(400).end(strignifyError(err));
       } else {
         return res.status(500).end(strignifyError(err));
@@ -93,11 +89,7 @@ export class Controller {
 
     // services functions
     function strignifyError(error) {
-      return JSON.stringify(
-        { name: error.name, message: error.message },
-        null,
-        2
-      );
+      return JSON.stringify({ name: error.name, message: error.message }, null, 2);
     }
   }
 }

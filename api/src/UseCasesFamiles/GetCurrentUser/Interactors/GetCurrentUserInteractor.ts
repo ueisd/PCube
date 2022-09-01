@@ -1,15 +1,11 @@
-"use strict";
+'use strict';
 
-import bcrypt = require("bcrypt");
-const nconf = require("nconf");
-import { jwtSignId } from "../../../controllers/auth/utils/jwt.utils";
-
-import { UseCaseActivator } from "../../../Requestors/UseCaseActivator";
-import UserDatabaseGateway from "../../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway";
-import User from "../../../entitiesFamilies/User/entities/User";
-import { UseCaseRequest } from "../../../Requestors/UseCaseRequest";
-import { GetCurrentUserRequest } from "./GetCurrentUserRequest";
-import { GetCurrentUserResponse } from "./GetCurrentUserResponse";
+import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
+import UserDatabaseGateway from '../../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
+import User from '../../../entitiesFamilies/User/entities/User';
+import { UseCaseRequest } from '../../../Requestors/UseCaseRequest';
+import { GetCurrentUserRequest } from './GetCurrentUserRequest';
+import { GetCurrentUserResponse } from './GetCurrentUserResponse';
 
 export class GetCurrentUserInteractor implements UseCaseActivator {
   private userDb: UserDatabaseGateway;
@@ -32,7 +28,7 @@ export class GetCurrentUserInteractor implements UseCaseActivator {
     const id = getCurrentUserRequest.id;
 
     if (!id) {
-      throw new Error("signin fail !");
+      throw new Error('signin fail !');
     }
 
     return { id };
@@ -45,19 +41,5 @@ export class GetCurrentUserInteractor implements UseCaseActivator {
     }
 
     return user;
-  }
-
-  private checkThatUserOwnPassword(user, password) {
-    if (!bcrypt.compareSync(password, user.password)) {
-      throw new Error("signin fail !");
-    }
-  }
-
-  private signInUser(user) {
-    let rsa_key_private = nconf.get("rsaKeyPrivate");
-    let timeRefresh = nconf.get("jwt_refresh_token_expires");
-    console.log(JSON.stringify({ rsa_key_private, timeRefresh }, null, 2));
-
-    return jwtSignId(user.id, rsa_key_private, timeRefresh);
   }
 }

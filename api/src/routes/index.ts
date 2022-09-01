@@ -1,17 +1,15 @@
-import UserDatabaseGateway from "../entitiesFamilies/User/databaseGateway/UserDatabaseGateway";
-import ActivityDatabaseGateway from "../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway";
-import ProjectDatabaseGateway from "../entitiesFamilies/Project/databaseGateway/ProjectDatabaseGateway";
-import ExpenseAccountDatabaseGateway from "../entitiesFamilies/ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway";
-import TimelineDatabaseGateway from "../entitiesFamilies/Timeline/DatabaseGateway/TimelineDatabaseGateway";
+import UserDatabaseGateway from '../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
+import ActivityDatabaseGateway from '../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
+import ProjectDatabaseGateway from '../entitiesFamilies/Project/databaseGateway/ProjectDatabaseGateway';
+import ExpenseAccountDatabaseGateway from '../entitiesFamilies/ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway';
+import TimelineDatabaseGateway from '../entitiesFamilies/Timeline/DatabaseGateway/TimelineDatabaseGateway';
 
-const router = require("express").Router();
-import AuthController from "./auth";
-const { getRouter: getUsersRouter } = require("./user");
-const { getRouter: getRolesRouter } = require("./roles");
-const { getRouter: getActivityRouter } = require("./activity");
-const { getRouter: getProjectRouter } = require("./projects");
-const { getRouter: getExpenseAccountRouter } = require("./expense-account");
-const { getRouter: getTimelineRouter } = require("./timelines");
+const router = require('express').Router();
+const { getRouter: getUsersRouter } = require('./user');
+const { getRouter: getActivityRouter } = require('./activity');
+const { getRouter: getProjectRouter } = require('./projects');
+const { getRouter: getExpenseAccountRouter } = require('./expense-account');
+const { getRouter: getTimelineRouter } = require('./timelines');
 
 export function initRouters({
   userDbGateway,
@@ -26,12 +24,10 @@ export function initRouters({
   expenseAccountDBGateway: ExpenseAccountDatabaseGateway;
   timelineDBGateway: TimelineDatabaseGateway;
 }) {
-  router.use("/api/auth", AuthController.initRouters());
-  router.use("/api/user", getUsersRouter(userDbGateway));
-  router.use("/api/roles", getRolesRouter());
-  router.use("/api/activity", getActivityRouter());
-  router.use("/api/project", getProjectRouter());
-  router.use("/api/expense-account", getExpenseAccountRouter());
-  router.use("/api/timeline", getTimelineRouter());
+  router.use('/api/user', getUsersRouter(userDbGateway));
+  router.use('/api/activity', getActivityRouter());
+  router.use('/api/project', getProjectRouter());
+  router.use('/api/expense-account', getExpenseAccountRouter());
+  router.use('/api/timeline', getTimelineRouter());
   return router;
 }

@@ -46,5 +46,10 @@
     "@types/joi": "^17.2.3",
     "nodemon": "^2.0.19",
     "ts-node": "^10.9.1"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2,
+    "printWidth": 200
   }
 }

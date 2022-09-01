@@ -1,15 +1,15 @@
-"use strict";
+'use strict';
 
-import bcrypt = require("bcrypt");
-const nconf = require("nconf");
-import { jwtSignId } from "../../../controllers/auth/utils/jwt.utils";
+import bcrypt = require('bcrypt');
+const nconf = require('nconf');
+import { jwtSignId } from '../_utils/jwt.utils';
 
-import { UseCaseActivator } from "../../../Requestors/UseCaseActivator";
-import UserDatabaseGateway from "../../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway";
-import User from "../../../entitiesFamilies/User/entities/User";
-import { UseCaseRequest } from "../../../Requestors/UseCaseRequest";
-import { SignInRequest } from "./SignInRequest";
-import { SignInResponse } from "./SignInResponse";
+import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
+import UserDatabaseGateway from '../../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
+import User from '../../../entitiesFamilies/User/entities/User';
+import { UseCaseRequest } from '../../../Requestors/UseCaseRequest';
+import { SignInRequest } from './SignInRequest';
+import { SignInResponse } from './SignInResponse';
 
 export class SignInInteractor implements UseCaseActivator {
   private userDb;
@@ -36,7 +36,7 @@ export class SignInInteractor implements UseCaseActivator {
     const password = signInRequest.password;
 
     if (!email || !password) {
-      throw new Error("signin fail !");
+      throw new Error('signin fail !');
     }
 
     return { email, password };
@@ -45,7 +45,7 @@ export class SignInInteractor implements UseCaseActivator {
   private async tryFindUserByEmail(email): Promise<User> {
     const user: User = await this.userDb.findUserByEmail(email);
     if (!user) {
-      throw new Error("signin fail !");
+      throw new Error('signin fail !');
     }
 
     return user;
@@ -53,13 +53,13 @@ export class SignInInteractor implements UseCaseActivator {
 
   private checkThatUserOwnPassword(user, password) {
     if (!bcrypt.compareSync(password, user.password)) {
-      throw new Error("signin fail !");
+      throw new Error('signin fail !');
     }
   }
 
   private signInUser(user) {
-    let rsa_key_private = nconf.get("rsaKeyPrivate");
-    let timeRefresh = nconf.get("jwt_refresh_token_expires");
+    let rsa_key_private = nconf.get('rsaKeyPrivate');
+    let timeRefresh = nconf.get('jwt_refresh_token_expires');
     console.log(JSON.stringify({ rsa_key_private, timeRefresh }, null, 2));
 
     return jwtSignId(user.id, rsa_key_private, timeRefresh);
