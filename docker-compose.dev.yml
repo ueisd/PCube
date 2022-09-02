@@ -60,8 +60,8 @@ services:
       context: ./client
       dockerfile: Dockerfile.dev
     volumes:
-      - ./client/src:/app/src
-      - /app/src/node_modules/
+      - ./client:/app
+      - /app/node_modules/
     stdin_open: true
     ports:
       - 4200:80
