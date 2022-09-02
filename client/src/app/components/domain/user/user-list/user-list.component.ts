@@ -119,13 +119,13 @@ export class UserListComponent implements OnInit {
       panelClass: 'warning-dialog',
     });
 
-    const result = await dialogRef.afterClosed().toPromise();
-    if (result === 'Canceled' || result === undefined) {
+    const userToDelete = await dialogRef.afterClosed().toPromise();
+    if (userToDelete === 'Canceled' || userToDelete === undefined) {
       this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
     } else {
       try {
-        await this.userService.deleteUser(result.id).toPromise();
-        this.customSnackBar.openSnackBar(`L'utilisateur a été supprimé!`, 'notif-success');
+        await this.userService.deleteUser(userToDelete.id).toPromise();
+        this.customSnackBar.openSnackBar(`L'utilisateur ${userToDelete.email} est supprimé`, 'notif-success');
         await this.refreshList();
       } catch (err) {
         this.customSnackBar.openSnackBar(`${err.error.name} - ${err.error.message} `, 'notif-error');
