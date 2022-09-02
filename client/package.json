@@ -57,5 +57,10 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.184"
+  },
+  "prettier": {
+    "singleQuote": true,
+    "tabWidth": 2,
+    "printWidth": 300
   }
 }
