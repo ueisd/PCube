@@ -12,4 +12,5 @@ export default interface UserDatabaseGateway {
   findUserByEmail(email: string): Promise<User>;
   findUserById(id): Promise<User>;
   findAllRoles(): Promise<Role[]>;
+  deleteUser(id: number): Promise<any>;
 }

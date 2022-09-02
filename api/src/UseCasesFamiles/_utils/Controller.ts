@@ -23,6 +23,10 @@ export class Controller {
         method: 'put',
         successCode: 201,
       },
+      DELETE: {
+        method: 'delete',
+        successCode: 201,
+      },
       GET: {
         method: 'get',
         successCode: 200,

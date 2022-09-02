@@ -40,6 +40,10 @@ import { AddUserRequest } from './UseCasesFamiles/ManageUsers/Interactors/AddUse
 import { UpdateUserController } from './UseCasesFamiles/ManageUsers/Controllers/UpdateUserController';
 import { UpdateUserRequest } from './UseCasesFamiles/ManageUsers/Interactors/UpdateUserRequest';
 import { UpdateUserInteractor } from './UseCasesFamiles/ManageUsers/Interactors/UpdateUserInterractor';
+import { DeleteUserController } from './UseCasesFamiles/ManageUsers/Controllers/DeleteUserController';
+import * as console from 'console';
+import { DeleteUserRequest } from './UseCasesFamiles/ManageUsers/Interactors/DeleteUserRequest';
+import { DeleteUserInteractor } from './UseCasesFamiles/ManageUsers/Interactors/DeleteUserInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -117,6 +121,15 @@ async function main() {
         return new UpdateUserRequest(req.body);
       },
     },
+    {
+      name: 'DeleteUser',
+      requestFactory: async (req) => {
+        const params = { ...req.params };
+        params.id = Number(params.id);
+        await DeleteUserRequest.checkBuildParamsAreValid(params);
+        return new DeleteUserRequest(params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -127,6 +140,7 @@ async function main() {
     { name: 'ListRoles', activator: new ListRolesInteractor(gateways.userDbGateway) },
     { name: 'AddUser', activator: new AddUserInteractor(gateways.userDbGateway) },
     { name: 'UpdateUser', activator: new UpdateUserInteractor(gateways.userDbGateway) },
+    { name: 'DeleteUser', activator: new DeleteUserInteractor(gateways.userDbGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -144,6 +158,7 @@ async function main() {
   RouteManager.addController(new ListRolesController({ url: '/api/roles' }));
   RouteManager.addController(new AddUserController({ url: '/api/user' }));
   RouteManager.addController(new UpdateUserController({ url: '/api/user' }));
+  RouteManager.addController(new DeleteUserController({ url: '/api/user/:id' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });

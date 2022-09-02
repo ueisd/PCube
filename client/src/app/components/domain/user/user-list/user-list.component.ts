@@ -127,8 +127,8 @@ export class UserListComponent implements OnInit {
         await this.userService.deleteUser(result.id).toPromise();
         this.customSnackBar.openSnackBar(`L'utilisateur a été supprimé!`, 'notif-success');
         await this.refreshList();
-      } catch (error) {
-        this.customSnackBar.openSnackBar(`Une erreur s'est produite. Veuillez réessayer`, 'notif-error');
+      } catch (err) {
+        this.customSnackBar.openSnackBar(`${err.error.name} - ${err.error.message} `, 'notif-error');
       }
     }
   }

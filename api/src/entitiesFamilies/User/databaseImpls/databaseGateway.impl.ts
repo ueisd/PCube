@@ -58,8 +58,14 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
     return UserDataBaseGatewayImpl.buildUserResponse(result, user);
   }
 
-  public updateUser(id: number, props: any): Promise<User> {
+  public async updateUser(id: number, props: any): Promise<User> {
     return UserImpl.update(props, { where: { id } });
+  }
+
+  public async deleteUser(id: number): Promise<any> {
+    return UserImpl.destroy({
+      where: { id: id },
+    });
   }
 
   public async createUsers(users: User[]): Promise<User[]> {

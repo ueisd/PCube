@@ -17,16 +17,5 @@ export function getRouter(userDb: UserDatabaseGateway) {
       });
   });
 
-  router.delete('/:id', isLoggedIn, (req, res) => {
-    let id = req.params.id;
-    User.deleteById(id)
-      .then((result) => {
-        res.json(result);
-      })
-      .catch((err) => {
-        res.status(401).json('error' + err);
-      });
-  });
-
   return router;
 }
