@@ -120,8 +120,8 @@ async function main() {
     {
       name: 'UpdateUser',
       requestFactory: async (req) => {
-        await UpdateUserRequest.checkBuildParamsAreValid(req.body);
-        return new UpdateUserRequest(req.body);
+        const params = await UpdateUserRequest.checkBuildParamsAreValid(req.body);
+        return new UpdateUserRequest(params);
       },
     },
     {
@@ -136,8 +136,8 @@ async function main() {
     {
       name: 'CheckUserEmailExist',
       requestFactory: async (req) => {
-        await CheckUserEmailExistRequest.checkBuildParamsAreValid(req.params);
-        return new CheckUserEmailExistRequest(req.params);
+        const params = await CheckUserEmailExistRequest.checkBuildParamsAreValid(req.params);
+        return new CheckUserEmailExistRequest(params);
       },
     },
   ]);

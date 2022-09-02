@@ -21,10 +21,10 @@ export class AddUserRequest extends UseCaseRequest {
 
   public static async checkBuildParamsAreValid(buildParams: any) {
     const schema = Joi.object({
-      email: Joi.string().max(100).email().required(),
-      password: Joi.string().max(20).required(),
-      firstName: Joi.string().max(40).required(),
-      lastName: Joi.string().max(40).required(),
+      email: Joi.string().min(5).max(100).email().required(),
+      password: Joi.string().min(5).max(20).required(),
+      firstName: Joi.string().min(5).max(40).required(),
+      lastName: Joi.string().min(5).max(40).required(),
       RoleId: Joi.number(),
     });
 
