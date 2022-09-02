@@ -113,7 +113,7 @@ export class AddUserComponent implements OnInit {
   async checkUniqueEmail(newValue) {
     if (newValue !== null && newValue.trim().length !== 0) {
       this.isUnique = true;
-      this.isUnique = await this.userService.isEmailUnique(newValue).toPromise();
+      this.isUnique = !(await this.userService.isEmailExist(newValue).toPromise());
     }
   }
 }

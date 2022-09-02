@@ -44,6 +44,9 @@ import { DeleteUserController } from './UseCasesFamiles/ManageUsers/Controllers/
 import * as console from 'console';
 import { DeleteUserRequest } from './UseCasesFamiles/ManageUsers/Interactors/DeleteUserRequest';
 import { DeleteUserInteractor } from './UseCasesFamiles/ManageUsers/Interactors/DeleteUserInterractor';
+import { CheckUserEmailExistController } from './UseCasesFamiles/ManageUsers/Controllers/CheckUserEmailExistController';
+import { CheckUserEmailExistRequest } from './UseCasesFamiles/ManageUsers/Interactors/CheckUserEmailExistRequest';
+import { CheckUserEmailExistInteractor } from './UseCasesFamiles/ManageUsers/Interactors/CheckUserEmailIsUniqueInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -130,6 +133,13 @@ async function main() {
         return new DeleteUserRequest(params);
       },
     },
+    {
+      name: 'CheckUserEmailExist',
+      requestFactory: async (req) => {
+        await CheckUserEmailExistRequest.checkBuildParamsAreValid(req.params);
+        return new CheckUserEmailExistRequest(req.params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -141,6 +151,7 @@ async function main() {
     { name: 'AddUser', activator: new AddUserInteractor(gateways.userDbGateway) },
     { name: 'UpdateUser', activator: new UpdateUserInteractor(gateways.userDbGateway) },
     { name: 'DeleteUser', activator: new DeleteUserInteractor(gateways.userDbGateway) },
+    { name: 'CheckUserEmailExist', activator: new CheckUserEmailExistInteractor(gateways.userDbGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -159,6 +170,7 @@ async function main() {
   RouteManager.addController(new AddUserController({ url: '/api/user' }));
   RouteManager.addController(new UpdateUserController({ url: '/api/user' }));
   RouteManager.addController(new DeleteUserController({ url: '/api/user/:id' }));
+  RouteManager.addController(new CheckUserEmailExistController({ url: '/api/user/isEmailExist/:email' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });

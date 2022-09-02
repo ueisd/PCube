@@ -81,14 +81,14 @@ export class ModifyUserComponent implements OnInit {
   }
 
   async checkUniqueEmail(newValue) {
-    if (newValue != null && newValue.toUpperCase() === this.data.email.toUpperCase()) {
+    if (newValue && newValue.toUpperCase() === this.data.email.toUpperCase()) {
       this.isUnique = true;
       return;
     }
 
-    if (newValue != null && newValue.trim().length !== 0) {
+    if (newValue && newValue.trim().length !== 0) {
       this.isUnique = true;
-      this.isUnique = await this.userService.isEmailUnique(newValue).toPromise();
+      this.isUnique = !(await this.userService.isEmailExist(newValue).toPromise());
     }
   }
 

@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 const API_USER = environment.api_url + '/api/user';
-const API_IS_UNIQUE = API_USER + '/emailUnique';
+const IS_EMAIL_EXIST_PATH = API_USER + '/isEmailExist';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -20,8 +20,8 @@ export class UserService {
     return this.http.delete(API_USER + '/' + id);
   }
 
-  isEmailUnique(email): Observable<boolean> {
-    const url = API_IS_UNIQUE + '/' + email;
+  isEmailExist(email): Observable<boolean> {
+    const url = IS_EMAIL_EXIST_PATH + '/' + email;
     return this.http.get<boolean>(url);
   }
 
