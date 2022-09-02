@@ -17,23 +17,6 @@ export function getRouter(userDb: UserDatabaseGateway) {
       });
   });
 
-  router.put('/', isLoggedIn, (req, res) => {
-    req.body.firstName = req.body.firstName.trim();
-    req.body.lastName = req.body.lastName.trim();
-    req.body.email = req.body.email.trim();
-    User.update(req.body, {
-      where: {
-        id: req.body.id,
-      },
-    })
-      .then((result) => {
-        res.json(result);
-      })
-      .catch((err) => {
-        res.status(401).json('error' + err);
-      });
-  });
-
   router.delete('/:id', isLoggedIn, (req, res) => {
     let id = req.params.id;
     User.deleteById(id)

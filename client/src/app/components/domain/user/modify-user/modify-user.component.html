@@ -1,12 +1,12 @@
 <form [formGroup]="modifyUserForm" (ngSubmit)="onSubmit()">
     <h2 mat-dialog-title *ngIf="!isCurrentUser">Modifier un utilisateur</h2>
     <h2 mat-dialog-title *ngIf="isCurrentUser">Modifier votre compte</h2>
-    
+
     <mat-dialog-content class="mat-typography">
 
         <input type="hidden" id="id" class="form-control" formControlName="id">
         <input type="hidden" id="email" class="form-control" formControlName="email">
-        
+
         <mat-form-field class="full-width">
             <mat-label>Prénom</mat-label>
             <input matInput placeholder="Prénom" formControlName="firstName" autocomplete="off">
@@ -20,10 +20,10 @@
         <div class="alert alert-warning" *ngIf="isCurrentUser">Si vous modifiez votre adresse courriel, il faudra vous re-authentifier.</div>
         <mat-form-field class="full-width">
             <mat-label>Adresse courriel</mat-label>
-            <input matInput 
-                placeholder="Adresse courriel" 
-                formControlName="newEmail" 
-                (ngModelChange)="checkUniqueEmail($event)" 
+            <input matInput
+                placeholder="Adresse courriel"
+                formControlName="newEmail"
+                (ngModelChange)="checkUniqueEmail($event)"
                 autocomplete="off">
         </mat-form-field>
 
@@ -31,7 +31,7 @@
             L'adresse courriel doit être unique!
         </div>
 
-        <ng-select 
+        <ng-select
             [items]="roles"
             bindLabel="name"
             placeholder="Rôle choisi"
@@ -41,6 +41,7 @@
 
     </mat-dialog-content>
     <br/>
+    <div *ngIf="errorMessage" class="alert-danger">{{ errorMessage }}</div>
     <mat-dialog-actions align="end">
         <button mat-raised-button color="warn" mat-dialog-close [mat-dialog-close]="canceledMessage">Annuler</button>
         <button mat-raised-button color="primary" type="submit" [disabled]="!modifyUserForm.valid || !isUnique">Sauvegarder</button>

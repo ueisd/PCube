@@ -19,6 +19,10 @@ export class Controller {
         method: 'post',
         successCode: 201,
       },
+      UPDATE: {
+        method: 'put',
+        successCode: 201,
+      },
       GET: {
         method: 'get',
         successCode: 200,

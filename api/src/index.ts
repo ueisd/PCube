@@ -37,6 +37,9 @@ import { ListRolesInteractor } from './UseCasesFamiles/ListRoles/Interactors/Lis
 import { AddUserController } from './UseCasesFamiles/ManageUsers/Controllers/AddUserController';
 import { AddUserInteractor } from './UseCasesFamiles/ManageUsers/Interactors/AddUserInterractor';
 import { AddUserRequest } from './UseCasesFamiles/ManageUsers/Interactors/AddUserRequest';
+import { UpdateUserController } from './UseCasesFamiles/ManageUsers/Controllers/UpdateUserController';
+import { UpdateUserRequest } from './UseCasesFamiles/ManageUsers/Interactors/UpdateUserRequest';
+import { UpdateUserInteractor } from './UseCasesFamiles/ManageUsers/Interactors/UpdateUserInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -101,13 +104,21 @@ async function main() {
     {
       name: 'AddUser',
       requestFactory: async (req) => {
-        // TODO enlever rolename de la querry frontend
+        // TODO remove roleName from frontend query
         const params = _.omit(req.body, ['roleName']);
         await AddUserRequest.checkBuildParamsAreValid(params);
         return new AddUserRequest(params);
       },
     },
+    {
+      name: 'UpdateUser',
+      requestFactory: async (req) => {
+        await UpdateUserRequest.checkBuildParamsAreValid(req.body);
+        return new UpdateUserRequest(req.body);
+      },
+    },
   ]);
+
   const interactorFactories = new InteractorFactory([
     { name: 'SignIn', activator: new SignInInteractor(gateways.userDbGateway) },
     { name: 'GetCurrentUser', activator: new GetCurrentUserInteractor(gateways.userDbGateway) },
@@ -115,6 +126,7 @@ async function main() {
     { name: 'ListUsers', activator: new ListUsersInteractor(gateways.userDbGateway) },
     { name: 'ListRoles', activator: new ListRolesInteractor(gateways.userDbGateway) },
     { name: 'AddUser', activator: new AddUserInteractor(gateways.userDbGateway) },
+    { name: 'UpdateUser', activator: new UpdateUserInteractor(gateways.userDbGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -131,6 +143,7 @@ async function main() {
   RouteManager.addController(new ListUsersController({ url: '/api/user' }));
   RouteManager.addController(new ListRolesController({ url: '/api/roles' }));
   RouteManager.addController(new AddUserController({ url: '/api/user' }));
+  RouteManager.addController(new UpdateUserController({ url: '/api/user' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });

@@ -1,14 +1,14 @@
-"use strict";
+'use strict';
 
-import _ = require("lodash");
-const bcrypt = require("bcrypt");
+import _ = require('lodash');
+const bcrypt = require('bcrypt');
 
-import RoleImpl from "./roleImpl";
-import UserImpl from "./userImpl";
+import RoleImpl from './roleImpl';
+import UserImpl from './userImpl';
 
-import Role from "../entities/role";
-import User from "../entities/User";
-import UserDatabaseGateway from "../databaseGateway/UserDatabaseGateway";
+import Role from '../entities/role';
+import User from '../entities/User';
+import UserDatabaseGateway from '../databaseGateway/UserDatabaseGateway';
 
 export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
   private sequelize;
@@ -58,11 +58,13 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
     return UserDataBaseGatewayImpl.buildUserResponse(result, user);
   }
 
+  public updateUser(id: number, props: any): Promise<User> {
+    return UserImpl.update(props, { where: { id } });
+  }
+
   public async createUsers(users: User[]): Promise<User[]> {
     const userModels = UserDataBaseGatewayImpl.fetchUserListModel(users);
-    _.forEach(userModels, (uM) =>
-      UserDataBaseGatewayImpl.encryptUserPassword(uM)
-    );
+    _.forEach(userModels, (uM) => UserDataBaseGatewayImpl.encryptUserPassword(uM));
 
     const createdUsers = await UserImpl.bulkCreate(userModels);
 
@@ -75,7 +77,7 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
 
   public async findAllUsersEager(): Promise<User[]> {
     const eagerUserListModel = await UserImpl.findAll({
-      order: [["createdAt", "DESC"]],
+      order: [['createdAt', 'DESC']],
       include: [
         {
           model: this.sequelize.models.Role,
@@ -84,9 +86,7 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
       raw: true,
     });
 
-    return _.map(eagerUserListModel, (userModel) =>
-      UserDataBaseGatewayImpl.buildUserResponseFromEager(userModel)
-    );
+    return _.map(eagerUserListModel, (userModel) => UserDataBaseGatewayImpl.buildUserResponseFromEager(userModel));
   }
 
   private static encryptUserPassword(user) {
@@ -94,7 +94,7 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
   }
 
   private static fetchUserModel(user: User) {
-    const userModels = _.omit(user, ["role"]);
+    const userModels = _.omit(user, ['role']);
 
     if (user.role) {
       userModels.RoleId = user.role.id;
@@ -130,11 +130,11 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
       isActive: userModel.isActive,
     });
 
-    if (userModel["Role.id"]) {
+    if (userModel['Role.id']) {
       user.role = new Role({
-        id: userModel["Role.id"],
-        name: userModel["Role.name"],
-        accessLevel: userModel["Role.accessLevel"],
+        id: userModel['Role.id'],
+        name: userModel['Role.name'],
+        accessLevel: userModel['Role.accessLevel'],
       });
     }
 

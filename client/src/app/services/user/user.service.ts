@@ -8,9 +8,7 @@ import { map } from 'rxjs/operators';
 const API_USER = environment.api_url + '/api/user';
 const API_IS_UNIQUE = API_USER + '/emailUnique';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable({ providedIn: 'root' })
 export class UserService {
   constructor(private http: HttpClient) {}
 
