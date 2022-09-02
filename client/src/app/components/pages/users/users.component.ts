@@ -27,7 +27,7 @@ export class UsersComponent implements OnInit {
     this.fileNameDialogRef = this.dialog.open(AddUserComponent, dialogConfig);
 
     const createdUserRes = await this.fileNameDialogRef.afterClosed().toPromise();
-    if (createdUserRes || createdUserRes !== 'Canceled') {
+    if (createdUserRes && createdUserRes !== 'Canceled') {
       this.child.addUserToTable(createdUserRes);
       this.customSnackBar.openSnackBar(`L'utilisateur ${createdUserRes.email} a été créé.`, 'notif-success');
     }
