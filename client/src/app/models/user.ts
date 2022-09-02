@@ -1,54 +1,45 @@
-import { Role } from "./role";
+import { Role } from './role';
+
+import * as _ from 'lodash';
 
 export class User {
-    id : number;
-    firstName : string;
-    lastName : string;
-    email : string;
-    role : Role
-    display_string?: string;
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  role: Role;
+  // tslint:disable-next-line:variable-name
+  display_string?: string;
 
-    constructor(userResponse?: any) {
-        this.id = userResponse && userResponse.id || "";
-        this.firstName = userResponse && userResponse.firstName || "";
-        this.lastName = userResponse && userResponse.lastName || "";
-        this.email = userResponse && userResponse.email || "";
-        this.role = new Role(
-            (userResponse) ? userResponse["RoleId"] : -1,
-            (userResponse) ? userResponse["Role.name"] : "",
-            (userResponse) ? userResponse["Role.accessLevel"] : 0
-        );
-        this.display_string = this.firstName + " " + this.lastName;
-    }
+  constructor(userResponse?: any) {
+    this.id = _.get(userResponse, 'id', 0);
+    this.firstName = _.get(userResponse, 'firstName', '');
+    this.lastName = _.get(userResponse, 'lastName', '');
+    this.email = _.get(userResponse, 'email', '');
 
-    getFullName() {
-        let name = [this.firstName, this.lastName];
-        return name.join(" ").trim();
-    }
+    // TODO uniformiser le output des getUsers
+    const roleId = _.get(userResponse, 'role.id') || _.get(userResponse, 'RoleId', -1);
+    const roleName = _.get(userResponse, 'role.name') || _.get(userResponse, 'Role.name', '');
+    const roleAccessLevel = _.get(userResponse, 'role.accessLevel') || _.get(userResponse, 'Role.accessLevel', 0);
 
-    equals(user:User):boolean {
-        return (
-            (user.id && this.id != user.id) 
-            ||
-            (user.email && this.email != user.email) 
-            ||
-            (user.firstName && this.firstName != user.firstName) 
-            ||
-            (user.lastName && this.lastName != user.lastName) 
-            ||
-            (user.role.name && this.role.name != user.role.name)
-            ||
-            (user.role.id && this.role.id != user.role.id)
-            ||
-            (
-                user.display_string 
-                && this.display_string != user.display_string
-            )
-            ||
-            (
-                user.role.accessLevel 
-                && this.role.accessLevel  != user.role.accessLevel 
-            )
-        );
-    }
+    this.role = new Role(roleId, roleName, roleAccessLevel);
+    this.display_string = this.firstName + ' ' + this.lastName;
+  }
+
+  getFullName() {
+    return [this.firstName, this.lastName].join(' ').trim();
+  }
+
+  equals(user: User): boolean {
+    return !(
+      this.id !== user.id ||
+      this.email !== user.email ||
+      this.firstName !== user.firstName ||
+      this.lastName !== user.lastName ||
+      this.role.name !== user.role.name ||
+      this.role.id !== user.role.id ||
+      this.display_string !== user.display_string ||
+      this.role.accessLevel !== user.role.accessLevel
+    );
+  }
 }

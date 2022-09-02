@@ -13,22 +13,19 @@ const API_USER_CURRENT = API_USER + '/curent';
 export class CurentUserService {
   constructor(private http: HttpClient) {}
 
-  public curentUser: BehaviorSubject<CurentUser> =
-    new BehaviorSubject<CurentUser>(new CurentUser());
+  public curentUser: BehaviorSubject<CurentUser> = new BehaviorSubject<CurentUser>(new CurentUser());
 
   getCurentUserFromApi(): Observable<User> {
-    return this.http
-      .get<{ user: User }>(API_USER_CURRENT)
-      .pipe(map((item) => new User(item.user)));
+    return this.http.get<{ user: User }>(API_USER_CURRENT).pipe(map((item) => new User(item.user)));
   }
 
   public updateCurentUser(user: User) {
     const curentUser = this.curentUser.value.user;
-    let modified = false;
+    let modified;
     if (!curentUser) {
       modified = true;
     } else {
-      modified = !user.equals(curentUser);
+      modified = user.equals(curentUser);
     }
     if (modified) {
       this.curentUser.value.user = user;
