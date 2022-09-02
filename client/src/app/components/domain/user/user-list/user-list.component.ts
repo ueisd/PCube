@@ -86,7 +86,7 @@ export class UserListComponent implements OnInit {
   }
 
   async openEditDialog(user: User) {
-    const dialogRef = this.dialog.open(ModifyUserComponent, {
+    const editDialog = this.dialog.open(ModifyUserComponent, {
       data: {
         id: user.id,
         firstName: user.firstName,
@@ -97,11 +97,9 @@ export class UserListComponent implements OnInit {
       },
     });
 
-    const result = await dialogRef.afterClosed().toPromise();
-    if (result === 'Canceled' || result === undefined) {
-      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-    } else {
-      this.customSnackBar.openSnackBar(`L'utilisateur a été modifié!`, 'notif-success');
+    const editedUserRes = await editDialog.afterClosed().toPromise();
+    if (editedUserRes && editedUserRes !== 'Canceled') {
+      this.customSnackBar.openSnackBar(`L'utilisateur ${editedUserRes.email} a été modifié.`, 'notif-success');
       await this.refreshList();
     }
   }
@@ -120,9 +118,7 @@ export class UserListComponent implements OnInit {
     });
 
     const userToDelete = await dialogRef.afterClosed().toPromise();
-    if (userToDelete === 'Canceled' || userToDelete === undefined) {
-      this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
-    } else {
+    if (userToDelete && userToDelete !== 'Canceled') {
       try {
         await this.userService.deleteUser(userToDelete.id).toPromise();
         this.customSnackBar.openSnackBar(`L'utilisateur ${userToDelete.email} est supprimé`, 'notif-success');

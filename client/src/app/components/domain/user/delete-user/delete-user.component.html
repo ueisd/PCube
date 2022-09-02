@@ -9,6 +9,6 @@
   <p>Si vous acceptez la suppression, vous ne serez plus en mesure d'accéder au portail.</p>
 </div>
 <div mat-dialog-actions>
-  <button mat-button class="delete-confirm-button" [mat-dialog-close]="data" cdkFocusInitial>Confirmer</button>
-  <button mat-button class="delete-cancel-button" (click)="onNoClick()" [mat-dialog-close]="canceledMessage">Annuler</button>
+  <button mat-button class="delete-cancel-button"  [mat-dialog-close]="canceledMessage" (click)="onNoClick()"  cdkFocusInitial>Annuler</button>
+  <button mat-button class="delete-confirm-button" [mat-dialog-close]="data">Confirmer</button>
 </div>

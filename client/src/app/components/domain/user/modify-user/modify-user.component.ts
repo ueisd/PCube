@@ -49,11 +49,11 @@ export class ModifyUserComponent implements OnInit {
     }
   }
 
-  private onSubmitSuccess() {
+  private onSubmitSuccess(editedUser) {
     this.isAdded = true;
     this.askForDataRefresh();
     this.modifyUserForm.reset();
-    this.dialogRef.close(true);
+    this.dialogRef.close(editedUser);
   }
 
   async onSubmit() {
@@ -69,13 +69,11 @@ export class ModifyUserComponent implements OnInit {
       try {
         user = await this.userService.modifyUser(id, email, firstName, lastName, roleId).toPromise();
       } catch (err) {
-        console.log('9'.repeat(100));
-        console.log(err);
         this.errorMessage = `${err.error.name} : ${err.error.message}`;
       }
 
       if (user && user.id !== -1) {
-        this.onSubmitSuccess();
+        this.onSubmitSuccess(user);
       } else {
         this.isAdded = false;
       }

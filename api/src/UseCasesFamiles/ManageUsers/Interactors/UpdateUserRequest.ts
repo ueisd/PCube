@@ -22,9 +22,9 @@ export class UpdateUserRequest extends UseCaseRequest {
   public static async checkBuildParamsAreValid(buildParams: any) {
     const schema = Joi.object({
       id: Joi.number().required(),
-      email: Joi.string().max(20).email().required(),
-      firstName: Joi.string().max(20).required(),
-      lastName: Joi.string().max(20).required(),
+      email: Joi.string().max(100).email().required(),
+      firstName: Joi.string().max(40).required(),
+      lastName: Joi.string().max(40).required(),
       RoleId: Joi.number(),
     });
 
