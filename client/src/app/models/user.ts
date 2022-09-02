@@ -7,23 +7,17 @@ export class User {
   firstName: string;
   lastName: string;
   email: string;
-  role: Role;
   // tslint:disable-next-line:variable-name
   display_string?: string;
+  role: Role;
 
-  constructor(userResponse?: any) {
-    this.id = _.get(userResponse, 'id', 0);
-    this.firstName = _.get(userResponse, 'firstName', '');
-    this.lastName = _.get(userResponse, 'lastName', '');
-    this.email = _.get(userResponse, 'email', '');
-
-    // TODO uniformiser le output des getUsers
-    const roleId = _.get(userResponse, 'role.id') || _.get(userResponse, 'RoleId', -1);
-    const roleName = _.get(userResponse, 'role.name') || _.get(userResponse, 'Role.name', '');
-    const roleAccessLevel = _.get(userResponse, 'role.accessLevel') || _.get(userResponse, 'Role.accessLevel', 0);
-
-    this.role = new Role(roleId, roleName, roleAccessLevel);
-    this.display_string = this.firstName + ' ' + this.lastName;
+  constructor(props?: any) {
+    this.id = _.get(props, 'id', 0);
+    this.firstName = _.get(props, 'firstName', '');
+    this.lastName = _.get(props, 'lastName', '');
+    this.email = _.get(props, 'email', '');
+    this.display_string = `${this.firstName} ${this.lastName}`;
+    this.role = extractRoleFromProps(props);
   }
 
   getFullName() {
@@ -42,4 +36,12 @@ export class User {
       this.role.accessLevel !== user.role.accessLevel
     );
   }
+}
+
+// TODO uniformiser le output des getUsers
+function extractRoleFromProps(props): Role {
+  const roleId = _.get(props, 'role.id') || _.get(props, 'RoleId', -1);
+  const roleName = _.get(props, 'role.name') || _.get(props, 'Role.name', '');
+  const roleAccessLevel = _.get(props, 'role.accessLevel') || _.get(props, 'Role.accessLevel', 0);
+  return new Role(roleId, roleName, roleAccessLevel);
 }
