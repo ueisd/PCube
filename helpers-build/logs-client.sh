@@ -1,0 +1,1 @@
+docker logs -f pcube_client_1 -n100

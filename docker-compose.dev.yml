@@ -5,9 +5,8 @@ services:
       context: ./api
       dockerfile: Dockerfile.dev
     volumes:
-      - type: bind
-        source: ./api/src
-        target: /app/src
+      - ./api:/app
+      - /app/node_modules/
     ports:
       - "3000:80"
       - "5678:5678"
@@ -61,9 +60,8 @@ services:
       context: ./client
       dockerfile: Dockerfile.dev
     volumes:
-      - type: bind
-        source: ./client/src
-        target: /app/src
+      - ./client/src:/app/src
+      - /app/src/node_modules/
     stdin_open: true
     ports:
       - 4200:80

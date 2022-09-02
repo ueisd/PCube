@@ -4,7 +4,9 @@ Chose action:
  1 : Start all
  2 : Terminate all
  3 : Logs for Api
- 4 : Quit
+ 4 : Logs for Client
+ 5 : build All
+ 6 : Quit
 "
 
 read -p "Enter number: " action
@@ -21,9 +23,19 @@ case  $action in
         ./helpers-build/down-dev.sh
         ;;
       3)
-        echo -n "down all services:
+        echo -n "Logs for API:
         "
         ./helpers-build/logs-api.sh
+        ;;
+      4)
+        echo -n "Logs for clients:
+        "
+        ./helpers-build/logs-client.sh
+        ;;
+      5)
+        echo -n "Logs for clients:
+        "
+        ./helpers-build/build-dev.sh
         ;;
       *)
 esac
