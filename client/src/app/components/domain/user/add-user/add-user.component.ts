@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, Input, Inject } from '@angular/core';
-import { FormGroup, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, AbstractControl } from '@angular/forms';
 import { UserService } from 'src/app/services/user/user.service';
 import { RoleService } from 'src/app/services/role/role.service';
 import { Role } from 'src/app/models/role';
@@ -7,9 +7,7 @@ import { User } from '../../../../models/user';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import * as _ from 'lodash';
+import { FormValidatorBuilder } from '../../../utils/FormValidatorBuilder';
 
 @Component({
   selector: 'app-add-user',
@@ -21,7 +19,6 @@ export class AddUserComponent implements OnInit {
   roles: Role[];
   userForm: FormGroup;
   hasToRefresh = true;
-  isAdded: boolean;
 
   @Input() isChecked = false;
   @Output() createUser: EventEmitter<any> = new EventEmitter();
@@ -37,7 +34,6 @@ export class AddUserComponent implements OnInit {
   constructor(private userService: UserService, private roleService: RoleService, private fb: FormBuilder, @Inject(MAT_DIALOG_DATA) public data: any, private dialogRef: MatDialogRef<AddUserComponent>, private snackBar: MatSnackBar) {}
 
   async ngOnInit(): Promise<void> {
-    this.isAdded = false;
     this.initForm();
     this.roles = await this.roleService.getRoles().toPromise();
   }
@@ -47,9 +43,8 @@ export class AddUserComponent implements OnInit {
   }
 
   private onSubmitSuccess(user: User) {
-    this.isAdded = true;
     this.askForDataRefresh();
-    this.userForm.reset();
+    // this.userForm.reset();
     this.dialogRef.close(user);
   }
 
@@ -61,134 +56,68 @@ export class AddUserComponent implements OnInit {
     user.role.id = this.userForm.get('roles').value.id;
     user.role.name = this.userForm.get('roles').value.name;
     const password = this.userForm.get('password').value;
-    const passwordConfirmation = this.userForm.get('passwordConfirmation').value;
 
-    if (this.passwordsMatch(password, passwordConfirmation)) {
-      try {
-        const result = await this.userService.createUser(user, password).toPromise();
-        this.onSubmitSuccess(new User(result));
-      } catch (err) {
-        this.errorMessage = `${err.error.name} : ${err.error.message}`;
-      }
-    } else {
-      this.isAdded = false;
-    }
-  }
-
-  clicked = () => {
-    const email = this.userForm.get('email');
-    const password = this.userForm.get('password');
-    const passwordConfirmation = this.userForm.get('passwordConfirmation');
-    email.disabled ? email.enable() : email.disable();
-    password.disabled ? password.enable() : password.disable();
-    passwordConfirmation.disabled ? passwordConfirmation.enable() : passwordConfirmation.disable();
-    this.isChecked = !this.isChecked;
-  };
-
-  passwordsMatch(password: string, confirmation: string) {
-    return password === confirmation;
-  }
-
-  passwordMatchValidator(control: AbstractControl) {
-    const password = control.get('password').value;
-    const confirmPassword = control.get('passwordConfirmation').value;
-    if (password === confirmPassword) {
-      return null;
-    } else {
-      control.get('passwordConfirmation').setErrors({ notMatching: true });
+    try {
+      const result = await this.userService.createUser(user, password).toPromise();
+      // TODO corriger le backend pour qu'il envoie le role dans sa réponse (PLM)
+      result.role = user.role;
+      this.onSubmitSuccess(new User(result));
+    } catch (err) {
+      this.errorMessage = `${err.error.name} : ${err.error.message}`;
     }
   }
 
   public isFieldError(fieldName, validation, lazy?: boolean) {
-    let isFieldError = this.userForm.get(fieldName).hasError(validation.type);
-    if (!lazy) {
-      isFieldError = isFieldError && (this.userForm.get(fieldName).dirty || this.userForm.get(fieldName).touched);
+    const isFieldError = this.userForm.get(fieldName).hasError(validation.type);
+    if (lazy) {
+      return isFieldError;
     }
-    return isFieldError;
-  }
 
-  private createStringValidator(field: string, props) {
-    const stringValidator = new StringValidator(props);
-
-    const validationMessages = stringValidator.getValidationMessages();
-    const addedValidators = stringValidator.getValidators();
-
-    _.forEach(props.validators, (val) => {
-      addedValidators.push(val.validator);
-      validationMessages.push({ type: val.type, message: val.message });
-    });
-
-    pushAllByPath(this.validationMessages, field, validationMessages);
-
-    return Validators.compose(addedValidators);
+    return isFieldError && (this.userForm.get(fieldName).dirty || this.userForm.get(fieldName).touched);
   }
 
   private initForm() {
-    pushAllByPath(this.validationMessages, 'email', [{ type: 'emailAlreadyExist', message: 'Le email n est pas unique' }]);
+    const { passwordMatchValidator, ValidateEmailUnique, emailValidators, nameValidators, lastNameValidators, passwordValidators, passwordConfirmValidators, requireRoleValidators } = this.initValidators();
 
-    const ValidateEmailUnique = (control: AbstractControl): Observable<ValidationErrors> | null => {
-      return this.userService.isEmailExist(control.value).pipe(
-        map((result: boolean) => {
-          if (!result) {
-            return null;
-          }
-          return { emailAlreadyExist: 'Le email n est pas unique' };
-        })
-      );
-    };
-
-    // https://www.thisdot.co/blog/using-custom-async-validators-in-angular-reactive-forms
-    const emailValidator = { type: 'email', validator: Validators.email, message: 'Le champ doit être un email' };
     this.userForm = this.fb.group(
       {
-        name: ['', this.createStringValidator('name', { fieldLabel: 'nom', min: 5, max: 40, required: true })],
-        lname: ['', this.createStringValidator('lname', { fieldLabel: 'Nom de famille', min: 5, max: 40, required: true })],
-        email: ['', this.createStringValidator('email', { fieldLabel: 'email', min: 5, max: 100, required: true, validators: [emailValidator] }), [ValidateEmailUnique]],
-        password: ['', this.createStringValidator('password', { fieldLabel: 'password', min: 5, max: 20, required: true })],
-        passwordConfirmation: ['', this.createStringValidator('passwordConfirmation', { fieldLabel: 'passwordConfirm', min: 5, max: 20, required: true })],
-        roles: ['', Validators.required],
+        name: ['', Validators.compose(nameValidators)],
+        lname: ['', Validators.compose(lastNameValidators)],
+        email: ['', Validators.compose(emailValidators), [ValidateEmailUnique]],
+        password: ['', Validators.compose(passwordValidators)],
+        passwordConfirmation: ['', Validators.compose(passwordConfirmValidators)],
+        roles: ['', requireRoleValidators],
       },
-      { validators: this.passwordMatchValidator }
+      { validators: passwordMatchValidator }
     );
-    pushAllByPath(this.validationMessages, 'roles', [{ type: 'required', message: 'Un role est requis' }]);
-    pushAllByPath(this.validationMessages, 'passwordConfirmation', [{ type: 'notMatching', message: 'Les mots de passe ne matchent pas' }]);
-  }
-}
-
-class StringValidator {
-  validatorsList = [];
-  validatorMessages = [];
-
-  public constructor(params: { fieldLabel: string; required?: boolean; min?: number; max?: number; validators?: { type: string; validator; message: string }[] }) {
-    if (params.required) {
-      this.validatorsList.push(Validators.required);
-      this.validatorMessages.push({ type: 'required', message: `Un ${params.fieldLabel} est requis` });
-    }
-
-    if (params.min) {
-      this.validatorsList.push(Validators.minLength(params.min));
-      this.validatorMessages.push({ type: 'minlength', message: `Minimum ${params.min} caractères` });
-    }
-
-    if (params.max) {
-      this.validatorsList.push(Validators.maxLength(params.max));
-      this.validatorMessages.push({ type: 'maxlength', message: `Maximum ${params.max} caractères` });
-    }
   }
 
-  public getValidators() {
-    return this.validatorsList;
-  }
+  private initValidators() {
+    const validatorBuilder = new FormValidatorBuilder(this.validationMessages);
 
-  public getValidationMessages() {
-    return this.validatorMessages;
-  }
-}
+    const passwordMatchValidator = validatorBuilder.buildCustomSyncValidator({
+      field: 'passwordConfirmation',
+      isErrorFn: (control: AbstractControl) => control.get('password').value !== control.get('passwordConfirmation').value,
+      error: { type: 'notMatching', message: 'Les mots de passe ne matchent pas' },
+    });
 
-function pushAllByPath(elem, path, values) {
-  if (elem[path]) {
-    elem[path] = [...elem[path], ...values];
-  } else {
-    elem[path] = values;
+    const ValidateEmailUnique = validatorBuilder.generateCustomAsyncValidator({ field: 'email', validatorFn: (val) => this.userService.isEmailExist(val), error: { type: 'emailAlreadyExist', message: 'Le email n est pas unique' } });
+
+    const emailValidators = [
+      ...validatorBuilder.buildStringValidators({ field: 'email', label: 'email', min: 5, max: 100, required: true }),
+      ...validatorBuilder.buildComposedSyncValidators({ field: 'email', validators: [{ validator: Validators.email, error: { type: 'email', message: 'Le champ doit être un email' } }] }),
+    ];
+
+    const nameValidators = validatorBuilder.buildStringValidators({ field: 'name', label: 'nom', min: 5, max: 40, required: true });
+
+    const lastNameValidators = validatorBuilder.buildStringValidators({ field: 'lname', label: 'Nom de famille', min: 5, max: 40, required: true });
+
+    const passwordValidators = validatorBuilder.buildStringValidators({ field: 'password', label: 'password', min: 5, max: 20, required: true });
+
+    const passwordConfirmValidators = validatorBuilder.buildStringValidators({ field: 'passwordConfirmation', label: 'passwordConfirm', min: 5, max: 20, required: true });
+
+    const requireRoleValidators = validatorBuilder.buildComposedSyncValidators({ field: 'roles', validators: [{ validator: Validators.required, error: { type: 'required', message: 'Un rôle est requis' } }] });
+
+    return { passwordMatchValidator, ValidateEmailUnique, emailValidators, nameValidators, lastNameValidators, passwordValidators, passwordConfirmValidators, requireRoleValidators };
   }
 }

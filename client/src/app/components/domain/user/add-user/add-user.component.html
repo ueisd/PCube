@@ -47,7 +47,7 @@
             formControlName="roles">
         </ng-select>
         <mat-error *ngFor="let validation of validationMessages.roles">
-          <mat-error class="error-message" *ngIf="isFieldError('roles', validation, true)">{{validation.message}}</mat-error>
+          <mat-error class="error-message" *ngIf="isFieldError('roles', validation)">{{validation.message}}</mat-error>
         </mat-error>
     </mat-dialog-content>
     <br/>

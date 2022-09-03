@@ -30,13 +30,17 @@ export class UserService {
   }
 
   createUser(user: User, pwd): Observable<User> {
-    return this.http.post<User>(API_USER, {
+    const req = {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
       RoleId: user.role.id,
       roleName: user.role.name,
       password: pwd,
-    });
+    };
+
+    console.log('7'.repeat(100));
+    console.log(req);
+    return this.http.post<User>(API_USER, req);
   }
 }

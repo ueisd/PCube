@@ -10,11 +10,17 @@
         <mat-form-field class="full-width">
             <mat-label>Prénom</mat-label>
             <input matInput placeholder="Prénom" formControlName="firstName" autocomplete="off">
+            <mat-error *ngFor="let validation of validationMessages.firstName">
+              <mat-error class="error-message" *ngIf="isFieldError('firstName', validation)">{{validation.message}}</mat-error>
+            </mat-error>
         </mat-form-field>
 
         <mat-form-field class="full-width">
             <mat-label>Nom de famille</mat-label>
             <input matInput placeholder="Nom de famille" formControlName="lastName" autocomplete="off">
+            <mat-error *ngFor="let validation of validationMessages.lastName">
+              <mat-error class="error-message" *ngIf="isFieldError('lastName', validation)">{{validation.message}}</mat-error>
+            </mat-error>
         </mat-form-field>
 
         <div class="alert alert-warning" *ngIf="isCurrentUser">Si vous modifiez votre adresse courriel, il faudra vous re-authentifier.</div>
@@ -23,13 +29,11 @@
             <input matInput
                 placeholder="Adresse courriel"
                 formControlName="newEmail"
-                (ngModelChange)="checkUniqueEmail($event)"
                 autocomplete="off">
+            <mat-error *ngFor="let validation of validationMessages.newEmail">
+              <mat-error class="error-message" *ngIf="isFieldError('newEmail', validation)">{{validation.message}}</mat-error>
+            </mat-error>
         </mat-form-field>
-
-        <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
-            L'adresse courriel doit être unique!
-        </div>
 
         <ng-select
             [items]="roles"
@@ -38,12 +42,15 @@
             appendTo="body"
             formControlName="roles">
         </ng-select>
+        <mat-error *ngFor="let validation of validationMessages.roles">
+          <mat-error class="error-message" *ngIf="isFieldError('roles', validation)">{{validation.message}}</mat-error>
+        </mat-error>
 
     </mat-dialog-content>
     <br/>
     <div *ngIf="errorMessage" class="alert-danger">{{ errorMessage }}</div>
     <mat-dialog-actions align="end">
         <button mat-raised-button color="warn" mat-dialog-close [mat-dialog-close]="canceledMessage">Annuler</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!modifyUserForm.valid || !isUnique">Sauvegarder</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!modifyUserForm.valid">Sauvegarder</button>
     </mat-dialog-actions>
 </form>
