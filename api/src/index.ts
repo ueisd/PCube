@@ -47,6 +47,17 @@ import { DeleteUserInteractor } from './UseCasesFamiles/ManageUsers/Interactors/
 import { CheckUserEmailExistController } from './UseCasesFamiles/ManageUsers/Controllers/CheckUserEmailExistController';
 import { CheckUserEmailExistRequest } from './UseCasesFamiles/ManageUsers/Interactors/CheckUserEmailExistRequest';
 import { CheckUserEmailExistInteractor } from './UseCasesFamiles/ManageUsers/Interactors/CheckUserEmailIsUniqueInterractor';
+import { ListActivitiesController } from './UseCasesFamiles/ManageActivities/Controllers/ListActivitiesController';
+import { ListActivitiesInteractor } from './UseCasesFamiles/ManageActivities/Interractors/ListActivitiesInterractor';
+import { CreateActivityController } from './UseCasesFamiles/ManageActivities/Controllers/CreateActivityController';
+import { CreateActivityInteractor } from './UseCasesFamiles/ManageActivities/Interractors/CreateActivityInterractor';
+import { CreateActivityRequest } from './UseCasesFamiles/ManageActivities/Interractors/CreateActivityRequest';
+import { UpdateActivityController } from './UseCasesFamiles/ManageActivities/Controllers/UpdateActivityController';
+import { UpdateActivityInteractor } from './UseCasesFamiles/ManageActivities/Interractors/UpdateActivityInterractor';
+import { UpdateActivityRequest } from './UseCasesFamiles/ManageActivities/Interractors/UpdateActivityRequest';
+import { CheckActivityNameExistController } from './UseCasesFamiles/ManageActivities/Controllers/CheckActivityNameExistController';
+import { CheckActivityNameExistInterractor } from './UseCasesFamiles/ManageActivities/Interractors/CheckActivityNameExistInterractor';
+import { CheckActivityNameExistRequest } from './UseCasesFamiles/ManageActivities/Interractors/CheckActivityNameExistRequest';
 
 const { initRouters } = require('./routes/index');
 
@@ -140,6 +151,27 @@ async function main() {
         return new CheckUserEmailExistRequest(params);
       },
     },
+    {
+      name: 'CreateActivity',
+      requestFactory: async (req) => {
+        const params = await CreateActivityRequest.checkBuildParamsAreValid(req.body);
+        return new CreateActivityRequest(params);
+      },
+    },
+    {
+      name: 'UpdateActivity',
+      requestFactory: async (req) => {
+        const params = await UpdateActivityRequest.checkBuildParamsAreValid(req.body);
+        return new UpdateActivityRequest(params);
+      },
+    },
+    {
+      name: 'CheckActivityNameExist',
+      requestFactory: async (req) => {
+        const params = await CheckActivityNameExistRequest.checkBuildParamsAreValid(req.body);
+        return new CheckActivityNameExistRequest(params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -152,6 +184,10 @@ async function main() {
     { name: 'UpdateUser', activator: new UpdateUserInteractor(gateways.userDbGateway) },
     { name: 'DeleteUser', activator: new DeleteUserInteractor(gateways.userDbGateway) },
     { name: 'CheckUserEmailExist', activator: new CheckUserEmailExistInteractor(gateways.userDbGateway) },
+    { name: 'ListActivities', activator: new ListActivitiesInteractor(gateways.activityDbGateway) },
+    { name: 'CreateActivity', activator: new CreateActivityInteractor(gateways.activityDbGateway) },
+    { name: 'UpdateActivity', activator: new UpdateActivityInteractor(gateways.activityDbGateway) },
+    { name: 'CheckActivityNameExist', activator: new CheckActivityNameExistInterractor(gateways.activityDbGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -171,6 +207,10 @@ async function main() {
   RouteManager.addController(new UpdateUserController({ url: '/api/user' }));
   RouteManager.addController(new DeleteUserController({ url: '/api/user/:id' }));
   RouteManager.addController(new CheckUserEmailExistController({ url: '/api/user/isEmailExist/:email' }));
+  RouteManager.addController(new ListActivitiesController({ url: '/api/activity' }));
+  RouteManager.addController(new CreateActivityController({ url: '/api/activity' }));
+  RouteManager.addController(new UpdateActivityController({ url: '/api/activity' }));
+  RouteManager.addController(new CheckActivityNameExistController({ url: '/api/activity/is-name-exist' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });

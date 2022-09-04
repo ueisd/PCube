@@ -4,43 +4,38 @@ import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { ActivityItem } from 'src/app/models/activity';
 
-const API_ACTIVITY = environment.api_url + "/api/activity";
-const API_IS_UNIQUE = API_ACTIVITY + "/is-name-unique";
+const API_ACTIVITY = environment.api_url + '/api/activity';
+const API_IS_NAME_EXIST = API_ACTIVITY + '/is-name-exist';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class ActivityService {
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
-  getAllActivity(): Observable<ActivityItem[]>{
+  getAllActivity(): Observable<ActivityItem[]> {
     return this.http.get<ActivityItem[]>(API_ACTIVITY);
   }
 
-  isNameUnique(name, activityId): Observable<boolean> {
-    return this.http.post<boolean>(API_IS_UNIQUE, {
-      name: name,
-      activityId: activityId
-    });
+  isNameExist(name): Observable<boolean> {
+    return this.http.post<boolean>(API_IS_NAME_EXIST, { name });
   }
 
-  addNewActivity(name): Observable<ActivityItem>{
+  addNewActivity(name): Observable<ActivityItem> {
     return this.http.post<ActivityItem>(API_ACTIVITY, {
-      name: name
+      name,
     });
   }
 
-  updateActivity(id, newName): Observable<ActivityItem>{
+  updateActivity(id, newName): Observable<ActivityItem> {
     return this.http.put<ActivityItem>(API_ACTIVITY, {
-      id: id,
+      id,
       name: newName,
     });
   }
 
   deleteActivity(id): Observable<{}> {
-    let url = API_ACTIVITY + "/" + id
+    const url = API_ACTIVITY + '/' + id;
     return this.http.delete(url);
   }
 }
