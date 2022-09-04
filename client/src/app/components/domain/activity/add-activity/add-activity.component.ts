@@ -98,7 +98,7 @@ export class AddActivityComponent implements OnInit {
 
     const nameUniqueAsyncValidator = validatorBuilder.generateCustomAsyncValidator({
       field: 'activityName',
-      validatorFn: (val) => this.activityService.isNameExist(val).pipe(map((isNameExist) => isNameExist)),
+      validatorFn: (val) => this.activityService.isNameExist(val).pipe(map((isNameExist) => isNameExist && val !== this.activityItem.name)),
       error: { type: 'nameAlreadyExist', message: `Le nom n'est pas unique` },
     });
 
