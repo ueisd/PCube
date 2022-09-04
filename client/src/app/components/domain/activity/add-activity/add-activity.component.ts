@@ -5,6 +5,8 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { ActivityItem } from 'src/app/models/activity';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
+import { FormValidatorBuilder } from '../../../utils/FormValidatorBuilder';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-add-activity',
@@ -12,82 +14,94 @@ import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
   styleUrls: ['./add-activity.component.css'],
 })
 export class AddActivityComponent implements OnInit {
-  canceledMessage = 'Canceled';
-
   constructor(@Optional() @Inject(MAT_DIALOG_DATA) public data: any, private activityService: ActivityService, private dialogRef: MatDialogRef<AddActivityComponent>, private snackBar: MatSnackBar) {}
 
-  newActivityForm: FormGroup;
+  ActivityForm: FormGroup;
+  isCreateForm = true;
+
   activityItem: ActivityItem;
 
   customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar);
-  isUnique: boolean;
 
-  isAdded: boolean;
-  isCreateForm = true;
+  errorMessage = null;
+
+  validationMessages = {};
+  canceledMessage = 'Canceled';
 
   ngOnInit(): void {
     this.initForm();
 
-    if (this.data) {
-      this.activityItem = this.data.activity;
-      this.isCreateForm = false;
-      this.newActivityForm.get('activityName').setValue(this.activityItem.name);
-    } else {
-      this.isCreateForm = true;
-    }
+    this.isCreateForm = !this.data;
 
-    this.isAdded = false;
-    this.isUnique = true;
+    if (!this.isCreateForm) {
+      this.activityItem = this.data.activity;
+      this.ActivityForm.get('activityName').setValue(this.activityItem.name);
+    }
   }
 
   private onSubmitSuccess() {
     this.dialogRef.close(true);
   }
 
-  async createNewActivity() {
-    const name = this.newActivityForm.controls.activityName.value;
-    const activity = await this.activityService.addNewActivity(name).toPromise();
-    if (activity.id !== -1) {
+  async tryCreateActivity() {
+    const name = this.ActivityForm.controls.activityName.value;
+
+    try {
+      await this.activityService.addNewActivity(name).toPromise();
       this.onSubmitSuccess();
-    } else {
-      this.isAdded = false;
+    } catch (err) {
+      this.errorMessage = `${err.error.name} : ${err.error.message}`;
     }
   }
 
-  async updateAnActivity(newName: string) {
+  async tryUpdateActivity(newName: string) {
     try {
       await this.activityService.updateActivity(this.activityItem.id, newName).toPromise();
-      this.dialogRef.close(true);
-    } catch (error) {
-      this.customSnackBar.openSnackBar(`Une erreur s'est produite, veuillez`, 'notif-error');
-      this.isAdded = false;
+      this.onSubmitSuccess();
+    } catch (err) {
+      this.errorMessage = `${err.error.name} : ${err.error.message}`;
     }
   }
 
   onSubmit() {
-    if (!this.newActivityForm.valid) {
+    if (!this.ActivityForm.valid) {
       return;
     }
 
     if (this.isCreateForm) {
-      this.createNewActivity();
+      this.tryCreateActivity();
     } else {
-      this.updateAnActivity(this.newActivityForm.get('activityName').value);
-    }
-  }
-
-  async checkUniqueName(newName) {
-    if (!this.isCreateForm && newName === this.activityItem.name) {
-      this.isUnique = true;
-      return;
-    } else if (newName != null && newName.trim().length !== 0) {
-      this.isUnique = !(await this.activityService.isNameExist(newName).toPromise());
+      this.tryUpdateActivity(this.ActivityForm.get('activityName').value);
     }
   }
 
   private initForm() {
-    this.newActivityForm = new FormGroup({
-      activityName: new FormControl('', [Validators.required]),
+    const { activityNameValidators, nameUniqueAsyncValidator } = this.initValidators();
+    this.ActivityForm = new FormGroup({
+      activityName: new FormControl('', Validators.compose(activityNameValidators), [nameUniqueAsyncValidator]),
     });
+  }
+
+  public isFieldError(fieldName, validation, lazy?: boolean) {
+    const isFieldError = this.ActivityForm.get(fieldName).hasError(validation.type);
+    if (lazy) {
+      return isFieldError;
+    }
+
+    return isFieldError && (this.ActivityForm.get(fieldName).dirty || this.ActivityForm.get(fieldName).touched);
+  }
+
+  private initValidators() {
+    const validatorBuilder = new FormValidatorBuilder(this.validationMessages);
+
+    const activityNameValidators = validatorBuilder.buildStringValidators({ field: 'activityName', label: 'nom', min: 5, max: 40, required: true });
+
+    const nameUniqueAsyncValidator = validatorBuilder.generateCustomAsyncValidator({
+      field: 'activityName',
+      validatorFn: (val) => this.activityService.isNameExist(val).pipe(map((isNameExist) => isNameExist)),
+      error: { type: 'nameAlreadyExist', message: `Le nom n'est pas unique` },
+    });
+
+    return { activityNameValidators, nameUniqueAsyncValidator };
   }
 }

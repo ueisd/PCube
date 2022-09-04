@@ -1,17 +1,18 @@
-<form [formGroup]="newActivityForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
+<form [formGroup]="ActivityForm" (ngSubmit)="onSubmit()" #myform="ngForm" class="example-form">
     <h1>{{ (isCreateForm) ? "Création" : "Modification" }} d'une activité</h1>
-
-    <div *ngIf="!isUnique" class="alert alert-danger" role="alert">
-        L'activité doit être unique !
-    </div>
 
     <mat-form-field class="full-width">
         <mat-label for="activityName">Nom de l'activité</mat-label>
-        <input matInput (ngModelChange)="checkUniqueName($event)" id="activityName" formControlName="activityName" autocomplete="off">
+        <input matInput id="activityName" formControlName="activityName" autocomplete="off">
+        <mat-error *ngFor="let validation of validationMessages.activityName">
+          <mat-error class="error-message" *ngIf="isFieldError('activityName', validation)">{{validation.message}}</mat-error>
+        </mat-error>
     </mat-form-field>
+
+    <div *ngIf="errorMessage" class="alert-danger">{{ errorMessage }}</div>
 
     <mat-dialog-actions align="end">
         <button mat-raised-button color="warn" [mat-dialog-close]="canceledMessage">Annuler</button>
-        <button mat-raised-button color="primary" type="submit" [disabled]="!newActivityForm.valid || !isUnique">{{ (isCreateForm) ? "Ajouter" : "Modifier" }}</button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="!ActivityForm.valid">{{ (isCreateForm) ? "Ajouter" : "Modifier" }}</button>
     </mat-dialog-actions>
 </form>

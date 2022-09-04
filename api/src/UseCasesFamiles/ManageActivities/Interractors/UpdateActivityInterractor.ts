@@ -19,6 +19,8 @@ export class UpdateActivityInteractor implements UseCaseActivator {
 
     checkUpdateHasAffectedRows(res);
 
+    throw new Error("Incapable d'updater lactivité");
+
     return this.activityDb.findActivityById(id);
   }
 }
