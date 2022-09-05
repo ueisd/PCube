@@ -1,25 +1,45 @@
-"use strict";
+'use strict';
 
-import ProjectImpl from "./ProjectImpl";
-import Project from "../entities/Project";
-import _ = require("lodash");
-import ProjectDatabaseGateway from "../databaseGateway/ProjectDatabaseGateway";
+import ProjectImpl from './ProjectImpl';
+import Project from '../entities/Project';
+import _ = require('lodash');
+import ProjectDatabaseGateway from '../databaseGateway/ProjectDatabaseGateway';
+import ActivityImpl from '../../Activity/gatabaseImpls/ActivityImpl';
 
-export default class ProjectDataBaseGatewayImpl
-  implements ProjectDatabaseGateway
-{
+export default class ProjectDataBaseGatewayImpl implements ProjectDatabaseGateway {
   private sequelize;
 
   constructor(sequelize) {
     this.sequelize = sequelize;
 
     ProjectImpl.initModel(sequelize);
+
+    ProjectImpl.belongsTo(ProjectImpl, { targetKey: 'id' });
+    ProjectImpl.hasMany(ProjectImpl);
   }
 
-  public async createProject(props: { name: string }): Promise<Project> {
-    const projectModel = {
+  public async isProjectNameExist(name: string): Promise<boolean> {
+    const res = await ProjectImpl.findAll({
+      where: { name },
+      raw: true,
+    });
+
+    return !(!res || !res[0]);
+  }
+
+  public async listAll(): Promise<Project[]> {
+    return ProjectImpl.findAll({
+      order: [['id', 'DESC']],
+      raw: true,
+    });
+  }
+
+  public async createProject(props: { name: string; ProjectId?: number }): Promise<Project> {
+    const projectModel: any = {
       name: props.name,
+      ProjectId: props.ProjectId,
     };
+
     return ProjectImpl.create(projectModel);
   }
 
@@ -32,26 +52,14 @@ export default class ProjectDataBaseGatewayImpl
     });
   }
 
-  public async addSubProjectsToProject(project, subProjects): Promise<void> {
+  public async addSubProjectsToProject(project, subProjects) {
     const projectRes: ProjectImpl = await ProjectImpl.findOne({
-      where: {
-        id: project.id,
-      },
+      where: { id: project.id },
       raw: false,
     });
 
-    const subProjectIds = _.map(
-      subProjects,
-      (subProject): number => subProjects.id
-    );
-
-    // fonctionne PLM
-    // const newProj = await caca.setProject(caca2);
+    const subProjectIds = _.map(subProjects, (subProject): number => subProject.id);
 
     await projectRes.addProjects(subProjectIds);
-
-    // const projetsList = await projectRes.getProjects();
-    // console.log("S".repeat(100));
-    // console.log(JSON.stringify({ projetsList }, null, 2));
   }
 }

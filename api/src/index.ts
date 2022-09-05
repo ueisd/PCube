@@ -63,6 +63,12 @@ import { DeleteActivityInterractor } from './UseCasesFamiles/ManageActivities/In
 import { DeleteActivityRequest } from './UseCasesFamiles/ManageActivities/Interractors/DeleteActivityRequest';
 import { ListProjectController } from './UseCasesFamiles/ManageProjects/Controllers/ListProjectController';
 import { ListProjectsInteractor } from './UseCasesFamiles/ManageProjects/Interractors/ListProjectsInterractor';
+import { CreateProjectController } from './UseCasesFamiles/ManageProjects/Controllers/CreateProjectController';
+import { CreateProjectRequest } from './UseCasesFamiles/ManageProjects/Interractors/CreateProjectRequest';
+import { CreateProjectInteractor } from './UseCasesFamiles/ManageProjects/Interractors/CreateProjectInterractor';
+import { CheckProjectNameExistController } from './UseCasesFamiles/ManageProjects/Controllers/CheckProjectNameExistController';
+import { CheckProjectNameExistRequest } from './UseCasesFamiles/ManageProjects/Interractors/CheckProjectNameExistRequest';
+import { CheckProjectNameExistInterractor } from './UseCasesFamiles/ManageProjects/Interractors/CheckProjectNameExistInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -184,6 +190,23 @@ async function main() {
         return new DeleteActivityRequest(params);
       },
     },
+    {
+      name: 'CreateProject',
+      requestFactory: async (req) => {
+        const { ProjectId, ...params } = await CreateProjectRequest.checkBuildParamsAreValid(req.body);
+        if (ProjectId && ProjectId > 0) {
+          params.ProjectId = ProjectId;
+        }
+        return new CreateProjectRequest(params);
+      },
+    },
+    {
+      name: 'CheckProjectNameExist',
+      requestFactory: async (req) => {
+        const params = await CheckProjectNameExistRequest.checkBuildParamsAreValid(req.params);
+        return new CheckProjectNameExistRequest(params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -202,6 +225,8 @@ async function main() {
     { name: 'CheckActivityNameExist', activator: new CheckActivityNameExistInterractor(gateways.activityDbGateway) },
     { name: 'DeleteActivity', activator: new DeleteActivityInterractor(gateways.activityDbGateway) },
     { name: 'ListProjects', activator: new ListProjectsInteractor(gateways.projectDbGateway) },
+    { name: 'CreateProject', activator: new CreateProjectInteractor(gateways.projectDbGateway) },
+    { name: 'CheckProjectNameExist', activator: new CheckProjectNameExistInterractor(gateways.projectDbGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -226,7 +251,9 @@ async function main() {
   RouteManager.addController(new UpdateActivityController({ url: '/api/activity' }));
   RouteManager.addController(new CheckActivityNameExistController({ url: '/api/activity/is-name-exist' }));
   RouteManager.addController(new DeleteActivityController({ url: '/api/activity/:id' }));
-  RouteManager.addController(new ListProjectController({ url: '/api/projects' }));
+  RouteManager.addController(new ListProjectController({ url: '/api/project' }));
+  RouteManager.addController(new CreateProjectController({ url: '/api/project' }));
+  RouteManager.addController(new CheckProjectNameExistController({ url: '/api/project/is-name-exist/:name' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });
