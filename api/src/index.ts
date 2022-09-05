@@ -69,6 +69,9 @@ import { CreateProjectInteractor } from './UseCasesFamiles/ManageProjects/Interr
 import { CheckProjectNameExistController } from './UseCasesFamiles/ManageProjects/Controllers/CheckProjectNameExistController';
 import { CheckProjectNameExistRequest } from './UseCasesFamiles/ManageProjects/Interractors/CheckProjectNameExistRequest';
 import { CheckProjectNameExistInterractor } from './UseCasesFamiles/ManageProjects/Interractors/CheckProjectNameExistInterractor';
+import { UpdateProjectController } from './UseCasesFamiles/ManageProjects/Controllers/UpdateProjectController';
+import { UpdateProjectRequest } from './UseCasesFamiles/ManageProjects/Interractors/UpdateProjectRequest';
+import { UpdateProjectInteractor } from './UseCasesFamiles/ManageProjects/Interractors/UpdateProjectInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -207,6 +210,13 @@ async function main() {
         return new CheckProjectNameExistRequest(params);
       },
     },
+    {
+      name: 'UpdateProject',
+      requestFactory: async (req) => {
+        const params = await UpdateProjectRequest.checkBuildParamsAreValid(req.body);
+        return new UpdateProjectRequest(params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -227,6 +237,7 @@ async function main() {
     { name: 'ListProjects', activator: new ListProjectsInteractor(gateways.projectDbGateway) },
     { name: 'CreateProject', activator: new CreateProjectInteractor(gateways.projectDbGateway) },
     { name: 'CheckProjectNameExist', activator: new CheckProjectNameExistInterractor(gateways.projectDbGateway) },
+    { name: 'UpdateProject', activator: new UpdateProjectInteractor(gateways.projectDbGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -254,6 +265,7 @@ async function main() {
   RouteManager.addController(new ListProjectController({ url: '/api/project' }));
   RouteManager.addController(new CreateProjectController({ url: '/api/project' }));
   RouteManager.addController(new CheckProjectNameExistController({ url: '/api/project/is-name-exist/:name' }));
+  RouteManager.addController(new UpdateProjectController({ url: '/api/project' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });

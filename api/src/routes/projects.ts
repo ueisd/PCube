@@ -3,22 +3,22 @@ import { isLoggedIn } from '../guards/isLoggedIn.guard';
 const { Project } = require('../models/project.model');
 
 export function getRouter() {
-  router.put('/', isLoggedIn, (req, res) => {
-    let project = req.body;
-    project.name = project.name.trim();
-    if (project.ProjectId < 0) project.ProjectId = null;
-    Project.update(project, {
-      where: {
-        id: project.id,
-      },
-    })
-      .then((result) => {
-        res.json(result);
-      })
-      .catch((err) => {
-        res.status(401).json('error' + err);
-      });
-  });
+  // router.put('/', isLoggedIn, (req, res) => {
+  //   let project = req.body;
+  //   project.name = project.name.trim();
+  //   if (project.ProjectId < 0) project.ProjectId = null;
+  //   Project.update(project, {
+  //     where: {
+  //       id: project.id,
+  //     },
+  //   })
+  //     .then((result) => {
+  //       res.json(result);
+  //     })
+  //     .catch((err) => {
+  //       res.status(401).json('error' + err);
+  //     });
+  // });
 
   router.delete('/:id', isLoggedIn, (req, res) => {
     let id = req.params.id;
@@ -35,19 +35,6 @@ export function getRouter() {
   router.get('/is-deletable/:id', isLoggedIn, (req, res) => {
     let id = req.params.id;
     res.json(true);
-  });
-
-  router.post('/is-name-unique', isLoggedIn, (req, res) => {
-    let id = req.body.id;
-    let nameVerif = req.body.name;
-    Project.isNameUnique(nameVerif, id)
-      .then((result) => {
-        if (result.length > 0) res.json(false);
-        else res.json(true);
-      })
-      .catch((err) => {
-        res.status(401).json('error: ' + err);
-      });
   });
 
   return router;

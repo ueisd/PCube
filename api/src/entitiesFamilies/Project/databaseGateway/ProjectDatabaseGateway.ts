@@ -8,4 +8,5 @@ export default interface ProjectDatabaseGateway {
   addSubProjectsToProject(project, subProjects): Promise<void>;
   listAll(): Promise<Project[]>;
   isProjectNameExist(name: string): Promise<boolean>;
+  updateProject(id: number, props: any): Promise<Project>;
 }

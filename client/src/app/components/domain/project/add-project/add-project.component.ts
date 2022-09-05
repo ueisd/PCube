@@ -114,21 +114,25 @@ export class AddProjectComponent implements OnInit {
         proj.id = this.projet.id;
 
         if (this.newProjectForm.value.isChild === false || !this.newProjectForm.value.parent) {
-          proj.parent_id = -1;
+          proj.parent_id = null;
         } else {
           proj.parent_id = this.newProjectForm.value.parent.id;
         }
         proj.name = this.newProjectForm.value.projectName;
-        await this.projectService.updateProject(proj).toPromise();
-        this.onSubmitSuccess();
+
+        try {
+          const res = await this.projectService.updateProject(proj).toPromise();
+          this.onSubmitSuccess(res);
+        } catch (err) {
+          this.errorMessage = `${err.error.name} : ${err.error.message}`;
+        }
       }
     }
   }
 
   private onSubmitSuccess(project?) {
     this.askForDataRefresh();
-    this.newProjectForm.reset();
-    this.dialogRef.close(true);
+    this.dialogRef.close(project);
   }
 
   // gère le champ "parent" par rapport à la spécification est child que l'utilisateur change
