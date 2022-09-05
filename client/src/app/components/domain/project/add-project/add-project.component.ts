@@ -6,7 +6,6 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { map } from 'rxjs/internal/operators/map';
 import { FormValidatorBuilder } from '../../../utils/FormValidatorBuilder';
 import * as _ from 'lodash';
-const SEPARATOR = ' * ';
 
 @Component({
   selector: 'app-project',
@@ -21,7 +20,6 @@ export class AddProjectComponent implements OnInit {
   newProjectForm: FormGroup;
   parentOptions: ProjectItem[];
   hasToRefresh = true;
-  isAddedFailled = false;
   validationMessages = {};
   errorMessage = null;
 

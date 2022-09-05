@@ -4,8 +4,6 @@ import ProjectImpl from './ProjectImpl';
 import Project from '../entities/Project';
 import _ = require('lodash');
 import ProjectDatabaseGateway from '../databaseGateway/ProjectDatabaseGateway';
-import ActivityImpl from '../../Activity/gatabaseImpls/ActivityImpl';
-import Activity from '../../Activity/entities/Activity';
 
 export default class ProjectDataBaseGatewayImpl implements ProjectDatabaseGateway {
   private sequelize;
@@ -21,6 +19,10 @@ export default class ProjectDataBaseGatewayImpl implements ProjectDatabaseGatewa
 
   public async updateProject(id: number, props: any): Promise<Project> {
     return ProjectImpl.update(props, { where: { id } });
+  }
+
+  public async deleteProjectById(id: number): Promise<any> {
+    return ProjectImpl.destroy({ where: { id } });
   }
 
   public async isProjectNameExist(name: string): Promise<boolean> {

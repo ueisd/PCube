@@ -9,4 +9,5 @@ export default interface ProjectDatabaseGateway {
   listAll(): Promise<Project[]>;
   isProjectNameExist(name: string): Promise<boolean>;
   updateProject(id: number, props: any): Promise<Project>;
+  deleteProjectById(id: number): Promise<any>;
 }

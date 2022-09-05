@@ -72,6 +72,9 @@ import { CheckProjectNameExistInterractor } from './UseCasesFamiles/ManageProjec
 import { UpdateProjectController } from './UseCasesFamiles/ManageProjects/Controllers/UpdateProjectController';
 import { UpdateProjectRequest } from './UseCasesFamiles/ManageProjects/Interractors/UpdateProjectRequest';
 import { UpdateProjectInteractor } from './UseCasesFamiles/ManageProjects/Interractors/UpdateProjectInterractor';
+import { DeleteProjectController } from './UseCasesFamiles/ManageProjects/Controllers/DeleteProjectController';
+import { DeleteProjectRequest } from './UseCasesFamiles/ManageProjects/Interractors/DeleteProjectRequest';
+import { DeleteProjectInterractor } from './UseCasesFamiles/ManageProjects/Interractors/DeleteProjectInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -217,6 +220,13 @@ async function main() {
         return new UpdateProjectRequest(params);
       },
     },
+    {
+      name: 'DeleteProject',
+      requestFactory: async (req) => {
+        const params = await DeleteProjectRequest.checkBuildParamsAreValid(req.params);
+        return new DeleteProjectRequest(params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -238,6 +248,7 @@ async function main() {
     { name: 'CreateProject', activator: new CreateProjectInteractor(gateways.projectDbGateway) },
     { name: 'CheckProjectNameExist', activator: new CheckProjectNameExistInterractor(gateways.projectDbGateway) },
     { name: 'UpdateProject', activator: new UpdateProjectInteractor(gateways.projectDbGateway) },
+    { name: 'DeleteProject', activator: new DeleteProjectInterractor(gateways.projectDbGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -266,6 +277,7 @@ async function main() {
   RouteManager.addController(new CreateProjectController({ url: '/api/project' }));
   RouteManager.addController(new CheckProjectNameExistController({ url: '/api/project/is-name-exist/:name' }));
   RouteManager.addController(new UpdateProjectController({ url: '/api/project' }));
+  RouteManager.addController(new DeleteProjectController({ url: '/api/project/:id' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });
