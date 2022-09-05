@@ -8,4 +8,5 @@ export default interface ActivityDatabaseGateway {
   updateActivity(id: number, props: any): Promise<Activity>;
   findActivityById(id): Promise<Activity>;
   isActivityNameExist(name: string): Promise<boolean>;
+  deleteActivityById(id: number): Promise<any>;
 }

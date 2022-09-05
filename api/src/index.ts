@@ -58,6 +58,11 @@ import { UpdateActivityRequest } from './UseCasesFamiles/ManageActivities/Interr
 import { CheckActivityNameExistController } from './UseCasesFamiles/ManageActivities/Controllers/CheckActivityNameExistController';
 import { CheckActivityNameExistInterractor } from './UseCasesFamiles/ManageActivities/Interractors/CheckActivityNameExistInterractor';
 import { CheckActivityNameExistRequest } from './UseCasesFamiles/ManageActivities/Interractors/CheckActivityNameExistRequest';
+import { DeleteActivityController } from './UseCasesFamiles/ManageActivities/Controllers/DeleteActivityController';
+import { DeleteActivityInterractor } from './UseCasesFamiles/ManageActivities/Interractors/DeleteActivityInterractor';
+import { DeleteActivityRequest } from './UseCasesFamiles/ManageActivities/Interractors/DeleteActivityRequest';
+import { ListProjectController } from './UseCasesFamiles/ManageProjects/Controllers/ListProjectController';
+import { ListProjectsInteractor } from './UseCasesFamiles/ManageProjects/Interractors/ListProjectsInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -172,6 +177,13 @@ async function main() {
         return new CheckActivityNameExistRequest(params);
       },
     },
+    {
+      name: 'DeleteActivity',
+      requestFactory: async (req) => {
+        const params = await DeleteActivityRequest.checkBuildParamsAreValid(req.params);
+        return new DeleteActivityRequest(params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -188,6 +200,8 @@ async function main() {
     { name: 'CreateActivity', activator: new CreateActivityInteractor(gateways.activityDbGateway) },
     { name: 'UpdateActivity', activator: new UpdateActivityInteractor(gateways.activityDbGateway) },
     { name: 'CheckActivityNameExist', activator: new CheckActivityNameExistInterractor(gateways.activityDbGateway) },
+    { name: 'DeleteActivity', activator: new DeleteActivityInterractor(gateways.activityDbGateway) },
+    { name: 'ListProjects', activator: new ListProjectsInteractor(gateways.projectDbGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -211,6 +225,8 @@ async function main() {
   RouteManager.addController(new CreateActivityController({ url: '/api/activity' }));
   RouteManager.addController(new UpdateActivityController({ url: '/api/activity' }));
   RouteManager.addController(new CheckActivityNameExistController({ url: '/api/activity/is-name-exist' }));
+  RouteManager.addController(new DeleteActivityController({ url: '/api/activity/:id' }));
+  RouteManager.addController(new ListProjectController({ url: '/api/projects' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });

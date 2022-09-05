@@ -39,8 +39,7 @@ export class UserListComponent implements OnInit {
       .then((users) => {
         this.userList = users;
         this.displayedColumns = ['firstName', 'lastName', 'email', 'role', 'operations'];
-        console.log('5'.repeat(100));
-        console.log(users);
+
         this.dataSource = new MatTableDataSource<User>(users);
         this.dataSource.paginator = this.paginator;
       })

@@ -1,22 +1,20 @@
-"use strict";
+'use strict';
 
-import jwt = require("jsonwebtoken");
-import GatewayRegisterImpl from "../entitiesFamilies/utils/GatewayRegisterImpl";
-const nconf = require("nconf");
+import jwt = require('jsonwebtoken');
+import GatewayRegisterImpl from '../entitiesFamilies/utils/GatewayRegisterImpl';
+const nconf = require('nconf');
 
 export async function isLoggedIn(req, res, next) {
   const userDb = GatewayRegisterImpl.getUserDbGateway();
 
   try {
-    const rsaPublicKey = nconf.get("rsaKeyPublic");
+    const rsaPublicKey = nconf.get('rsaKeyPublic');
     const token = tryExtractToken(req);
 
     let id = await tryExtractUserIdFromToken(token, rsaPublicKey);
 
     req.user = await tryGetUserById(id);
 
-    console.log("W".repeat(100));
-    console.log(JSON.stringify({ user: req.user }, null, 2));
     next();
   } catch (err) {
     return renderTokenError(res, err);
@@ -44,7 +42,7 @@ function tryExtractToken(req) {
 }
 
 function renderTokenError(res, err) {
-  if (err.name === "Error") {
+  if (err.name === 'Error') {
     return res.status(401).end(stringifyError(err));
   } else {
     return res.status(500).end(stringifyError(err));
@@ -59,7 +57,7 @@ async function tryExtractUserIdFromToken(token, rsaPublicKey) {
   let id;
   await jwt.verify(token, rsaPublicKey, (err, decoded) => {
     if (err) {
-      throw new Error("Mauvais token");
+      throw new Error('Mauvais token');
     }
     id = decoded.sub;
   });

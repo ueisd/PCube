@@ -20,7 +20,7 @@ export class ListActivitiesInteractor implements UseCaseActivator {
     const activities: Activity[] = await this.activityDb.listAll();
 
     if (!activities) {
-      throw new NotFoundError("Pas d'utilisateurs!");
+      throw new NotFoundError("Pas d'activités!");
     }
 
     return activities;

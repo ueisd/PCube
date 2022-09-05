@@ -45,4 +45,8 @@ export default class ActivityDataBaseGatewayImpl implements ActivityDatabaseGate
 
     return !(!res || !res[0]);
   }
+
+  public async deleteActivityById(id: number): Promise<any> {
+    return ActivityImpl.destroy({ where: { id } });
+  }
 }

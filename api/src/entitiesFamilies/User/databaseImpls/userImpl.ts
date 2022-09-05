@@ -9,11 +9,7 @@ export default class UserImpl extends Model {
       return UserImpl.findAll({
         where: {
           [Op.and]: [
-            {
-              id: {
-                [Op.ne]: id,
-              },
-            },
+            { id: { [Op.ne]: id } },
             { email: email },
           ],
         },
@@ -25,9 +21,7 @@ export default class UserImpl extends Model {
       return UserImpl.findAll({
         order: [['createdAt', 'DESC']],
         include: [
-          {
-            model: sequelize.models.Role,
-          },
+          { model: sequelize.models.Role },
         ],
         raw: true,
       });
