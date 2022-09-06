@@ -83,6 +83,9 @@ import { CreateExpenseAccountInterractor } from './UseCasesFamiles/ManageExpense
 import { CheckExpenseAccountNameExistController } from './UseCasesFamiles/ManageExpenseAccounts/Controllers/CheckExpenseAccountNameExistController';
 import { CheckExpenseAccountNameExistRequest } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/CheckExpenseAccountNameExistRequest';
 import { CheckExpenseAccountNameExistInterractor } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/CheckExpenseAccountNameExistInterractor';
+import { UpdateExpenseAccountController } from './UseCasesFamiles/ManageExpenseAccounts/Controllers/UpdateExpenseAccountController';
+import { UpdateExpenseAccountRequest } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/UpdateExpenseAccountRequest';
+import { UpdateExpenseAccountInterractor } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/UpdateExpenseAccountInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -252,6 +255,13 @@ async function main() {
         return new CheckExpenseAccountNameExistRequest(params);
       },
     },
+    {
+      name: 'UpdateExpenseAccount',
+      requestFactory: async (req) => {
+        const params = await UpdateExpenseAccountRequest.checkBuildParamsAreValid(req.body);
+        return new UpdateExpenseAccountRequest(params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -277,6 +287,7 @@ async function main() {
     { name: 'ListExpenseAccounts', activator: new ListExpenseAccountInteractor(gateways.expenseAccountDBGateway) },
     { name: 'CreateExpenseAccount', activator: new CreateExpenseAccountInterractor(gateways.expenseAccountDBGateway) },
     { name: 'CheckExpenseAccountNameExist', activator: new CheckExpenseAccountNameExistInterractor(gateways.expenseAccountDBGateway) },
+    { name: 'UpdateExpenseAccount', activator: new UpdateExpenseAccountInterractor(gateways.expenseAccountDBGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -308,6 +319,7 @@ async function main() {
   RouteManager.addController(new DeleteProjectController({ url: '/api/project/:id' }));
   RouteManager.addController(new ListExpenseAccountsController({ url: '/api/expense-account' }));
   RouteManager.addController(new CreateExpenseAccountController({ url: '/api/expense-account' }));
+  RouteManager.addController(new UpdateExpenseAccountController({ url: '/api/expense-account' }));
   RouteManager.addController(new CheckExpenseAccountNameExistController({ url: '/api/expense-account/is-name-exist/:name' }));
 
   app.get('/', (req, res) => {

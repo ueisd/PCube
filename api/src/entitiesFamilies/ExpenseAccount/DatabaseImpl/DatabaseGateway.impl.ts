@@ -27,6 +27,10 @@ export default class ExpenseAccountDataBaseGatewayImpl implements ExpenseAccount
     });
   }
 
+  public async updateExpenseAccount(id: number, props: any): Promise<ExpenseAccount> {
+    return ExpenseAccountImpl.update(props, { where: { id } });
+  }
+
   public async isExpenseAccountNameExist(name: string): Promise<boolean> {
     const res = await ExpenseAccountImpl.findAll({
       where: { name },
@@ -34,6 +38,13 @@ export default class ExpenseAccountDataBaseGatewayImpl implements ExpenseAccount
     });
 
     return !(!res || !res[0]);
+  }
+
+  public async findExpenseAccountById(expenseAccountId: number): Promise<ExpenseAccount> {
+    return ExpenseAccountImpl.findOne({
+      where: { id: expenseAccountId },
+      raw: true,
+    });
   }
 
   public async createExpenseAccount(props: { name: string; ExpenseAccountId?: number }): Promise<ExpenseAccount> {

@@ -128,8 +128,13 @@ export class AddExpenseAccountComponent implements OnInit {
         }
 
         exp.name = this.ExpenseForm.value.name;
-        await this.expenseAccountServices.updateExpenseAccount(exp).toPromise();
-        this.onSubmitSuccess();
+
+        try {
+          const res = await this.expenseAccountServices.updateExpenseAccount(exp).toPromise();
+          this.onSubmitSuccess(res);
+        } catch (err) {
+          this.errorMessage = `${err.error.name} : ${err.error.message}`;
+        }
       }
     }
   }

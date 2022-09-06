@@ -9,4 +9,6 @@ export default interface ExpenseAccountDatabaseGateway {
   deleteById(id): Promise<any>;
   listAll(): Promise<ExpenseAccount[]>;
   isExpenseAccountNameExist(name: string): Promise<boolean>;
+  updateExpenseAccount(id: number, props: any): Promise<ExpenseAccount>;
+  findExpenseAccountById(expenseAccountId: number): Promise<ExpenseAccount>;
 }

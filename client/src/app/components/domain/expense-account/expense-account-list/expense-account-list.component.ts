@@ -3,42 +3,53 @@ import { ExpenseAccountItem } from 'src/app/models/expense-account';
 import { ExpenseAccountService } from 'src/app/services/expense-account/expense-account.service';
 import { FlatTreeControl } from '@angular/cdk/tree';
 import { MatTreeFlatDataSource, MatTreeFlattener } from '@angular/material/tree';
-import { FormControl } from '@angular/forms';
 import { MatDialogConfig, MatDialogRef, MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AddExpenseAccountComponent } from '../add-expense-account/add-expense-account.component';
 import { DeleteExpenseAccountComponent } from 'src/app/components/domain/expense-account/delete-expense-account/delete-expense-account.component';
 import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
-import {DataTreeFetcher} from 'src/app/models/utils/DataTreeFetcher'
+import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 
 @Component({
   selector: 'app-expense-account-list',
   templateUrl: './expense-account-list.component.html',
-  styleUrls: ['./expense-account-list.component.css']
+  styleUrls: ['./expense-account-list.component.css'],
 })
 export class ExpenseAccountListComponent implements OnInit {
-
   fileNameDialogRef: MatDialogRef<AddExpenseAccountComponent>;
   deleteProjectDialogRef: MatDialogRef<DeleteExpenseAccountComponent>;
-  isDeletable: Boolean = true;
+  isDeletable = true;
 
-  constructor(private expenseAccountService: ExpenseAccountService,
-    private dialog: MatDialog, private snackBar: MatSnackBar) { }
+  constructor(private expenseAccountService: ExpenseAccountService, private dialog: MatDialog, private snackBar: MatSnackBar) {}
 
-  customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar)
+  customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar);
+
+  treeControl = new FlatTreeControl<FlatNode>(
+    (node) => node.level,
+    (node) => node.expandable
+  );
+
+  treeFlattener = new MatTreeFlattener(
+    this._transformer,
+    (node) => node.level,
+    (node) => node.expandable,
+    (node) => node.child
+  );
+
+  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
 
   ngOnInit(): void {
     this.refreshList({ expanded: true });
   }
 
-  private _transformer = (node: ExpenseAccountItem, level: number) => {
-    let expensenoChild: ExpenseAccountItem = new ExpenseAccountItem(node);
+  private _transformer(node: ExpenseAccountItem, level: number) {
+    const expensenoChild: ExpenseAccountItem = new ExpenseAccountItem(node);
     expensenoChild.child = [];
     return {
       expandable: !!node.child && node.child.length > 0,
       id: node.id,
       name: node.name,
-      level: level,
+      level,
       parent_id: node.parent_id,
       expenseAcount: expensenoChild,
       nbLignesDeTemps: node.nbLignesDeTemps,
@@ -47,76 +58,66 @@ export class ExpenseAccountListComponent implements OnInit {
   }
 
   async openEditDialog(compte: ExpenseAccountItem) {
-
     const dialogConfig = new MatDialogConfig();
     dialogConfig.data = {
       expenseAccount: compte,
-    }
+    };
     dialogConfig.minWidth = 600;
     this.fileNameDialogRef = this.dialog.open(AddExpenseAccountComponent, dialogConfig);
 
-    let result = await this.fileNameDialogRef.afterClosed().toPromise();
-    if (result == "Canceled" || result == undefined) {
+    const result = await this.fileNameDialogRef.afterClosed().toPromise();
+    if (result === 'Canceled' || result === undefined) {
       this.customSnackBar.openSnackBar('Action annulée', 'notif-warning');
     } else if (result) {
-      this.refreshList({ expanded: true });
-      this.customSnackBar.openSnackBar('Le compte de dépense a été modifié', 'notif-success');
+      await this.refreshList({ expanded: true });
+      this.customSnackBar.openSnackBar(`Le compte de dépense ${result.name} a été modifié`, 'notif-success');
     }
   }
 
   async openDeleteDialog(expenseAccount: ExpenseAccountItem) {
-
-    this.isDeletable = await this.expenseAccountService.isExpenseAccountDeletable(
-      expenseAccount.id
-    ).toPromise();
+    this.isDeletable = await this.expenseAccountService.isExpenseAccountDeletable(expenseAccount.id).toPromise();
     const dialogConfig = this.dialog.open(DeleteExpenseAccountComponent, {
       data: {
         id: expenseAccount.id,
         name: expenseAccount.name,
-        isDeletable: this.isDeletable
+        isDeletable: this.isDeletable,
       },
-      panelClass: 'warning-dialog'
+      panelClass: 'warning-dialog',
     });
-    let result = await dialogConfig.afterClosed().toPromise();
+    const result = await dialogConfig.afterClosed().toPromise();
     if (result !== undefined) {
       try {
         await this.expenseAccountService.deleteExpenseAccount(expenseAccount.id).toPromise();
         this.customSnackBar.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
         this.refreshList({ expanded: true });
       } catch (error) {
-        this.customSnackBar.openSnackBar('Une erreur s\'est produit. Veuillez réessayer', 'notif-error');
+        this.customSnackBar.openSnackBar(`Une erreur s'est produite. Veuillez réessayer`, 'notif-error');
       }
     }
   }
 
-  treeControl = new FlatTreeControl<FlatNode>(
-    node => node.level, node => node.expandable);
-
-  treeFlattener = new MatTreeFlattener(
-    this._transformer, node => node.level, node => node.expandable, node => node.child);
-
-  dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
-
   hasChild = (_: number, node: FlatNode) => node.expandable;
 
-
   async refreshList(opts?: refreshOption) {
-    let expensesAccounts = await this.expenseAccountService.getAllExpenseAccount().toPromise();
-    let expensesAccountsTree = DataTreeFetcher.fetchProjectTree({
+    const expensesAccounts = await this.expenseAccountService.getAllExpenseAccount().toPromise();
+    const expensesAccountsTree = DataTreeFetcher.fetchProjectTree({
       itemList: expensesAccounts,
-      fieldsNames : {
-          childs:     'child',
-          id :        'id',
-          parentId :  'parent_id'
-      }
+      fieldsNames: {
+        childs: 'child',
+        id: 'id',
+        parentId: 'parent_id',
+      },
     });
     this.dataSource.data = expensesAccountsTree;
-    if (opts.expanded) this.treeControl.expandAll();
+    if (opts.expanded) {
+      this.treeControl.expandAll();
+    }
   }
 }
 
+// tslint:disable-next-line:class-name
 interface refreshOption {
-  expanded: boolean
+  expanded: boolean;
 }
 
 /** Flat node with expandable and level information */
