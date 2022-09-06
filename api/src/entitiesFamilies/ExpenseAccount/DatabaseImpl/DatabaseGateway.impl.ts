@@ -6,14 +6,26 @@ import { Op } from 'sequelize';
 
 import ExpenseAccountImpl from './ExpenseAccountImpl';
 import ExpenseAccount from '../Entities/ExpenseAccount';
+import ExpenseAccountDatabaseGateway from '../DatabaseGateway/ExpenseAccountDatabaseGateway';
+import Project from '../../Project/entities/Project';
 
-export default class ExpenseAccountDataBaseGatewayImpl {
+export default class ExpenseAccountDataBaseGatewayImpl implements ExpenseAccountDatabaseGateway {
   private sequelize;
 
   constructor(sequelize) {
     this.sequelize = sequelize;
 
     ExpenseAccountImpl.initModel(sequelize);
+
+    ExpenseAccountImpl.belongsTo(ExpenseAccountImpl, { targetKey: 'id' });
+    ExpenseAccountImpl.hasMany(ExpenseAccountImpl);
+  }
+
+  public async listAll(): Promise<Project[]> {
+    return ExpenseAccountImpl.findAll({
+      order: [['id', 'DESC']],
+      raw: true,
+    });
   }
 
   public async createExpenseAccount(props: { name: string }): Promise<ExpenseAccount> {

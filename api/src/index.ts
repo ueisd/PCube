@@ -75,6 +75,8 @@ import { UpdateProjectInteractor } from './UseCasesFamiles/ManageProjects/Interr
 import { DeleteProjectController } from './UseCasesFamiles/ManageProjects/Controllers/DeleteProjectController';
 import { DeleteProjectRequest } from './UseCasesFamiles/ManageProjects/Interractors/DeleteProjectRequest';
 import { DeleteProjectInterractor } from './UseCasesFamiles/ManageProjects/Interractors/DeleteProjectInterractor';
+import { ListExpenseAccountsController } from './UseCasesFamiles/ManageExpenseAccounts/Controllers/ListExpenseAccounts';
+import { ListExpenseAccountsInteractor } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/ListExpenseAccountsInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -249,6 +251,7 @@ async function main() {
     { name: 'CheckProjectNameExist', activator: new CheckProjectNameExistInterractor(gateways.projectDbGateway) },
     { name: 'UpdateProject', activator: new UpdateProjectInteractor(gateways.projectDbGateway) },
     { name: 'DeleteProject', activator: new DeleteProjectInterractor(gateways.projectDbGateway) },
+    { name: 'ListExpenseAccounts', activator: new ListExpenseAccountsInteractor(gateways.expenseAccountDBGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -278,6 +281,7 @@ async function main() {
   RouteManager.addController(new CheckProjectNameExistController({ url: '/api/project/is-name-exist/:name' }));
   RouteManager.addController(new UpdateProjectController({ url: '/api/project' }));
   RouteManager.addController(new DeleteProjectController({ url: '/api/project/:id' }));
+  RouteManager.addController(new ListExpenseAccountsController({ url: '/api/expense-account' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });

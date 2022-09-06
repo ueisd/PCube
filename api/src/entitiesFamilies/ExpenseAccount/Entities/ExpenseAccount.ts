@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
 export default interface ExpenseAccount {
-  id: number;
+  id?: number;
   name: string;
 }
