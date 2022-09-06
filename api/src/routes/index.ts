@@ -5,8 +5,6 @@ import ExpenseAccountDatabaseGateway from '../entitiesFamilies/ExpenseAccount/Da
 import TimelineDatabaseGateway from '../entitiesFamilies/Timeline/DatabaseGateway/TimelineDatabaseGateway';
 
 const router = require('express').Router();
-const { getRouter: getProjectRouter } = require('./projects');
-const { getRouter: getExpenseAccountRouter } = require('./expense-account');
 const { getRouter: getTimelineRouter } = require('./timelines');
 
 export function initRouters({
@@ -22,8 +20,6 @@ export function initRouters({
   expenseAccountDBGateway: ExpenseAccountDatabaseGateway;
   timelineDBGateway: TimelineDatabaseGateway;
 }) {
-  router.use('/api/project', getProjectRouter());
-  router.use('/api/expense-account', getExpenseAccountRouter());
   router.use('/api/timeline', getTimelineRouter());
   return router;
 }

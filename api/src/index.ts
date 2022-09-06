@@ -89,6 +89,10 @@ import { UpdateExpenseAccountInterractor } from './UseCasesFamiles/ManageExpense
 import { DeleteExpenseAccountController } from './UseCasesFamiles/ManageExpenseAccounts/Controllers/DeleteExpenseAccountController';
 import { DeleteExpenseAccountRequest } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/DeleteExpenseAccountRequest';
 import { DeleteExpenseAccountInterractor } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/DeleteExpenseAccountInterractor';
+import { CheckExpenseAccountIsDeletableController } from './UseCasesFamiles/ManageExpenseAccounts/Controllers/CheckExpenseAccountIsDeletableController';
+import { CheckExpenseAccountIsDeletableInterractor } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/CheckExpenseAccountIsDeletableInterractor';
+import { CheckProjectIsDeletableController } from './UseCasesFamiles/ManageProjects/Controllers/CheckProjectIsDeletableController';
+import { CheckProjectsDeletableInterractor } from './UseCasesFamiles/ManageProjects/Interractors/CheckProjectsDeletableInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -299,6 +303,8 @@ async function main() {
     { name: 'CheckExpenseAccountNameExist', activator: new CheckExpenseAccountNameExistInterractor(gateways.expenseAccountDBGateway) },
     { name: 'UpdateExpenseAccount', activator: new UpdateExpenseAccountInterractor(gateways.expenseAccountDBGateway) },
     { name: 'DeleteExpenseAccount', activator: new DeleteExpenseAccountInterractor(gateways.expenseAccountDBGateway) },
+    { name: 'CheckExpenseAccountIsDeletable', activator: new CheckExpenseAccountIsDeletableInterractor() },
+    { name: 'CheckProjectIsDeletable', activator: new CheckProjectsDeletableInterractor() },
   ]);
 
   UseCaseFactories.initFactories({
@@ -325,6 +331,7 @@ async function main() {
   RouteManager.addController(new DeleteActivityController({ url: '/api/activity/:id' }));
   RouteManager.addController(new ListProjectController({ url: '/api/project' }));
   RouteManager.addController(new CreateProjectController({ url: '/api/project' }));
+  RouteManager.addController(new CheckProjectIsDeletableController({ url: '/api/project/is-deletable/:id' }));
   RouteManager.addController(new CheckProjectNameExistController({ url: '/api/project/is-name-exist/:name' }));
   RouteManager.addController(new UpdateProjectController({ url: '/api/project' }));
   RouteManager.addController(new DeleteProjectController({ url: '/api/project/:id' }));
@@ -333,6 +340,7 @@ async function main() {
   RouteManager.addController(new UpdateExpenseAccountController({ url: '/api/expense-account' }));
   RouteManager.addController(new DeleteExpenseAccountController({ url: '/api/expense-account/:id' }));
   RouteManager.addController(new CheckExpenseAccountNameExistController({ url: '/api/expense-account/is-name-exist/:name' }));
+  RouteManager.addController(new CheckExpenseAccountIsDeletableController({ url: '/api/expense-account/is-deletable/:id' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });
