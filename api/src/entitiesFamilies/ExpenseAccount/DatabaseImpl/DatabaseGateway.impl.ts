@@ -7,7 +7,6 @@ import { Op } from 'sequelize';
 import ExpenseAccountImpl from './ExpenseAccountImpl';
 import ExpenseAccount from '../Entities/ExpenseAccount';
 import ExpenseAccountDatabaseGateway from '../DatabaseGateway/ExpenseAccountDatabaseGateway';
-import Project from '../../Project/entities/Project';
 
 export default class ExpenseAccountDataBaseGatewayImpl implements ExpenseAccountDatabaseGateway {
   private sequelize;
@@ -21,11 +20,20 @@ export default class ExpenseAccountDataBaseGatewayImpl implements ExpenseAccount
     ExpenseAccountImpl.hasMany(ExpenseAccountImpl);
   }
 
-  public async listAll(): Promise<Project[]> {
+  public async listAll(): Promise<ExpenseAccount[]> {
     return ExpenseAccountImpl.findAll({
       order: [['id', 'DESC']],
       raw: true,
     });
+  }
+
+  public async isExpenseAccountNameExist(name: string): Promise<boolean> {
+    const res = await ExpenseAccountImpl.findAll({
+      where: { name },
+      raw: true,
+    });
+
+    return !(!res || !res[0]);
   }
 
   public async createExpenseAccount(props: { name: string; ExpenseAccountId?: number }): Promise<ExpenseAccount> {

@@ -9,7 +9,7 @@ import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 const SEPARATOR = ' * ';
 
 const API_EXPENSE_ACCOUNT = environment.api_url + '/api/expense-account';
-const API_IS_UNIQUE = API_EXPENSE_ACCOUNT + '/is-name-unique';
+const API_IS_NAME_EXIST = API_EXPENSE_ACCOUNT + '/is-name-exist';
 const API_IS_DELETABLE = API_EXPENSE_ACCOUNT + '/is-deletable';
 
 @Injectable({
@@ -38,8 +38,8 @@ export class ExpenseAccountService {
     );
   }
 
-  isNameUnique(name): Observable<boolean> {
-    return this.http.post<boolean>(API_IS_UNIQUE, { name });
+  isNameExist(name): Observable<boolean> {
+    return this.http.get<boolean>(`${API_IS_NAME_EXIST}/${name}`);
   }
 
   addExpenseAccount(compte: ExpenseAccountItem): Observable<ExpenseAccountItem> {

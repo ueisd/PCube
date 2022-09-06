@@ -3,7 +3,7 @@ import { FormGroup, ValidationErrors, ValidatorFn, FormBuilder, Validators, Asyn
 import { ExpenseAccountItem } from 'src/app/models/expense-account';
 import { ExpenseAccountService } from 'src/app/services/expense-account/expense-account.service';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { map, first } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { FormValidatorBuilder } from '../../../utils/FormValidatorBuilder';
 
 @Component({
@@ -54,13 +54,7 @@ export class AddExpenseAccountComponent implements OnInit {
 
     const nameUniqueAsyncValidator = validatorBuilder.generateCustomAsyncValidator({
       field: 'name',
-      validatorFn: (val) =>
-        this.expenseAccountServices.isNameUnique(val).pipe(
-          map((isNameExist) => {
-            // isNameExist && val !== this.expenseAccount.name
-            return null;
-          })
-        ),
+      validatorFn: (val) => this.expenseAccountServices.isNameExist(val).pipe(map((isNameExist) => isNameExist && val !== this.expenseAccount.name)),
       error: { type: 'nameAlreadyExist', message: `Le nom n'est pas unique` },
     });
 
@@ -155,24 +149,6 @@ export class AddExpenseAccountComponent implements OnInit {
       this.ExpenseForm.controls.parent.setValue(selected);
     }
   }
-
-  // // vérifie qu'un nom de expenseAccount est unique en interrogant le backend
-  // private nomCompteUniqueValidation(): AsyncValidatorFn {
-  //   return (control: AbstractControl): Promise<ValidationErrors | null> | Observable<ValidationErrors | null> => {
-  //     return timer(500).pipe(
-  //       switchMap(() =>
-  //         this.expenseAccountServices
-  //           .isNameUnique(control.value, this.expenseAccount.id)
-  //           .pipe(
-  //             map((isUnique: boolean) => {
-  //               return isUnique || control.value === this.expenseAccount.name ? null : { ereureNonUnique: true };
-  //             })
-  //           )
-  //           .pipe(first())
-  //       )
-  //     );
-  //   };
-  // }
 
   validateForm: ValidatorFn = (control: FormGroup): ValidationErrors | null => {
     return null;
