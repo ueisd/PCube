@@ -6,26 +6,18 @@ import { CustomSnackBar } from 'src/app/utils/custom-snackbar';
 @Component({
   selector: 'app-delete-expense-account',
   templateUrl: './delete-expense-account.component.html',
-  styleUrls: ['./delete-expense-account.component.css']
+  styleUrls: ['./delete-expense-account.component.css'],
 })
 export class DeleteExpenseAccountComponent implements OnInit {
+  canceledMessage = 'Canceled';
 
-  canceledMessage = "Canceled";
+  constructor(public dialogRef: MatDialogRef<DeleteExpenseAccountComponent>, @Inject(MAT_DIALOG_DATA) public data: any, private snackBar: MatSnackBar) {}
 
-  constructor(
-    public dialogRef: MatDialogRef<DeleteExpenseAccountComponent>,
-    @Inject(MAT_DIALOG_DATA) public data:any,
-    private snackBar : MatSnackBar
-  ) { }
+  customSnackBar: CustomSnackBar = new CustomSnackBar(this.snackBar);
 
-  customSnackBar:CustomSnackBar = new CustomSnackBar(this.snackBar)
+  ngOnInit(): void {}
 
-  ngOnInit(): void {
-  }
-
-  onNoClick() : void {
+  onNoClick(): void {
     this.dialogRef.close();
-    this.customSnackBar.openSnackBar("L'action a été annulé.", 'notif-success');
   }
-
 }

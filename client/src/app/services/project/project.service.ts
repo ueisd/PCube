@@ -49,19 +49,23 @@ export class ProjectService {
    * avec un affichage identé selon le niveua de profondeur @level
    */
   generateParentOption(projets: ProjectItem[], level: number): ProjectItem[] {
-    if (projets === null) return [];
-    let retour: ProjectItem[] = [];
+    if (projets === null) {
+      return [];
+    }
+    const retour: ProjectItem[] = [];
 
-    for (var projet of projets) {
-      let item: ProjectItem = new ProjectItem(projet);
+    for (const projet of projets) {
+      const item: ProjectItem = new ProjectItem(projet);
       item.child_project = null;
       item.nomAffichage = item.name;
       for (let i = 0; i < level; i++) {
         item.nomAffichage = SEPARATOR + item.nomAffichage;
       }
       retour.push(item);
-      if (projet.child_project != undefined && projet.child_project.length != undefined) {
-        for (var sprojet of this.generateParentOption(projet.child_project, level + 1)) retour.push(sprojet);
+      if (projet.child_project !== undefined && projet.child_project.length !== undefined) {
+        for (const sprojet of this.generateParentOption(projet.child_project, level + 1)) {
+          retour.push(sprojet);
+        }
       }
     }
     return retour;
@@ -69,7 +73,7 @@ export class ProjectService {
 
   addNewProject(name, parentId): Observable<ProjectItem> {
     return this.http.post<ProjectItem>(API_PROJECT, {
-      name: name,
+      name,
       ProjectId: parentId,
     });
   }
@@ -91,7 +95,7 @@ export class ProjectService {
   }
 
   isProjectDeletable(id): Observable<boolean> {
-    let url = API_IS_DELETABLE + '/' + id;
+    const url = API_IS_DELETABLE + '/' + id;
     return this.http.get<boolean>(url);
   }
 }

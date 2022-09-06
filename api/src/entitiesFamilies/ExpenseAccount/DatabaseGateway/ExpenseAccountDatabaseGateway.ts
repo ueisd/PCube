@@ -11,4 +11,5 @@ export default interface ExpenseAccountDatabaseGateway {
   isExpenseAccountNameExist(name: string): Promise<boolean>;
   updateExpenseAccount(id: number, props: any): Promise<ExpenseAccount>;
   findExpenseAccountById(expenseAccountId: number): Promise<ExpenseAccount>;
+  deleteExpenseAccountById(id: number): Promise<any>;
 }

@@ -7,6 +7,7 @@ import { Op } from 'sequelize';
 import ExpenseAccountImpl from './ExpenseAccountImpl';
 import ExpenseAccount from '../Entities/ExpenseAccount';
 import ExpenseAccountDatabaseGateway from '../DatabaseGateway/ExpenseAccountDatabaseGateway';
+import ProjectImpl from '../../Project/databaseImpls/ProjectImpl';
 
 export default class ExpenseAccountDataBaseGatewayImpl implements ExpenseAccountDatabaseGateway {
   private sequelize;
@@ -45,6 +46,10 @@ export default class ExpenseAccountDataBaseGatewayImpl implements ExpenseAccount
       where: { id: expenseAccountId },
       raw: true,
     });
+  }
+
+  public async deleteExpenseAccountById(id: number): Promise<any> {
+    return ExpenseAccountImpl.destroy({ where: { id } });
   }
 
   public async createExpenseAccount(props: { name: string; ExpenseAccountId?: number }): Promise<ExpenseAccount> {

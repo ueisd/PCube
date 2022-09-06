@@ -17,7 +17,6 @@ import { DataTreeFetcher } from 'src/app/models/utils/DataTreeFetcher';
 })
 export class ExpenseAccountListComponent implements OnInit {
   fileNameDialogRef: MatDialogRef<AddExpenseAccountComponent>;
-  deleteProjectDialogRef: MatDialogRef<DeleteExpenseAccountComponent>;
   isDeletable = true;
 
   constructor(private expenseAccountService: ExpenseAccountService, private dialog: MatDialog, private snackBar: MatSnackBar) {}
@@ -88,10 +87,10 @@ export class ExpenseAccountListComponent implements OnInit {
     if (result !== undefined) {
       try {
         await this.expenseAccountService.deleteExpenseAccount(expenseAccount.id).toPromise();
-        this.customSnackBar.openSnackBar('Le compte de dépense a été supprimé', 'notif-success');
+        this.customSnackBar.openSnackBar(`Le compte de dépense ${expenseAccount.name} a été supprimé`, 'notif-success');
         this.refreshList({ expanded: true });
-      } catch (error) {
-        this.customSnackBar.openSnackBar(`Une erreur s'est produite. Veuillez réessayer`, 'notif-error');
+      } catch (err) {
+        this.customSnackBar.openSnackBar(`${err.error.name} - ${err.error.message} `, 'notif-error');
       }
     }
   }
