@@ -75,8 +75,11 @@ import { UpdateProjectInteractor } from './UseCasesFamiles/ManageProjects/Interr
 import { DeleteProjectController } from './UseCasesFamiles/ManageProjects/Controllers/DeleteProjectController';
 import { DeleteProjectRequest } from './UseCasesFamiles/ManageProjects/Interractors/DeleteProjectRequest';
 import { DeleteProjectInterractor } from './UseCasesFamiles/ManageProjects/Interractors/DeleteProjectInterractor';
-import { ListExpenseAccountsController } from './UseCasesFamiles/ManageExpenseAccounts/Controllers/ListExpenseAccounts';
-import { ListExpenseAccountsInteractor } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/ListExpenseAccountsInterractor';
+import { ListExpenseAccountsController } from './UseCasesFamiles/ManageExpenseAccounts/Controllers/ListExpenseAccountsController';
+import { ListExpenseAccountInteractor } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/ListExpenseAccountInterractor';
+import { CreateExpenseAccountController } from './UseCasesFamiles/ManageExpenseAccounts/Controllers/CreateExpenseAccountController';
+import { CreateExpenseAccountRequest } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/CreateExpenseAccountRequest';
+import { CreateExpenseAccountInterractor } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/CreateExpenseAccountInterractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -229,6 +232,16 @@ async function main() {
         return new DeleteProjectRequest(params);
       },
     },
+    {
+      name: 'CreateExpenseAccount',
+      requestFactory: async (req) => {
+        const { ExpenseAccountId, ...params } = await CreateExpenseAccountRequest.checkBuildParamsAreValid(req.body);
+        if (ExpenseAccountId && ExpenseAccountId > 0) {
+          params.ExpenseAccountId = ExpenseAccountId;
+        }
+        return new CreateExpenseAccountRequest(params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -251,7 +264,8 @@ async function main() {
     { name: 'CheckProjectNameExist', activator: new CheckProjectNameExistInterractor(gateways.projectDbGateway) },
     { name: 'UpdateProject', activator: new UpdateProjectInteractor(gateways.projectDbGateway) },
     { name: 'DeleteProject', activator: new DeleteProjectInterractor(gateways.projectDbGateway) },
-    { name: 'ListExpenseAccounts', activator: new ListExpenseAccountsInteractor(gateways.expenseAccountDBGateway) },
+    { name: 'ListExpenseAccounts', activator: new ListExpenseAccountInteractor(gateways.expenseAccountDBGateway) },
+    { name: 'CreateExpenseAccount', activator: new CreateExpenseAccountInterractor(gateways.expenseAccountDBGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -282,6 +296,7 @@ async function main() {
   RouteManager.addController(new UpdateProjectController({ url: '/api/project' }));
   RouteManager.addController(new DeleteProjectController({ url: '/api/project/:id' }));
   RouteManager.addController(new ListExpenseAccountsController({ url: '/api/expense-account' }));
+  RouteManager.addController(new CreateExpenseAccountController({ url: '/api/expense-account' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });

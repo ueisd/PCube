@@ -28,7 +28,7 @@ export default class ExpenseAccountDataBaseGatewayImpl implements ExpenseAccount
     });
   }
 
-  public async createExpenseAccount(props: { name: string }): Promise<ExpenseAccount> {
+  public async createExpenseAccount(props: { name: string; ExpenseAccountId?: number }): Promise<ExpenseAccount> {
     return ExpenseAccountImpl.create(props);
   }
 

@@ -20,19 +20,6 @@ export function getRouter() {
       });
   });
 
-  router.post('/', isLoggedIn, (req, res) => {
-    let expenseAccount = req.body;
-    expenseAccount.name = expenseAccount.name.trim();
-    if (expenseAccount.ExpenseAccountId < 0) expenseAccount.ExpenseAccountId = null;
-    ExpenseAccount.create(expenseAccount)
-      .then((response) => {
-        res.json(response);
-      })
-      .catch((err) => {
-        res.status(401).json('error' + err);
-      });
-  });
-
   router.post('/is-name-unique', isLoggedIn, (req, res) => {
     let id = req.body.id;
     let nameVerif = req.body.name.trim();

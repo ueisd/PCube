@@ -4,7 +4,7 @@ import ExpenseAccount from '../Entities/ExpenseAccount';
 import Project from '../../Project/entities/Project';
 
 export default interface ExpenseAccountDatabaseGateway {
-  createExpenseAccount(props: { name: string }): Promise<ExpenseAccount>;
+  createExpenseAccount(props: { name: string; ExpenseAccountId?: number }): Promise<ExpenseAccount>;
   addSubExpenseAccounts(expenseAccount, subExpenseAccount): Promise<void>;
   isNameUnique(name, id): Promise<ExpenseAccount[]>;
   deleteById(id): Promise<any>;
