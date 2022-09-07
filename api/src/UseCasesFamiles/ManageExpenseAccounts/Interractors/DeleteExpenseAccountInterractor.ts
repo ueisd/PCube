@@ -1,8 +1,8 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
-import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
-import ExpenseAccountDatabaseGateway from '../../../entitiesFamilies/ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway';
+import { UseCaseActivator } from '../../../delivery/Requestors/UseCaseActivator';
+import { UseCaseRequest } from '../../../delivery/Requestors/UseCaseRequest';
+import ExpenseAccountDatabaseGateway from '../../../EntitiesFamilies/ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway';
 import { DeleteExpenseAccountRequest } from './DeleteExpenseAccountRequest';
 
 export class DeleteExpenseAccountInterractor implements UseCaseActivator {

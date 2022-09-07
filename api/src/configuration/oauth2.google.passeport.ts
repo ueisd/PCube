@@ -1,7 +1,7 @@
 'use strict';
 
-import GatewayRegisterImpl from '../entitiesFamilies/utils/GatewayRegisterImpl';
-import User from '../entitiesFamilies/User/entities/User';
+import GatewayRegisterImpl from '../EntitiesFamilies/utils/GatewayRegisterImpl';
+import User from '../EntitiesFamilies/User/entities/User';
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;

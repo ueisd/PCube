@@ -1,6 +1,6 @@
-import { RequestFactory } from '../../system/Requestors/RequestFactory';
-import { InteractorFactory } from '../../system/Requestors/InteractorFactory';
-import { UseCaseRequest } from '../../system/Requestors/UseCaseRequest';
+import { RequestFactory } from '../../delivery/Requestors/RequestFactory';
+import { InteractorFactory } from '../../delivery/Requestors/InteractorFactory';
+import { UseCaseRequest } from '../../delivery/Requestors/UseCaseRequest';
 import { UseCaseFactories } from './UseCaseFactories';
 
 export class Controller {

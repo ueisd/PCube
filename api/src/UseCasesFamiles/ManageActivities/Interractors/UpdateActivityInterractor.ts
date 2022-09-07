@@ -1,9 +1,9 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
-import ActivityDatabaseGateway from '../../../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
+import { UseCaseActivator } from '../../../delivery/Requestors/UseCaseActivator';
+import ActivityDatabaseGateway from '../../../EntitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
 import { UpdateActivityRequest } from './UpdateActivityRequest';
-import Activity from '../../../entitiesFamilies/Activity/entities/Activity';
+import Activity from '../../../EntitiesFamilies/Activity/entities/Activity';
 
 export class UpdateActivityInteractor implements UseCaseActivator {
   private activityDb: ActivityDatabaseGateway;

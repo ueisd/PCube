@@ -1,9 +1,9 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
-import { NotFoundError } from '../../../system/Requestors/Errors/NotFoundError';
-import ActivityDatabaseGateway from '../../../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
-import Activity from '../../../entitiesFamilies/Activity/entities/Activity';
+import { UseCaseActivator } from '../../../delivery/Requestors/UseCaseActivator';
+import { NotFoundError } from '../../../delivery/Requestors/Errors/NotFoundError';
+import ActivityDatabaseGateway from '../../../EntitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
+import Activity from '../../../EntitiesFamilies/Activity/entities/Activity';
 
 export class ListActivitiesInteractor implements UseCaseActivator {
   private activityDb: ActivityDatabaseGateway;

@@ -1,7 +1,7 @@
 'use strict';
 
 import Joi = require('joi');
-import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
+import { UseCaseRequest } from '../../../delivery/Requestors/UseCaseRequest';
 
 export class DeleteTimelinesRequest extends UseCaseRequest {
   public timelineIds: number[];

@@ -1,7 +1,7 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
-import UserDatabaseGateway from '../../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
+import { UseCaseActivator } from '../../../delivery/Requestors/UseCaseActivator';
+import UserDatabaseGateway from '../../../EntitiesFamilies/User/databaseGateway/UserDatabaseGateway';
 
 export class ListRolesInteractor implements UseCaseActivator {
   private rolesDb: UserDatabaseGateway;

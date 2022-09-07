@@ -11,12 +11,12 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 import { loadConfig } from './configuration';
-const { closePool } = require('./system/database');
+const { closePool } = require('./delivery/database');
 const { buildDataset } = require('./configuration/DataSet');
-import { PresetQuery } from './system/database/presetQuery';
-import GatewayRegisterImpl from './entitiesFamilies/utils/GatewayRegisterImpl';
-import { RequestFactory } from './system/Requestors/RequestFactory';
-import { InteractorFactory } from './system/Requestors/InteractorFactory';
+import { PresetQuery } from './delivery/database/presetQuery';
+import GatewayRegisterImpl from './EntitiesFamilies/utils/GatewayRegisterImpl';
+import { RequestFactory } from './delivery/Requestors/RequestFactory';
+import { InteractorFactory } from './delivery/Requestors/InteractorFactory';
 import { SignInController } from './UseCasesFamiles/SignIn/Controllers/SignInController';
 import { SignInRequest } from './UseCasesFamiles/SignIn/Interactors/SignInRequest';
 import { GetCurrentUserInteractor } from './UseCasesFamiles/GetCurrentUser/Interactors/GetCurrentUserInteractor';

@@ -1,8 +1,8 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
+import { UseCaseActivator } from '../../../delivery/Requestors/UseCaseActivator';
 import { DeleteActivityRequest } from './DeleteActivityRequest';
-import ActivityDatabaseGateway from '../../../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
+import ActivityDatabaseGateway from '../../../EntitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
 
 export class DeleteActivityInterractor implements UseCaseActivator {
   private activityDb: ActivityDatabaseGateway;

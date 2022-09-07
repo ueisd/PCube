@@ -1,5 +1,5 @@
 import { Controller } from '../../_utils/Controller';
-import { isLoggedIn } from '../../../system/guards/isLoggedIn.guard';
+import { isLoggedIn } from '../../../delivery/guards/isLoggedIn.guard';
 
 export class ListProjectController extends Controller {
   constructor(opts: { url: string }) {

@@ -1,8 +1,8 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
-import ProjectDatabaseGateway from '../../../entitiesFamilies/Project/databaseGateway/ProjectDatabaseGateway';
-import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
+import { UseCaseActivator } from '../../../delivery/Requestors/UseCaseActivator';
+import ProjectDatabaseGateway from '../../../EntitiesFamilies/Project/databaseGateway/ProjectDatabaseGateway';
+import { UseCaseRequest } from '../../../delivery/Requestors/UseCaseRequest';
 import { DeleteProjectRequest } from './DeleteProjectRequest';
 
 export class DeleteProjectInterractor implements UseCaseActivator {

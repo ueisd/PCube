@@ -1,9 +1,9 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
-import UserDatabaseGateway from '../../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
-import User from '../../../entitiesFamilies/User/entities/User';
-import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
+import { UseCaseActivator } from '../../../delivery/Requestors/UseCaseActivator';
+import UserDatabaseGateway from '../../../EntitiesFamilies/User/databaseGateway/UserDatabaseGateway';
+import User from '../../../EntitiesFamilies/User/entities/User';
+import { UseCaseRequest } from '../../../delivery/Requestors/UseCaseRequest';
 import { GetCurrentUserRequest } from './GetCurrentUserRequest';
 import { GetCurrentUserResponse } from './GetCurrentUserResponse';
 

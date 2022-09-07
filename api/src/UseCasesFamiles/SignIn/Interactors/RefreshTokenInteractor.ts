@@ -5,9 +5,9 @@ import { RefreshTokenResponse } from './RefreshTokenResponse';
 const nconf = require('nconf');
 import { jwtSignId } from '../_utils/jwt.utils';
 
-import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
-import UserDatabaseGateway from '../../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
-import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
+import { UseCaseActivator } from '../../../delivery/Requestors/UseCaseActivator';
+import UserDatabaseGateway from '../../../EntitiesFamilies/User/databaseGateway/UserDatabaseGateway';
+import { UseCaseRequest } from '../../../delivery/Requestors/UseCaseRequest';
 import { RefreshTokenRequest } from './RefreshTokenRequest';
 import { JwtHelper } from '../_utils/JwtHelper';
 

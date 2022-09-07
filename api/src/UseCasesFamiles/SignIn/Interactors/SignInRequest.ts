@@ -1,6 +1,6 @@
 'use strict';
 
-import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
+import { UseCaseRequest } from '../../../delivery/Requestors/UseCaseRequest';
 import Joi = require('joi');
 
 export class SignInRequest extends UseCaseRequest {

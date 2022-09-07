@@ -1,6 +1,6 @@
 "use strict";
 
-import User from "../../../entitiesFamilies/User/entities/User";
+import User from "../../../EntitiesFamilies/User/entities/User";
 import _ = require("lodash");
 
 export class RefreshTokenResponse {

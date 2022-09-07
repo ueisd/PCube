@@ -1,7 +1,7 @@
 'use strict';
 
-import { RequestFactory } from '../../system/Requestors/RequestFactory';
-import { InteractorFactory } from '../../system/Requestors/InteractorFactory';
+import { RequestFactory } from '../../delivery/Requestors/RequestFactory';
+import { InteractorFactory } from '../../delivery/Requestors/InteractorFactory';
 
 export class UseCaseFactories {
   private static requestFactories: RequestFactory;
