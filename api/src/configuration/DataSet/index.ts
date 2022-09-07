@@ -4,15 +4,15 @@ import * as console from 'console';
 
 const moment = require('moment-timezone');
 
-import User from '../entitiesFamilies/User/entities/User';
-import Role from '../entitiesFamilies/User/entities/role';
-import Activity from '../entitiesFamilies/Activity/entities/Activity';
+import User from '../../entitiesFamilies/User/entities/User';
+import Role from '../../entitiesFamilies/User/entities/role';
+import Activity from '../../entitiesFamilies/Activity/entities/Activity';
 
-import ProjectDatabaseGateway from '../entitiesFamilies/Project/databaseGateway/ProjectDatabaseGateway';
-import ActivityDatabaseGateway from '../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
-import UserDatabaseGateway from '../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
-import ExpenseAccountDatabaseGateway from '../entitiesFamilies/ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway';
-import TimelineDatabaseGateway from '../entitiesFamilies/Timeline/DatabaseGateway/TimelineDatabaseGateway';
+import ProjectDatabaseGateway from '../../entitiesFamilies/Project/databaseGateway/ProjectDatabaseGateway';
+import ActivityDatabaseGateway from '../../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
+import UserDatabaseGateway from '../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
+import ExpenseAccountDatabaseGateway from '../../entitiesFamilies/ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway';
+import TimelineDatabaseGateway from '../../entitiesFamilies/Timeline/DatabaseGateway/TimelineDatabaseGateway';
 
 exports.buildDataset = async ({
   userDbGateway,

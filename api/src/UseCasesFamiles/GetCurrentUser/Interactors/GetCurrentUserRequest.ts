@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
-import { UseCaseRequest } from "../../../Requestors/UseCaseRequest";
-import Joi = require("joi");
+import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
+import Joi = require('joi');
 
 export class GetCurrentUserRequest extends UseCaseRequest {
   public id: string;

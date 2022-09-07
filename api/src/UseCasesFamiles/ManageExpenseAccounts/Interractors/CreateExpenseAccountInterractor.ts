@@ -1,7 +1,7 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
-import { UseCaseRequest } from '../../../Requestors/UseCaseRequest';
+import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
+import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
 import { CreateExpenseAccountRequest } from './CreateExpenseAccountRequest';
 import ExpenseAccountDatabaseGateway from '../../../entitiesFamilies/ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway';
 

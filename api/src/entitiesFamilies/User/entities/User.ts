@@ -1,4 +1,4 @@
-import Role from "../../../models/role.model";
+import Role from './role';
 
 export default class User {
   id: number;
@@ -9,23 +9,7 @@ export default class User {
   isActive: boolean;
   role: Role;
 
-  constructor({
-    id,
-    firstName,
-    lastName,
-    email,
-    password,
-    isActive,
-    role,
-  }: {
-    id?: number;
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-    isActive?: boolean;
-    role?: Role;
-  }) {
+  constructor({ id, firstName, lastName, email, password, isActive, role }: { id?: number; firstName: string; lastName: string; email: string; password: string; isActive?: boolean; role?: Role }) {
     if (id) {
       this.id = id;
     }

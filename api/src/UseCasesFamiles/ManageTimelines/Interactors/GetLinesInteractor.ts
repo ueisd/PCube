@@ -1,9 +1,9 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
+import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
 import TimelineDatabaseGateway from '../../../entitiesFamilies/Timeline/DatabaseGateway/TimelineDatabaseGateway';
 import { GenerateReportRequest } from '../../GenerateRepport/Interractor/GenerateReportRequest';
-import { UseCaseRequest } from '../../../Requestors/UseCaseRequest';
+import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
 
 export class GetLinesInteractor implements UseCaseActivator {
   private timelineDb: TimelineDatabaseGateway;

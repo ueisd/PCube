@@ -1,6 +1,6 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
+import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
 import UserDatabaseGateway from '../../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
 import User from '../../../entitiesFamilies/User/entities/User';
 import { DeleteUserRequest } from './DeleteUserRequest';

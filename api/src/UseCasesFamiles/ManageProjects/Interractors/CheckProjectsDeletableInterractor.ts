@@ -1,7 +1,7 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
-import { UseCaseRequest } from '../../../Requestors/UseCaseRequest';
+import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
+import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
 
 export class CheckProjectsDeletableInterractor implements UseCaseActivator {
   constructor() {}

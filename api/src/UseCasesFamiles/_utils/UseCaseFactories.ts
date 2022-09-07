@@ -1,16 +1,13 @@
-"use strict";
+'use strict';
 
-import { RequestFactory } from "../../Requestors/RequestFactory";
-import { InteractorFactory } from "../../Requestors/InteractorFactory";
+import { RequestFactory } from '../../system/Requestors/RequestFactory';
+import { InteractorFactory } from '../../system/Requestors/InteractorFactory';
 
 export class UseCaseFactories {
   private static requestFactories: RequestFactory;
   private static interactorFactories: InteractorFactory;
 
-  public static initFactories(factories: {
-    requestFactories: RequestFactory;
-    interactorFactories: InteractorFactory;
-  }) {
+  public static initFactories(factories: { requestFactories: RequestFactory; interactorFactories: InteractorFactory }) {
     UseCaseFactories.requestFactories = factories.requestFactories;
     UseCaseFactories.interactorFactories = factories.interactorFactories;
   }

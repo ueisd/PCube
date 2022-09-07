@@ -1,9 +1,9 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
+import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
 import ProjectDatabaseGateway from '../../../entitiesFamilies/Project/databaseGateway/ProjectDatabaseGateway';
 import { CreateProjectRequest } from './CreateProjectRequest';
-import { UseCaseRequest } from '../../../Requestors/UseCaseRequest';
+import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
 
 export class CreateProjectInteractor implements UseCaseActivator {
   private projectDb: ProjectDatabaseGateway;

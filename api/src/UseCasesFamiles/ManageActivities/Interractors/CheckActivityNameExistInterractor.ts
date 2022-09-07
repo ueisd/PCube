@@ -1,6 +1,6 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
+import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
 import { CheckActivityNameExistRequest } from './CheckActivityNameExistRequest';
 import ActivityDatabaseGateway from '../../../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
 

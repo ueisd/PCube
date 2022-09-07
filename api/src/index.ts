@@ -11,12 +11,12 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 import { loadConfig } from './configuration';
-const { closePool } = require('./database');
-const { buildDataset } = require('./models');
-import { PresetQuery } from './database/presetQuery';
+const { closePool } = require('./system/database');
+const { buildDataset } = require('./configuration/DataSet');
+import { PresetQuery } from './system/database/presetQuery';
 import GatewayRegisterImpl from './entitiesFamilies/utils/GatewayRegisterImpl';
-import { RequestFactory } from './Requestors/RequestFactory';
-import { InteractorFactory } from './Requestors/InteractorFactory';
+import { RequestFactory } from './system/Requestors/RequestFactory';
+import { InteractorFactory } from './system/Requestors/InteractorFactory';
 import { SignInController } from './UseCasesFamiles/SignIn/Controllers/SignInController';
 import { SignInRequest } from './UseCasesFamiles/SignIn/Interactors/SignInRequest';
 import { GetCurrentUserInteractor } from './UseCasesFamiles/GetCurrentUser/Interactors/GetCurrentUserInteractor';
@@ -167,8 +167,7 @@ async function main() {
       name: 'AddUser',
       requestFactory: async (req) => {
         // TODO remove roleName from frontend query
-        const params = _.omit(req.body, ['roleName']);
-        await AddUserRequest.checkBuildParamsAreValid(params);
+        const params = await AddUserRequest.checkBuildParamsAreValid(_.omit(req.body, ['roleName']));
         return new AddUserRequest(params);
       },
     },

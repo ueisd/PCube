@@ -1,9 +1,9 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
+import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
 import UserDatabaseGateway from '../../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
 import User from '../../../entitiesFamilies/User/entities/User';
-import { NotFoundError } from '../../../Requestors/Errors/NotFoundError';
+import { NotFoundError } from '../../../system/Requestors/Errors/NotFoundError';
 
 export class ListUsersInteractor implements UseCaseActivator {
   private userDb: UserDatabaseGateway;

@@ -1,9 +1,9 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
+import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
 import UserDatabaseGateway from '../../../entitiesFamilies/User/databaseGateway/UserDatabaseGateway';
 import { CheckUserEmailExistRequest } from './CheckUserEmailExistRequest';
-import { UseCaseRequest } from '../../../Requestors/UseCaseRequest';
+import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
 
 export class CheckUserEmailExistInteractor implements UseCaseActivator {
   private userDb: UserDatabaseGateway;

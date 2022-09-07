@@ -1,7 +1,7 @@
 'use strict';
 
 import jwt = require('jsonwebtoken');
-import GatewayRegisterImpl from '../entitiesFamilies/utils/GatewayRegisterImpl';
+import GatewayRegisterImpl from '../../entitiesFamilies/utils/GatewayRegisterImpl';
 const nconf = require('nconf');
 
 export async function isLoggedIn(req, res, next) {

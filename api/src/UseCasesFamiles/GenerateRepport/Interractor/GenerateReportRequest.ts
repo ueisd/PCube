@@ -1,7 +1,7 @@
 'use strict';
 
 import Joi = require('joi');
-import { UseCaseRequest } from '../../../Requestors/UseCaseRequest';
+import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
 
 export class GenerateReportRequest extends UseCaseRequest {
   public activitys: number[];

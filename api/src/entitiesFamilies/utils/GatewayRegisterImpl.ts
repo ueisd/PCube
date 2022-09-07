@@ -1,16 +1,16 @@
-"use strict";
+'use strict';
 
-import { getSequelize } from "../../configuration/sequelize";
-import UserDataBaseGatewayImpl from "../User/databaseImpls/databaseGateway.impl";
-import ActivityDataBaseGatewayImpl from "../Activity/gatabaseImpls/DatabaseGateway.impl";
-import ProjectDataBaseGatewayImpl from "../Project/databaseImpls/databaseGateway.impl";
-import ExpenseAccountDataBaseGatewayImpl from "../ExpenseAccount/DatabaseImpl/DatabaseGateway.impl";
-import TimelineDataBaseGatewayImpl from "../Timeline/DatabaseImpl/DatabaseGateway.impl";
-import UserDatabaseGateway from "../User/databaseGateway/UserDatabaseGateway";
-import ActivityDatabaseGateway from "../Activity/databaseGateway/ActivityDatabaseGateway";
-import ProjectDatabaseGateway from "../Project/databaseGateway/ProjectDatabaseGateway";
-import ExpenseAccountDatabaseGateway from "../ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway";
-import TimelineDatabaseGateway from "../Timeline/DatabaseGateway/TimelineDatabaseGateway";
+import { getSequelize } from '../../configuration/sequelize';
+import UserDataBaseGatewayImpl from '../User/databaseImpls/databaseGateway.impl';
+import ActivityDataBaseGatewayImpl from '../Activity/gatabaseImpls/DatabaseGateway.impl';
+import ProjectDataBaseGatewayImpl from '../Project/databaseImpls/databaseGateway.impl';
+import ExpenseAccountDataBaseGatewayImpl from '../ExpenseAccount/DatabaseImpl/DatabaseGateway.impl';
+import TimelineDataBaseGatewayImpl from '../Timeline/DatabaseImpl/DatabaseGateway.impl';
+import UserDatabaseGateway from '../User/databaseGateway/UserDatabaseGateway';
+import ActivityDatabaseGateway from '../Activity/databaseGateway/ActivityDatabaseGateway';
+import ProjectDatabaseGateway from '../Project/databaseGateway/ProjectDatabaseGateway';
+import ExpenseAccountDatabaseGateway from '../ExpenseAccount/DatabaseGateway/ExpenseAccountDatabaseGateway';
+import TimelineDatabaseGateway from '../Timeline/DatabaseGateway/TimelineDatabaseGateway';
 
 export default class GatewayRegisterImpl {
   private static userDbGateway: UserDatabaseGateway;
@@ -29,17 +29,10 @@ export default class GatewayRegisterImpl {
     const sequelize = getSequelize();
 
     GatewayRegisterImpl.userDbGateway = new UserDataBaseGatewayImpl(sequelize);
-    GatewayRegisterImpl.activityDbGateway = new ActivityDataBaseGatewayImpl(
-      sequelize
-    );
-    GatewayRegisterImpl.projectDbGateway = new ProjectDataBaseGatewayImpl(
-      sequelize
-    );
-    GatewayRegisterImpl.expenseAccountDBGateway =
-      new ExpenseAccountDataBaseGatewayImpl(sequelize);
-    GatewayRegisterImpl.timelineDBGateway = new TimelineDataBaseGatewayImpl(
-      sequelize
-    );
+    GatewayRegisterImpl.activityDbGateway = new ActivityDataBaseGatewayImpl(sequelize);
+    GatewayRegisterImpl.projectDbGateway = new ProjectDataBaseGatewayImpl(sequelize);
+    GatewayRegisterImpl.expenseAccountDBGateway = new ExpenseAccountDataBaseGatewayImpl(sequelize);
+    GatewayRegisterImpl.timelineDBGateway = new TimelineDataBaseGatewayImpl(sequelize);
 
     return {
       userDbGateway: GatewayRegisterImpl.userDbGateway,

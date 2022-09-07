@@ -1,6 +1,6 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
+import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
 import ActivityDatabaseGateway from '../../../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
 import { UpdateActivityRequest } from './UpdateActivityRequest';
 import Activity from '../../../entitiesFamilies/Activity/entities/Activity';

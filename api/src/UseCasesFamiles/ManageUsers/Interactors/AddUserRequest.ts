@@ -1,16 +1,16 @@
 'use strict';
 
 import Joi = require('joi');
-import { UseCaseRequest } from '../../../Requestors/UseCaseRequest';
+import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
 
 export class AddUserRequest extends UseCaseRequest {
   public email: string;
   public password: string;
   public firstName: string;
   public lastName: string;
-  public RoleId: string;
+  public RoleId: number;
 
-  constructor(params: { email: string; password: string; firstName: string; lastName: string; RoleId?: string }) {
+  constructor(params: { email: string; password: string; firstName: string; lastName: string; RoleId?: number }) {
     super();
     this.email = params.email;
     this.password = params.password;
@@ -28,6 +28,6 @@ export class AddUserRequest extends UseCaseRequest {
       RoleId: Joi.number(),
     });
 
-    await schema.validateAsync(buildParams);
+    return await schema.validateAsync(buildParams);
   }
 }

@@ -1,11 +1,10 @@
-import { execQueryNoDB } from "./index";
-import { getSequelize } from "../configuration/sequelize";
+import { execQueryNoDB } from './index';
+import { getSequelize } from '../../configuration/sequelize';
 
 export class PresetQuery {
   static isDatabaseInResult(dbName, results) {
     if (!results) return false;
-    for (let value of results)
-      if (dbName === Object.values(value)[0]) return true;
+    for (let value of results) if (dbName === Object.values(value)[0]) return true;
     return false;
   }
 
@@ -13,8 +12,8 @@ export class PresetQuery {
     const databases = await execQueryNoDB(`SHOW DATABASES LIKE '${dbName}'`);
     if (!PresetQuery.isDatabaseInResult(dbName, databases)) {
       await execQueryNoDB(`CREATE DATABASE ${dbName}`);
-      return "DB céée!";
-    } else return "db existante";
+      return 'DB céée!';
+    } else return 'db existante';
   };
 
   static async syncSchemas() {

@@ -1,7 +1,7 @@
 'use strict';
 
-import { UseCaseActivator } from '../../../Requestors/UseCaseActivator';
-import { NotFoundError } from '../../../Requestors/Errors/NotFoundError';
+import { UseCaseActivator } from '../../../system/Requestors/UseCaseActivator';
+import { NotFoundError } from '../../../system/Requestors/Errors/NotFoundError';
 import ActivityDatabaseGateway from '../../../entitiesFamilies/Activity/databaseGateway/ActivityDatabaseGateway';
 import Activity from '../../../entitiesFamilies/Activity/entities/Activity';
 import ProjectDatabaseGateway from '../../../entitiesFamilies/Project/databaseGateway/ProjectDatabaseGateway';

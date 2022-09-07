@@ -1,7 +1,7 @@
 'use strict';
 
 import Joi = require('joi');
-import { UseCaseRequest } from '../../../Requestors/UseCaseRequest';
+import { UseCaseRequest } from '../../../system/Requestors/UseCaseRequest';
 
 export class UpdateTimelinesRequest extends UseCaseRequest {
   public timelines: { id: number; ActivityId: number; ExpenseAccountId: number; ProjectId: number; UserId: number; punchIn: number; punchOut: number }[];
