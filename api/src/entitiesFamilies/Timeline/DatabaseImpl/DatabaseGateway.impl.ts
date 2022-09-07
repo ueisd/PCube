@@ -53,6 +53,18 @@ export default class TimelineDataBaseGatewayImpl implements TimelineDatabaseGate
     });
   }
 
+  public async deleteTimelinesWithIds(timelineIds: number[]) {
+    return TimelineImpl.destroy({ where: { id: timelineIds } });
+  }
+
+  public async updateTimeline(id: number, props: any): Promise<Timeline> {
+    return TimelineImpl.update(props, { where: { id } });
+  }
+
+  public async createTimelines(timelines): Promise<Timeline> {
+    return TimelineImpl.bulkCreate(timelines);
+  }
+
   public async getReportFromReqParams(params): Promise<Timeline[]> {
     let whereClauses = TimelineDataBaseGatewayImpl.fetchWhereClauseFromParams(params);
 

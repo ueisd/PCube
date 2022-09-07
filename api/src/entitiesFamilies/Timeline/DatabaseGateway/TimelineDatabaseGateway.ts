@@ -7,4 +7,7 @@ export default interface TimelineDatabaseGateway {
   getTimelineById(timelineId): Promise<Timeline>;
   getAllFromReqParams(params): Promise<Timeline[]>;
   getReportFromReqParams(params): Promise<Timeline[]>;
+  createTimelines(timelines): Promise<Timeline>;
+  updateTimeline(id: number, props: any): Promise<Timeline>;
+  deleteTimelinesWithIds(timelineIds: number[]);
 }

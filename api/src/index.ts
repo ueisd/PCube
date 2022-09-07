@@ -51,7 +51,6 @@ import { ListActivitiesController } from './UseCasesFamiles/ManageActivities/Con
 import { ListActivitiesInteractor } from './UseCasesFamiles/ManageActivities/Interractors/ListActivitiesInterractor';
 import { CreateActivityController } from './UseCasesFamiles/ManageActivities/Controllers/CreateActivityController';
 import { CreateActivityInteractor } from './UseCasesFamiles/ManageActivities/Interractors/CreateActivityInterractor';
-import { CreateActivityRequest } from './UseCasesFamiles/ManageActivities/Interractors/CreateActivityRequest';
 import { UpdateActivityController } from './UseCasesFamiles/ManageActivities/Controllers/UpdateActivityController';
 import { UpdateActivityInteractor } from './UseCasesFamiles/ManageActivities/Interractors/UpdateActivityInterractor';
 import { UpdateActivityRequest } from './UseCasesFamiles/ManageActivities/Interractors/UpdateActivityRequest';
@@ -96,8 +95,17 @@ import { CheckProjectsDeletableInterractor } from './UseCasesFamiles/ManageProje
 import { GenerateReportController } from './UseCasesFamiles/GenerateRepport/Controllers/GenerateReportController';
 import { GenerateReportRequest } from './UseCasesFamiles/GenerateRepport/Interractor/GenerateReportRequest';
 import { GenerateReportInteractor } from './UseCasesFamiles/GenerateRepport/Interractor/GenerateReportInteractor';
-
-const { initRouters } = require('./routes/index');
+import { GetLinesController } from './UseCasesFamiles/ManageTimelines/Controllers/GetLinesController';
+import { GetLinesInteractor } from './UseCasesFamiles/ManageTimelines/Interactors/GetLinesInteractor';
+import { CreateTimelinesRequest } from './UseCasesFamiles/ManageTimelines/Interactors/CreateTimelinesRequest';
+import { CreateTimelinesInteractor } from './UseCasesFamiles/ManageTimelines/Interactors/CreateTimelinesInteractor';
+import { CreateTimelinesController } from './UseCasesFamiles/ManageTimelines/Controllers/CreateTimelinesController';
+import { UpdateTimelinesController } from './UseCasesFamiles/ManageTimelines/Controllers/UpdateTimelinesController';
+import { UpdateTimelinesRequest } from './UseCasesFamiles/ManageTimelines/Interactors/UpdateTimelinesRequest';
+import { UpdateTimelinesInteractor } from './UseCasesFamiles/ManageTimelines/Interactors/UpdateTimelinesInteractor';
+import { DeleteTimelinesController } from './UseCasesFamiles/ManageTimelines/Controllers/DeleteTimelinesController';
+import { DeleteTimelinesRequest } from './UseCasesFamiles/ManageTimelines/Interactors/DeleteTimelinesRequest';
+import { DeleteTimelinesInteractor } from './UseCasesFamiles/ManageTimelines/Interactors/DeleteTimelinesInteractor';
 
 const app = express();
 app.use(logger('dev'));
@@ -130,8 +138,6 @@ async function main() {
   } else {
     app.use(cors());
   }
-
-  app.use(initRouters(gateways));
 
   const requestFactories = new RequestFactory([
     {
@@ -287,6 +293,37 @@ async function main() {
         return new GenerateReportRequest(params);
       },
     },
+    {
+      name: 'GetLines',
+      requestFactory: async (req) => {
+        const { dateDebut: debut, dateFin: fin, ...payload } = req.body;
+        const params = await GenerateReportRequest.checkBuildParamsAreValid({ ...payload, debut, fin });
+        return new GenerateReportRequest(params);
+      },
+    },
+    {
+      name: 'CreateTimelines',
+      requestFactory: async (req) => {
+        const { timelines } = req.body;
+        const params = await CreateTimelinesRequest.checkBuildParamsAreValid(timelines);
+        return new CreateTimelinesRequest(params);
+      },
+    },
+    {
+      name: 'UpdateTimelines',
+      requestFactory: async (req) => {
+        const { timelines } = req.body;
+        const params = await UpdateTimelinesRequest.checkBuildParamsAreValid(timelines);
+        return new UpdateTimelinesRequest(params);
+      },
+    },
+    {
+      name: 'DeleteTimelines',
+      requestFactory: async (req) => {
+        const params = await DeleteTimelinesRequest.checkBuildParamsAreValid(req.body);
+        return new DeleteTimelinesRequest(params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -317,6 +354,10 @@ async function main() {
     { name: 'CheckExpenseAccountIsDeletable', activator: new CheckExpenseAccountIsDeletableInterractor() },
     { name: 'CheckProjectIsDeletable', activator: new CheckProjectsDeletableInterractor() },
     { name: 'GenerateReport', activator: new GenerateReportInteractor(gateways.timelineDBGateway, gateways.expenseAccountDBGateway) },
+    { name: 'GetLines', activator: new GetLinesInteractor(gateways.timelineDBGateway) },
+    { name: 'CreateTimelines', activator: new CreateTimelinesInteractor(gateways.timelineDBGateway) },
+    { name: 'UpdateTimelines', activator: new UpdateTimelinesInteractor(gateways.timelineDBGateway) },
+    { name: 'DeleteTimelines', activator: new DeleteTimelinesInteractor(gateways.timelineDBGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -354,6 +395,10 @@ async function main() {
   RouteManager.addController(new CheckExpenseAccountNameExistController({ url: '/api/expense-account/is-name-exist/:name' }));
   RouteManager.addController(new CheckExpenseAccountIsDeletableController({ url: '/api/expense-account/is-deletable/:id' }));
   RouteManager.addController(new GenerateReportController({ url: '/api/timeline/report' }));
+  RouteManager.addController(new GetLinesController({ url: '/api/timeline/getLines' }));
+  RouteManager.addController(new CreateTimelinesController({ url: '/api/timeline' }));
+  RouteManager.addController(new UpdateTimelinesController({ url: '/api/timeline' }));
+  RouteManager.addController(new DeleteTimelinesController({ url: '/api/timeline' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });
