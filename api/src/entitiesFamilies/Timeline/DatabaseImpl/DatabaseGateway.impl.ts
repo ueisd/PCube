@@ -1,21 +1,34 @@
-"use strict";
+'use strict';
 
-import { Op, Sequelize } from "sequelize";
+import { Op, Sequelize } from 'sequelize';
 
-import TimelineImpl from "./Timeline.impl";
-import ExpenseAccountImpl from "../../ExpenseAccount/DatabaseImpl/ExpenseAccountImpl";
-import Timeline from "../Entities/Timeline";
-import TimelineDatabaseGateway from "../DatabaseGateway/TimelineDatabaseGateway";
+import TimelineImpl from './Timeline.impl';
+import ExpenseAccountImpl from '../../ExpenseAccount/DatabaseImpl/ExpenseAccountImpl';
+import Timeline from '../Entities/Timeline';
+import TimelineDatabaseGateway from '../DatabaseGateway/TimelineDatabaseGateway';
+import * as _ from 'lodash';
+import UserImpl from '../../User/databaseImpls/userImpl';
+import ProjectImpl from '../../Project/databaseImpls/ProjectImpl';
+import ActivityImpl from '../../Activity/gatabaseImpls/ActivityImpl';
+import * as console from 'console';
+const moment = require('moment-timezone');
 
-export default class TimelineDataBaseGatewayImpl
-  implements TimelineDatabaseGateway
-{
+const TIMEZONE = 'America/New_York';
+
+export default class TimelineDataBaseGatewayImpl implements TimelineDatabaseGateway {
   private sequelize;
 
   constructor(sequelize) {
     this.sequelize = sequelize;
 
     TimelineImpl.initModel(sequelize);
+
+    UserImpl.hasMany(TimelineImpl);
+    TimelineImpl.belongsTo(UserImpl);
+
+    TimelineImpl.belongsTo(ProjectImpl);
+    TimelineImpl.belongsTo(ActivityImpl);
+    TimelineImpl.belongsTo(ExpenseAccountImpl);
   }
 
   public async createTimeline(props): Promise<Timeline> {
@@ -23,11 +36,10 @@ export default class TimelineDataBaseGatewayImpl
   }
 
   public async getAllFromReqParams(params): Promise<Timeline[]> {
-    let whereClauses =
-      TimelineDataBaseGatewayImpl.fetchWhereClauseFromParams(params);
+    let whereClauses = TimelineDataBaseGatewayImpl.fetchWhereClauseFromParams(params);
     return TimelineImpl.findAll({
       where: whereClauses,
-      order: [["id", "DESC"]],
+      order: [['id', 'DESC']],
       raw: true,
     });
   }
@@ -41,26 +53,24 @@ export default class TimelineDataBaseGatewayImpl
     });
   }
 
-  public async getReportFromReqRarams(params): Promise<Timeline[]> {
-    let whereClauses =
-      TimelineDataBaseGatewayImpl.fetchWhereClauseFromParams(params);
+  public async getReportFromReqParams(params): Promise<Timeline[]> {
+    let whereClauses = TimelineDataBaseGatewayImpl.fetchWhereClauseFromParams(params);
+
+    console.log('8'.repeat(100));
+    console.log(JSON.stringify({ whereClauses, params }, null, 2));
+    console.log('-'.repeat(100));
 
     return TimelineImpl.findAll({
       include: {
         model: ExpenseAccountImpl,
         attributes: [
-          ["name", "nom"],
-          ["id", "id"],
-          ["ExpenseAccountId", "parentId"],
+          ['name', 'nom'],
+          ['id', 'id'],
+          ['ExpenseAccountId', 'parentId'],
         ],
       },
-      attributes: [
-        [
-          Sequelize.fn("sum", Sequelize.literal("punchOut - punchIn")),
-          "seconds",
-        ],
-      ],
-      group: ["Timeline.id"],
+      attributes: [[Sequelize.fn('sum', Sequelize.literal('punchOut - punchIn')), 'seconds']],
+      group: ['Timeline.id'],
       where: whereClauses,
       raw: true,
     });
@@ -69,24 +79,39 @@ export default class TimelineDataBaseGatewayImpl
   private static fetchWhereClauseFromParams(params) {
     let whereClauses: any = {};
 
-    let actyvitys = params.activitys;
-    let activitysIds =
-      actyvitys.length > 0 ? actyvitys.map((activity) => activity.id) : [];
-    if (activitysIds.length > 0) whereClauses.ActivityId = activitysIds;
+    const activitiesIds = _.map(params.activitys, (a) => a.id);
+    if (activitiesIds.length > 0) {
+      whereClauses.ActivityId = activitiesIds;
+    }
 
-    let projects = params.projects;
-    let projectsIds =
-      projects.length > 0 ? projects.map((project) => project.id) : [];
-    if (projectsIds.length > 0) whereClauses.ProjectId = projectsIds;
+    const projectsIds = _.map(params.projects, (p) => p.id);
+    if (projectsIds.length > 0) {
+      whereClauses.ProjectId = projectsIds;
+    }
 
-    let users = params.users;
-    let usersIds = users.length > 0 ? users.map((user) => user.id) : [];
-    if (usersIds.length > 0) whereClauses.UserId = usersIds;
+    const usersIds = _.map(params.users, (u) => u.id);
+    if (usersIds.length > 0) {
+      whereClauses.UserId = usersIds;
+    }
 
-    if (params.debut) whereClauses.punchIn = { [Op.gte]: params.debut };
+    if (params.debut) {
+      whereClauses.punchIn = { [Op.gte]: fetchPunchIn(params.debut) };
+    }
 
-    if (params.fin) whereClauses.punchOut = { [Op.lte]: params.fin };
+    if (params.fin) {
+      whereClauses.punchOut = { [Op.lte]: fetchPunchOut(params.fin) };
+    }
 
     return whereClauses;
   }
+}
+
+function fetchPunchIn(day) {
+  const time = moment.tz(day + ' ' + '00:00', TIMEZONE);
+  return time.unix();
+}
+
+function fetchPunchOut(day) {
+  const time = moment.tz(day + ' ' + '23:59', TIMEZONE);
+  return time.unix();
 }

@@ -1,10 +1,6 @@
-import ExpenseAccountImpl from "../../ExpenseAccount/DatabaseImpl/ExpenseAccountImpl";
-import UserImpl from "../../User/databaseImpls/userImpl";
-import ProjectImpl from "../../Project/databaseImpls/ProjectImpl";
-import ActivityImpl from "../../Activity/gatabaseImpls/ActivityImpl";
-import Timeline from "../Entities/Timeline";
+import Timeline from '../Entities/Timeline';
 
-const { DataTypes, Model } = require("sequelize");
+const { DataTypes, Model } = require('sequelize');
 
 export default class TimelineImpl extends Model implements Timeline {
   public static initModel(sequelize) {
@@ -21,19 +17,24 @@ export default class TimelineImpl extends Model implements Timeline {
         punchOut: {
           type: DataTypes.BIGINT,
         },
+        project: {
+          type: DataTypes.INTEGER,
+          references: {
+            model: sequelize.models.Project,
+            key: 'id',
+          },
+        },
       },
       {
-        indexes: [{ unique: true, fields: ["id"] }],
+        indexes: [{ unique: true, fields: ['id'] }],
         sequelize,
-        modelName: "Timeline",
+        modelName: 'Timeline',
       }
     );
-
-    UserImpl.hasMany(TimelineImpl);
-    TimelineImpl.belongsTo(UserImpl);
-
-    TimelineImpl.belongsTo(ProjectImpl);
-    TimelineImpl.belongsTo(ActivityImpl);
-    TimelineImpl.belongsTo(ExpenseAccountImpl);
   }
+
+  id?: number;
+  name: string;
+  punchIn: number;
+  punchOut: number;
 }

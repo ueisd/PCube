@@ -12,9 +12,9 @@ export default class ReportLine {
 
   static fetchFromTimelineEagerResponse(item) {
     let line: any = {};
-    line.id = item["Timeline.id"];
-    line.name = item["Timeline.nom"];
-    line.parent_id = item["Timeline.parentId"];
+    line.id = item['ExpenseAccount.id'];
+    line.name = item['ExpenseAccount.nom'];
+    line.parent_id = item['ExpenseAccount.parentId'];
     if (item.seconds) {
       let secs: number = parseInt(item.seconds);
       let rems: number = secs % 60;

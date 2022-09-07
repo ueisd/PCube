@@ -1,7 +1,7 @@
-"use strict";
+'use strict';
 
 export default interface Timeline {
-  id: number;
+  id?: number;
   name: string;
   punchIn: number;
   punchOut: number;

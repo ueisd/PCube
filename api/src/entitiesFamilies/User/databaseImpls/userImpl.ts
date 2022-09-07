@@ -1,32 +1,9 @@
 import User from '../entities/User';
 
 const { DataTypes, Model, Sequelize } = require('sequelize');
-const Op = Sequelize.Op;
 
 export default class UserImpl extends Model {
   public static initModel(sequelize) {
-    UserImpl.isEmailUnique = (email, id) => {
-      return UserImpl.findAll({
-        where: {
-          [Op.and]: [
-            { id: { [Op.ne]: id } },
-            { email: email },
-          ],
-        },
-        raw: true,
-      });
-    };
-
-    UserImpl.findAllEager = () => {
-      return UserImpl.findAll({
-        order: [['createdAt', 'DESC']],
-        include: [
-          { model: sequelize.models.Role },
-        ],
-        raw: true,
-      });
-    };
-
     UserImpl.init(
       {
         id: {

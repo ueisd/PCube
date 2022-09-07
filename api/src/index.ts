@@ -93,6 +93,9 @@ import { CheckExpenseAccountIsDeletableController } from './UseCasesFamiles/Mana
 import { CheckExpenseAccountIsDeletableInterractor } from './UseCasesFamiles/ManageExpenseAccounts/Interractors/CheckExpenseAccountIsDeletableInterractor';
 import { CheckProjectIsDeletableController } from './UseCasesFamiles/ManageProjects/Controllers/CheckProjectIsDeletableController';
 import { CheckProjectsDeletableInterractor } from './UseCasesFamiles/ManageProjects/Interractors/CheckProjectsDeletableInterractor';
+import { GenerateReportController } from './UseCasesFamiles/GenerateRepport/Controllers/GenerateReportController';
+import { GenerateReportRequest } from './UseCasesFamiles/GenerateRepport/Interractor/GenerateReportRequest';
+import { GenerateReportInteractor } from './UseCasesFamiles/GenerateRepport/Interractor/GenerateReportInteractor';
 
 const { initRouters } = require('./routes/index');
 
@@ -189,8 +192,8 @@ async function main() {
     {
       name: 'CreateActivity',
       requestFactory: async (req) => {
-        const params = await CreateActivityRequest.checkBuildParamsAreValid(req.body);
-        return new CreateActivityRequest(params);
+        const params = await GenerateReportRequest.checkBuildParamsAreValid(req.body);
+        return new GenerateReportRequest(params);
       },
     },
     {
@@ -276,6 +279,14 @@ async function main() {
         return new DeleteExpenseAccountRequest(params);
       },
     },
+    {
+      name: 'GenerateReport',
+      requestFactory: async (req) => {
+        const { dateDebut: debut, dateFin: fin, ...payload } = req.body;
+        const params = await GenerateReportRequest.checkBuildParamsAreValid({ ...payload, debut, fin });
+        return new GenerateReportRequest(params);
+      },
+    },
   ]);
 
   const interactorFactories = new InteractorFactory([
@@ -305,6 +316,7 @@ async function main() {
     { name: 'DeleteExpenseAccount', activator: new DeleteExpenseAccountInterractor(gateways.expenseAccountDBGateway) },
     { name: 'CheckExpenseAccountIsDeletable', activator: new CheckExpenseAccountIsDeletableInterractor() },
     { name: 'CheckProjectIsDeletable', activator: new CheckProjectsDeletableInterractor() },
+    { name: 'GenerateReport', activator: new GenerateReportInteractor(gateways.timelineDBGateway, gateways.expenseAccountDBGateway) },
   ]);
 
   UseCaseFactories.initFactories({
@@ -341,6 +353,7 @@ async function main() {
   RouteManager.addController(new DeleteExpenseAccountController({ url: '/api/expense-account/:id' }));
   RouteManager.addController(new CheckExpenseAccountNameExistController({ url: '/api/expense-account/is-name-exist/:name' }));
   RouteManager.addController(new CheckExpenseAccountIsDeletableController({ url: '/api/expense-account/is-deletable/:id' }));
+  RouteManager.addController(new GenerateReportController({ url: '/api/timeline/report' }));
 
   app.get('/', (req, res) => {
     res.status(200).json({ message: 'accueil heroku ' });

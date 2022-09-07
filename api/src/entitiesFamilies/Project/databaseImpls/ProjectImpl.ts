@@ -8,7 +8,7 @@ export default class ProjectImpl extends Model {
     ProjectImpl.init(
       {
         id: {
-          type: DataTypes.INTEGER.UNSIGNED,
+          type: DataTypes.INTEGER,
           primaryKey: true,
           autoIncrement: true,
         },

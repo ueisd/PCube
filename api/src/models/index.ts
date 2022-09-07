@@ -1,5 +1,7 @@
 'use strict';
 
+import * as console from 'console';
+
 const moment = require('moment-timezone');
 
 import User from '../entitiesFamilies/User/entities/User';
@@ -377,7 +379,7 @@ exports.buildDataset = async ({
     UserId: usersLs.Nmember.id,
   });
 
-  punch = fetchPunchTzNY('2020-07-03', '06:00', '12:00');
+  punch = fetchPunchTzNY('2021-07-03', '06:00', '12:00');
   let tl4 = await timelineDBGateway.createTimeline({
     punchIn: punch.punchIn,
     punchOut: punch.punchOut,
@@ -467,7 +469,7 @@ exports.buildDataset = async ({
     UserId: usersLs.NannabelFischer.id,
   });
 
-  punch = fetchPunchTzNY('2012-07-05', '14:00', '21:43');
+  punch = fetchPunchTzNY('2010-07-05', '14:00', '21:43');
   let tl13 = await timelineDBGateway.createTimeline({
     punchIn: punch.punchIn,
     punchOut: punch.punchOut,
