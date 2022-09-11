@@ -156,3 +156,4 @@ envtest*
 /api/old2/
 /api/src/rsa/key
 /api/src/rsa/key.pub
+/api/coverage/
