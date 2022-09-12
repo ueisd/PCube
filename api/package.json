@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "test": "jest --coverage",
+    "test": "jest",
     "prod": "tsc && pm2-runtime ecosystem.config.js",
     "dev": "nodemon --inspect=0.0.0.0:9229 --es-module-specifier-resolution=node --legacy-watch",
     "start": "ts-node ./src/index.ts"
@@ -42,12 +42,13 @@
     "typescript": "^4.6.3"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.19.0",
     "@types/express": "^4.17.13",
     "@types/joi": "^17.2.3",
+    "jest": "^29.0.3",
     "nodemon": "^2.0.19",
-    "ts-node": "^10.9.1",
     "ts-jest": "^29.0.0",
-    "jest": "^29.0.3"
+    "ts-node": "^10.9.1"
   },
   "prettier": {
     "singleQuote": true,
