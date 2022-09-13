@@ -122,14 +122,12 @@ async function main() {
 
   const gateways = await GatewayRegisterImpl.buildGateways();
 
-  await PresetQuery.syncSchemas();
-  await buildDataset(gateways);
-  // if (nconf.get('have_to_build_dataset')) {
-  //   await PresetQuery.syncSchemas();
-  // }
-  // if (nconf.get('have_to_sync_schemas')) {
-  //   await buildDataset(gateways);
-  // }
+  if (actualConfig.have_to_build_dataset) {
+    await PresetQuery.syncSchemas();
+  }
+  if (actualConfig.have_to_sync_schemas) {
+    await buildDataset(gateways);
+  }
 
   const { getInitializedPassport } = require('./configuration/oauth2.google.passeport');
   app.use(getInitializedPassport());
