@@ -15,11 +15,16 @@ export function getSequelize() {
     host: actualConfig.database_host,
   };
 
-  sequelizeInst = new Sequelize(config.db, config.user, config.password, {
+  const params: any = {
     host: config.host,
-    // port: 3308,
     dialect: 'mysql',
-  });
+  };
+
+  if (actualConfig.database_port) {
+    params.port = 3308;
+  }
+
+  sequelizeInst = new Sequelize(config.db, config.user, config.password, params);
 
   return sequelizeInst;
 }

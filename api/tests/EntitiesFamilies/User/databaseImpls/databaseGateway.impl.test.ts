@@ -1,28 +1,43 @@
 'use strict';
 
 // @ts-ignore
-import { expect, jest, test } from '@jest/globals';
+import { expect, jest, test, beforeAll } from '@jest/globals';
+import _ = require('lodash');
 
 import UserDataBaseGatewayImpl from '../../../../src/EntitiesFamilies/User/databaseImpls/databaseGateway.impl';
 import Role from '../../../../src/EntitiesFamilies/User/entities/role';
-import { loadConfig } from '../../../../src/configuration';
+import { loadConfig, actualConfig } from '../../../../src/configuration';
 import { getSequelize } from '../../../../src/configuration/sequelize';
 
-test('Create role', async () => {
-  await loadConfig();
-  const sequelize = getSequelize();
-  const userDbGateway = new UserDataBaseGatewayImpl(sequelize);
-  try {
-    const admin = await userDbGateway.createRole(
-      new Role({
-        name: 'admin',
-        accessLevel: 1,
-      })
-    );
-  } catch (err) {
-    console.log(err);
-  }
+let userDbGateway;
 
-  //
-  // expect(admin).toBe({});
+beforeAll(async () => {
+  await loadConfig();
+  actualConfig.database_host = 'localhost';
+  actualConfig.database_port = 3308;
+
+  const sequelize = getSequelize();
+  userDbGateway = new UserDataBaseGatewayImpl(sequelize);
+});
+
+test('Create role', async () => {
+  const admin = await userDbGateway.createRole(
+    new Role({
+      name: 'admin',
+      accessLevel: 1,
+    })
+  );
+
+  expect(_.omit(JSON.parse(JSON.stringify(admin)), ['id'])).toStrictEqual({ accessLevel: 1, name: 'admin' });
+});
+
+test('Create role 2', async () => {
+  const admin = await userDbGateway.createRole(
+    new Role({
+      name: 'admin',
+      accessLevel: 1,
+    })
+  );
+
+  expect(_.omit(JSON.parse(JSON.stringify(admin)), ['id'])).toStrictEqual({ accessLevel: 1, name: 'admin' });
 });
