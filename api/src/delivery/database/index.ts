@@ -1,5 +1,5 @@
 import * as mysql from 'mysql';
-import * as nconf from 'nconf';
+import { actualConfig } from '../../configuration';
 
 let pool;
 let connection;
@@ -42,10 +42,10 @@ export const getConnection = () => {
       if (!pool) {
         pool = mysql.createPool({
           connectionLimit: 10,
-          host: nconf.get('database_host'),
-          user: nconf.get('database_user'),
-          password: nconf.get('database_password'),
-          database: nconf.get('database_db'),
+          host: actualConfig.database_host,
+          user: actualConfig.database_user,
+          password: actualConfig.database_password,
+          database: actualConfig.database_db,
         });
       }
       pool.getConnection(function (err, connection) {
@@ -62,9 +62,9 @@ const getConnectionNoDB = (): Promise<any> => {
   return new Promise((resolve, reject) => {
     try {
       var con = mysql.createConnection({
-        host: nconf.get('database_host'),
-        user: nconf.get('database_user'),
-        password: nconf.get('database_password'),
+        host: actualConfig.database_host,
+        user: actualConfig.database_user,
+        password: actualConfig.database_password,
       });
       con.connect(function (err) {
         if (err) reject(err);

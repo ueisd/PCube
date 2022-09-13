@@ -2,13 +2,13 @@
 
 import jwt = require('jsonwebtoken');
 import GatewayRegisterImpl from '../../EntitiesFamilies/utils/GatewayRegisterImpl';
-const nconf = require('nconf');
+import { actualConfig } from '../../configuration';
 
 export async function isLoggedIn(req, res, next) {
   const userDb = GatewayRegisterImpl.getUserDbGateway();
 
   try {
-    const rsaPublicKey = nconf.get('rsaKeyPublic');
+    const rsaPublicKey = actualConfig.rsaKeyPublic;
     const token = tryExtractToken(req);
 
     let id = await tryExtractUserIdFromToken(token, rsaPublicKey);

@@ -2,7 +2,7 @@
 
 import { RefreshTokenResponse } from './RefreshTokenResponse';
 
-const nconf = require('nconf');
+import { actualConfig } from '../../../configuration';
 import { jwtSignId } from '../_utils/jwt.utils';
 
 import { UseCaseActivator } from '../../../delivery/Requestors/UseCaseActivator';
@@ -21,9 +21,9 @@ export class RefreshTokenInteractor implements UseCaseActivator {
   public async execute(request: UseCaseRequest) {
     const { token } = this.tryExtractParams(request as RefreshTokenRequest);
 
-    let rsaPrivateKey = nconf.get('rsaKeyPrivate');
-    let rsaPublicKey = nconf.get('rsaKeyPublic');
-    let timeRefresh = nconf.get('jwt_refresh_token_expires');
+    let rsaPrivateKey = actualConfig.rsaKeyPrivate;
+    let rsaPublicKey = actualConfig.rsaKeyPublic;
+    let timeRefresh = actualConfig.jwt_refresh_token_expires;
 
     const userId = await JwtHelper.tryExtractUserIdFromToken(token, rsaPublicKey);
 

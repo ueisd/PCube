@@ -1,7 +1,6 @@
 'use strict';
 
 import bcrypt = require('bcrypt');
-const nconf = require('nconf');
 import { jwtSignId } from '../_utils/jwt.utils';
 
 import { UseCaseActivator } from '../../../delivery/Requestors/UseCaseActivator';
@@ -10,6 +9,7 @@ import User from '../../../EntitiesFamilies/User/entities/User';
 import { UseCaseRequest } from '../../../delivery/Requestors/UseCaseRequest';
 import { SignInRequest } from './SignInRequest';
 import { SignInResponse } from './SignInResponse';
+import { actualConfig } from '../../../configuration';
 
 export class SignInInteractor implements UseCaseActivator {
   private userDb;
@@ -58,8 +58,8 @@ export class SignInInteractor implements UseCaseActivator {
   }
 
   private signInUser(user) {
-    let rsa_key_private = nconf.get('rsaKeyPrivate');
-    let timeRefresh = nconf.get('jwt_refresh_token_expires');
+    let rsa_key_private = actualConfig.rsaKeyPrivate;
+    let timeRefresh = actualConfig.jwt_refresh_token_expires;
     console.log(JSON.stringify({ rsa_key_private, timeRefresh }, null, 2));
 
     return jwtSignId(user.id, rsa_key_private, timeRefresh);

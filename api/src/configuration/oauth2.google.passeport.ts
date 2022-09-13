@@ -2,10 +2,10 @@
 
 import GatewayRegisterImpl from '../EntitiesFamilies/utils/GatewayRegisterImpl';
 import User from '../EntitiesFamilies/User/entities/User';
+import { actualConfig } from './index';
 
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const nconf = require('nconf');
 
 export function getInitializedPassport() {
   return passport.initialize();
@@ -28,9 +28,9 @@ passport.use(
   'google',
   new GoogleStrategy(
     {
-      clientID: nconf.get('oauth2_google_id'),
-      clientSecret: nconf.get('oauth2_google_secret'),
-      callbackURL: nconf.get('api_address') + '/api/auth/google/cb',
+      clientID: actualConfig.oauth2_google_id,
+      clientSecret: actualConfig.oauth2_google_secret,
+      callbackURL: actualConfig.api_address + '/api/auth/google/cb',
     },
     async (accessToken, refreshToken, profile, done) => {
       const userDb = GatewayRegisterImpl.getUserDbGateway();

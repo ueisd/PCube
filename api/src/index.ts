@@ -4,13 +4,12 @@ import { SignInInteractor } from './UseCasesFamiles/SignIn/Interactors/SignInInt
 
 declare function require(name: string);
 import * as express from 'express';
-const nconf = require('nconf');
 const logger = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
-import { loadConfig } from './configuration';
+import { loadConfig, actualConfig } from './configuration';
 const { closePool } = require('./delivery/database');
 const { buildDataset } = require('./configuration/DataSet');
 import { PresetQuery } from './delivery/database/presetQuery';
@@ -106,6 +105,7 @@ import { UpdateTimelinesInteractor } from './UseCasesFamiles/ManageTimelines/Int
 import { DeleteTimelinesController } from './UseCasesFamiles/ManageTimelines/Controllers/DeleteTimelinesController';
 import { DeleteTimelinesRequest } from './UseCasesFamiles/ManageTimelines/Interactors/DeleteTimelinesRequest';
 import { DeleteTimelinesInteractor } from './UseCasesFamiles/ManageTimelines/Interactors/DeleteTimelinesInteractor';
+import { getInitializedPassport } from './configuration/oauth2.google.passeport';
 
 const app = express();
 app.use(logger('dev'));
@@ -118,21 +118,23 @@ let server;
 
 async function main() {
   await loadConfig();
-  await PresetQuery.ensureDBIsCreated(nconf.get('database_db'));
+  await PresetQuery.ensureDBIsCreated(actualConfig.database_db);
+
+  const gateways = await GatewayRegisterImpl.buildGateways();
+
+  await PresetQuery.syncSchemas();
+  await buildDataset(gateways);
+  // if (nconf.get('have_to_build_dataset')) {
+  //   await PresetQuery.syncSchemas();
+  // }
+  // if (nconf.get('have_to_sync_schemas')) {
+  //   await buildDataset(gateways);
+  // }
 
   const { getInitializedPassport } = require('./configuration/oauth2.google.passeport');
   app.use(getInitializedPassport());
 
-  const gateways = await GatewayRegisterImpl.buildGateways();
-
-  if (nconf.get('have_to_build_dataset')) {
-    await PresetQuery.syncSchemas();
-  }
-  if (nconf.get('have_to_sync_schemas')) {
-    await buildDataset(gateways);
-  }
-
-  let apiOrigin = nconf.get('api_url_origin');
+  let apiOrigin = actualConfig.api_url_origin;
   if (apiOrigin) {
     app.use(cors({ origin: apiOrigin }));
   } else {

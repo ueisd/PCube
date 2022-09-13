@@ -2,8 +2,8 @@
 
 import { Controller } from '../../_utils/Controller';
 import { jwtSignId } from '../_utils/jwt.utils';
+import { actualConfig } from '../../../configuration';
 const passport = require('passport');
-const nconf = require('nconf');
 
 export class GoogleCbSignInController extends Controller {
   constructor(opts: { url: string }) {
@@ -16,12 +16,12 @@ export class GoogleCbSignInController extends Controller {
 }
 
 export function generateOAuth2UserToken(req, res) {
-  let timeRefresh = nconf.get('jwt_refresh_token_expires');
+  let timeRefresh = actualConfig.jwt_refresh_token_expires;
   let user = req.user;
 
   let response: any = { user };
 
-  let rsaPrivateKey = nconf.get('rsaKeyPrivate');
+  let rsaPrivateKey = actualConfig.rsaKeyPrivate;
   response.token = jwtSignId(user.id, rsaPrivateKey, timeRefresh);
 
   var responseHTML = '<html><head><title>Main</title></head><body></body><script>res = %value%; window.opener.postMessage(res, "*");window.close();</script></html>';
