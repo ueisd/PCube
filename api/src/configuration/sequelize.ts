@@ -21,7 +21,7 @@ export function getSequelize() {
   };
 
   if (actualConfig.database_port) {
-    params.port = 3308;
+    params.port = actualConfig.database_port;
   }
 
   sequelizeInst = new Sequelize(config.db, config.user, config.password, params);

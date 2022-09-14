@@ -1,34 +1,37 @@
 'use strict';
 
 // @ts-ignore
-import { expect, jest, test, beforeAll } from '@jest/globals';
+import { expect, jest, test, beforeAll, afterAll } from '@jest/globals';
 import _ = require('lodash');
 
 import UserDataBaseGatewayImpl from '../../../../src/EntitiesFamilies/User/databaseImpls/databaseGateway.impl';
 import Role from '../../../../src/EntitiesFamilies/User/entities/role';
 import { loadConfig, actualConfig } from '../../../../src/configuration';
-import { getSequelize } from '../../../../src/configuration/sequelize';
+import { PresetQuery } from '../../../../src/delivery/database/presetQuery';
 
 let userDbGateway;
 
 beforeAll(async () => {
   await loadConfig();
   actualConfig.database_host = 'localhost';
-  actualConfig.database_port = 3308;
+  actualConfig.database_port = 3309;
 
-  const sequelize = getSequelize();
-  userDbGateway = new UserDataBaseGatewayImpl(sequelize);
+  await PresetQuery.ensureDBIsCreated(actualConfig.database_db);
+
+  userDbGateway = new UserDataBaseGatewayImpl(null);
+
+  await PresetQuery.syncSchemas();
 });
 
 test('Create role', async () => {
   const admin = await userDbGateway.createRole(
     new Role({
-      name: 'admin',
+      name: 'Zarathustra',
       accessLevel: 1,
     })
   );
 
-  expect(_.omit(JSON.parse(JSON.stringify(admin)), ['id'])).toStrictEqual({ accessLevel: 1, name: 'admin' });
+  expect(_.omit(JSON.parse(JSON.stringify(admin)), ['id'])).toStrictEqual({ accessLevel: 1, name: 'Zarathustra' });
 });
 
 test('Create role 2', async () => {
@@ -38,6 +41,9 @@ test('Create role 2', async () => {
       accessLevel: 1,
     })
   );
-
   expect(_.omit(JSON.parse(JSON.stringify(admin)), ['id'])).toStrictEqual({ accessLevel: 1, name: 'admin' });
+});
+
+afterAll(async () => {
+  PresetQuery.closeConnection();
 });

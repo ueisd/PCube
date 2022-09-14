@@ -10,7 +10,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 
 import { loadConfig, actualConfig } from './configuration';
-const { closePool } = require('./delivery/database');
 const { buildDataset } = require('./configuration/DataSet');
 import { PresetQuery } from './delivery/database/presetQuery';
 import GatewayRegisterImpl from './EntitiesFamilies/utils/GatewayRegisterImpl';
@@ -440,10 +439,11 @@ class RouteManager {
 process.on('SIGINT', async () => {
   server.close(async (err) => {
     if (err) {
+      PresetQuery.closeConnection();
       process.exit(1);
     } else {
       try {
-        await closePool();
+        PresetQuery.closeConnection();
         console.log('pool fermé');
         process.exit(0);
       } catch (err) {

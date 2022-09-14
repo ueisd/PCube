@@ -47,12 +47,30 @@ services:
     security_opt:
     - seccomp:unconfined
     ports:
-      - 3308:3306
+      - "3308:3306"
+  db-test:
+    build:
+      context: ./database
+      dockerfile: Dockerfile.dev
+    stdin_open: true
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      - MYSQL_ROOT_PASSWORD=${DATABASE_PASSWORD}
+      - MYSQL_DATABASE=${DATABASE_DB}
+    volumes:
+      - type: volume
+        source: dbdataTest
+        target: /var/lib/mysql
+    security_opt:
+      - seccomp:unconfined
+    ports:
+      - "3309:3306"
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
      - db
   client:
@@ -64,8 +82,8 @@ services:
       - /app/node_modules/
     stdin_open: true
     ports:
-      - 4200:80
-      - 49153:49153
+      - "4200:80"
+      - "49153:49153"
     environment: 
       - DEBUG=*
       - NODE_ENV=development
@@ -83,10 +101,11 @@ services:
       context: ./reverse-proxy
       dockerfile: Dockerfile.dev
     ports: 
-      - 80:80
+      - "80:80"
     depends_on: 
       - api
       - db
       - client
 volumes:
   dbdata:
+  dbdataTest:

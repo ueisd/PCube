@@ -3,21 +3,35 @@ import { getSequelize } from '../../configuration/sequelize';
 
 export class PresetQuery {
   static isDatabaseInResult(dbName, results) {
-    if (!results) return false;
-    for (let value of results) if (dbName === Object.values(value)[0]) return true;
+    if (!results) {
+      return false;
+    }
+    for (let value of results) {
+      if (dbName === Object.values(value)[0]) {
+        return true;
+      }
+    }
     return false;
   }
 
   static ensureDBIsCreated = async (dbName) => {
     const databases = await execQueryNoDB(`SHOW DATABASES LIKE '${dbName}'`);
-    if (!PresetQuery.isDatabaseInResult(dbName, databases)) {
-      await execQueryNoDB(`CREATE DATABASE ${dbName}`);
-      return 'DB céée!';
-    } else return 'db existante';
+
+    if (PresetQuery.isDatabaseInResult(dbName, databases)) {
+      return `La db ${dbName} existe deja`;
+    }
+
+    await execQueryNoDB(`CREATE DATABASE ${dbName}`);
+    return `La db ${dbName} a été céée!`;
   };
 
   static async syncSchemas() {
     const sequelize = getSequelize();
-    return sequelize.sync({ force: true });
+    await sequelize.sync({ force: true });
+  }
+
+  static closeConnection() {
+    const sequelize = getSequelize();
+    sequelize.close();
   }
 }

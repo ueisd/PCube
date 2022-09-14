@@ -9,15 +9,16 @@ import UserImpl from './userImpl';
 import Role from '../entities/role';
 import User from '../entities/User';
 import UserDatabaseGateway from '../databaseGateway/UserDatabaseGateway';
+import { getSequelize } from '../../../configuration/sequelize';
 
 export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
   private sequelize;
 
   constructor(sequelize) {
-    this.sequelize = sequelize;
+    this.sequelize = getSequelize();
 
-    RoleImpl.initModel(sequelize);
-    UserImpl.initModel(sequelize);
+    RoleImpl.initModel(this.sequelize);
+    UserImpl.initModel(this.sequelize);
 
     // role
     RoleImpl.hasMany(UserImpl);
