@@ -2,11 +2,12 @@
 echo -n "
 Chose action:
  1 : Start all
- 2 : Terminate all
- 3 : Logs for Api
- 4 : Logs for Client
- 5 : build All
- 6 : Quit
+ 2 : Start test-db
+ 3 : Terminate all
+ 4 : Logs for Api
+ 5 : Logs for Client
+ 6 : build All
+ 7 : Quit
 "
 
 read -p "Enter number: " action
@@ -18,21 +19,26 @@ case  $action in
         ./helpers-build/start-dev.sh
         ;;
       2)
+        echo -n "starting the test db:
+        "
+        ./helpers-build/start-test-db-dev.sh
+        ;;
+      3)
         echo -n "down all services:
         "
         ./helpers-build/down-dev.sh
         ;;
-      3)
+      4)
         echo -n "Logs for API:
         "
         ./helpers-build/logs-api.sh
         ;;
-      4)
+      5)
         echo -n "Logs for clients:
         "
         ./helpers-build/logs-client.sh
         ;;
-      5)
+      6)
         echo -n "Logs for clients:
         "
         ./helpers-build/build-dev.sh
