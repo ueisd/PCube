@@ -1,7 +1,7 @@
 'use strict';
 
 // @ts-ignore
-import { expect, jest, test, beforeAll, afterAll, beforeEach } from '@jest/globals';
+import { expect, jest, test, beforeAll, afterAll, beforeEach, afterEach } from '@jest/globals';
 import _ = require('lodash');
 
 import UserDataBaseGatewayImpl from '../../../../src/EntitiesFamilies/User/databaseImpls/databaseGateway.impl';
@@ -21,10 +21,12 @@ beforeAll(async () => {
   await PresetQuery.ensureDBIsCreated(actualConfig.database_db);
 
   userDbGateway = new UserDataBaseGatewayImpl();
+
+  await PresetQuery.syncSchemas();
 });
 
-beforeEach(async () => {
-  await PresetQuery.syncSchemas();
+afterEach(async () => {
+  await PresetQuery.clearAllCollections();
 });
 
 test('Create role', async () => {
