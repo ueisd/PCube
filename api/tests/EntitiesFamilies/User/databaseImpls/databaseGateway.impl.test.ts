@@ -86,7 +86,7 @@ function asJson(object) {
 }
 
 afterEach(async () => {
-  await PresetQuery.truncateAll();
+  await PresetQuery.syncSchemas();
 });
 
 afterAll(async () => {
