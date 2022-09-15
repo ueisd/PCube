@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "test": "jest --coverage",
-    "test-only": "jest --detectOpenHandles",
+    "test-only": "jest",
     "prod": "tsc && pm2-runtime ecosystem.config.js",
     "dev": "nodemon --inspect=0.0.0.0:9229 --es-module-specifier-resolution=node --legacy-watch",
     "start": "ts-node ./src/index.ts"
