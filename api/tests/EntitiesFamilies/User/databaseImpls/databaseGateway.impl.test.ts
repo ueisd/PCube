@@ -1,13 +1,14 @@
 'use strict';
 
 // @ts-ignore
-import { expect, jest, test, beforeAll, afterAll } from '@jest/globals';
+import { expect, jest, test, beforeAll, afterAll, afterEach } from '@jest/globals';
 import _ = require('lodash');
 
 import UserDataBaseGatewayImpl from '../../../../src/EntitiesFamilies/User/databaseImpls/databaseGateway.impl';
 import Role from '../../../../src/EntitiesFamilies/User/entities/role';
 import { loadConfig, actualConfig } from '../../../../src/configuration';
 import { PresetQuery } from '../../../../src/delivery/database/presetQuery';
+import User from '../../../../src/EntitiesFamilies/User/entities/User';
 
 let userDbGateway;
 
@@ -42,6 +43,49 @@ test('Create role 2', async () => {
     })
   );
   expect(_.omit(JSON.parse(JSON.stringify(admin)), ['id'])).toStrictEqual({ accessLevel: 1, name: 'admin' });
+});
+
+test('Create User', async () => {
+  const roleProps = {
+    name: 'admin',
+    accessLevel: 1,
+  };
+
+  const admin = await userDbGateway.createRole(new Role(roleProps));
+
+  const user = await userDbGateway.createUser(
+    new User({
+      email: 'PM',
+      firstName: 'monsieur',
+      lastName: 'yota',
+      password: 'pm',
+      role: admin,
+    })
+  );
+
+  expect(getAssertableFields(admin)).toStrictEqual({ accessLevel: 1, name: 'admin' });
+  expect(getAssertableUser(user)).toStrictEqual({
+    email: 'PM',
+    firstName: 'monsieur',
+    lastName: 'yota',
+    role: roleProps,
+  });
+});
+
+function getAssertableFields(role) {
+  return _.omit(asJson(role), ['id']);
+}
+
+function getAssertableUser(role) {
+  return _.omit(asJson(role), ['id', 'password', 'role.id']);
+}
+
+function asJson(object) {
+  return JSON.parse(JSON.stringify(object));
+}
+
+afterEach(async () => {
+  PresetQuery.truncateAll();
 });
 
 afterAll(async () => {
