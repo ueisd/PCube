@@ -16,10 +16,11 @@ beforeAll(async () => {
   await loadConfig();
   actualConfig.database_host = 'localhost';
   actualConfig.database_port = 3309;
+  actualConfig.db_logging = false;
 
   await PresetQuery.ensureDBIsCreated(actualConfig.database_db);
 
-  userDbGateway = new UserDataBaseGatewayImpl(null);
+  userDbGateway = new UserDataBaseGatewayImpl();
 
   await PresetQuery.syncSchemas();
 });

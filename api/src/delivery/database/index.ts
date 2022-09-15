@@ -73,9 +73,6 @@ const getConnectionNoDB = (): Promise<any> => {
         connectionConfig.port = actualConfig.database_port;
       }
 
-      console.log('4'.repeat(100));
-      console.log(connectionConfig);
-
       const con = mysql.createConnection(connectionConfig);
       con.connect(function (err) {
         if (err) {

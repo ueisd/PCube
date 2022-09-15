@@ -16,6 +16,7 @@ const loadConfig: Function = () => {
         rsaKeyPrivate: readRsaPrivate() || process.env.RSA_KEY_PRIVATE,
         database_host: process.env.DATABASE_HOST || 'localhost',
         database_port: process.env.DATABASE_PORT,
+        db_logging: true,
         database_user: process.env.DATABASE_USER || 'root',
         database_password: process.env.DATABASE_PASSWORD || '12345678',
         database_db: process.env.DATABASE_DB || 'pcube',

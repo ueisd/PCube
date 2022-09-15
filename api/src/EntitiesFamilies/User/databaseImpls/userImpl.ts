@@ -1,6 +1,6 @@
 import User from '../entities/User';
 
-const { DataTypes, Model, Sequelize } = require('sequelize');
+const { DataTypes, Model } = require('sequelize');
 
 export default class UserImpl extends Model {
   public static initModel(sequelize) {

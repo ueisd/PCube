@@ -12,9 +12,9 @@ import UserDatabaseGateway from '../databaseGateway/UserDatabaseGateway';
 import { getSequelize } from '../../../configuration/sequelize';
 
 export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
-  private sequelize;
+  private readonly sequelize;
 
-  constructor(sequelize) {
+  constructor() {
     this.sequelize = getSequelize();
 
     RoleImpl.initModel(this.sequelize);

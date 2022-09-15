@@ -28,7 +28,7 @@ export default class GatewayRegisterImpl {
   }> {
     const sequelize = getSequelize();
 
-    GatewayRegisterImpl.userDbGateway = new UserDataBaseGatewayImpl(sequelize);
+    GatewayRegisterImpl.userDbGateway = new UserDataBaseGatewayImpl();
     GatewayRegisterImpl.activityDbGateway = new ActivityDataBaseGatewayImpl(sequelize);
     GatewayRegisterImpl.projectDbGateway = new ProjectDataBaseGatewayImpl(sequelize);
     GatewayRegisterImpl.expenseAccountDBGateway = new ExpenseAccountDataBaseGatewayImpl(sequelize);

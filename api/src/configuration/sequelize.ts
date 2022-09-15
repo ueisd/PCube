@@ -18,6 +18,7 @@ export function getSequelize() {
   const params: any = {
     host: config.host,
     dialect: 'mysql',
+    logging: actualConfig.db_logging,
   };
 
   if (actualConfig.database_port) {
