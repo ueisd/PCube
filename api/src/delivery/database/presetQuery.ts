@@ -30,10 +30,10 @@ export class PresetQuery {
     await sequelize.sync({ force: true });
   }
 
-  static truncateAll() {
+  static async truncateAll() {
     const sequelize = getSequelize();
-    Object.values(sequelize.models).map((model: any) => {
-      return model.destroy({ truncate: { cascade: true } });
+    await Object.values(sequelize.models).map(async (model: any) => {
+      await model.destroy({ truncate: { cascade: true } });
     });
   }
 

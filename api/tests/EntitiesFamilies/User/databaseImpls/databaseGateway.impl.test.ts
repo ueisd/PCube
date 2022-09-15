@@ -86,7 +86,7 @@ function asJson(object) {
 }
 
 afterEach(async () => {
-  PresetQuery.truncateAll();
+  await PresetQuery.truncateAll();
 });
 
 afterAll(async () => {
