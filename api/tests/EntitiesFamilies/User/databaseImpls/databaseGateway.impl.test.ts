@@ -1,7 +1,7 @@
 'use strict';
 
 // @ts-ignore
-import { expect, jest, test, beforeAll, afterAll, afterEach } from '@jest/globals';
+import { expect, jest, test, beforeAll, afterAll, beforeEach } from '@jest/globals';
 import _ = require('lodash');
 
 import UserDataBaseGatewayImpl from '../../../../src/EntitiesFamilies/User/databaseImpls/databaseGateway.impl';
@@ -21,7 +21,9 @@ beforeAll(async () => {
   await PresetQuery.ensureDBIsCreated(actualConfig.database_db);
 
   userDbGateway = new UserDataBaseGatewayImpl();
+});
 
+beforeEach(async () => {
   await PresetQuery.syncSchemas();
 });
 
@@ -84,10 +86,6 @@ function getAssertableUser(role) {
 function asJson(object) {
   return JSON.parse(JSON.stringify(object));
 }
-
-afterEach(async () => {
-  await PresetQuery.syncSchemas();
-});
 
 afterAll(async () => {
   PresetQuery.closeConnection();
