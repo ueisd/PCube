@@ -163,7 +163,7 @@ describe('Database Gateway implement', () => {
     });
   });
 
-  describe('createUsers', function () {
+  describe('create Users', function () {
     test('With basic params', async () => {
       // Arrange
       const admin = await userDbGateway.createRole(
