@@ -43,12 +43,12 @@ services:
     security_opt:
     - seccomp:unconfined
     ports:
-      - 3308:3306
+      - "3308:3306"
   adminer:
     image: adminer
     restart: always
     ports:
-      - 8080:8080
+      - "8080:8080"
     depends_on:
      - db
   client:
@@ -56,10 +56,6 @@ services:
       context: ./client
       dockerfile: Dockerfile.dev
     stdin_open: true
-    volumes:
-      - type: bind
-        source: ./client/src
-        target: /app/src
     environment: 
       - DEBUG=*
       - NODE_ENV=development
@@ -83,8 +79,8 @@ services:
       context: ./reverse-proxy
       dockerfile: Dockerfile.prod
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     volumes:
       - type: bind
         source: /etc/letsencrypt

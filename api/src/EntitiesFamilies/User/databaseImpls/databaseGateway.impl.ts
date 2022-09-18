@@ -8,7 +8,7 @@ import UserImpl from './userImpl';
 
 import Role from '../entities/role';
 import User from '../entities/User';
-import UserDatabaseGateway from '../databaseGateway/UserDatabaseGateway';
+import UserDatabaseGateway, { CreateUserProps } from '../databaseGateway/UserDatabaseGateway';
 import { getSequelize } from '../../../configuration/sequelize';
 
 export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
@@ -23,21 +23,6 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
     // role
     RoleImpl.hasMany(UserImpl);
     UserImpl.belongsTo(RoleImpl);
-  }
-
-  public async findUserByEmail(email: string): Promise<User> {
-    return UserImpl.findOne({
-      where: { email: email },
-      include: [{ model: RoleImpl }],
-      raw: true,
-    });
-  }
-
-  public async findUserById(id): Promise<User> {
-    return UserImpl.findByPk(id, {
-      include: [{ model: RoleImpl }],
-      raw: true,
-    });
   }
 
   public async createRole(role: Role): Promise<Role> {
@@ -59,32 +44,27 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
     return UserDataBaseGatewayImpl.buildUserResponse(result, user);
   }
 
-  public async updateUser(id: number, props: any): Promise<User> {
-    return UserImpl.update(props, { where: { id } });
-  }
-
-  public async deleteUser(id: number): Promise<any> {
-    return UserImpl.destroy({
-      where: { id: id },
+  public async findUserById(id): Promise<User> {
+    return UserImpl.findByPk(id, {
+      include: [{ model: RoleImpl }],
+      raw: true,
     });
   }
 
-  public async createUsers(users: User[]): Promise<User[]> {
-    const userModels = UserDataBaseGatewayImpl.fetchUserListModel(users);
-    _.forEach(userModels, (uM) => UserDataBaseGatewayImpl.encryptUserPassword(uM));
-
-    const createdUsers = await UserImpl.bulkCreate(userModels);
-
-    return UserDataBaseGatewayImpl.buildUserListResponse(createdUsers, users);
-  }
-
-  public async findAllRoles(): Promise<Role[]> {
-    return RoleImpl.findAll({ raw: true });
+  public async findUserByEmail(email: string): Promise<User> {
+    return UserImpl.findOne({
+      where: { email: email },
+      include: [{ model: RoleImpl }],
+      raw: true,
+    });
   }
 
   public async findAllUsersEager(): Promise<User[]> {
     const eagerUserListModel = await UserImpl.findAll({
-      order: [['createdAt', 'DESC']],
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
       include: [
         {
           model: this.sequelize.models.Role,
@@ -95,6 +75,39 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
 
     return _.map(eagerUserListModel, (userModel) => UserDataBaseGatewayImpl.buildUserResponseFromEager(userModel));
   }
+
+  public async findAllUsers(): Promise<User[]> {
+    return UserImpl.findAll({
+      order: [
+        ['createdAt', 'DESC'],
+        ['id', 'DESC'],
+      ],
+      raw: true,
+    });
+  }
+
+  public async findAllRoles(): Promise<Role[]> {
+    return RoleImpl.findAll({ raw: true });
+  }
+
+  public async createUsers(createUsersProps: CreateUserProps[]): Promise<User[]> {
+    const userModels = createUsersProps;
+    _.forEach(userModels, (uM) => UserDataBaseGatewayImpl.encryptUserPassword(uM));
+
+    return UserImpl.bulkCreate(userModels);
+  }
+
+  public async updateUser(id: number, props: any): Promise<User> {
+    return UserImpl.update(props, { where: { id } });
+  }
+
+  public async deleteUser(id: number): Promise<any> {
+    return UserImpl.destroy({
+      where: { id: id },
+    });
+  }
+
+  // Service methods
 
   private static encryptUserPassword(user) {
     user.password = bcrypt.hashSync(user.password, bcrypt.genSaltSync(8));
@@ -146,15 +159,5 @@ export default class UserDataBaseGatewayImpl implements UserDatabaseGateway {
     }
 
     return user;
-  }
-
-  private static fetchUserListModel(users: User[]) {
-    return _.map(users, (u) => UserDataBaseGatewayImpl.fetchUserModel(u));
-  }
-  private static buildUserListResponse(createdUsers, users) {
-    return _.map(createdUsers, (res, index) => {
-      const us = users[index];
-      return UserDataBaseGatewayImpl.buildUserResponse(res, us);
-    });
   }
 }

@@ -147,90 +147,90 @@ exports.buildDataset = async ({
   );
 
   let users = await userDbGateway.createUsers([
-    new User({
+    {
       email: 'Kane@Nod.com',
       firstName: 'Kane',
       lastName: 'Nod',
       password: 'kane',
-      role: admin,
-    }),
-    new User({
+      RoleId: admin.id,
+    },
+    {
       email: 'Redmond@Boyle.com',
       firstName: 'Redmond',
       lastName: 'Boyle',
       password: 'redmond',
-      role: admin,
-    }),
-    new User({
+      RoleId: admin.id,
+    },
+    {
       email: 'Kirce@James.ca',
       firstName: 'Kirce',
       lastName: 'James',
       password: 'kirce',
-      role: pm,
-    }),
-    new User({
+      RoleId: pm.id,
+    },
+    {
       email: 'Kilian@Qatar.ca',
       firstName: 'Kilian',
       lastName: 'Qatar',
       password: 'kilian',
-      role: pm,
-    }),
-    new User({
+      RoleId: pm.id,
+    },
+    {
       email: 'Louise',
       firstName: 'Louise',
       lastName: 'Strickland',
       password: 'louise',
-      role: membre,
-    }),
-    new User({
+      RoleId: membre.id,
+    },
+    {
       email: 'Sebastian@Merrill.qc',
       firstName: 'Sebastian',
       lastName: 'Merrill',
       password: 'louise',
-      role: membre,
-    }),
-    new User({
+      RoleId: membre.id,
+    },
+    {
       email: 'Edwin@Phillips.ai',
       firstName: 'Edwin',
       lastName: 'Phillips',
       password: 'edwin',
-      role: pm,
-    }),
-    new User({
+      RoleId: pm.id,
+    },
+    {
       email: 'Darren@Vargas.li',
       firstName: 'Darren',
       lastName: 'Vargas',
       password: 'darren',
-      role: admin,
-    }),
-    new User({
+      RoleId: admin.id,
+    },
+    {
       email: 'James@Mccormick.com',
       firstName: 'James',
       lastName: 'Mccormick',
       password: 'james',
-      role: membre,
-    }),
-    new User({
+      RoleId: membre.id,
+    },
+    {
       email: 'Georgie@Nelson.qc',
       firstName: 'Georgie',
       lastName: 'Nelson',
       password: 'georgie',
-      role: membre,
-    }),
-    new User({
+      RoleId: membre.id,
+    },
+    {
       email: 'Roosevelt@Bradford.eu',
       firstName: 'Roosevelt',
       lastName: 'Bradford',
       password: 'roosevelt',
-      role: membre,
-    }),
-    new User({
+      RoleId: membre.id,
+    },
+    {
       email: 'Marcel@Wilcox.ku',
       firstName: 'Marcel',
       lastName: 'Wilcox',
       password: 'marcel',
-      role: membre,
-    }),
+      RoleId: membre.id,
+    },
   ]);
 
   console.log('E'.repeat(100));

@@ -8,6 +8,8 @@ export default class User {
   password: string;
   isActive: boolean;
   role: Role;
+  RoleId?: number;
+  createdAt?;
 
   constructor({ id, firstName, lastName, email, password, isActive, role }: { id?: number; firstName: string; lastName: string; email: string; password: string; isActive?: boolean; role?: Role }) {
     if (id) {
