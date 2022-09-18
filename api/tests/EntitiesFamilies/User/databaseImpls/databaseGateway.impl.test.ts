@@ -203,6 +203,7 @@ describe('Database Gateway implement', () => {
       // Assert
       const foundUsers = await userDbGateway.findAllUsers();
       expect(Asserter.extractAssertableCreatedUsers(users)).toEqual(Asserter.extractAssertableListCreatedUsers(foundUsers).reverse());
+      // expect(Asserter.extractAssertableCreatedUsers(users)).toEqual('');
     });
   });
 
@@ -292,7 +293,7 @@ class Arranger {
 
 class Asserter {
   public static extractAssertableRoles(roles) {
-    _.map(roles, (role) => Asserter.extractAssertableRole(role));
+    return _.map(roles, (role) => Asserter.extractAssertableRole(role));
   }
 
   public static extractAssertableCreatedUsers(userResponse) {
@@ -308,7 +309,7 @@ class Asserter {
   }
 
   public static extractAssertableRole(role) {
-    return _.omit(role, ['id']);
+    return _.omit(role, ['id', 'createdAt', 'updatedAt']);
   }
 
   public static extractAssertableUser(user, withRole = true) {
